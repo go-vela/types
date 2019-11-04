@@ -1,0 +1,5 @@
+---
+branch: master
+event: push
+continue: true
+path: [ foo.txt, /foo/bar.txt ]

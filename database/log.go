@@ -1,0 +1,118 @@
+// Copyright (c) 2019 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
+package database
+
+import (
+	"database/sql"
+	"errors"
+
+	"github.com/go-vela/types/library"
+)
+
+var (
+	// ErrEmptyLogBuildID defines the error type when a
+	// Log type has an empty BuildID field provided.
+	ErrEmptyLogBuildID = errors.New("empty log build_id provided")
+
+	// ErrEmptyLogRepoID defines the error type when a
+	// Log type has an empty RepoID field provided.
+	ErrEmptyLogRepoID = errors.New("empty log repo_id provided")
+
+	// ErrEmptyLogStepOrServiceID defines the error type when a
+	// Log type has an empty StepID or ServiceID field provided.
+	ErrEmptyLogStepOrServiceID = errors.New("empty log step_id or service_id not provided")
+)
+
+// Log is the database representation of a log for a step in a build.
+type Log struct {
+	ID        sql.NullInt64 `sql:"id"`
+	BuildID   sql.NullInt64 `sql:"build_id"`
+	RepoID    sql.NullInt64 `sql:"repo_id"`
+	ServiceID sql.NullInt64 `sql:"service_id"`
+	StepID    sql.NullInt64 `sql:"step_id"`
+	Data      []byte        `sql:"data"`
+}
+
+// ToLibrary converts the Log type
+// to a library Log type.
+func (l *Log) ToLibrary() *library.Log {
+	return &library.Log{
+		ID:        &l.ID.Int64,
+		BuildID:   &l.BuildID.Int64,
+		RepoID:    &l.RepoID.Int64,
+		ServiceID: &l.ServiceID.Int64,
+		StepID:    &l.StepID.Int64,
+		Data:      &l.Data,
+	}
+}
+
+// Nullify is a helper function to overwrite fields in the
+// repo to ensure the valid flag is properly set for a sqlnull type.
+func (l *Log) nullify() {
+
+	// check if the ID should be false
+	if l.ID.Int64 == 0 {
+		l.ID.Valid = false
+	}
+
+	// check if the BuildID should be false
+	if l.BuildID.Int64 == 0 {
+		l.BuildID.Valid = false
+	}
+
+	// check if the RepoID should be false
+	if l.RepoID.Int64 == 0 {
+		l.RepoID.Valid = false
+	}
+
+	// check if the StepID should be false
+	if l.ServiceID.Int64 == 0 {
+		l.ServiceID.Valid = false
+	}
+
+	// check if the StepID should be false
+	if l.StepID.Int64 == 0 {
+		l.StepID.Valid = false
+	}
+}
+
+// LogFromLibrary converts the Log type
+// to a library Log type.
+func LogFromLibrary(l *library.Log) *Log {
+
+	entry := &Log{
+		ID:        sql.NullInt64{Int64: l.GetID(), Valid: true},
+		BuildID:   sql.NullInt64{Int64: l.GetBuildID(), Valid: true},
+		RepoID:    sql.NullInt64{Int64: l.GetRepoID(), Valid: true},
+		ServiceID: sql.NullInt64{Int64: l.GetServiceID(), Valid: true},
+		StepID:    sql.NullInt64{Int64: l.GetStepID(), Valid: true},
+		Data:      l.GetData(),
+	}
+
+	entry.nullify()
+
+	return entry
+}
+
+// Validate verifies the necessary fields for
+// the Log type are populated correctly.
+func (l *Log) Validate() error {
+	// verify the has StepID or ServiceID field populated
+	if l.StepID.Int64 <= 0 && l.ServiceID.Int64 <= 0 {
+		return ErrEmptyLogStepOrServiceID
+	}
+
+	// verify the BuildID field is populated
+	if l.BuildID.Int64 <= 0 {
+		return ErrEmptyLogBuildID
+	}
+
+	// verify the RepoID field is populated
+	if l.RepoID.Int64 <= 0 {
+		return ErrEmptyLogRepoID
+	}
+
+	return nil
+}

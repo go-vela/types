@@ -1,4 +1,3 @@
-name: Go
 on: 
   pull_request:
   push:

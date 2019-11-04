@@ -13,6 +13,8 @@ jobs:
     container:
       image: golang:latest
     steps:
+    - name: clone
+      uses: actions/checkout@v1      
     - name: validate
       run: |
         # Check that go mod tidy produces a zero diff; clean up any changes afterwards.

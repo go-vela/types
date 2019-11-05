@@ -11,17 +11,20 @@ jobs:
     steps:
 
     - name: clone
-      uses: actions/checkout@v1
-    
-    - name: download
-      run: |
-        go get github.com/mattn/goveralls
-        go get github.com/go-playground/overalls    
+      uses: actions/checkout@v1  
             
-    - name: test
-      run: go test -cover -coverprofile coverage.out ./...
-
-    - name: coveralls
-      uses: coverallsapp/github-action@master
+    - name: Calc coverage 
+      run: |
+        export PATH=$PATH:$(go env GOPATH)/bin   
+        go test -v -covermode=count -coverprofile=coverage.out
+    - name: Convert coverage to lcov
+      uses: jandelgado/gcov2lcov-action@v1.0.0
       with:
-        github-token: ${{ secrets.github_token }}  
+          infile: coverage.out
+          outfile: coverage.lcov
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+          github-token: ${{ secrets.github_token }}
+          path-to-lcov: coverage.lcov 

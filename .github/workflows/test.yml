@@ -12,7 +12,12 @@ jobs:
 
     - name: clone
       uses: actions/checkout@v1
-
+    
+    - name: download
+      run: |
+        go get github.com/mattn/goveralls
+        go get github.com/go-playground/overalls    
+            
     - name: test
       run: go test -cover -coverprofile coverage.out ./...
 

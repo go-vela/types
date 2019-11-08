@@ -45,7 +45,7 @@ func (l *Login) GetPassword() string {
 	if l == nil || l.Password == nil {
 		return ""
 	}
-	return *l.Username
+	return *l.Password
 }
 
 // GetOTP returns the Username field.

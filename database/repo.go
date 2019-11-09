@@ -7,7 +7,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"strings"
 
 	"github.com/go-vela/types/library"
 )
@@ -51,6 +50,70 @@ type Repo struct {
 	AllowTag    sql.NullBool   `sql:"allow_tag"`
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the Repo type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (r *Repo) Nullify() *Repo {
+	if r == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if r.ID.Int64 == 0 {
+		r.ID.Valid = false
+	}
+
+	// check if the UserID field should be false
+	if r.UserID.Int64 == 0 {
+		r.UserID.Valid = false
+	}
+
+	// check if the Org field should be false
+	if len(r.Org.String) == 0 {
+		r.Org.Valid = false
+	}
+
+	// check if the Name field should be false
+	if len(r.Name.String) == 0 {
+		r.Name.Valid = false
+	}
+
+	// check if the FullName field should be false
+	if len(r.FullName.String) == 0 {
+		r.FullName.Valid = false
+	}
+
+	// check if the Link field should be false
+	if len(r.Link.String) == 0 {
+		r.Link.Valid = false
+	}
+
+	// check if the Clone field should be false
+	if len(r.Clone.String) == 0 {
+		r.Clone.Valid = false
+	}
+
+	// check if the Branch field should be false
+	if len(r.Branch.String) == 0 {
+		r.Branch.Valid = false
+	}
+
+	// check if the Timeout field should be false
+	if r.Timeout.Int64 == 0 {
+		r.Timeout.Valid = false
+	}
+
+	// check if the Visibility field should be false
+	if len(r.Visibility.String) == 0 {
+		r.Visibility.Valid = false
+	}
+
+	return r
+}
+
 // ToLibrary converts the Repo type
 // to a library Repo type.
 func (r *Repo) ToLibrary() *library.Repo {
@@ -73,89 +136,6 @@ func (r *Repo) ToLibrary() *library.Repo {
 		AllowDeploy: &r.AllowDeploy.Bool,
 		AllowTag:    &r.AllowTag.Bool,
 	}
-}
-
-// Nullify is a helper function to overwrite fields in the
-// repo to ensure the valid flag is properly set for a sqlnull type.
-func (r *Repo) nullify() {
-
-	// check if the ID should be false
-	if r.ID.Int64 == 0 {
-		r.ID.Valid = false
-	}
-
-	// check if the UserID should be false
-	if r.UserID.Int64 == 0 {
-		r.UserID.Valid = false
-	}
-
-	// check if the Org should be false
-	if strings.EqualFold(r.Org.String, "") {
-		r.Org.Valid = false
-	}
-
-	// check if the Name should be false
-	if strings.EqualFold(r.Name.String, "") {
-		r.Name.Valid = false
-	}
-
-	// check if the FullName should be false
-	if strings.EqualFold(r.FullName.String, "") {
-		r.FullName.Valid = false
-	}
-
-	// check if the Link should be false
-	if strings.EqualFold(r.Link.String, "") {
-		r.Link.Valid = false
-	}
-
-	// check if the Clone should be false
-	if strings.EqualFold(r.Clone.String, "") {
-		r.Clone.Valid = false
-	}
-
-	// check if the Branch should be false
-	if strings.EqualFold(r.Branch.String, "") {
-		r.Branch.Valid = false
-	}
-
-	// check if the Timeout should be false
-	if r.Timeout.Int64 == 0 {
-		r.Timeout.Valid = false
-	}
-
-	// check if the Visibility should be false
-	if strings.EqualFold(r.Visibility.String, "") {
-		r.Visibility.Valid = false
-	}
-}
-
-// RepoFromLibrary converts the libray Repo type
-// to a database repo type.
-func RepoFromLibrary(r *library.Repo) *Repo {
-	entry := &Repo{
-		ID:          sql.NullInt64{Int64: r.GetID(), Valid: true},
-		UserID:      sql.NullInt64{Int64: r.GetUserID(), Valid: true},
-		Org:         sql.NullString{String: r.GetOrg(), Valid: true},
-		Name:        sql.NullString{String: r.GetName(), Valid: true},
-		FullName:    sql.NullString{String: r.GetFullName(), Valid: true},
-		Link:        sql.NullString{String: r.GetLink(), Valid: true},
-		Clone:       sql.NullString{String: r.GetClone(), Valid: true},
-		Branch:      sql.NullString{String: r.GetBranch(), Valid: true},
-		Timeout:     sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
-		Visibility:  sql.NullString{String: r.GetVisibility(), Valid: true},
-		Private:     sql.NullBool{Bool: r.GetPrivate(), Valid: true},
-		Trusted:     sql.NullBool{Bool: r.GetTrusted(), Valid: true},
-		Active:      sql.NullBool{Bool: r.GetActive(), Valid: true},
-		AllowPull:   sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
-		AllowPush:   sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
-		AllowDeploy: sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
-		AllowTag:    sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
-	}
-
-	entry.nullify()
-
-	return entry
 }
 
 // Validate verifies the necessary fields for
@@ -182,4 +162,30 @@ func (r *Repo) Validate() error {
 	}
 
 	return nil
+}
+
+// RepoFromLibrary converts the libray Repo type
+// to a database repo type.
+func RepoFromLibrary(r *library.Repo) *Repo {
+	repo := &Repo{
+		ID:          sql.NullInt64{Int64: r.GetID(), Valid: true},
+		UserID:      sql.NullInt64{Int64: r.GetUserID(), Valid: true},
+		Org:         sql.NullString{String: r.GetOrg(), Valid: true},
+		Name:        sql.NullString{String: r.GetName(), Valid: true},
+		FullName:    sql.NullString{String: r.GetFullName(), Valid: true},
+		Link:        sql.NullString{String: r.GetLink(), Valid: true},
+		Clone:       sql.NullString{String: r.GetClone(), Valid: true},
+		Branch:      sql.NullString{String: r.GetBranch(), Valid: true},
+		Timeout:     sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
+		Visibility:  sql.NullString{String: r.GetVisibility(), Valid: true},
+		Private:     sql.NullBool{Bool: r.GetPrivate(), Valid: true},
+		Trusted:     sql.NullBool{Bool: r.GetTrusted(), Valid: true},
+		Active:      sql.NullBool{Bool: r.GetActive(), Valid: true},
+		AllowPull:   sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
+		AllowPush:   sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
+		AllowDeploy: sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
+		AllowTag:    sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
+	}
+
+	return repo.Nullify()
 }

@@ -53,6 +53,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 
 	// name and value of secret
 	v := "foo"
+	booL := false
 
 	// setup types
 	tests := []struct {
@@ -195,6 +196,20 @@ func TestLibrary_Secret_Match(t *testing.T) {
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}},
 			want: true,
+		},
+		{
+			step: &pipeline.Container{
+				Image:       "alpine:latest",
+				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Ruleset: pipeline.Ruleset{
+					If: pipeline.Rules{
+						Event: []string{"push"},
+					},
+				},
+				Commands: []string{"echo hi"},
+			},
+			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}, Commands: &booL},
+			want: false,
 		},
 		//TODO: circle back to make this test pass
 		// {

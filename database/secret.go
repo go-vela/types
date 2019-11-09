@@ -52,6 +52,7 @@ type Secret struct {
 	Type   sql.NullString `sql:"type"`
 	Images pq.StringArray `sql:"images"`
 	Events pq.StringArray `sql:"events"`
+	Commands sql.NullBool `sql:"commands"`
 }
 
 // ToLibrary converts the Secret type
@@ -70,6 +71,7 @@ func (s *Secret) ToLibrary() *library.Secret {
 		Type:   &s.Type.String,
 		Images: &images,
 		Events: &events,
+		Commands: &s.Commands.Bool,
 	}
 }
 
@@ -125,6 +127,7 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Type:   sql.NullString{String: s.GetType(), Valid: true},
 		Images: s.GetImages(),
 		Events: s.GetEvents(),
+		Commands: sql.NullBool{Bool: s.GetCommands(), Valid: true},
 	}
 
 	entry.nullify()

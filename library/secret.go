@@ -23,6 +23,7 @@ type Secret struct {
 	Type   *string   `json:"type,omitempty"`
 	Images *[]string `json:"images,omitempty"`
 	Events *[]string `json:"events,omitempty"`
+	Commands *bool `json:"commands,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -36,6 +37,7 @@ func (s *Secret) Sanitize() *Secret {
 		Type:   s.Type,
 		Images: s.Images,
 		Events: s.Events,
+		Commands: s.Commands,
 	}
 }
 
@@ -45,7 +47,12 @@ func (s *Secret) Sanitize() *Secret {
 func (s *Secret) Match(from *pipeline.Container) bool {
 
 	eACL, iACL := false, false
-	events, images := s.GetEvents(), s.GetImages()
+	events, images, commands := s.GetEvents(), s.GetImages(), s.GetCommands()
+
+	// check if commands are utilized when not allowed
+	if !commands && len(from.Commands) > 0 {
+		return false
+	}
 
 	// check incoming events
 	switch from.Environment["BUILD_EVENT"] {
@@ -189,6 +196,18 @@ func (s *Secret) GetEvents() []string {
 	return *s.Events
 }
 
+// GetCommands returns the Commands field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetCommands() bool {
+	// return zero value if Secret type or Images field is nil
+	if s == nil || s.Commands == nil {
+		return true
+	}
+	return *s.Commands
+}
+
 // SetID sets the ID field.
 func (s *Secret) SetID(v int64) {
 	if s == nil {
@@ -259,6 +278,14 @@ func (s *Secret) SetEvents(v []string) {
 		return
 	}
 	s.Events = &v
+}
+
+// SetCommands sets the Commands field.
+func (s *Secret) SetCommands(v bool) {
+	if s == nil {
+		return
+	}
+	s.Commands = &v
 }
 
 // String implements the Stringer interface for the Secret type.

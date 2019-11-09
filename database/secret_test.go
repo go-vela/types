@@ -17,6 +17,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := false
 	want := &library.Secret{
 		ID:     &num64,
 		Org:    &str,
@@ -27,6 +28,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 		Type:   &str,
 		Images: &arr,
 		Events: &arr,
+		Commands: &booL,
 	}
 	s := &Secret{
 		ID:     sql.NullInt64{Int64: num64, Valid: true},
@@ -38,6 +40,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 		Type:   sql.NullString{String: str, Valid: true},
 		Images: arr,
 		Events: arr,
+		Commands: sql.NullBool{Bool: booL, Valid: true},
 	}
 
 	// run test
@@ -53,6 +56,7 @@ func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := false
 	want := &Secret{
 		ID:     sql.NullInt64{Int64: num64, Valid: true},
 		Org:    sql.NullString{String: str, Valid: true},
@@ -63,6 +67,7 @@ func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
 		Type:   sql.NullString{String: str, Valid: true},
 		Images: arr,
 		Events: arr,
+		Commands: sql.NullBool{Bool: booL, Valid:true},
 	}
 
 	s := &library.Secret{
@@ -75,6 +80,7 @@ func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
 		Type:   &str,
 		Images: &arr,
 		Events: &arr,
+		Commands: &booL,
 	}
 
 	// run test

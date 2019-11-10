@@ -7,7 +7,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"strings"
 
 	"github.com/go-vela/types/library"
 )
@@ -49,6 +48,95 @@ type Step struct {
 	Distribution sql.NullString `sql:"distribution"`
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the Step type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (s *Step) Nullify() *Step {
+	if s == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if s.ID.Int64 == 0 {
+		s.ID.Valid = false
+	}
+
+	// check if the BuildID field should be false
+	if s.BuildID.Int64 == 0 {
+		s.BuildID.Valid = false
+	}
+
+	// check if the RepoID field should be false
+	if s.RepoID.Int64 == 0 {
+		s.RepoID.Valid = false
+	}
+
+	// check if the Number field should be false
+	if s.Number.Int32 == 0 {
+		s.Number.Valid = false
+	}
+
+	// check if the Name field should be false
+	if len(s.Name.String) == 0 {
+		s.Name.Valid = false
+	}
+
+	// check if the Stage field should be false
+	if len(s.Stage.String) == 0 {
+		s.Stage.Valid = false
+	}
+
+	// check if the Status field should be false
+	if len(s.Status.String) == 0 {
+		s.Status.Valid = false
+	}
+
+	// check if the Error field should be false
+	if len(s.Error.String) == 0 {
+		s.Error.Valid = false
+	}
+
+	// check if the ExitCode field should be false
+	if s.ExitCode.Int32 == 0 {
+		s.ExitCode.Valid = false
+	}
+
+	// check if Created field should be false
+	if s.Created.Int64 == 0 {
+		s.Created.Valid = false
+	}
+
+	// check if Started field should be false
+	if s.Started.Int64 == 0 {
+		s.Started.Valid = false
+	}
+
+	// check if Finished field should be false
+	if s.Finished.Int64 == 0 {
+		s.Finished.Valid = false
+	}
+
+	// check if the Host field should be false
+	if len(s.Host.String) == 0 {
+		s.Host.Valid = false
+	}
+
+	// check if the Runtime field should be false
+	if len(s.Runtime.String) == 0 {
+		s.Runtime.Valid = false
+	}
+
+	// check if the Distribution field should be false
+	if len(s.Distribution.String) == 0 {
+		s.Distribution.Valid = false
+	}
+
+	return s
+}
+
 // ToLibrary converts the Step type
 // to a library Step type.
 func (s *Step) ToLibrary() *library.Step {
@@ -71,111 +159,6 @@ func (s *Step) ToLibrary() *library.Step {
 		Runtime:      &s.Runtime.String,
 		Distribution: &s.Distribution.String,
 	}
-}
-
-// Nullify is a helper function to overwrite fields in the
-// step to ensure the valid flag is properly set for a sqlnull type.
-func (s *Step) nullify() {
-	// check if the ID should be false
-	if s.ID.Int64 == 0 {
-		s.ID.Valid = false
-	}
-
-	// check if the BuildID should be false
-	if s.BuildID.Int64 == 0 {
-		s.BuildID.Valid = false
-	}
-
-	// check if the RepoID should be false
-	if s.RepoID.Int64 == 0 {
-		s.RepoID.Valid = false
-	}
-
-	// check if the Number should be false
-	if s.Number.Int32 == 0 {
-		s.Number.Valid = false
-	}
-
-	// check if the Name should be false
-	if strings.EqualFold(s.Name.String, "") {
-		s.Name.Valid = false
-	}
-
-	// check if the Stage should be false
-	if strings.EqualFold(s.Stage.String, "") {
-		s.Stage.Valid = false
-	}
-
-	// check if the Status should be false
-	if strings.EqualFold(s.Status.String, "") {
-		s.Status.Valid = false
-	}
-
-	// check if the Error should be false
-	if strings.EqualFold(s.Error.String, "") {
-		s.Error.Valid = false
-	}
-
-	// check if the ExitCode should be false
-	if s.ExitCode.Int32 == 0 {
-		s.ExitCode.Valid = false
-	}
-
-	// check if Created should be false
-	if s.Created.Int64 == 0 {
-		s.Created.Valid = false
-	}
-
-	// check if Started should be false
-	if s.Started.Int64 == 0 {
-		s.Started.Valid = false
-	}
-
-	// check if Finished should be false
-	if s.Finished.Int64 == 0 {
-		s.Finished.Valid = false
-	}
-
-	// check if the Host should be false
-	if strings.EqualFold(s.Host.String, "") {
-		s.Host.Valid = false
-	}
-
-	// check if the Runtime should be false
-	if strings.EqualFold(s.Runtime.String, "") {
-		s.Runtime.Valid = false
-	}
-
-	// check if the Distrobution should be false
-	if strings.EqualFold(s.Distribution.String, "") {
-		s.Distribution.Valid = false
-	}
-}
-
-// StepFromLibrary converts the library Step type
-// to a database Step type.
-func StepFromLibrary(s *library.Step) *Step {
-	entry := &Step{
-		ID:           sql.NullInt64{Int64: s.GetID(), Valid: true},
-		BuildID:      sql.NullInt64{Int64: s.GetBuildID(), Valid: true},
-		RepoID:       sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
-		Number:       sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
-		Name:         sql.NullString{String: s.GetName(), Valid: true},
-		Stage:        sql.NullString{String: s.GetStage(), Valid: true},
-		Status:       sql.NullString{String: s.GetStatus(), Valid: true},
-		Error:        sql.NullString{String: s.GetError(), Valid: true},
-		ExitCode:     sql.NullInt32{Int32: int32(s.GetExitCode()), Valid: true},
-		Created:      sql.NullInt64{Int64: s.GetCreated(), Valid: true},
-		Started:      sql.NullInt64{Int64: s.GetStarted(), Valid: true},
-		Finished:     sql.NullInt64{Int64: s.GetFinished(), Valid: true},
-		Host:         sql.NullString{String: s.GetHost(), Valid: true},
-		Runtime:      sql.NullString{String: s.GetRuntime(), Valid: true},
-		Distribution: sql.NullString{String: s.GetDistribution(), Valid: true},
-	}
-
-	entry.nullify()
-
-	return entry
 }
 
 // Validate verifies the necessary fields for
@@ -202,4 +185,28 @@ func (s *Step) Validate() error {
 	}
 
 	return nil
+}
+
+// StepFromLibrary converts the library Step type
+// to a database Step type.
+func StepFromLibrary(s *library.Step) *Step {
+	step := &Step{
+		ID:           sql.NullInt64{Int64: s.GetID(), Valid: true},
+		BuildID:      sql.NullInt64{Int64: s.GetBuildID(), Valid: true},
+		RepoID:       sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
+		Number:       sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
+		Name:         sql.NullString{String: s.GetName(), Valid: true},
+		Stage:        sql.NullString{String: s.GetStage(), Valid: true},
+		Status:       sql.NullString{String: s.GetStatus(), Valid: true},
+		Error:        sql.NullString{String: s.GetError(), Valid: true},
+		ExitCode:     sql.NullInt32{Int32: int32(s.GetExitCode()), Valid: true},
+		Created:      sql.NullInt64{Int64: s.GetCreated(), Valid: true},
+		Started:      sql.NullInt64{Int64: s.GetStarted(), Valid: true},
+		Finished:     sql.NullInt64{Int64: s.GetFinished(), Valid: true},
+		Host:         sql.NullString{String: s.GetHost(), Valid: true},
+		Runtime:      sql.NullString{String: s.GetRuntime(), Valid: true},
+		Distribution: sql.NullString{String: s.GetDistribution(), Valid: true},
+	}
+
+	return step.Nullify()
 }

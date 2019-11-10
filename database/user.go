@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"regexp"
-	"strings"
 
 	"github.com/go-vela/types/library"
 )
@@ -45,6 +44,40 @@ type User struct {
 	Admin  sql.NullBool   `sql:"admin"`
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the User type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (u *User) Nullify() *User {
+	if u == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if u.ID.Int64 == 0 {
+		u.ID.Valid = false
+	}
+
+	// check if the Name field should be false
+	if len(u.Name.String) == 0 {
+		u.Name.Valid = false
+	}
+
+	// check if the Token field should be false
+	if len(u.Token.String) == 0 {
+		u.Token.Valid = false
+	}
+
+	// check if the Hash field should be false
+	if len(u.Hash.String) == 0 {
+		u.Hash.Valid = false
+	}
+
+	return u
+}
+
 // ToLibrary converts the User type
 // to a library User type.
 func (u *User) ToLibrary() *library.User {
@@ -56,49 +89,6 @@ func (u *User) ToLibrary() *library.User {
 		Active: &u.Active.Bool,
 		Admin:  &u.Admin.Bool,
 	}
-}
-
-// Nullify is a helper function to overwrite fields in the
-// user to ensure the valid flag is properly set for a sqlnull type.
-func (u *User) nullify() {
-
-	// check if the ID should be false
-	if u.ID.Int64 == 0 {
-		u.ID.Valid = false
-	}
-
-	// check if the Name should be false
-	if strings.EqualFold(u.Name.String, "") {
-		u.Name.Valid = false
-	}
-
-	// check if the Token should be false
-	if strings.EqualFold(u.Token.String, "") {
-		u.Token.Valid = false
-	}
-
-	// check if the Hash should be false
-	if strings.EqualFold(u.Hash.String, "") {
-		u.Hash.Valid = false
-	}
-}
-
-// UserFromLibrary converts the library User type
-// to a database User type.
-func UserFromLibrary(u *library.User) *User {
-
-	entry := &User{
-		ID:     sql.NullInt64{Int64: u.GetID(), Valid: true},
-		Name:   sql.NullString{String: u.GetName(), Valid: true},
-		Token:  sql.NullString{String: u.GetToken(), Valid: true},
-		Hash:   sql.NullString{String: u.GetHash(), Valid: true},
-		Active: sql.NullBool{Bool: u.GetActive(), Valid: true},
-		Admin:  sql.NullBool{Bool: u.GetAdmin(), Valid: true},
-	}
-
-	entry.nullify()
-
-	return entry
 }
 
 // Validate verifies the necessary fields for
@@ -125,4 +115,19 @@ func (u *User) Validate() error {
 	}
 
 	return nil
+}
+
+// UserFromLibrary converts the library User type
+// to a database User type.
+func UserFromLibrary(u *library.User) *User {
+	user := &User{
+		ID:     sql.NullInt64{Int64: u.GetID(), Valid: true},
+		Name:   sql.NullString{String: u.GetName(), Valid: true},
+		Token:  sql.NullString{String: u.GetToken(), Valid: true},
+		Hash:   sql.NullString{String: u.GetHash(), Valid: true},
+		Active: sql.NullBool{Bool: u.GetActive(), Valid: true},
+		Admin:  sql.NullBool{Bool: u.GetAdmin(), Valid: true},
+	}
+
+	return user.Nullify()
 }

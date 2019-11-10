@@ -36,6 +36,84 @@ func TestDatabase_Build_Crop(t *testing.T) {
 	}
 }
 
+func TestDatabase_Build_Nullify(t *testing.T) {
+	// setup types
+	b := &Build{
+		ID:           sql.NullInt64{Int64: 0, Valid: true},
+		RepoID:       sql.NullInt64{Int64: 0, Valid: true},
+		Number:       sql.NullInt32{Int32: 0, Valid: true},
+		Parent:       sql.NullInt32{Int32: 0, Valid: true},
+		Event:        sql.NullString{String: "", Valid: true},
+		Status:       sql.NullString{String: "", Valid: true},
+		Error:        sql.NullString{String: "", Valid: true},
+		Enqueued:     sql.NullInt64{Int64: 0, Valid: true},
+		Created:      sql.NullInt64{Int64: 0, Valid: true},
+		Started:      sql.NullInt64{Int64: 0, Valid: true},
+		Finished:     sql.NullInt64{Int64: 0, Valid: true},
+		Deploy:       sql.NullString{String: "", Valid: true},
+		Clone:        sql.NullString{String: "", Valid: true},
+		Source:       sql.NullString{String: "", Valid: true},
+		Title:        sql.NullString{String: "", Valid: true},
+		Message:      sql.NullString{String: "", Valid: true},
+		Commit:       sql.NullString{String: "", Valid: true},
+		Sender:       sql.NullString{String: "", Valid: true},
+		Author:       sql.NullString{String: "", Valid: true},
+		Branch:       sql.NullString{String: "", Valid: true},
+		Ref:          sql.NullString{String: "", Valid: true},
+		BaseRef:      sql.NullString{String: "", Valid: true},
+		Host:         sql.NullString{String: "", Valid: true},
+		Runtime:      sql.NullString{String: "", Valid: true},
+		Distribution: sql.NullString{String: "", Valid: true},
+	}
+	want := &Build{
+		ID:           sql.NullInt64{Int64: 0, Valid: false},
+		RepoID:       sql.NullInt64{Int64: 0, Valid: false},
+		Number:       sql.NullInt32{Int32: 0, Valid: false},
+		Parent:       sql.NullInt32{Int32: 0, Valid: false},
+		Event:        sql.NullString{String: "", Valid: false},
+		Status:       sql.NullString{String: "", Valid: false},
+		Error:        sql.NullString{String: "", Valid: false},
+		Enqueued:     sql.NullInt64{Int64: 0, Valid: false},
+		Created:      sql.NullInt64{Int64: 0, Valid: false},
+		Started:      sql.NullInt64{Int64: 0, Valid: false},
+		Finished:     sql.NullInt64{Int64: 0, Valid: false},
+		Deploy:       sql.NullString{String: "", Valid: false},
+		Clone:        sql.NullString{String: "", Valid: false},
+		Source:       sql.NullString{String: "", Valid: false},
+		Title:        sql.NullString{String: "", Valid: false},
+		Message:      sql.NullString{String: "", Valid: false},
+		Commit:       sql.NullString{String: "", Valid: false},
+		Sender:       sql.NullString{String: "", Valid: false},
+		Author:       sql.NullString{String: "", Valid: false},
+		Branch:       sql.NullString{String: "", Valid: false},
+		Ref:          sql.NullString{String: "", Valid: false},
+		BaseRef:      sql.NullString{String: "", Valid: false},
+		Host:         sql.NullString{String: "", Valid: false},
+		Runtime:      sql.NullString{String: "", Valid: false},
+		Distribution: sql.NullString{String: "", Valid: false},
+	}
+
+	// run test
+	got := b.Nullify()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Nullify is %v, want %v", got, want)
+	}
+}
+
+func TestDatabase_Build_Nullify_Empty(t *testing.T) {
+	// setup types
+	b := &Build{}
+	b = nil
+
+	// run test
+	got := b.Nullify()
+
+	if got != nil {
+		t.Errorf("Nullify is %v, want nil", got)
+	}
+}
+
 func TestDatabase_Build_ToLibrary(t *testing.T) {
 	// setup types
 	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
@@ -105,7 +183,53 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	}
 }
 
-func TestDatabase_Build_BuildFromLibrary(t *testing.T) {
+func TestDatabase_Build_Validate(t *testing.T) {
+	// setup types
+	b := &Build{
+		ID:     sql.NullInt64{Int64: 1, Valid: true},
+		RepoID: sql.NullInt64{Int64: 1, Valid: true},
+		Number: sql.NullInt32{Int32: 1, Valid: true},
+	}
+
+	// run test
+	err := b.Validate()
+
+	if err != nil {
+		t.Errorf("Validate returned err: %v", err)
+	}
+}
+
+func TestDatabase_Build_Validate_NoRepoID(t *testing.T) {
+	// setup types
+	b := &Build{
+		ID:     sql.NullInt64{Int64: 1, Valid: true},
+		Number: sql.NullInt32{Int32: 1, Valid: true},
+	}
+
+	// run test
+	err := b.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDatabase_Build_Validate_NoNumber(t *testing.T) {
+	// setup types
+	b := &Build{
+		ID:     sql.NullInt64{Int64: 1, Valid: true},
+		RepoID: sql.NullInt64{Int64: 1, Valid: true},
+	}
+
+	// run test
+	err := b.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDatabase_BuildFromLibrary(t *testing.T) {
 	// setup types
 	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
 	num := 1
@@ -172,52 +296,6 @@ func TestDatabase_Build_BuildFromLibrary(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("BuildFromLibrary is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_Build_Validate(t *testing.T) {
-	// setup types
-	b := &Build{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-		Number: sql.NullInt32{Int32: 1, Valid: true},
-	}
-
-	// run test
-	err := b.Validate()
-
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
-
-func TestDatabase_Build_Validate_NoRepoID(t *testing.T) {
-	// setup types
-	b := &Build{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		Number: sql.NullInt32{Int32: 1, Valid: true},
-	}
-
-	// run test
-	err := b.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Build_Validate_NoNumber(t *testing.T) {
-	// setup types
-	b := &Build{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-	}
-
-	// run test
-	err := b.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
 	}
 }
 

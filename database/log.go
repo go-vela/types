@@ -35,6 +35,45 @@ type Log struct {
 	Data      []byte        `sql:"data"`
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the Log type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (l *Log) Nullify() *Log {
+	if l == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if l.ID.Int64 == 0 {
+		l.ID.Valid = false
+	}
+
+	// check if the BuildID field should be false
+	if l.BuildID.Int64 == 0 {
+		l.BuildID.Valid = false
+	}
+
+	// check if the RepoID field should be false
+	if l.RepoID.Int64 == 0 {
+		l.RepoID.Valid = false
+	}
+
+	// check if the ServiceID field should be false
+	if l.ServiceID.Int64 == 0 {
+		l.ServiceID.Valid = false
+	}
+
+	// check if the StepID field should be false
+	if l.StepID.Int64 == 0 {
+		l.StepID.Valid = false
+	}
+
+	return l
+}
+
 // ToLibrary converts the Log type
 // to a library Log type.
 func (l *Log) ToLibrary() *library.Log {
@@ -46,54 +85,6 @@ func (l *Log) ToLibrary() *library.Log {
 		StepID:    &l.StepID.Int64,
 		Data:      &l.Data,
 	}
-}
-
-// Nullify is a helper function to overwrite fields in the
-// repo to ensure the valid flag is properly set for a sqlnull type.
-func (l *Log) nullify() {
-
-	// check if the ID should be false
-	if l.ID.Int64 == 0 {
-		l.ID.Valid = false
-	}
-
-	// check if the BuildID should be false
-	if l.BuildID.Int64 == 0 {
-		l.BuildID.Valid = false
-	}
-
-	// check if the RepoID should be false
-	if l.RepoID.Int64 == 0 {
-		l.RepoID.Valid = false
-	}
-
-	// check if the StepID should be false
-	if l.ServiceID.Int64 == 0 {
-		l.ServiceID.Valid = false
-	}
-
-	// check if the StepID should be false
-	if l.StepID.Int64 == 0 {
-		l.StepID.Valid = false
-	}
-}
-
-// LogFromLibrary converts the Log type
-// to a library Log type.
-func LogFromLibrary(l *library.Log) *Log {
-
-	entry := &Log{
-		ID:        sql.NullInt64{Int64: l.GetID(), Valid: true},
-		BuildID:   sql.NullInt64{Int64: l.GetBuildID(), Valid: true},
-		RepoID:    sql.NullInt64{Int64: l.GetRepoID(), Valid: true},
-		ServiceID: sql.NullInt64{Int64: l.GetServiceID(), Valid: true},
-		StepID:    sql.NullInt64{Int64: l.GetStepID(), Valid: true},
-		Data:      l.GetData(),
-	}
-
-	entry.nullify()
-
-	return entry
 }
 
 // Validate verifies the necessary fields for
@@ -115,4 +106,19 @@ func (l *Log) Validate() error {
 	}
 
 	return nil
+}
+
+// LogFromLibrary converts the Log type
+// to a library Log type.
+func LogFromLibrary(l *library.Log) *Log {
+	log := &Log{
+		ID:        sql.NullInt64{Int64: l.GetID(), Valid: true},
+		BuildID:   sql.NullInt64{Int64: l.GetBuildID(), Valid: true},
+		RepoID:    sql.NullInt64{Int64: l.GetRepoID(), Valid: true},
+		ServiceID: sql.NullInt64{Int64: l.GetServiceID(), Valid: true},
+		StepID:    sql.NullInt64{Int64: l.GetStepID(), Valid: true},
+		Data:      l.GetData(),
+	}
+
+	return log.Nullify()
 }

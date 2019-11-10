@@ -54,6 +54,55 @@ type Secret struct {
 	Events pq.StringArray `sql:"events"`
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the Secret type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (s *Secret) Nullify() *Secret {
+	if s == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if s.ID.Int64 == 0 {
+		s.ID.Valid = false
+	}
+
+	// check if the Org field should be false
+	if len(s.Org.String) == 0 {
+		s.Org.Valid = false
+	}
+
+	// check if the Repo field should be false
+	if len(s.Repo.String) == 0 {
+		s.Repo.Valid = false
+	}
+
+	// check if the Team field should be false
+	if len(s.Team.String) == 0 {
+		s.Team.Valid = false
+	}
+
+	// check if the Name field should be false
+	if len(s.Name.String) == 0 {
+		s.Name.Valid = false
+	}
+
+	// check if the Value field should be false
+	if len(s.Value.String) == 0 {
+		s.Value.Valid = false
+	}
+
+	// check if the Value should be false
+	if len(s.Type.String) == 0 {
+		s.Type.Valid = false
+	}
+
+	return s
+}
+
 // ToLibrary converts the Secret type
 // to a library Secret type.
 func (s *Secret) ToLibrary() *library.Secret {
@@ -71,65 +120,6 @@ func (s *Secret) ToLibrary() *library.Secret {
 		Images: &images,
 		Events: &events,
 	}
-}
-
-// Nullify is a helper function to overwrite fields in the
-// secret to ensure the valid flag is properly set for a sqlnull type.
-func (s *Secret) nullify() {
-	// check if the ID should be false
-	if s.ID.Int64 == 0 {
-		s.ID.Valid = false
-	}
-
-	// check if the Org should be false
-	if strings.EqualFold(s.Org.String, "") {
-		s.Org.Valid = false
-	}
-
-	// check if the Repo should be false
-	if strings.EqualFold(s.Repo.String, "") {
-		s.Repo.Valid = false
-	}
-
-	// check if the Team should be false
-	if strings.EqualFold(s.Team.String, "") {
-		s.Team.Valid = false
-	}
-
-	// check if the Name should be false
-	if strings.EqualFold(s.Name.String, "") {
-		s.Team.Valid = false
-	}
-
-	// check if the Value should be false
-	if strings.EqualFold(s.Value.String, "") {
-		s.Value.Valid = false
-	}
-
-	// check if the Value should be false
-	if strings.EqualFold(s.Type.String, "") {
-		s.Type.Valid = false
-	}
-}
-
-// SecretFromLibrary converts the library Secret type
-// to a database Secret type.
-func SecretFromLibrary(s *library.Secret) *Secret {
-	entry := &Secret{
-		ID:     sql.NullInt64{Int64: s.GetID(), Valid: true},
-		Org:    sql.NullString{String: s.GetOrg(), Valid: true},
-		Repo:   sql.NullString{String: s.GetRepo(), Valid: true},
-		Team:   sql.NullString{String: s.GetTeam(), Valid: true},
-		Name:   sql.NullString{String: s.GetName(), Valid: true},
-		Value:  sql.NullString{String: s.GetValue(), Valid: true},
-		Type:   sql.NullString{String: s.GetType(), Valid: true},
-		Images: s.GetImages(),
-		Events: s.GetEvents(),
-	}
-
-	entry.nullify()
-
-	return entry
 }
 
 // Validate verifies the necessary fields for
@@ -173,4 +163,22 @@ func (s *Secret) Validate() error {
 	}
 
 	return nil
+}
+
+// SecretFromLibrary converts the library Secret type
+// to a database Secret type.
+func SecretFromLibrary(s *library.Secret) *Secret {
+	secret := &Secret{
+		ID:     sql.NullInt64{Int64: s.GetID(), Valid: true},
+		Org:    sql.NullString{String: s.GetOrg(), Valid: true},
+		Repo:   sql.NullString{String: s.GetRepo(), Valid: true},
+		Team:   sql.NullString{String: s.GetTeam(), Valid: true},
+		Name:   sql.NullString{String: s.GetName(), Valid: true},
+		Value:  sql.NullString{String: s.GetValue(), Valid: true},
+		Type:   sql.NullString{String: s.GetType(), Valid: true},
+		Images: s.GetImages(),
+		Events: s.GetEvents(),
+	}
+
+	return secret.Nullify()
 }

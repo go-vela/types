@@ -43,16 +43,16 @@ var (
 
 // Secret is the database representation of a secret.
 type Secret struct {
-	ID     sql.NullInt64  `sql:"id"`
-	Org    sql.NullString `sql:"org"`
-	Repo   sql.NullString `sql:"repo"`
-	Team   sql.NullString `sql:"team"`
-	Name   sql.NullString `sql:"name"`
-	Value  sql.NullString `sql:"value"`
-	Type   sql.NullString `sql:"type"`
-	Images pq.StringArray `sql:"images"`
-	Events pq.StringArray `sql:"events"`
-	AllowCommand sql.NullBool `sql:"allow_command"`
+	ID           sql.NullInt64  `sql:"id"`
+	Org          sql.NullString `sql:"org"`
+	Repo         sql.NullString `sql:"repo"`
+	Team         sql.NullString `sql:"team"`
+	Name         sql.NullString `sql:"name"`
+	Value        sql.NullString `sql:"value"`
+	Type         sql.NullString `sql:"type"`
+	Images       pq.StringArray `sql:"images"`
+	Events       pq.StringArray `sql:"events"`
+	AllowCommand sql.NullBool   `sql:"allow_command"`
 }
 
 // Nullify ensures the valid flag for
@@ -111,15 +111,15 @@ func (s *Secret) ToLibrary() *library.Secret {
 	events := []string(s.Events)
 
 	return &library.Secret{
-		ID:     &s.ID.Int64,
-		Org:    &s.Org.String,
-		Repo:   &s.Repo.String,
-		Team:   &s.Team.String,
-		Name:   &s.Name.String,
-		Value:  &s.Value.String,
-		Type:   &s.Type.String,
-		Images: &images,
-		Events: &events,
+		ID:           &s.ID.Int64,
+		Org:          &s.Org.String,
+		Repo:         &s.Repo.String,
+		Team:         &s.Team.String,
+		Name:         &s.Name.String,
+		Value:        &s.Value.String,
+		Type:         &s.Type.String,
+		Images:       &images,
+		Events:       &events,
 		AllowCommand: &s.AllowCommand.Bool,
 	}
 }
@@ -171,15 +171,15 @@ func (s *Secret) Validate() error {
 // to a database Secret type.
 func SecretFromLibrary(s *library.Secret) *Secret {
 	secret := &Secret{
-		ID:     sql.NullInt64{Int64: s.GetID(), Valid: true},
-		Org:    sql.NullString{String: s.GetOrg(), Valid: true},
-		Repo:   sql.NullString{String: s.GetRepo(), Valid: true},
-		Team:   sql.NullString{String: s.GetTeam(), Valid: true},
-		Name:   sql.NullString{String: s.GetName(), Valid: true},
-		Value:  sql.NullString{String: s.GetValue(), Valid: true},
-		Type:   sql.NullString{String: s.GetType(), Valid: true},
-		Images: s.GetImages(),
-		Events: s.GetEvents(),
+		ID:           sql.NullInt64{Int64: s.GetID(), Valid: true},
+		Org:          sql.NullString{String: s.GetOrg(), Valid: true},
+		Repo:         sql.NullString{String: s.GetRepo(), Valid: true},
+		Team:         sql.NullString{String: s.GetTeam(), Valid: true},
+		Name:         sql.NullString{String: s.GetName(), Valid: true},
+		Value:        sql.NullString{String: s.GetValue(), Valid: true},
+		Type:         sql.NullString{String: s.GetType(), Valid: true},
+		Images:       s.GetImages(),
+		Events:       s.GetEvents(),
 		AllowCommand: sql.NullBool{Bool: s.GetCommands(), Valid: true},
 	}
 

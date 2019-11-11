@@ -7,7 +7,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"strings"
 
 	"github.com/go-vela/types/library"
 )
@@ -67,6 +66,145 @@ func (b *Build) Crop() *Build {
 	return b
 }
 
+// Nullify ensures the valid flag for
+// the sql.Null types are properly set.
+//
+// When a field within the Build type is the zero
+// value for the field, the valid flag is set to
+// false causing it to be NULL in the database.
+func (b *Build) Nullify() *Build {
+	if b == nil {
+		return nil
+	}
+
+	// check if the ID field should be false
+	if b.ID.Int64 == 0 {
+		b.ID.Valid = false
+	}
+
+	// check if the RepoID field should be false
+	if b.RepoID.Int64 == 0 {
+		b.RepoID.Valid = false
+	}
+
+	// check if the Number field should be false
+	if b.Number.Int32 == 0 {
+		b.Number.Valid = false
+	}
+
+	// check if the Parent field should be false
+	if b.Parent.Int32 == 0 {
+		b.Parent.Valid = false
+	}
+
+	// check if the Event field should be false
+	if len(b.Event.String) == 0 {
+		b.Event.Valid = false
+	}
+
+	// check if the Status field should be false
+	if len(b.Status.String) == 0 {
+		b.Status.Valid = false
+	}
+
+	// check if the Error field should be false
+	if len(b.Error.String) == 0 {
+		b.Error.Valid = false
+	}
+
+	// check if the Enqueued field should be false
+	if b.Enqueued.Int64 == 0 {
+		b.Enqueued.Valid = false
+	}
+
+	// check if the Created field should be false
+	if b.Created.Int64 == 0 {
+		b.Created.Valid = false
+	}
+
+	// check if the Started field should be false
+	if b.Started.Int64 == 0 {
+		b.Started.Valid = false
+	}
+
+	// check if the Finished field should be false
+	if b.Finished.Int64 == 0 {
+		b.Finished.Valid = false
+	}
+
+	// check if the Deploy field should be false
+	if len(b.Deploy.String) == 0 {
+		b.Deploy.Valid = false
+	}
+
+	// check if the Clone field should be false
+	if len(b.Clone.String) == 0 {
+		b.Clone.Valid = false
+	}
+
+	// check if the Source field should be false
+	if len(b.Source.String) == 0 {
+		b.Source.Valid = false
+	}
+
+	// check if the Title field should be false
+	if len(b.Title.String) == 0 {
+		b.Title.Valid = false
+	}
+
+	// check if the Message field should be false
+	if len(b.Message.String) == 0 {
+		b.Message.Valid = false
+	}
+
+	// check if the Commit field should be false
+	if len(b.Commit.String) == 0 {
+		b.Commit.Valid = false
+	}
+
+	// check if the Sender field should be false
+	if len(b.Sender.String) == 0 {
+		b.Sender.Valid = false
+	}
+
+	// check if the Author field should be false
+	if len(b.Author.String) == 0 {
+		b.Author.Valid = false
+	}
+
+	// check if the Branch field should be false
+	if len(b.Branch.String) == 0 {
+		b.Branch.Valid = false
+	}
+
+	// check if the Ref field should be false
+	if len(b.Ref.String) == 0 {
+		b.Ref.Valid = false
+	}
+
+	// check if the BaseRef field should be false
+	if len(b.BaseRef.String) == 0 {
+		b.BaseRef.Valid = false
+	}
+
+	// check if the Host field should be false
+	if len(b.Host.String) == 0 {
+		b.Host.Valid = false
+	}
+
+	// check if the Runtime field should be false
+	if len(b.Runtime.String) == 0 {
+		b.Runtime.Valid = false
+	}
+
+	// check if the Distribution field should be false
+	if len(b.Distribution.String) == 0 {
+		b.Distribution.Valid = false
+	}
+
+	return b
+}
+
 // ToLibrary converts the Build type
 // to a library Build type.
 func (b *Build) ToLibrary() *library.Build {
@@ -101,131 +239,26 @@ func (b *Build) ToLibrary() *library.Build {
 	}
 }
 
-// nullify is a to overwrite fields in the
-// build to ensure the valid flag is properly set for a sqlnull type.
-func (b *Build) nullify() {
-
-	// check if the ID should be false
-	if b.ID.Int64 == 0 {
-		b.ID.Valid = false
+// Validate verifies the necessary fields for
+// the Build type are populated correctly.
+func (b *Build) Validate() error {
+	// verify the RepoID field is populated
+	if b.RepoID.Int64 <= 0 {
+		return ErrEmptyBuildRepoID
 	}
 
-	// check if the RepoID should be false
-	if b.RepoID.Int64 == 0 {
-		b.RepoID.Valid = false
+	// verify the Number field is populated
+	if b.Number.Int32 <= 0 {
+		return ErrEmptyBuildNumber
 	}
 
-	// check if the Number should be false
-	if b.Number.Int32 == 0 {
-		b.Number.Valid = false
-	}
-
-	// check if the Parent should be false
-	if b.Parent.Int32 == 0 {
-		b.Parent.Valid = false
-	}
-
-	// check if the Event should be false
-	if strings.EqualFold(b.Event.String, "") {
-		b.Event.Valid = false
-	}
-
-	// check if the Status should be false
-	if strings.EqualFold(b.Status.String, "") {
-		b.Status.Valid = false
-	}
-
-	// check if the Error should be false
-	if strings.EqualFold(b.Error.String, "") {
-		b.Error.Valid = false
-	}
-
-	// check if the Enqueued should be false
-	if b.Enqueued.Int64 == 0 {
-		b.Enqueued.Valid = false
-	}
-
-	// check if the Created should be false
-	if b.Created.Int64 == 0 {
-		b.Created.Valid = false
-	}
-
-	// check if the Started should be false
-	if b.Started.Int64 == 0 {
-		b.Started.Valid = false
-	}
-
-	// check if the Finished should be false
-	if b.Finished.Int64 == 0 {
-		b.Finished.Valid = false
-	}
-
-	// check if the Deploy should be false
-	if strings.EqualFold(b.Deploy.String, "") {
-		b.Deploy.Valid = false
-	}
-
-	// check if the Clone should be false
-	if strings.EqualFold(b.Clone.String, "") {
-		b.Clone.Valid = false
-	}
-
-	// check if the Source should be false
-	if strings.EqualFold(b.Source.String, "") {
-		b.Source.Valid = false
-	}
-
-	// check if the Title should be false
-	if strings.EqualFold(b.Title.String, "") {
-		b.Title.Valid = false
-	}
-
-	// check if the Message should be false
-	if strings.EqualFold(b.Message.String, "") {
-		b.Message.Valid = false
-	}
-
-	// check if the Author should be false
-	if strings.EqualFold(b.Author.String, "") {
-		b.Author.Valid = false
-	}
-
-	// check if the Branch should be false
-	if strings.EqualFold(b.Branch.String, "") {
-		b.Branch.Valid = false
-	}
-
-	// check if the Ref should be false
-	if strings.EqualFold(b.Ref.String, "") {
-		b.Ref.Valid = false
-	}
-
-	// check if the BaseRef should be false
-	if strings.EqualFold(b.BaseRef.String, "") {
-		b.BaseRef.Valid = false
-	}
-
-	// check if the Host should be false
-	if strings.EqualFold(b.Host.String, "") {
-		b.Host.Valid = false
-	}
-
-	// check if the Runtime should be false
-	if strings.EqualFold(b.Runtime.String, "") {
-		b.Runtime.Valid = false
-	}
-
-	// check if the Distribution should be false
-	if strings.EqualFold(b.Distribution.String, "") {
-		b.Distribution.Valid = false
-	}
+	return nil
 }
 
 // BuildFromLibrary converts the libray Build type
 // to a database build type.
 func BuildFromLibrary(b *library.Build) *Build {
-
-	entry := &Build{
+	build := &Build{
 		ID:           sql.NullInt64{Int64: b.GetID(), Valid: true},
 		RepoID:       sql.NullInt64{Int64: b.GetRepoID(), Valid: true},
 		Number:       sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
@@ -253,23 +286,5 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Distribution: sql.NullString{String: b.GetDistribution(), Valid: true},
 	}
 
-	entry.nullify()
-
-	return entry
-}
-
-// Validate verifies the necessary fields for
-// the Build type are populated correctly.
-func (b *Build) Validate() error {
-	// verify the RepoID field is populated
-	if b.RepoID.Int64 <= 0 {
-		return ErrEmptyBuildRepoID
-	}
-
-	// verify the Number field is populated
-	if b.Number.Int32 <= 0 {
-		return ErrEmptyBuildNumber
-	}
-
-	return nil
+	return build.Nullify()
 }

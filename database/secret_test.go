@@ -12,6 +12,52 @@ import (
 	"github.com/go-vela/types/library"
 )
 
+func TestDatabase_Secret_Nullify(t *testing.T) {
+	// setup types
+	s := &Secret{
+		ID:     sql.NullInt64{Int64: 0, Valid: true},
+		Org:    sql.NullString{String: "", Valid: true},
+		Repo:   sql.NullString{String: "", Valid: true},
+		Team:   sql.NullString{String: "", Valid: true},
+		Name:   sql.NullString{String: "", Valid: true},
+		Value:  sql.NullString{String: "", Valid: true},
+		Type:   sql.NullString{String: "", Valid: true},
+		Images: []string{},
+		Events: []string{},
+	}
+	want := &Secret{
+		ID:     sql.NullInt64{Int64: 0, Valid: false},
+		Org:    sql.NullString{String: "", Valid: false},
+		Repo:   sql.NullString{String: "", Valid: false},
+		Team:   sql.NullString{String: "", Valid: false},
+		Name:   sql.NullString{String: "", Valid: false},
+		Value:  sql.NullString{String: "", Valid: false},
+		Type:   sql.NullString{String: "", Valid: false},
+		Images: []string{},
+		Events: []string{},
+	}
+
+	// run test
+	got := s.Nullify()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Nullify is %v, want %v", got, want)
+	}
+}
+
+func TestDatabase_Secret_Nullify_Empty(t *testing.T) {
+	// setup types
+	s := &Secret{}
+	s = nil
+
+	// run test
+	got := s.Nullify()
+
+	if got != nil {
+		t.Errorf("Nullify is %v, want nil", got)
+	}
+}
+
 func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	// setup types
 	num64 := int64(1)
@@ -19,15 +65,15 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	arr := []string{"foo", "bar"}
 	booL := false
 	want := &library.Secret{
-		ID:           &num64,
-		Org:          &str,
-		Repo:         &str,
-		Team:         &str,
-		Name:         &str,
-		Value:        &str,
-		Type:         &str,
-		Images:       &arr,
-		Events:       &arr,
+		ID:     &num64,
+		Org:    &str,
+		Repo:   &str,
+		Team:   &str,
+		Name:   &str,
+		Value:  &str,
+		Type:   &str,
+		Images: &arr,
+		Events: &arr,
 		AllowCommand: &booL,
 	}
 	s := &Secret{
@@ -51,45 +97,6 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	}
 }
 
-func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
-	// setup types
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	booL := false
-	want := &Secret{
-		ID:     sql.NullInt64{Int64: num64, Valid: true},
-		Org:    sql.NullString{String: str, Valid: true},
-		Repo:   sql.NullString{String: str, Valid: true},
-		Team:   sql.NullString{String: str, Valid: true},
-		Name:   sql.NullString{String: str, Valid: true},
-		Value:  sql.NullString{String: str, Valid: true},
-		Type:   sql.NullString{String: str, Valid: true},
-		Images: arr,
-		Events: arr,
-		AllowCommand: sql.NullBool{Bool: booL, Valid:true},
-	}
-
-	s := &library.Secret{
-		ID:           &num64,
-		Org:          &str,
-		Repo:         &str,
-		Team:         &str,
-		Name:         &str,
-		Value:        &str,
-		Type:         &str,
-		Images:       &arr,
-		Events:       &arr,
-		AllowCommand: &booL,
-	}
-
-	// run test
-	got := SecretFromLibrary(s)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToLibrary is %v, want %v", got, want)
-	}
-}
 func TestDatabase_Secret_Validate(t *testing.T) {
 	// setup types
 	s := &Secret{
@@ -221,5 +228,45 @@ func TestDatabase_Secret_Validate_NoValue(t *testing.T) {
 
 	if err == nil {
 		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDatabase_SecretFromLibrary(t *testing.T) {
+	// setup types
+	num64 := int64(1)
+	str := "foo"
+	arr := []string{"foo", "bar"}
+	booL := false
+	want := &Secret{
+		ID:     sql.NullInt64{Int64: num64, Valid: true},
+		Org:    sql.NullString{String: str, Valid: true},
+		Repo:   sql.NullString{String: str, Valid: true},
+		Team:   sql.NullString{String: str, Valid: true},
+		Name:   sql.NullString{String: str, Valid: true},
+		Value:  sql.NullString{String: str, Valid: true},
+		Type:   sql.NullString{String: str, Valid: true},
+		Images: arr,
+		Events: arr,
+		AllowCommand: sql.NullBool{Bool: booL, Valid:true},
+	}
+
+	s := &library.Secret{
+		ID:     &num64,
+		Org:    &str,
+		Repo:   &str,
+		Team:   &str,
+		Name:   &str,
+		Value:  &str,
+		Type:   &str,
+		Images: &arr,
+		Events: &arr,
+		AllowCommand: &booL,
+	}
+
+	// run test
+	got := SecretFromLibrary(s)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("SecretFromLibrary is %v, want %v", got, want)
 	}
 }

@@ -376,32 +376,77 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	s.SetImages(wantImages)
 	s.SetEvents(wantEvents)
 
-	if *s.ID != wantID {
-		t.Errorf("GetID is %v, want %v", *s.ID, wantID)
+	if s.GetID() != wantID {
+		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
 	}
-	if *s.Org != wantOrg {
-		t.Errorf("GetOrg is %v, want %v", *s.Org, wantOrg)
+	if s.GetOrg() != wantOrg {
+		t.Errorf("SetOrg is %v, want %v", s.GetOrg(), wantOrg)
 	}
-	if *s.Repo != wantRepo {
-		t.Errorf("GetRepo is %v, want %v", *s.Repo, wantRepo)
+	if s.GetRepo() != wantRepo {
+		t.Errorf("SetRepo is %v, want %v", s.GetRepo(), wantRepo)
 	}
-	if *s.Team != wantTeam {
-		t.Errorf("GetTeam is %v, want %v", *s.Team, wantTeam)
+	if s.GetTeam() != wantTeam {
+		t.Errorf("SetTeam is %v, want %v", s.GetTeam(), wantTeam)
 	}
-	if *s.Name != wantName {
-		t.Errorf("GetName is %v, want %v", *s.Name, wantName)
+	if s.GetName() != wantName {
+		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
 	}
-	if *s.Value != wantValue {
-		t.Errorf("GetValue is %v, want %v", *s.Value, wantValue)
+	if s.GetValue() != wantValue {
+		t.Errorf("SetValue is %v, want %v", s.GetValue(), wantValue)
 	}
-	if *s.Type != wantType {
-		t.Errorf("GetType is %v, want %v", *s.Type, wantType)
+	if s.GetType() != wantType {
+		t.Errorf("SetType is %v, want %v", s.GetType(), wantType)
 	}
-	if !reflect.DeepEqual(*s.Images, wantImages) {
-		t.Errorf("GetImages is %v, want %v", *s.Images, wantImages)
+	if !reflect.DeepEqual(s.GetImages(), wantImages) {
+		t.Errorf("SetImages is %v, want %v", s.GetImages(), wantImages)
 	}
-	if !reflect.DeepEqual(*s.Events, wantEvents) {
-		t.Errorf("GetEvents is %v, want %v", *s.Events, wantEvents)
+	if !reflect.DeepEqual(s.GetEvents(), wantEvents) {
+		t.Errorf("SetEvents is %v, want %v", s.GetEvents(), wantEvents)
+	}
+}
+
+func TestLibrary_Secret_Setters_Empty(t *testing.T) {
+	// setup types
+	s := &Secret{}
+	s = nil
+
+	// run test
+	s.SetID(0)
+	s.SetOrg("")
+	s.SetRepo("")
+	s.SetTeam("")
+	s.SetName("")
+	s.SetValue("")
+	s.SetType("")
+	s.SetImages([]string{})
+	s.SetEvents([]string{})
+
+	if s.GetID() != 0 {
+		t.Errorf("SetID is %v, want 0", s.GetID())
+	}
+	if s.GetOrg() != "" {
+		t.Errorf("SetOrg is %v, want \"\"", s.GetOrg())
+	}
+	if s.GetRepo() != "" {
+		t.Errorf("SetRepo is %v, want \"\"", s.GetRepo())
+	}
+	if s.GetTeam() != "" {
+		t.Errorf("SetTeam is %v, want \"\"", s.GetTeam())
+	}
+	if s.GetName() != "" {
+		t.Errorf("SetName is %v, want \"\"", s.GetName())
+	}
+	if s.GetValue() != "" {
+		t.Errorf("SetValue is %v, want \"\"", s.GetValue())
+	}
+	if s.GetType() != "" {
+		t.Errorf("SetType is %v, want \"\"", s.GetType())
+	}
+	if !reflect.DeepEqual(s.GetImages(), []string{}) {
+		t.Errorf("SetImages is %v, want []string{}", s.GetImages())
+	}
+	if !reflect.DeepEqual(s.GetEvents(), []string{}) {
+		t.Errorf("SetEvents is %v, want []string{}", s.GetEvents())
 	}
 }
 

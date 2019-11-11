@@ -232,7 +232,11 @@ func (r *Repo) GetAllowTag() bool {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetID(v int64) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -240,7 +244,11 @@ func (r *Repo) SetID(v int64) {
 }
 
 // SetUserID sets the UserID field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetUserID(v int64) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -248,7 +256,11 @@ func (r *Repo) SetUserID(v int64) {
 }
 
 // SetOrg sets the Org field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetOrg(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -256,7 +268,11 @@ func (r *Repo) SetOrg(v string) {
 }
 
 // SetName sets the Name field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetName(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -264,7 +280,11 @@ func (r *Repo) SetName(v string) {
 }
 
 // SetFullName sets the FullName field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetFullName(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -272,7 +292,11 @@ func (r *Repo) SetFullName(v string) {
 }
 
 // SetLink sets the Link field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetLink(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -280,7 +304,11 @@ func (r *Repo) SetLink(v string) {
 }
 
 // SetClone sets the Clone field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetClone(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -288,7 +316,11 @@ func (r *Repo) SetClone(v string) {
 }
 
 // SetBranch sets the Branch field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetBranch(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -296,7 +328,11 @@ func (r *Repo) SetBranch(v string) {
 }
 
 // SetTimeout sets the Timeout field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetTimeout(v int64) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -304,7 +340,11 @@ func (r *Repo) SetTimeout(v int64) {
 }
 
 // SetVisibility sets the Visibility field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetVisibility(v string) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -312,7 +352,11 @@ func (r *Repo) SetVisibility(v string) {
 }
 
 // SetPrivate sets the Private field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetPrivate(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -320,7 +364,11 @@ func (r *Repo) SetPrivate(v bool) {
 }
 
 // SetTrusted sets the Trusted field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetTrusted(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -328,7 +376,11 @@ func (r *Repo) SetTrusted(v bool) {
 }
 
 // SetActive sets the Active field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetActive(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -336,7 +388,11 @@ func (r *Repo) SetActive(v bool) {
 }
 
 // SetAllowPull sets the AllowPull field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetAllowPull(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -344,7 +400,11 @@ func (r *Repo) SetAllowPull(v bool) {
 }
 
 // SetAllowPush sets the AllowPush field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetAllowPush(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -352,7 +412,11 @@ func (r *Repo) SetAllowPush(v bool) {
 }
 
 // SetAllowDeploy sets the AllowDeploy field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetAllowDeploy(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}
@@ -360,7 +424,11 @@ func (r *Repo) SetAllowDeploy(v bool) {
 }
 
 // SetAllowTag sets the AllowTag field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetAllowTag(v bool) {
+	// return if Repo type is nil
 	if r == nil {
 		return
 	}

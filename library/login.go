@@ -72,32 +72,48 @@ func (l *Login) GetToken() string {
 	return *l.Token
 }
 
-// SetUsername Sets the Username field.
+// SetUsername sets the Username field.
+//
+// When the provided Login type is nil, it
+// will set nothing and immediately return.
 func (l *Login) SetUsername(v string) {
+	// return if Login type is nil
 	if l == nil {
 		return
 	}
 	l.Username = &v
 }
 
-// SetPassword Sets the Password field.
+// SetPassword sets the Password field.
+//
+// When the provided Login type is nil, it
+// will set nothing and immediately return.
 func (l *Login) SetPassword(v string) {
+	// return if Login type is nil
 	if l == nil {
 		return
 	}
 	l.Password = &v
 }
 
-// SetOTP Sets the OTP field.
+// SetOTP sets the OTP field.
+//
+// When the provided Login type is nil, it
+// will set nothing and immediately return.
 func (l *Login) SetOTP(v string) {
+	// return if Login type is nil
 	if l == nil {
 		return
 	}
 	l.OTP = &v
 }
 
-// SetToken Sets the Token field.
+// SetToken sets the Token field.
+//
+// When the provided Login type is nil, it
+// will set nothing and immediately return.
 func (l *Login) SetToken(v string) {
+	// return if Login type is nil
 	if l == nil {
 		return
 	}

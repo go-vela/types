@@ -206,7 +206,11 @@ func (s *Step) GetDistribution() string {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetID(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -214,7 +218,11 @@ func (s *Step) SetID(v int64) {
 }
 
 // SetBuildID sets the BuildID field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetBuildID(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -222,7 +230,11 @@ func (s *Step) SetBuildID(v int64) {
 }
 
 // SetRepoID sets the RepoID field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetRepoID(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -230,7 +242,11 @@ func (s *Step) SetRepoID(v int64) {
 }
 
 // SetNumber sets the Number field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetNumber(v int) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -238,7 +254,11 @@ func (s *Step) SetNumber(v int) {
 }
 
 // SetName sets the Name field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetName(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -246,7 +266,11 @@ func (s *Step) SetName(v string) {
 }
 
 // SetStage sets the Stage field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetStage(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -254,7 +278,11 @@ func (s *Step) SetStage(v string) {
 }
 
 // SetStatus sets the Status field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetStatus(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -262,7 +290,11 @@ func (s *Step) SetStatus(v string) {
 }
 
 // SetError sets the Error field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetError(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -270,7 +302,11 @@ func (s *Step) SetError(v string) {
 }
 
 // SetExitCode sets the ExitCode field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetExitCode(v int) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -278,7 +314,11 @@ func (s *Step) SetExitCode(v int) {
 }
 
 // SetCreated sets the Created field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetCreated(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -286,7 +326,11 @@ func (s *Step) SetCreated(v int64) {
 }
 
 // SetStarted sets the Started field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetStarted(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -294,7 +338,11 @@ func (s *Step) SetStarted(v int64) {
 }
 
 // SetFinished sets the Finished field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetFinished(v int64) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -302,7 +350,11 @@ func (s *Step) SetFinished(v int64) {
 }
 
 // SetHost sets the Host field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetHost(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -310,7 +362,11 @@ func (s *Step) SetHost(v string) {
 }
 
 // SetRuntime sets the Runtime field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetRuntime(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
@@ -318,7 +374,11 @@ func (s *Step) SetRuntime(v string) {
 }
 
 // SetDistribution sets the Runtime field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
 func (s *Step) SetDistribution(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}

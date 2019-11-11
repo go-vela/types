@@ -190,7 +190,11 @@ func (s *Secret) GetEvents() []string {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetID(v int64) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -198,7 +202,11 @@ func (s *Secret) SetID(v int64) {
 }
 
 // SetOrg sets the Org field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetOrg(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -206,7 +214,11 @@ func (s *Secret) SetOrg(v string) {
 }
 
 // SetRepo sets the Repo field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetRepo(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -214,7 +226,11 @@ func (s *Secret) SetRepo(v string) {
 }
 
 // SetTeam sets the Team field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetTeam(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -222,7 +238,11 @@ func (s *Secret) SetTeam(v string) {
 }
 
 // SetName sets the Name field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetName(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -230,7 +250,11 @@ func (s *Secret) SetName(v string) {
 }
 
 // SetValue sets the Value field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetValue(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -238,7 +262,11 @@ func (s *Secret) SetValue(v string) {
 }
 
 // SetType sets the Type field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetType(v string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -246,7 +274,11 @@ func (s *Secret) SetType(v string) {
 }
 
 // SetImages sets the Images field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetImages(v []string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
@@ -254,7 +286,11 @@ func (s *Secret) SetImages(v []string) {
 }
 
 // SetEvents sets the Events field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetEvents(v []string) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}

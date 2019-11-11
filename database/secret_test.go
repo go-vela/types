@@ -40,7 +40,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 		Type:   sql.NullString{String: str, Valid: true},
 		Images: arr,
 		Events: arr,
-		Commands: sql.NullBool{Bool: booL, Valid: true},
+		AllowCommand: sql.NullBool{Bool: booL, Valid: true},
 	}
 
 	// run test
@@ -67,7 +67,7 @@ func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
 		Type:   sql.NullString{String: str, Valid: true},
 		Images: arr,
 		Events: arr,
-		Commands: sql.NullBool{Bool: booL, Valid:true},
+		AllowCommand: sql.NullBool{Bool: booL, Valid:true},
 	}
 
 	s := &library.Secret{

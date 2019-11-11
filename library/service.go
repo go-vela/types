@@ -154,7 +154,11 @@ func (s *Service) GetFinished() int64 {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetID(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -162,7 +166,11 @@ func (s *Service) SetID(v int64) {
 }
 
 // SetBuildID sets the BuildID field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetBuildID(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -170,7 +178,11 @@ func (s *Service) SetBuildID(v int64) {
 }
 
 // SetRepoID sets the RepoID field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetRepoID(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -178,7 +190,11 @@ func (s *Service) SetRepoID(v int64) {
 }
 
 // SetNumber sets the Number field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetNumber(v int) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -186,7 +202,11 @@ func (s *Service) SetNumber(v int) {
 }
 
 // SetName sets the Name field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetName(v string) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -194,7 +214,11 @@ func (s *Service) SetName(v string) {
 }
 
 // SetStatus sets the Status field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetStatus(v string) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -202,7 +226,11 @@ func (s *Service) SetStatus(v string) {
 }
 
 // SetError sets the Error field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetError(v string) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -210,7 +238,11 @@ func (s *Service) SetError(v string) {
 }
 
 // SetExitCode sets the ExitCode field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetExitCode(v int) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -218,7 +250,11 @@ func (s *Service) SetExitCode(v int) {
 }
 
 // SetCreated sets the Created field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetCreated(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -226,7 +262,11 @@ func (s *Service) SetCreated(v int64) {
 }
 
 // SetStarted sets the Started field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetStarted(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}
@@ -234,7 +274,11 @@ func (s *Service) SetStarted(v int64) {
 }
 
 // SetFinished sets the Finished field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
 func (s *Service) SetFinished(v int64) {
+	// return if Service type is nil
 	if s == nil {
 		return
 	}

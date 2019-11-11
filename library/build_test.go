@@ -340,80 +340,189 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	b.SetRuntime(wantRuntime)
 	b.SetDistribution(wantDistribution)
 
-	if *b.ID != wantID {
-		t.Errorf("GetID is %v, want %v", *b.ID, wantID)
+	if b.GetID() != wantID {
+		t.Errorf("SetID is %v, want %v", b.GetID(), wantID)
 	}
-	if *b.RepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", *b.RepoID, wantRepoID)
+	if b.GetRepoID() != wantRepoID {
+		t.Errorf("SetRepoID is %v, want %v", b.GetRepoID(), wantRepoID)
 	}
-	if *b.Number != wantNumber {
-		t.Errorf("GetNumber is %v, want %v", *b.Number, wantNumber)
+	if b.GetNumber() != wantNumber {
+		t.Errorf("SetNumber is %v, want %v", b.GetNumber(), wantNumber)
 	}
-	if *b.Parent != wantParent {
-		t.Errorf("GetParent is %v, want %v", *b.Parent, wantParent)
+	if b.GetParent() != wantParent {
+		t.Errorf("SetParent is %v, want %v", b.GetParent(), wantParent)
 	}
-	if *b.Event != wantEvent {
-		t.Errorf("GetEvent is %v, want %v", *b.Event, wantEvent)
+	if b.GetEvent() != wantEvent {
+		t.Errorf("SetEvent is %v, want %v", b.GetEvent(), wantEvent)
 	}
-	if *b.Status != wantStatus {
-		t.Errorf("GetStatus is %v, want %v", *b.Status, wantStatus)
+	if b.GetStatus() != wantStatus {
+		t.Errorf("SetStatus is %v, want %v", b.GetStatus(), wantStatus)
 	}
-	if *b.Error != wantError {
-		t.Errorf("GetError is %v, want %v", *b.Error, wantError)
+	if b.GetError() != wantError {
+		t.Errorf("SetError is %v, want %v", b.GetError(), wantError)
 	}
-	if *b.Enqueued != wantEnqueued {
-		t.Errorf("GetEnqueued is %v, want %v", *b.Enqueued, wantEnqueued)
+	if b.GetEnqueued() != wantEnqueued {
+		t.Errorf("SetEnqueued is %v, want %v", b.GetEnqueued(), wantEnqueued)
 	}
-	if *b.Created != wantCreated {
-		t.Errorf("GetCreated is %v, want %v", *b.Created, wantCreated)
+	if b.GetCreated() != wantCreated {
+		t.Errorf("SetCreated is %v, want %v", b.GetCreated(), wantCreated)
 	}
-	if *b.Started != wantStarted {
-		t.Errorf("GetStarted is %v, want %v", *b.Started, wantStarted)
+	if b.GetStarted() != wantStarted {
+		t.Errorf("SetStarted is %v, want %v", b.GetStarted(), wantStarted)
 	}
-	if *b.Finished != wantFinished {
-		t.Errorf("GetFinished is %v, want %v", *b.Finished, wantFinished)
+	if b.GetFinished() != wantFinished {
+		t.Errorf("SetFinished is %v, want %v", b.GetFinished(), wantFinished)
 	}
-	if *b.Deploy != wantDeploy {
-		t.Errorf("GetDeploy is %v, want %v", *b.Deploy, wantDeploy)
+	if b.GetDeploy() != wantDeploy {
+		t.Errorf("SetDeploy is %v, want %v", b.GetDeploy(), wantDeploy)
 	}
-	if *b.Clone != wantClone {
-		t.Errorf("GetClone is %v, want %v", *b.Clone, wantClone)
+	if b.GetClone() != wantClone {
+		t.Errorf("SetClone is %v, want %v", b.GetClone(), wantClone)
 	}
-	if *b.Source != wantSource {
-		t.Errorf("GetSource is %v, want %v", *b.Source, wantSource)
+	if b.GetSource() != wantSource {
+		t.Errorf("SetSource is %v, want %v", b.GetSource(), wantSource)
 	}
-	if *b.Title != wantTitle {
-		t.Errorf("GetTitle is %v, want %v", *b.Title, wantTitle)
+	if b.GetTitle() != wantTitle {
+		t.Errorf("SetTitle is %v, want %v", b.GetTitle(), wantTitle)
 	}
-	if *b.Message != wantMessage {
-		t.Errorf("GetMessage is %v, want %v", *b.Message, wantMessage)
+	if b.GetMessage() != wantMessage {
+		t.Errorf("SetMessage is %v, want %v", b.GetMessage(), wantMessage)
 	}
-	if *b.Commit != wantCommit {
-		t.Errorf("GetCommit is %v, want %v", *b.Commit, wantCommit)
+	if b.GetCommit() != wantCommit {
+		t.Errorf("SetCommit is %v, want %v", b.GetCommit(), wantCommit)
 	}
-	if *b.Sender != wantSender {
-		t.Errorf("GetSender is %v, want %v", *b.Sender, wantSender)
+	if b.GetSender() != wantSender {
+		t.Errorf("SetSender is %v, want %v", b.GetSender(), wantSender)
 	}
-	if *b.Author != wantAuthor {
-		t.Errorf("GetAuthor is %v, want %v", *b.Author, wantAuthor)
+	if b.GetAuthor() != wantAuthor {
+		t.Errorf("SetAuthor is %v, want %v", b.GetAuthor(), wantAuthor)
 	}
-	if *b.Branch != wantBranch {
-		t.Errorf("GetBranch is %v, want %v", *b.Branch, wantBranch)
+	if b.GetBranch() != wantBranch {
+		t.Errorf("SetBranch is %v, want %v", b.GetBranch(), wantBranch)
 	}
-	if *b.Ref != wantRef {
-		t.Errorf("GetRef is %v, want %v", *b.Ref, wantRef)
+	if b.GetRef() != wantRef {
+		t.Errorf("SetRef is %v, want %v", b.GetRef(), wantRef)
 	}
-	if *b.BaseRef != wantBaseRef {
-		t.Errorf("GetBaseRef is %v, want %v", *b.BaseRef, wantBaseRef)
+	if b.GetBaseRef() != wantBaseRef {
+		t.Errorf("SetBaseRef is %v, want %v", b.GetBaseRef(), wantBaseRef)
 	}
-	if *b.Host != wantHost {
-		t.Errorf("GetHost is %v, want %v", *b.Host, wantHost)
+	if b.GetHost() != wantHost {
+		t.Errorf("SetHost is %v, want %v", b.GetHost(), wantHost)
 	}
-	if *b.Runtime != wantRuntime {
-		t.Errorf("GetRuntime is %v, want %v", *b.Runtime, wantRuntime)
+	if b.GetRuntime() != wantRuntime {
+		t.Errorf("SetRuntime is %v, want %v", b.GetRuntime(), wantRuntime)
 	}
-	if *b.Distribution != wantDistribution {
-		t.Errorf("GetDistribution is %v, want %v", *b.Distribution, wantDistribution)
+	if b.GetDistribution() != wantDistribution {
+		t.Errorf("SetDistribution is %v, want %v", b.GetDistribution(), wantDistribution)
+	}
+}
+
+func TestLibrary_Build_Setters_Empty(t *testing.T) {
+	// setup types
+	b := &Build{}
+	b = nil
+
+	// Run tests
+	b.SetID(0)
+	b.SetRepoID(0)
+	b.SetNumber(0)
+	b.SetParent(0)
+	b.SetEvent("")
+	b.SetStatus("")
+	b.SetError("")
+	b.SetEnqueued(0)
+	b.SetCreated(0)
+	b.SetStarted(0)
+	b.SetFinished(0)
+	b.SetDeploy("")
+	b.SetClone("")
+	b.SetSource("")
+	b.SetTitle("")
+	b.SetMessage("")
+	b.SetCommit("")
+	b.SetSender("")
+	b.SetAuthor("")
+	b.SetBranch("")
+	b.SetRef("")
+	b.SetBaseRef("")
+	b.SetHost("")
+	b.SetRuntime("")
+	b.SetDistribution("")
+
+	if b.GetID() != 0 {
+		t.Errorf("SetID is %v, want 0", b.GetID())
+	}
+	if b.GetRepoID() != 0 {
+		t.Errorf("SetRepoID is %v, want 0", b.GetRepoID())
+	}
+	if b.GetNumber() != 0 {
+		t.Errorf("SetNumber is %v, want 0", b.GetNumber())
+	}
+	if b.GetParent() != 0 {
+		t.Errorf("SetParent is %v, want 0", b.GetParent())
+	}
+	if b.GetEvent() != "" {
+		t.Errorf("SetEvent is %v, want \"\"", b.GetEvent())
+	}
+	if b.GetStatus() != "" {
+		t.Errorf("SetStatus is %v, want \"\"", b.GetStatus())
+	}
+	if b.GetError() != "" {
+		t.Errorf("SetError is %v, want \"\"", b.GetError())
+	}
+	if b.GetEnqueued() != 0 {
+		t.Errorf("SetEnqueued is %v, want 0", b.GetEnqueued())
+	}
+	if b.GetCreated() != 0 {
+		t.Errorf("SetCreated is %v, want 0", b.GetCreated())
+	}
+	if b.GetStarted() != 0 {
+		t.Errorf("SetStarted is %v, want 0", b.GetStarted())
+	}
+	if b.GetFinished() != 0 {
+		t.Errorf("SetFinished is %v, want 0", b.GetFinished())
+	}
+	if b.GetDeploy() != "" {
+		t.Errorf("SetDeploy is %v, want \"\"", b.GetDeploy())
+	}
+	if b.GetClone() != "" {
+		t.Errorf("SetClone is %v, want \"\"", b.GetClone())
+	}
+	if b.GetSource() != "" {
+		t.Errorf("SetSource is %v, want \"\"", b.GetSource())
+	}
+	if b.GetTitle() != "" {
+		t.Errorf("SetTitle is %v, want \"\"", b.GetTitle())
+	}
+	if b.GetMessage() != "" {
+		t.Errorf("SetMessage is %v, want \"\"", b.GetMessage())
+	}
+	if b.GetCommit() != "" {
+		t.Errorf("SetCommit is %v, want \"\"", b.GetCommit())
+	}
+	if b.GetSender() != "" {
+		t.Errorf("SetSender is %v, want \"\"", b.GetSender())
+	}
+	if b.GetAuthor() != "" {
+		t.Errorf("SetAuthor is %v, want \"\"", b.GetAuthor())
+	}
+	if b.GetBranch() != "" {
+		t.Errorf("SetBranch is %v, want \"\"", b.GetBranch())
+	}
+	if b.GetRef() != "" {
+		t.Errorf("SetRef is %v, want \"\"", b.GetRef())
+	}
+	if b.GetBaseRef() != "" {
+		t.Errorf("SetBaseRef is %v, want \"\"", b.GetBaseRef())
+	}
+	if b.GetHost() != "" {
+		t.Errorf("SetHost is %v, want \"\"", b.GetHost())
+	}
+	if b.GetRuntime() != "" {
+		t.Errorf("SetRuntime is %v, want \"\"", b.GetRuntime())
+	}
+	if b.GetDistribution() != "" {
+		t.Errorf("SetDistribution is %v, want \"\"", b.GetDistribution())
 	}
 }
 

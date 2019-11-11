@@ -336,7 +336,11 @@ func (b *Build) GetDistribution() string {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetID(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -344,7 +348,11 @@ func (b *Build) SetID(v int64) {
 }
 
 // SetRepoID sets the RepoID field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetRepoID(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -352,7 +360,11 @@ func (b *Build) SetRepoID(v int64) {
 }
 
 // SetNumber sets the Number field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetNumber(v int) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -360,7 +372,11 @@ func (b *Build) SetNumber(v int) {
 }
 
 // SetParent sets the Parent field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetParent(v int) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -368,7 +384,11 @@ func (b *Build) SetParent(v int) {
 }
 
 // SetEvent sets the Event field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetEvent(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -376,7 +396,11 @@ func (b *Build) SetEvent(v string) {
 }
 
 // SetStatus sets the Status field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetStatus(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -384,7 +408,11 @@ func (b *Build) SetStatus(v string) {
 }
 
 // SetError sets the Error field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetError(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -392,7 +420,11 @@ func (b *Build) SetError(v string) {
 }
 
 // SetEnqueued sets the Enqueued field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetEnqueued(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -400,7 +432,11 @@ func (b *Build) SetEnqueued(v int64) {
 }
 
 // SetCreated sets the Created field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetCreated(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -408,7 +444,11 @@ func (b *Build) SetCreated(v int64) {
 }
 
 // SetStarted sets the Started field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetStarted(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -416,7 +456,11 @@ func (b *Build) SetStarted(v int64) {
 }
 
 // SetFinished sets the Finished field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetFinished(v int64) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -424,7 +468,11 @@ func (b *Build) SetFinished(v int64) {
 }
 
 // SetDeploy sets the Deploy field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetDeploy(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -432,7 +480,11 @@ func (b *Build) SetDeploy(v string) {
 }
 
 // SetClone sets the Clone field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetClone(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -440,7 +492,11 @@ func (b *Build) SetClone(v string) {
 }
 
 // SetSource sets the Source field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetSource(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -448,7 +504,11 @@ func (b *Build) SetSource(v string) {
 }
 
 // SetTitle sets the Title field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetTitle(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -456,7 +516,11 @@ func (b *Build) SetTitle(v string) {
 }
 
 // SetMessage sets the Message field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetMessage(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -464,7 +528,11 @@ func (b *Build) SetMessage(v string) {
 }
 
 // SetCommit sets the Commit field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetCommit(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -472,7 +540,11 @@ func (b *Build) SetCommit(v string) {
 }
 
 // SetSender sets the Sender field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetSender(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -480,7 +552,11 @@ func (b *Build) SetSender(v string) {
 }
 
 // SetAuthor sets the Author field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetAuthor(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -488,7 +564,11 @@ func (b *Build) SetAuthor(v string) {
 }
 
 // SetBranch sets the Branch field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetBranch(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -496,7 +576,11 @@ func (b *Build) SetBranch(v string) {
 }
 
 // SetRef sets the Ref field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetRef(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -504,7 +588,11 @@ func (b *Build) SetRef(v string) {
 }
 
 // SetBaseRef sets the BaseRef field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetBaseRef(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -512,7 +600,11 @@ func (b *Build) SetBaseRef(v string) {
 }
 
 // SetHost sets the Host field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetHost(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -520,7 +612,11 @@ func (b *Build) SetHost(v string) {
 }
 
 // SetRuntime sets the Runtime field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetRuntime(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}
@@ -528,7 +624,11 @@ func (b *Build) SetRuntime(v string) {
 }
 
 // SetDistribution sets the Runtime field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
 func (b *Build) SetDistribution(v string) {
+	// return if Build type is nil
 	if b == nil {
 		return
 	}

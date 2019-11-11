@@ -89,23 +89,23 @@ func (l *Log) GetData() []byte {
 }
 
 // SetID sets the ID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
 func (l *Log) SetID(v int64) {
+	// return if Log type is nil
 	if l == nil {
 		return
 	}
 	l.ID = &v
 }
 
-// SetStepID sets the StepID field.
-func (l *Log) SetStepID(v int64) {
-	if l == nil {
-		return
-	}
-	l.StepID = &v
-}
-
 // SetBuildID sets the BuildID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
 func (l *Log) SetBuildID(v int64) {
+	// return if Log type is nil
 	if l == nil {
 		return
 	}
@@ -113,15 +113,47 @@ func (l *Log) SetBuildID(v int64) {
 }
 
 // SetRepoID sets the RepoID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
 func (l *Log) SetRepoID(v int64) {
+	// return if Log type is nil
 	if l == nil {
 		return
 	}
 	l.RepoID = &v
 }
 
+// SetServiceID sets the ServiceID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
+func (l *Log) SetServiceID(v int64) {
+	// return if Log type is nil
+	if l == nil {
+		return
+	}
+	l.ServiceID = &v
+}
+
+// SetStepID sets the StepID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
+func (l *Log) SetStepID(v int64) {
+	// return if Log type is nil
+	if l == nil {
+		return
+	}
+	l.StepID = &v
+}
+
 // SetData sets the Data field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
 func (l *Log) SetData(v []byte) {
+	// return if Log type is nil
 	if l == nil {
 		return
 	}

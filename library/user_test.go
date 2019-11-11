@@ -58,48 +58,6 @@ func TestLibrary_User_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_User_Setters(t *testing.T) {
-	// setup types
-	booL := false
-	num64 := int64(1)
-	str := "foo"
-	u := &User{}
-
-	wantID := num64
-	wantName := str
-	wantToken := str
-	wantHash := str
-	wantActive := booL
-	wantAdmin := booL
-
-	// run test
-	u.SetID(wantID)
-	u.SetName(wantName)
-	u.SetToken(wantToken)
-	u.SetHash(wantHash)
-	u.SetActive(wantActive)
-	u.SetAdmin(wantAdmin)
-
-	if *u.ID != wantID {
-		t.Errorf("GetID is %v, want %v", *u.ID, wantID)
-	}
-	if *u.Name != wantName {
-		t.Errorf("GetName is %v, want %v", *u.Name, wantName)
-	}
-	if *u.Token != wantToken {
-		t.Errorf("GetToken is %v, want %v", *u.Token, wantToken)
-	}
-	if *u.Hash != wantHash {
-		t.Errorf("GetHash is %v, want %v", *u.Hash, wantHash)
-	}
-	if *u.Active != wantActive {
-		t.Errorf("GetActive is %v, want %v", *u.Active, wantActive)
-	}
-	if *u.Admin != wantAdmin {
-		t.Errorf("GetAdmin is %v, want %v", *u.Admin, wantAdmin)
-	}
-}
-
 func TestLibrary_User_Getters_Empty(t *testing.T) {
 	// setup types
 	u := &User{}
@@ -129,6 +87,81 @@ func TestLibrary_User_Getters_Empty(t *testing.T) {
 	}
 	if gotAdmin != false {
 		t.Errorf("GetAdmin is %v, want false", gotAdmin)
+	}
+}
+
+func TestLibrary_User_Setters(t *testing.T) {
+	// setup types
+	booL := false
+	num64 := int64(1)
+	str := "foo"
+	u := &User{}
+
+	wantID := num64
+	wantName := str
+	wantToken := str
+	wantHash := str
+	wantActive := booL
+	wantAdmin := booL
+
+	// run test
+	u.SetID(wantID)
+	u.SetName(wantName)
+	u.SetToken(wantToken)
+	u.SetHash(wantHash)
+	u.SetActive(wantActive)
+	u.SetAdmin(wantAdmin)
+
+	if u.GetID() != wantID {
+		t.Errorf("SetID is %v, want %v", u.GetID(), wantID)
+	}
+	if u.GetName() != wantName {
+		t.Errorf("SetName is %v, want %v", u.GetName(), wantName)
+	}
+	if u.GetToken() != wantToken {
+		t.Errorf("SetToken is %v, want %v", u.GetToken(), wantToken)
+	}
+	if u.GetHash() != wantHash {
+		t.Errorf("SetHash is %v, want %v", u.GetHash(), wantHash)
+	}
+	if u.GetActive() != wantActive {
+		t.Errorf("SetActive is %v, want %v", u.GetActive(), wantActive)
+	}
+	if u.GetAdmin() != wantAdmin {
+		t.Errorf("SetAdmin is %v, want %v", u.GetAdmin(), wantAdmin)
+	}
+}
+
+func TestLibrary_User_Setters_Empty(t *testing.T) {
+	// setup types
+	u := &User{}
+	u = nil
+
+	// run test
+	u.SetID(0)
+	u.SetName("")
+	u.SetToken("")
+	u.SetHash("")
+	u.SetActive(false)
+	u.SetAdmin(false)
+
+	if u.GetID() != 0 {
+		t.Errorf("SetID is %v, want 0", u.GetID())
+	}
+	if u.GetName() != "" {
+		t.Errorf("SetName is %v, want \"\"", u.GetName())
+	}
+	if u.GetToken() != "" {
+		t.Errorf("SetToken is %v, want \"\"", u.GetToken())
+	}
+	if u.GetHash() != "" {
+		t.Errorf("SetHash is %v, want \"\"", u.GetHash())
+	}
+	if u.GetActive() != false {
+		t.Errorf("SetActive is %v, want false", u.GetActive())
+	}
+	if u.GetAdmin() != false {
+		t.Errorf("SetAdmin is %v, want false", u.GetAdmin())
 	}
 }
 

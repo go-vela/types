@@ -54,6 +54,30 @@ func TestLibrary_Login_Getters(t *testing.T) {
 	}
 }
 
+func TestLibrary_Login_Getters_Empty(t *testing.T) {
+	// setup types
+	l := &Login{}
+
+	// run test
+	gotUsername := l.GetUsername()
+	gotPassword := l.GetPassword()
+	gotOTP := l.GetOTP()
+	gotToken := l.GetToken()
+
+	if gotUsername != "" {
+		t.Errorf("GetUsername is %v, want \"\"", gotUsername)
+	}
+	if gotPassword != "" {
+		t.Errorf("GetPassword is %v, want \"\"", gotPassword)
+	}
+	if gotOTP != "" {
+		t.Errorf("GetOTP is %v, want \"\"", gotOTP)
+	}
+	if gotToken != "" {
+		t.Errorf("GetToken is %v, want \"\"", gotToken)
+	}
+}
+
 func TestLibrary_Login_Setters(t *testing.T) {
 	// setup types
 	str := "foo"
@@ -69,17 +93,42 @@ func TestLibrary_Login_Setters(t *testing.T) {
 	l.SetOTP(wantOTP)
 	l.SetToken(wantToken)
 
-	if *l.Username != wantUsername {
-		t.Errorf("GetUsername is %v, want %v", *l.Username, wantUsername)
+	if l.GetUsername() != wantUsername {
+		t.Errorf("SetUsername is %v, want %v", l.GetUsername(), wantUsername)
 	}
-	if *l.Password != wantPassword {
-		t.Errorf("GetPassword is %v, want %v", *l.Password, wantPassword)
+	if l.GetPassword() != wantPassword {
+		t.Errorf("SetPassword is %v, want %v", l.GetPassword(), wantPassword)
 	}
-	if *l.OTP != wantOTP {
-		t.Errorf("GetOTP is %v, want %v", *l.OTP, wantOTP)
+	if l.GetOTP() != wantOTP {
+		t.Errorf("SetOTP is %v, want %v", l.GetOTP(), wantOTP)
 	}
-	if *l.Token != wantToken {
-		t.Errorf("GetToken is %v, want %v", *l.Token, wantToken)
+	if l.GetToken() != wantToken {
+		t.Errorf("SetToken is %v, want %v", l.GetToken(), wantToken)
+	}
+}
+
+func TestLibrary_Login_Setters_Empty(t *testing.T) {
+	// setup types
+	l := &Login{}
+	l = nil
+
+	// run test
+	l.SetUsername("")
+	l.SetPassword("")
+	l.SetOTP("")
+	l.SetToken("")
+
+	if l.GetUsername() != "" {
+		t.Errorf("SetUsername is %v, want \"\"", l.GetUsername())
+	}
+	if l.GetPassword() != "" {
+		t.Errorf("SetPassword is %v, want \"\"", l.GetPassword())
+	}
+	if l.GetOTP() != "" {
+		t.Errorf("SetOTP is %v, want \"\"", l.GetOTP())
+	}
+	if l.GetToken() != "" {
+		t.Errorf("SetToken is %v, want \"\"", l.GetToken())
 	}
 }
 

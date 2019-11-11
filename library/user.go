@@ -89,7 +89,11 @@ func (u *User) GetAdmin() bool {
 }
 
 // SetID sets the ID field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetID(v int64) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}
@@ -97,7 +101,11 @@ func (u *User) SetID(v int64) {
 }
 
 // SetName sets the Name field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetName(v string) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}
@@ -105,7 +113,11 @@ func (u *User) SetName(v string) {
 }
 
 // SetToken sets the Token field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetToken(v string) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}
@@ -113,7 +125,11 @@ func (u *User) SetToken(v string) {
 }
 
 // SetHash sets the Hash field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetHash(v string) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}
@@ -121,7 +137,11 @@ func (u *User) SetHash(v string) {
 }
 
 // SetActive sets the Active field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetActive(v bool) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}
@@ -129,7 +149,11 @@ func (u *User) SetActive(v bool) {
 }
 
 // SetAdmin sets the Admin field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
 func (u *User) SetAdmin(v bool) {
+	// return if User type is nil
 	if u == nil {
 		return
 	}

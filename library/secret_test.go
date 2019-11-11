@@ -208,7 +208,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 				},
 				Commands: []string{"echo hi"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}, Commands: &booL},
+			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}, AllowCommand: &booL},
 			want: false,
 		},
 		//TODO: circle back to make this test pass

@@ -19,16 +19,16 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	arr := []string{"foo", "bar"}
 	booL := false
 	want := &library.Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
-		Commands: &booL,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 	s := &Secret{
 		ID:     sql.NullInt64{Int64: num64, Valid: true},
@@ -71,16 +71,16 @@ func TestDatabase_Secret_SecretFromLibrary(t *testing.T) {
 	}
 
 	s := &library.Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
-		Commands: &booL,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 
 	// run test

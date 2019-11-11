@@ -14,30 +14,30 @@ import (
 
 // Secret is the library representation of a secret.
 type Secret struct {
-	ID     *int64    `json:"id,omitempty"`
-	Org    *string   `json:"org,omitempty"`
-	Repo   *string   `json:"repo,omitempty"`
-	Team   *string   `json:"team,omitempty"`
-	Name   *string   `json:"name,omitempty"`
-	Value  *string   `json:"value,omitempty"`
-	Type   *string   `json:"type,omitempty"`
-	Images *[]string `json:"images,omitempty"`
-	Events *[]string `json:"events,omitempty"`
-	Commands *bool `json:"commands,omitempty"`
+	ID           *int64    `json:"id,omitempty"`
+	Org          *string   `json:"org,omitempty"`
+	Repo         *string   `json:"repo,omitempty"`
+	Team         *string   `json:"team,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	Value        *string   `json:"value,omitempty"`
+	Type         *string   `json:"type,omitempty"`
+	Images       *[]string `json:"images,omitempty"`
+	Events       *[]string `json:"events,omitempty"`
+	AllowCommand *bool     `json:"commands,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
 func (s *Secret) Sanitize() *Secret {
 	return &Secret{
-		ID:     s.ID,
-		Org:    s.Org,
-		Repo:   s.Repo,
-		Team:   s.Team,
-		Name:   s.Name,
-		Type:   s.Type,
-		Images: s.Images,
-		Events: s.Events,
-		Commands: s.Commands,
+		ID:           s.ID,
+		Org:          s.Org,
+		Repo:         s.Repo,
+		Team:         s.Team,
+		Name:         s.Name,
+		Type:         s.Type,
+		Images:       s.Images,
+		Events:       s.Events,
+		AllowCommand: s.AllowCommand,
 	}
 }
 
@@ -196,16 +196,16 @@ func (s *Secret) GetEvents() []string {
 	return *s.Events
 }
 
-// GetCommands returns the Commands field.
+// GetCommands returns the AllowCommand field.
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (s *Secret) GetCommands() bool {
 	// return zero value if Secret type or Images field is nil
-	if s == nil || s.Commands == nil {
+	if s == nil || s.AllowCommand == nil {
 		return true
 	}
-	return *s.Commands
+	return *s.AllowCommand
 }
 
 // SetID sets the ID field.
@@ -280,12 +280,12 @@ func (s *Secret) SetEvents(v []string) {
 	s.Events = &v
 }
 
-// SetCommands sets the Commands field.
+// SetCommands sets the AllowCommand field.
 func (s *Secret) SetCommands(v bool) {
 	if s == nil {
 		return
 	}
-	s.Commands = &v
+	s.AllowCommand = &v
 }
 
 // String implements the Stringer interface for the Secret type.

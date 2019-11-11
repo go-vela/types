@@ -112,93 +112,6 @@ func TestStep_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_Step_Setters(t *testing.T) {
-	// setup types
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	s := &Step{}
-
-	wantID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantNumber := num
-	wantName := str
-	wantStage := str
-	wantStatus := str
-	wantError := str
-	wantExitCode := num
-	wantCreated := num64
-	wantStarted := num64
-	wantFinished := num64
-	wantHost := str
-	wantRuntime := str
-	wantDistribution := str
-
-	// run test
-	s.SetID(wantID)
-	s.SetBuildID(wantBuildID)
-	s.SetRepoID(wantRepoID)
-	s.SetNumber(wantNumber)
-	s.SetName(wantName)
-	s.SetStage(wantStage)
-	s.SetStatus(wantStatus)
-	s.SetError(wantError)
-	s.SetExitCode(wantExitCode)
-	s.SetCreated(wantCreated)
-	s.SetStarted(wantStarted)
-	s.SetFinished(wantFinished)
-	s.SetHost(wantHost)
-	s.SetRuntime(wantRuntime)
-	s.SetDistribution(wantDistribution)
-
-	if *s.ID != wantID {
-		t.Errorf("GetID is %v, want %v", *s.ID, wantID)
-	}
-	if *s.BuildID != wantBuildID {
-		t.Errorf("GetBuildID is %v, want %v", *s.BuildID, wantBuildID)
-	}
-	if *s.RepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", *s.RepoID, wantRepoID)
-	}
-	if *s.Number != wantNumber {
-		t.Errorf("GetNumber is %v, want %v", *s.Number, wantNumber)
-	}
-	if *s.Name != wantName {
-		t.Errorf("GetName is %v, want %v", *s.Name, wantName)
-	}
-	if *s.Stage != wantStage {
-		t.Errorf("GetStage is %v, want %v", *s.Stage, wantStage)
-	}
-	if *s.Status != wantStatus {
-		t.Errorf("GetStatus is %v, want %v", *s.Status, wantStatus)
-	}
-	if *s.Error != wantError {
-		t.Errorf("GetError is %v, want %v", *s.Error, wantError)
-	}
-	if *s.ExitCode != wantExitCode {
-		t.Errorf("GetExitCode is %v, want %v", *s.ExitCode, wantExitCode)
-	}
-	if *s.Created != wantCreated {
-		t.Errorf("GetCreated is %v, want %v", *s.Created, wantCreated)
-	}
-	if *s.Started != wantStarted {
-		t.Errorf("GetStarted is %v, want %v", *s.Started, wantStarted)
-	}
-	if *s.Finished != wantFinished {
-		t.Errorf("GetFinished is %v, want %v", *s.Finished, wantFinished)
-	}
-	if *s.Host != wantHost {
-		t.Errorf("GetHost is %v, want %v", *s.Host, wantHost)
-	}
-	if *s.Runtime != wantRuntime {
-		t.Errorf("GetRuntime is %v, want %v", *s.Runtime, wantRuntime)
-	}
-	if *s.Distribution != wantDistribution {
-		t.Errorf("GetDistribution is %v, want %v", *s.Distribution, wantDistribution)
-	}
-}
-
 func TestStep_Getters_Empty(t *testing.T) {
 	// setup types
 	s := &Step{}
@@ -264,6 +177,162 @@ func TestStep_Getters_Empty(t *testing.T) {
 	}
 	if gotDistribution != "" {
 		t.Errorf("GetDistribution is %v, want \"\"", gotDistribution)
+	}
+}
+
+func TestLibrary_Step_Setters(t *testing.T) {
+	// setup types
+	num := 1
+	num64 := int64(num)
+	str := "foo"
+	s := &Step{}
+
+	wantID := num64
+	wantBuildID := num64
+	wantRepoID := num64
+	wantNumber := num
+	wantName := str
+	wantStage := str
+	wantStatus := str
+	wantError := str
+	wantExitCode := num
+	wantCreated := num64
+	wantStarted := num64
+	wantFinished := num64
+	wantHost := str
+	wantRuntime := str
+	wantDistribution := str
+
+	// run test
+	s.SetID(wantID)
+	s.SetBuildID(wantBuildID)
+	s.SetRepoID(wantRepoID)
+	s.SetNumber(wantNumber)
+	s.SetName(wantName)
+	s.SetStage(wantStage)
+	s.SetStatus(wantStatus)
+	s.SetError(wantError)
+	s.SetExitCode(wantExitCode)
+	s.SetCreated(wantCreated)
+	s.SetStarted(wantStarted)
+	s.SetFinished(wantFinished)
+	s.SetHost(wantHost)
+	s.SetRuntime(wantRuntime)
+	s.SetDistribution(wantDistribution)
+
+	if s.GetID() != wantID {
+		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
+	}
+	if s.GetBuildID() != wantBuildID {
+		t.Errorf("SetBuildID is %v, want %v", s.GetBuildID(), wantBuildID)
+	}
+	if s.GetRepoID() != wantRepoID {
+		t.Errorf("SetRepoID is %v, want %v", s.GetRepoID(), wantRepoID)
+	}
+	if s.GetNumber() != wantNumber {
+		t.Errorf("SetNumber is %v, want %v", s.GetNumber(), wantNumber)
+	}
+	if s.GetName() != wantName {
+		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
+	}
+	if s.GetStage() != wantStage {
+		t.Errorf("SetStage is %v, want %v", s.GetStage(), wantStage)
+	}
+	if s.GetStatus() != wantStatus {
+		t.Errorf("SetStatus is %v, want %v", s.GetStatus(), wantStatus)
+	}
+	if s.GetError() != wantError {
+		t.Errorf("SetError is %v, want %v", s.GetError(), wantError)
+	}
+	if s.GetExitCode() != wantExitCode {
+		t.Errorf("SetExitCode is %v, want %v", s.GetExitCode(), wantExitCode)
+	}
+	if s.GetCreated() != wantCreated {
+		t.Errorf("SetCreated is %v, want %v", s.GetCreated(), wantCreated)
+	}
+	if s.GetStarted() != wantStarted {
+		t.Errorf("SetStarted is %v, want %v", s.GetStarted(), wantStarted)
+	}
+	if s.GetFinished() != wantFinished {
+		t.Errorf("SetFinished is %v, want %v", s.GetFinished(), wantFinished)
+	}
+	if s.GetHost() != wantHost {
+		t.Errorf("SetHost is %v, want %v", s.GetHost(), wantHost)
+	}
+	if s.GetRuntime() != wantRuntime {
+		t.Errorf("SetRuntime is %v, want %v", s.GetRuntime(), wantRuntime)
+	}
+	if s.GetDistribution() != wantDistribution {
+		t.Errorf("SetDistribution is %v, want %v", s.GetDistribution(), wantDistribution)
+	}
+}
+
+func TestLibrary_Step_Setters_Empty(t *testing.T) {
+	// setup types
+	s := &Step{}
+	s = nil
+
+	// run test
+	s.SetID(0)
+	s.SetBuildID(0)
+	s.SetRepoID(0)
+	s.SetNumber(0)
+	s.SetName("")
+	s.SetStage("")
+	s.SetStatus("")
+	s.SetError("")
+	s.SetExitCode(0)
+	s.SetCreated(0)
+	s.SetStarted(0)
+	s.SetFinished(0)
+	s.SetHost("")
+	s.SetRuntime("")
+	s.SetDistribution("")
+
+	if s.GetID() != 0 {
+		t.Errorf("SetID is %v, want 0", s.GetID())
+	}
+	if s.GetBuildID() != 0 {
+		t.Errorf("SetBuildID is %v, want 0", s.GetBuildID())
+	}
+	if s.GetRepoID() != 0 {
+		t.Errorf("SetRepoID is %v, want 0", s.GetRepoID())
+	}
+	if s.GetNumber() != 0 {
+		t.Errorf("SetNumber is %v, want 0", s.GetNumber())
+	}
+	if s.GetName() != "" {
+		t.Errorf("SetName is %v, want \"\"", s.GetName())
+	}
+	if s.GetStage() != "" {
+		t.Errorf("SetStage is %v, want \"\"", s.GetStage())
+	}
+	if s.GetStatus() != "" {
+		t.Errorf("SetStatus is %v, want \"\"", s.GetStatus())
+	}
+	if s.GetError() != "" {
+		t.Errorf("SetError is %v, want \"\"", s.GetError())
+	}
+	if s.GetExitCode() != 0 {
+		t.Errorf("SetExitCode is %v, want 0", s.GetExitCode())
+	}
+	if s.GetCreated() != 0 {
+		t.Errorf("SetCreated is %v, want 0", s.GetCreated())
+	}
+	if s.GetStarted() != 0 {
+		t.Errorf("SetStarted is %v, want 0", s.GetStarted())
+	}
+	if s.GetFinished() != 0 {
+		t.Errorf("SetFinished is %v, want 0", s.GetFinished())
+	}
+	if s.GetHost() != "" {
+		t.Errorf("SetHost is %v, want \"\"", s.GetHost())
+	}
+	if s.GetRuntime() != "" {
+		t.Errorf("SetRuntime is %v, want \"\"", s.GetRuntime())
+	}
+	if s.GetDistribution() != "" {
+		t.Errorf("SetDistribution is %v, want \"\"", s.GetDistribution())
 	}
 }
 

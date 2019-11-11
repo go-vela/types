@@ -88,73 +88,6 @@ func TestService_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_Service_Setters(t *testing.T) {
-	// setup types
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	s := &Service{}
-
-	wantID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantNumber := num
-	wantName := str
-	wantStatus := str
-	wantError := str
-	wantExitCode := num
-	wantCreated := num64
-	wantStarted := num64
-	wantFinished := num64
-
-	// run test
-	s.SetID(wantID)
-	s.SetBuildID(wantBuildID)
-	s.SetRepoID(wantRepoID)
-	s.SetNumber(wantNumber)
-	s.SetName(wantName)
-	s.SetStatus(wantStatus)
-	s.SetError(wantError)
-	s.SetExitCode(wantExitCode)
-	s.SetCreated(wantCreated)
-	s.SetStarted(wantStarted)
-	s.SetFinished(wantFinished)
-
-	if *s.ID != wantID {
-		t.Errorf("GetID is %v, want %v", *s.ID, wantID)
-	}
-	if *s.BuildID != wantBuildID {
-		t.Errorf("GetBuildID is %v, want %v", *s.BuildID, wantBuildID)
-	}
-	if *s.RepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", *s.RepoID, wantRepoID)
-	}
-	if *s.Number != wantNumber {
-		t.Errorf("GetNumber is %v, want %v", *s.Number, wantNumber)
-	}
-	if *s.Name != wantName {
-		t.Errorf("GetName is %v, want %v", *s.Name, wantName)
-	}
-	if *s.Status != wantStatus {
-		t.Errorf("GetStatus is %v, want %v", *s.Status, wantStatus)
-	}
-	if *s.Error != wantError {
-		t.Errorf("GetError is %v, want %v", *s.Error, wantError)
-	}
-	if *s.ExitCode != wantExitCode {
-		t.Errorf("GetExitCode is %v, want %v", *s.ExitCode, wantExitCode)
-	}
-	if *s.Created != wantCreated {
-		t.Errorf("GetCreated is %v, want %v", *s.Created, wantCreated)
-	}
-	if *s.Started != wantStarted {
-		t.Errorf("GetStarted is %v, want %v", *s.Started, wantStarted)
-	}
-	if *s.Finished != wantFinished {
-		t.Errorf("GetFinished is %v, want %v", *s.Finished, wantFinished)
-	}
-}
-
 func TestService_Getters_Empty(t *testing.T) {
 	// setup types
 	s := &Service{}
@@ -204,6 +137,126 @@ func TestService_Getters_Empty(t *testing.T) {
 	}
 	if gotFinished != 0 {
 		t.Errorf("GetFinished is %v, want 0", gotFinished)
+	}
+}
+
+func TestLibrary_Service_Setters(t *testing.T) {
+	// setup types
+	num := 1
+	num64 := int64(num)
+	str := "foo"
+	s := &Service{}
+
+	wantID := num64
+	wantBuildID := num64
+	wantRepoID := num64
+	wantNumber := num
+	wantName := str
+	wantStatus := str
+	wantError := str
+	wantExitCode := num
+	wantCreated := num64
+	wantStarted := num64
+	wantFinished := num64
+
+	// run test
+	s.SetID(wantID)
+	s.SetBuildID(wantBuildID)
+	s.SetRepoID(wantRepoID)
+	s.SetNumber(wantNumber)
+	s.SetName(wantName)
+	s.SetStatus(wantStatus)
+	s.SetError(wantError)
+	s.SetExitCode(wantExitCode)
+	s.SetCreated(wantCreated)
+	s.SetStarted(wantStarted)
+	s.SetFinished(wantFinished)
+
+	if s.GetID() != wantID {
+		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
+	}
+	if s.GetBuildID() != wantBuildID {
+		t.Errorf("SetBuildID is %v, want %v", s.GetBuildID(), wantBuildID)
+	}
+	if s.GetRepoID() != wantRepoID {
+		t.Errorf("SetRepoID is %v, want %v", s.GetRepoID(), wantRepoID)
+	}
+	if s.GetNumber() != wantNumber {
+		t.Errorf("SetNumber is %v, want %v", s.GetNumber(), wantNumber)
+	}
+	if s.GetName() != wantName {
+		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
+	}
+	if s.GetStatus() != wantStatus {
+		t.Errorf("SetStatus is %v, want %v", s.GetStatus(), wantStatus)
+	}
+	if s.GetError() != wantError {
+		t.Errorf("SetError is %v, want %v", s.GetError(), wantError)
+	}
+	if s.GetExitCode() != wantExitCode {
+		t.Errorf("SetExitCode is %v, want %v", s.GetExitCode(), wantExitCode)
+	}
+	if s.GetCreated() != wantCreated {
+		t.Errorf("SetCreated is %v, want %v", s.GetCreated(), wantCreated)
+	}
+	if s.GetStarted() != wantStarted {
+		t.Errorf("SetStarted is %v, want %v", s.GetStarted(), wantStarted)
+	}
+	if s.GetFinished() != wantFinished {
+		t.Errorf("SetFinished is %v, want %v", s.GetFinished(), wantFinished)
+	}
+}
+
+func TestLibrary_Service_Setters_Empty(t *testing.T) {
+	// setup types
+	s := &Service{}
+	s = nil
+
+	// run test
+	s.SetID(0)
+	s.SetBuildID(0)
+	s.SetRepoID(0)
+	s.SetNumber(0)
+	s.SetName("")
+	s.SetStatus("")
+	s.SetError("")
+	s.SetExitCode(0)
+	s.SetCreated(0)
+	s.SetStarted(0)
+	s.SetFinished(0)
+
+	if s.GetID() != 0 {
+		t.Errorf("SetID is %v, want 0", s.GetID())
+	}
+	if s.GetBuildID() != 0 {
+		t.Errorf("SetBuildID is %v, want 0", s.GetBuildID())
+	}
+	if s.GetRepoID() != 0 {
+		t.Errorf("SetRepoID is %v, want 0", s.GetRepoID())
+	}
+	if s.GetNumber() != 0 {
+		t.Errorf("SetNumber is %v, want 0", s.GetNumber())
+	}
+	if s.GetName() != "" {
+		t.Errorf("SetName is %v, want \"\"", s.GetName())
+	}
+	if s.GetStatus() != "" {
+		t.Errorf("SetStatus is %v, want \"\"", s.GetStatus())
+	}
+	if s.GetError() != "" {
+		t.Errorf("SetError is %v, want \"\"", s.GetError())
+	}
+	if s.GetExitCode() != 0 {
+		t.Errorf("SetExitCode is %v, want 0", s.GetExitCode())
+	}
+	if s.GetCreated() != 0 {
+		t.Errorf("SetCreated is %v, want 0", s.GetCreated())
+	}
+	if s.GetStarted() != 0 {
+		t.Errorf("SetStarted is %v, want 0", s.GetStarted())
+	}
+	if s.GetFinished() != 0 {
+		t.Errorf("SetFinished is %v, want 0", s.GetFinished())
 	}
 }
 

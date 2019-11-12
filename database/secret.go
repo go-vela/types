@@ -180,7 +180,7 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Type:         sql.NullString{String: s.GetType(), Valid: true},
 		Images:       s.GetImages(),
 		Events:       s.GetEvents(),
-		AllowCommand: sql.NullBool{Bool: s.GetCommands(), Valid: true},
+		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
 	}
 
 	return secret.Nullify()

@@ -63,27 +63,30 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := false
 	want := &library.Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 	s := &Secret{
-		ID:     sql.NullInt64{Int64: num64, Valid: true},
-		Org:    sql.NullString{String: str, Valid: true},
-		Repo:   sql.NullString{String: str, Valid: true},
-		Team:   sql.NullString{String: str, Valid: true},
-		Name:   sql.NullString{String: str, Valid: true},
-		Value:  sql.NullString{String: str, Valid: true},
-		Type:   sql.NullString{String: str, Valid: true},
-		Images: arr,
-		Events: arr,
+		ID:           sql.NullInt64{Int64: num64, Valid: true},
+		Org:          sql.NullString{String: str, Valid: true},
+		Repo:         sql.NullString{String: str, Valid: true},
+		Team:         sql.NullString{String: str, Valid: true},
+		Name:         sql.NullString{String: str, Valid: true},
+		Value:        sql.NullString{String: str, Valid: true},
+		Type:         sql.NullString{String: str, Valid: true},
+		Images:       arr,
+		Events:       arr,
+		AllowCommand: sql.NullBool{Bool: booL, Valid: true},
 	}
 
 	// run test
@@ -233,28 +236,31 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := false
 	want := &Secret{
-		ID:     sql.NullInt64{Int64: num64, Valid: true},
-		Org:    sql.NullString{String: str, Valid: true},
-		Repo:   sql.NullString{String: str, Valid: true},
-		Team:   sql.NullString{String: str, Valid: true},
-		Name:   sql.NullString{String: str, Valid: true},
-		Value:  sql.NullString{String: str, Valid: true},
-		Type:   sql.NullString{String: str, Valid: true},
-		Images: arr,
-		Events: arr,
+		ID:           sql.NullInt64{Int64: num64, Valid: true},
+		Org:          sql.NullString{String: str, Valid: true},
+		Repo:         sql.NullString{String: str, Valid: true},
+		Team:         sql.NullString{String: str, Valid: true},
+		Name:         sql.NullString{String: str, Valid: true},
+		Value:        sql.NullString{String: str, Valid: true},
+		Type:         sql.NullString{String: str, Valid: true},
+		Images:       arr,
+		Events:       arr,
+		AllowCommand: sql.NullBool{Bool: booL, Valid: true},
 	}
 
 	s := &library.Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 
 	// run test

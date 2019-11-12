@@ -47,7 +47,7 @@ func (s *Secret) Sanitize() *Secret {
 func (s *Secret) Match(from *pipeline.Container) bool {
 
 	eACL, iACL := false, false
-	events, images, commands := s.GetEvents(), s.GetImages(), s.GetCommands()
+	events, images, commands := s.GetEvents(), s.GetImages(), s.GetAllowCommand()
 
 	// check if commands are utilized when not allowed
 	if !commands && len(from.Commands) > 0 {
@@ -196,11 +196,11 @@ func (s *Secret) GetEvents() []string {
 	return *s.Events
 }
 
-// GetCommands returns the AllowCommand field.
+// GetAllowCommand returns the AllowCommand field.
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetCommands() bool {
+func (s *Secret) GetAllowCommand() bool {
 	// return zero value if Secret type or Images field is nil
 	if s == nil || s.AllowCommand == nil {
 		return true
@@ -316,8 +316,8 @@ func (s *Secret) SetEvents(v []string) {
 	s.Events = &v
 }
 
-// SetCommands sets the AllowCommand field.
-func (s *Secret) SetCommands(v bool) {
+// SetAllowCommand sets the AllowCommand field.
+func (s *Secret) SetAllowCommand(v bool) {
 	if s == nil {
 		return
 	}

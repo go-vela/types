@@ -21,7 +21,7 @@ type Repo struct {
 	Private     *bool   `json:"private,omitempty"`
 	Trusted     *bool   `json:"trusted,omitempty"`
 	Active      *bool   `json:"active,omitempty"`
-	AllowPull   *bool   `json:"allow_pr,omitempty"`
+	AllowPull   *bool   `json:"allow_pull,omitempty"`
 	AllowPush   *bool   `json:"allow_push,omitempty"`
 	AllowDeploy *bool   `json:"allow_deploy,omitempty"`
 	AllowTag    *bool   `json:"allow_tag,omitempty"`

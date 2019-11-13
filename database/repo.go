@@ -44,7 +44,7 @@ type Repo struct {
 	Private     sql.NullBool   `sql:"private"`
 	Trusted     sql.NullBool   `sql:"trusted"`
 	Active      sql.NullBool   `sql:"active"`
-	AllowPull   sql.NullBool   `sql:"allow_pr"`
+	AllowPull   sql.NullBool   `sql:"allow_pull"`
 	AllowPush   sql.NullBool   `sql:"allow_push"`
 	AllowDeploy sql.NullBool   `sql:"allow_deploy"`
 	AllowTag    sql.NullBool   `sql:"allow_tag"`

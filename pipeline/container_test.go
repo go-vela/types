@@ -60,3 +60,59 @@ func TestPipeline_ContainerSlice_Purge(t *testing.T) {
 		t.Errorf("Purge is %v, want %v", got, want)
 	}
 }
+
+func TestPipeline_Container_Sanitize_Stage(t *testing.T) {
+	// setup types
+	got := &Container{
+		ID:       "github_octocat_1_install deps_install",
+		Commands: []string{"./gradlew downloadDependencies"},
+		Image:    "openjdk:latest",
+		Name:     "install",
+		Number:   1,
+		Pull:     true,
+	}
+
+	want := &Container{
+		ID:       "github_octocat_1_install-deps_install",
+		Commands: []string{"./gradlew downloadDependencies"},
+		Image:    "openjdk:latest",
+		Name:     "install",
+		Number:   1,
+		Pull:     true,
+	}
+
+	// run test
+	got.Sanitize()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_Container_Sanitize_Step(t *testing.T) {
+	// setup types
+	got := &Container{
+		ID:       "github_octocat_1_install deps",
+		Commands: []string{"./gradlew downloadDependencies"},
+		Image:    "openjdk:latest",
+		Name:     "install deps",
+		Number:   1,
+		Pull:     true,
+	}
+
+	want := &Container{
+		ID:       "github_octocat_1_install-deps",
+		Commands: []string{"./gradlew downloadDependencies"},
+		Image:    "openjdk:latest",
+		Name:     "install deps",
+		Number:   1,
+		Pull:     true,
+	}
+
+	// run test
+	got.Sanitize()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}

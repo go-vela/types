@@ -4,6 +4,8 @@
 
 package pipeline
 
+import "strings"
+
 type (
 	// ContainerSlice is the pipeline representation
 	// of the Containers block for a pipeline.
@@ -58,4 +60,12 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 
 	// return the new slice of Containers
 	return containers
+}
+
+// Sanitize cleans the ID for the container which
+// allows it to be safely executed on a worker.
+func (c *Container) Sanitize() {
+	if strings.Contains(c.ID, " ") {
+		c.ID = strings.ReplaceAll(c.ID, " ", "-")
+	}
 }

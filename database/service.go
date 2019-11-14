@@ -20,6 +20,10 @@ var (
 	// Service type has an empty Name field provided.
 	ErrEmptyServiceName = errors.New("empty service name provided")
 
+	// ErrEmptyServiceImage defines the error type when a
+	// Service type has an empty Image field provided.
+	ErrEmptyServiceImage = errors.New("empty service image provided")
+
 	// ErrEmptyServiceNumber defines the error type when a
 	// Service type has an empty Number field provided.
 	ErrEmptyServiceNumber = errors.New("empty service number provided")
@@ -36,6 +40,7 @@ type Service struct {
 	RepoID   sql.NullInt64  `sql:"repo_id"`
 	Number   sql.NullInt32  `sql:"number"`
 	Name     sql.NullString `sql:"name"`
+	Image    sql.NullString `sql:"image"`
 	Status   sql.NullString `sql:"status"`
 	Error    sql.NullString `sql:"error"`
 	ExitCode sql.NullInt32  `sql:"exit_code"`
@@ -78,6 +83,11 @@ func (s *Service) Nullify() *Service {
 	// check if the Name field should be false
 	if len(s.Name.String) == 0 {
 		s.Name.Valid = false
+	}
+
+	// check if the Image field should be false
+	if len(s.Image.String) == 0 {
+		s.Image.Valid = false
 	}
 
 	// check if the Status field should be false
@@ -124,6 +134,7 @@ func (s *Service) ToLibrary() *library.Service {
 		RepoID:   &s.RepoID.Int64,
 		Number:   &n,
 		Name:     &s.Name.String,
+		Image:    &s.Image.String,
 		Status:   &s.Status.String,
 		Error:    &s.Error.String,
 		ExitCode: &e,
@@ -156,6 +167,11 @@ func (s *Service) Validate() error {
 		return ErrEmptyServiceName
 	}
 
+	// verify the Image field is populated
+	if len(s.Image.String) == 0 {
+		return ErrEmptyServiceImage
+	}
+
 	return nil
 }
 
@@ -168,6 +184,7 @@ func ServiceFromLibrary(s *library.Service) *Service {
 		RepoID:   sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
 		Number:   sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
 		Name:     sql.NullString{String: s.GetName(), Valid: true},
+		Image:    sql.NullString{String: s.GetImage(), Valid: true},
 		Status:   sql.NullString{String: s.GetStatus(), Valid: true},
 		Error:    sql.NullString{String: s.GetError(), Valid: true},
 		ExitCode: sql.NullInt32{Int32: int32(s.GetExitCode()), Valid: true},

@@ -20,6 +20,7 @@ func TestDatabase_Step_Nullify(t *testing.T) {
 		RepoID:       sql.NullInt64{Int64: 0, Valid: true},
 		Number:       sql.NullInt32{Int32: 0, Valid: true},
 		Name:         sql.NullString{String: "", Valid: true},
+		Image:        sql.NullString{String: "", Valid: true},
 		Stage:        sql.NullString{String: "", Valid: true},
 		Status:       sql.NullString{String: "", Valid: true},
 		Error:        sql.NullString{String: "", Valid: true},
@@ -37,6 +38,7 @@ func TestDatabase_Step_Nullify(t *testing.T) {
 		RepoID:       sql.NullInt64{Int64: 0, Valid: false},
 		Number:       sql.NullInt32{Int32: 0, Valid: false},
 		Name:         sql.NullString{String: "", Valid: false},
+		Image:        sql.NullString{String: "", Valid: false},
 		Stage:        sql.NullString{String: "", Valid: false},
 		Status:       sql.NullString{String: "", Valid: false},
 		Error:        sql.NullString{String: "", Valid: false},
@@ -82,6 +84,7 @@ func TestDatabase_Step_ToLibrary(t *testing.T) {
 		RepoID:       &num64,
 		Number:       &num,
 		Name:         &str,
+		Image:        &str,
 		Stage:        &str,
 		Status:       &str,
 		Error:        &str,
@@ -99,6 +102,7 @@ func TestDatabase_Step_ToLibrary(t *testing.T) {
 		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
 		Number:       sqlNum,
 		Name:         sql.NullString{String: str, Valid: true},
+		Image:        sql.NullString{String: str, Valid: true},
 		Stage:        sql.NullString{String: str, Valid: true},
 		Status:       sql.NullString{String: str, Valid: true},
 		Error:        sql.NullString{String: str, Valid: true},
@@ -127,6 +131,7 @@ func TestDatabase_Step_Validate(t *testing.T) {
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
 		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 
 	// run test
@@ -144,6 +149,7 @@ func TestDatabase_Step_Validate_NoBuildID(t *testing.T) {
 		RepoID: sql.NullInt64{Int64: 1, Valid: true},
 		Number: sql.NullInt32{Int32: 1, Valid: true},
 		Name:   sql.NullString{String: "foo", Valid: true},
+		Image:  sql.NullString{String: "foo", Valid: true},
 	}
 
 	// run test
@@ -160,7 +166,7 @@ func TestDatabase_Step_Validate_NoRepoID(t *testing.T) {
 		ID:      sql.NullInt64{Int64: 1, Valid: true},
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -176,7 +182,7 @@ func TestDatabase_Step_Validate_NoNumber(t *testing.T) {
 		ID:      sql.NullInt64{Int64: 1, Valid: true},
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -186,7 +192,7 @@ func TestDatabase_Step_Validate_NoNumber(t *testing.T) {
 	}
 }
 
-func TestDatabase_Step_Validate_NoName(t *testing.T) {
+func TestDatabase_Step_Validate_NoImage(t *testing.T) {
 	// setup types
 	s := &Step{
 		ID:      sql.NullInt64{Int64: 1, Valid: true},
@@ -214,6 +220,7 @@ func TestDatabase_StepFromLibrary(t *testing.T) {
 		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
 		Number:       sqlNum,
 		Name:         sql.NullString{String: str, Valid: true},
+		Image:        sql.NullString{String: str, Valid: true},
 		Stage:        sql.NullString{String: str, Valid: true},
 		Status:       sql.NullString{String: str, Valid: true},
 		Error:        sql.NullString{String: str, Valid: true},
@@ -231,6 +238,7 @@ func TestDatabase_StepFromLibrary(t *testing.T) {
 		RepoID:       &num64,
 		Number:       &num,
 		Name:         &str,
+		Image:        &str,
 		Stage:        &str,
 		Status:       &str,
 		Error:        &str,

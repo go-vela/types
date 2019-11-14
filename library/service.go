@@ -13,6 +13,7 @@ type Service struct {
 	RepoID   *int64  `json:"repo_id,omitempty"`
 	Number   *int    `json:"number,omitempty"`
 	Name     *string `json:"name,omitempty"`
+	Image    *string `json:"image,omitempty"`
 	Status   *string `json:"status,omitempty"`
 	Error    *string `json:"error,omitempty"`
 	ExitCode *int    `json:"exit_code,omitempty"`
@@ -79,6 +80,18 @@ func (s *Service) GetName() string {
 		return ""
 	}
 	return *s.Name
+}
+
+// GetImage returns the Image field.
+//
+// When the provided Service type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Service) GetImage() string {
+	// return zero value if Service type or Image field is nil
+	if s == nil || s.Image == nil {
+		return ""
+	}
+	return *s.Image
 }
 
 // GetStatus returns the Status field.
@@ -211,6 +224,18 @@ func (s *Service) SetName(v string) {
 		return
 	}
 	s.Name = &v
+}
+
+// SetImage sets the Image field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
+func (s *Service) SetImage(v string) {
+	// return if Service type is nil
+	if s == nil {
+		return
+	}
+	s.Image = &v
 }
 
 // SetStatus sets the Status field.

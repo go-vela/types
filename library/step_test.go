@@ -21,6 +21,7 @@ func TestStep_Getters(t *testing.T) {
 		RepoID:       &num64,
 		Number:       &num,
 		Name:         &str,
+		Image:        &str,
 		Stage:        &str,
 		Status:       &str,
 		Error:        &str,
@@ -37,6 +38,7 @@ func TestStep_Getters(t *testing.T) {
 	wantRepoID := num64
 	wantNumber := num
 	wantName := str
+	wantImage := str
 	wantStage := str
 	wantStatus := str
 	wantError := str
@@ -54,6 +56,7 @@ func TestStep_Getters(t *testing.T) {
 	gotRepoID := s.GetRepoID()
 	gotNumber := s.GetNumber()
 	gotName := s.GetName()
+	gotImage := s.GetImage()
 	gotStage := s.GetStage()
 	gotStatus := s.GetStatus()
 	gotError := s.GetError()
@@ -79,6 +82,9 @@ func TestStep_Getters(t *testing.T) {
 	}
 	if gotName != wantName {
 		t.Errorf("GetName is %v, want %v", gotName, wantName)
+	}
+	if gotImage != wantImage {
+		t.Errorf("GetImage is %v, want %v", gotImage, wantImage)
 	}
 	if gotStage != wantStage {
 		t.Errorf("GetStage is %v, want %v", gotStage, wantStage)
@@ -122,6 +128,7 @@ func TestStep_Getters_Empty(t *testing.T) {
 	gotRepoID := s.GetRepoID()
 	gotNumber := s.GetNumber()
 	gotName := s.GetName()
+	gotImage := s.GetImage()
 	gotStage := s.GetStage()
 	gotStatus := s.GetStatus()
 	gotError := s.GetError()
@@ -147,6 +154,9 @@ func TestStep_Getters_Empty(t *testing.T) {
 	}
 	if gotName != "" {
 		t.Errorf("GetName is %v, want \"\"", gotName)
+	}
+	if gotImage != "" {
+		t.Errorf("GetImage is %v, want \"\"", gotImage)
 	}
 	if gotStage != "" {
 		t.Errorf("GetStage is %v, want \"\"", gotStage)
@@ -192,6 +202,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	wantRepoID := num64
 	wantNumber := num
 	wantName := str
+	wantImage := str
 	wantStage := str
 	wantStatus := str
 	wantError := str
@@ -209,6 +220,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	s.SetRepoID(wantRepoID)
 	s.SetNumber(wantNumber)
 	s.SetName(wantName)
+	s.SetImage(wantImage)
 	s.SetStage(wantStage)
 	s.SetStatus(wantStatus)
 	s.SetError(wantError)
@@ -234,6 +246,9 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	}
 	if s.GetName() != wantName {
 		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
+	}
+	if s.GetImage() != wantImage {
+		t.Errorf("SetImage is %v, want %v", s.GetImage(), wantImage)
 	}
 	if s.GetStage() != wantStage {
 		t.Errorf("SetStage is %v, want %v", s.GetStage(), wantStage)
@@ -278,6 +293,7 @@ func TestLibrary_Step_Setters_Empty(t *testing.T) {
 	s.SetRepoID(0)
 	s.SetNumber(0)
 	s.SetName("")
+	s.SetImage("")
 	s.SetStage("")
 	s.SetStatus("")
 	s.SetError("")
@@ -303,6 +319,9 @@ func TestLibrary_Step_Setters_Empty(t *testing.T) {
 	}
 	if s.GetName() != "" {
 		t.Errorf("SetName is %v, want \"\"", s.GetName())
+	}
+	if s.GetImage() != "" {
+		t.Errorf("SetImage is %v, want \"\"", s.GetImage())
 	}
 	if s.GetStage() != "" {
 		t.Errorf("SetStage is %v, want \"\"", s.GetStage())
@@ -347,6 +366,7 @@ func TestStep_String(t *testing.T) {
 		RepoID:       &num64,
 		Number:       &num,
 		Name:         &str,
+		Image:        &str,
 		Stage:        &str,
 		Status:       &str,
 		Error:        &str,

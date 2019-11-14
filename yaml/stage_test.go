@@ -12,7 +12,7 @@ import (
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 
-	yaml "gopkg.in/yaml.v2"
+	"github.com/buildkite/yaml"
 )
 
 func TestYaml_StageSlice_ToPipeline(t *testing.T) {

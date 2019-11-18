@@ -9,7 +9,7 @@ type Build struct {
 	ID       string         `json:"id,omitempty"`
 	Version  string         `json:"version,omitempty"`
 	Metadata Metadata       `json:"metadata,omitempty"`
-	Worker   Worker         `json:"metadata,omitempty"`
+	Worker   Worker         `json:"worker,omitempty"`
 	Secrets  SecretSlice    `json:"secrets,omitempty"`
 	Services ContainerSlice `json:"services,omitempty"`
 	Stages   StageSlice     `json:"stages,omitempty"`

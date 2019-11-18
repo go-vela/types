@@ -18,6 +18,11 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Name:    "worker_1",
+			Flavor:  "16cpu8gb",
+			Runtime: "docker",
+		},
 		Stages: StageSlice{
 			&Stage{
 				Name:  "install",
@@ -70,6 +75,11 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Name:    "worker_1",
+			Flavor:  "16cpu8gb",
+			Runtime: "docker",
+		},
 		Stages: StageSlice{
 			&Stage{
 				Name:  "install",
@@ -104,6 +114,11 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Name:    "worker_1",
+			Flavor:  "16cpu8gb",
+			Runtime: "docker",
+		},
 		Steps: ContainerSlice{
 			&Container{
 				Commands: []string{"./gradlew downloadDependencies"},
@@ -144,6 +159,11 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Name:    "worker_1",
+			Flavor:  "16cpu8gb",
+			Runtime: "docker",
+		},
 		Steps: ContainerSlice{
 			&Container{
 				Commands: []string{"./gradlew downloadDependencies"},

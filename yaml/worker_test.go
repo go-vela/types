@@ -13,7 +13,7 @@ import (
 
 func TestYaml_Worker_ToPipeline(t *testing.T) {
 	// setup types
-	name := "agent_1"
+	name := "worker_1"
 	flavor := "16cpu8gb"
 	runtime := "docker"
 	want := &pipeline.Worker{

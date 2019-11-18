@@ -23,7 +23,7 @@ type Secret struct {
 	Type         *string   `json:"type,omitempty"`
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
-	AllowCommand *bool     `json:"commands,omitempty"`
+	AllowCommand *bool     `json:"allow_command,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -203,7 +203,7 @@ func (s *Secret) GetEvents() []string {
 func (s *Secret) GetAllowCommand() bool {
 	// return zero value if Secret type or Images field is nil
 	if s == nil || s.AllowCommand == nil {
-		return true
+		return false
 	}
 	return *s.AllowCommand
 }
@@ -317,6 +317,9 @@ func (s *Secret) SetEvents(v []string) {
 }
 
 // SetAllowCommand sets the AllowCommand field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetAllowCommand(v bool) {
 	if s == nil {
 		return

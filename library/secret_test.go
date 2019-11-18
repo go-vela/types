@@ -20,25 +20,28 @@ func TestLibrary_Secret_Sanitize(t *testing.T) {
 	repo := "repo"
 	images := []string{"foo"}
 	events := []string{"bar"}
+	cmd := true
 	s := &Secret{
-		ID:     &one,
-		Org:    &foo,
-		Repo:   &bar,
-		Name:   &foo,
-		Value:  &bar,
-		Type:   &repo,
-		Images: &images,
-		Events: &events,
+		ID:           &one,
+		Org:          &foo,
+		Repo:         &bar,
+		Name:         &foo,
+		Value:        &bar,
+		Type:         &repo,
+		Images:       &images,
+		Events:       &events,
+		AllowCommand: &cmd,
 	}
 
 	want := &Secret{
-		ID:     &one,
-		Org:    &foo,
-		Repo:   &bar,
-		Name:   &foo,
-		Type:   &repo,
-		Images: &images,
-		Events: &events,
+		ID:           &one,
+		Org:          &foo,
+		Repo:         &bar,
+		Name:         &foo,
+		Type:         &repo,
+		Images:       &images,
+		Events:       &events,
+		AllowCommand: &cmd,
 	}
 
 	// run test
@@ -243,16 +246,18 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := true
 	s := &Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 	wantID := num64
 	wantOrg := str
@@ -263,6 +268,7 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 	wantType := str
 	wantImages := arr
 	wantEvents := arr
+	wantAllowCommand := booL
 
 	// run test
 	gotID := s.GetID()
@@ -274,6 +280,7 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 	gotType := s.GetType()
 	gotImages := s.GetImages()
 	gotEvents := s.GetEvents()
+	gotAllowCommand := s.GetAllowCommand()
 
 	if gotID != wantID {
 		t.Errorf("GetID is %v, want %v", gotID, wantID)
@@ -302,6 +309,9 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 	if !reflect.DeepEqual(gotEvents, wantEvents) {
 		t.Errorf("GetEvents is %v, want %v", gotEvents, wantEvents)
 	}
+	if gotAllowCommand != wantAllowCommand {
+		t.Errorf("GetAllowCommand is %v, want %v", gotAllowCommand, wantAllowCommand)
+	}
 }
 
 func TestLibrary_Secret_Getters_Empty(t *testing.T) {
@@ -318,6 +328,7 @@ func TestLibrary_Secret_Getters_Empty(t *testing.T) {
 	gotType := s.GetType()
 	gotImages := s.GetImages()
 	gotEvents := s.GetEvents()
+	gotAllowCommand := s.GetAllowCommand()
 
 	if gotID != 0 {
 		t.Errorf("GetID is %v, want 0", gotID)
@@ -346,6 +357,9 @@ func TestLibrary_Secret_Getters_Empty(t *testing.T) {
 	if !reflect.DeepEqual(gotEvents, []string{}) {
 		t.Errorf("GetEvents is %v, want []string{}", gotEvents)
 	}
+	if gotAllowCommand != false {
+		t.Errorf("GetAllowCommand is %v, want false", gotAllowCommand)
+	}
 }
 
 func TestLibrary_Secret_Setters(t *testing.T) {
@@ -353,6 +367,8 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := true
+
 	s := &Secret{}
 
 	wantID := num64
@@ -364,6 +380,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	wantType := str
 	wantImages := arr
 	wantEvents := arr
+	wantAllowCommand := booL
 
 	// run test
 	s.SetID(wantID)
@@ -375,6 +392,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	s.SetType(wantType)
 	s.SetImages(wantImages)
 	s.SetEvents(wantEvents)
+	s.SetAllowCommand(wantAllowCommand)
 
 	if s.GetID() != wantID {
 		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
@@ -403,6 +421,9 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	if !reflect.DeepEqual(s.GetEvents(), wantEvents) {
 		t.Errorf("SetEvents is %v, want %v", s.GetEvents(), wantEvents)
 	}
+	if s.GetAllowCommand() != wantAllowCommand {
+		t.Errorf("SetAllowCommand is %v, want %v", s.GetAllowCommand(), wantAllowCommand)
+	}
 }
 
 func TestLibrary_Secret_Setters_Empty(t *testing.T) {
@@ -420,6 +441,7 @@ func TestLibrary_Secret_Setters_Empty(t *testing.T) {
 	s.SetType("")
 	s.SetImages([]string{})
 	s.SetEvents([]string{})
+	s.SetAllowCommand(false)
 
 	if s.GetID() != 0 {
 		t.Errorf("SetID is %v, want 0", s.GetID())
@@ -448,6 +470,9 @@ func TestLibrary_Secret_Setters_Empty(t *testing.T) {
 	if !reflect.DeepEqual(s.GetEvents(), []string{}) {
 		t.Errorf("SetEvents is %v, want []string{}", s.GetEvents())
 	}
+	if s.GetAllowCommand() != false {
+		t.Errorf("SetAllowCommand is %v, want false", s.GetAllowCommand())
+	}
 }
 
 func TestLibrary_Secret_String(t *testing.T) {
@@ -455,16 +480,18 @@ func TestLibrary_Secret_String(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	arr := []string{"foo", "bar"}
+	booL := true
 	s := &Secret{
-		ID:     &num64,
-		Org:    &str,
-		Repo:   &str,
-		Team:   &str,
-		Name:   &str,
-		Value:  &str,
-		Type:   &str,
-		Images: &arr,
-		Events: &arr,
+		ID:           &num64,
+		Org:          &str,
+		Repo:         &str,
+		Team:         &str,
+		Name:         &str,
+		Value:        &str,
+		Type:         &str,
+		Images:       &arr,
+		Events:       &arr,
+		AllowCommand: &booL,
 	}
 	want := fmt.Sprintf("%+v", *s)
 

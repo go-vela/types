@@ -203,7 +203,7 @@ func (s *Secret) GetEvents() []string {
 func (s *Secret) GetAllowCommand() bool {
 	// return zero value if Secret type or Images field is nil
 	if s == nil || s.AllowCommand == nil {
-		return true
+		return false
 	}
 	return *s.AllowCommand
 }

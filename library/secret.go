@@ -317,6 +317,9 @@ func (s *Secret) SetEvents(v []string) {
 }
 
 // SetAllowCommand sets the AllowCommand field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
 func (s *Secret) SetAllowCommand(v bool) {
 	if s == nil {
 		return

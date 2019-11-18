@@ -23,7 +23,7 @@ type Secret struct {
 	Type         *string   `json:"type,omitempty"`
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
-	AllowCommand *bool     `json:"commands,omitempty"`
+	AllowCommand *bool     `json:"allow_command,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.

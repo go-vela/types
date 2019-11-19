@@ -10,14 +10,14 @@ type Worker struct {
 	Platform string `yaml:"platform,omitempty"`
 }
 
-// Empty returns true if the provided ruletypes are empty.
+// Empty returns true if the provided worker is empty.
 func (w *Worker) Empty() bool {
-	// return true if every ruletype is empty
+	// return true if every worker field is empty
 	if len(w.Flavor) == 0 &&
 		len(w.Platform) == 0 {
 		return true
 	}
 
-	// return false if any of the ruletype is provided
+	// return false if any of the worker fields are provided
 	return false
 }

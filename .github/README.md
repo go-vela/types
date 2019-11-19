@@ -4,9 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/go-vela/types)](https://goreportcard.com/report/go-vela/types)
 [![Coverage Status](https://coveralls.io/repos/github/go-vela/types/badge.svg?branch=master)](https://coveralls.io/github/go-vela/types?branch=master)
 
-> Vela is in active development and is a pre-release product.
->
-> Please use at your own risk in production.
+> Vela is in active development and is a pre-release product. Please use at your own risk in production.
 >
 > Feel free to send us feedback at https://github.com/go-vela/community/issues/new.
 

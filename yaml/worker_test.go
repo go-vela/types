@@ -20,13 +20,13 @@ func TestYaml_Worker_ToPipeline(t *testing.T) {
 		Platform: platform,
 	}
 
-	v := &Worker{
+	w := &Worker{
 		Flavor:   flavor,
 		Platform: platform,
 	}
 
 	// run test
-	got := v.ToPipeline()
+	got := w.ToPipeline()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToPipeline is %v, want %v", got, want)

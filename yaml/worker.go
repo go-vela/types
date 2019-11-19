@@ -13,8 +13,8 @@ type Worker struct {
 	Platform string `yaml:"platform,omitempty"`
 }
 
-// ToPipeline converts the Metadata type
-// to a pipeline Metadata type.
+// ToPipeline converts the Worker type
+// to a pipeline Worker type.
 func (w *Worker) ToPipeline() *pipeline.Worker {
 	return &pipeline.Worker{
 		Flavor:   w.Flavor,

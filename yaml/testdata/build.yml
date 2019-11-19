@@ -10,9 +10,8 @@ templates:
     type: github
 
 worker:
-  name: worker_1
   flavor: 16cpu8gb
-  runtime: docker    
+  platform: gcp    
 
 services:
   - name: postgres

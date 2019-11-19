@@ -13,19 +13,16 @@ import (
 
 func TestYaml_Worker_ToPipeline(t *testing.T) {
 	// setup types
-	name := "worker_1"
 	flavor := "16cpu8gb"
-	runtime := "docker"
+	platform := "gcp"
 	want := &pipeline.Worker{
-		Name:    name,
-		Flavor:  flavor,
-		Runtime: runtime,
+		Flavor:   flavor,
+		Platform: platform,
 	}
 
 	v := &Worker{
-		Name:    name,
-		Flavor:  flavor,
-		Runtime: runtime,
+		Flavor:   flavor,
+		Platform: platform,
 	}
 
 	// run test

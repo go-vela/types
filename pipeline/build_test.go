@@ -19,9 +19,8 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Number: 1,
 			}},
 		Worker: Worker{
-			Name:    "worker_1",
-			Flavor:  "16cpu8gb",
-			Runtime: "docker",
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
 		},
 		Stages: StageSlice{
 			&Stage{
@@ -76,9 +75,8 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Number: 1,
 			}},
 		Worker: Worker{
-			Name:    "worker_1",
-			Flavor:  "16cpu8gb",
-			Runtime: "docker",
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
 		},
 		Stages: StageSlice{
 			&Stage{
@@ -115,9 +113,8 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Number: 1,
 			}},
 		Worker: Worker{
-			Name:    "worker_1",
-			Flavor:  "16cpu8gb",
-			Runtime: "docker",
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
 		},
 		Steps: ContainerSlice{
 			&Container{
@@ -160,9 +157,8 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Number: 1,
 			}},
 		Worker: Worker{
-			Name:    "worker_1",
-			Flavor:  "16cpu8gb",
-			Runtime: "docker",
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
 		},
 		Steps: ContainerSlice{
 			&Container{

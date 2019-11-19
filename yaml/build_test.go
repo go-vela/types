@@ -22,9 +22,8 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			Template: false,
 		},
 		Worker: Worker{
-			Name:    "worker_1",
-			Flavor:  "16cpu8gb",
-			Runtime: "docker",
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
 		},
 		Services: ServiceSlice{
 			&Service{

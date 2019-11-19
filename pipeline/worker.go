@@ -6,17 +6,15 @@ package pipeline
 
 // Worker is the yaml representation of the worker block for a pipeline.
 type Worker struct {
-	Name    string `yaml:"name,omitempty"`
-	Flavor  string `yaml:"flavor,omitempty"`
-	Runtime string `yaml:"runtime,omitempty"`
+	Flavor   string `yaml:"flavor,omitempty"`
+	Platform string `yaml:"platform,omitempty"`
 }
 
 // Empty returns true if the provided ruletypes are empty.
 func (w *Worker) Empty() bool {
 	// return true if every ruletype is empty
-	if len(w.Name) == 0 &&
-		len(w.Flavor) == 0 &&
-		len(w.Runtime) == 0 {
+	if len(w.Flavor) == 0 &&
+		len(w.Platform) == 0 {
 		return true
 	}
 

@@ -21,6 +21,10 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 		Metadata: Metadata{
 			Template: false,
 		},
+		Worker: Worker{
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
+		},
 		Services: ServiceSlice{
 			&Service{
 				Ports: []string{"5432:5432"},

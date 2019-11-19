@@ -9,6 +9,10 @@ templates:
     source: github.com/go-vela/atlas/stable/docker_publish
     type: github
 
+worker:
+  flavor: 16cpu8gb
+  platform: gcp    
+
 services:
   - name: postgres
     image: postgres:latest

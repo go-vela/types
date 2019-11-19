@@ -18,6 +18,10 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
+		},
 		Stages: StageSlice{
 			&Stage{
 				Name:  "install",
@@ -70,6 +74,10 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
+		},
 		Stages: StageSlice{
 			&Stage{
 				Name:  "install",
@@ -104,6 +112,10 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
+		},
 		Steps: ContainerSlice{
 			&Container{
 				Commands: []string{"./gradlew downloadDependencies"},
@@ -144,6 +156,10 @@ func TestPipeline_Build_Purge_Steps(t *testing.T) {
 				Name:   "postgres",
 				Number: 1,
 			}},
+		Worker: Worker{
+			Flavor:   "16cpu8gb",
+			Platform: "gcp",
+		},
 		Steps: ContainerSlice{
 			&Container{
 				Commands: []string{"./gradlew downloadDependencies"},

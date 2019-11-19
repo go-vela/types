@@ -10,3 +10,16 @@ type Worker struct {
 	Flavor  string `yaml:"flavor,omitempty"`
 	Runtime string `yaml:"runtime,omitempty"`
 }
+
+// Empty returns true if the provided ruletypes are empty.
+func (w *Worker) Empty() bool {
+	// return true if every ruletype is empty
+	if len(w.Name) == 0 &&
+		len(w.Flavor) == 0 &&
+		len(w.Runtime) == 0 {
+		return true
+	}
+
+	// return false if any of the ruletype is provided
+	return false
+}

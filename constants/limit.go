@@ -4,7 +4,7 @@
 
 package constants
 
-// queue types
+// limits and constraints
 const (
 	// BuildTimeoutMin defines the minimum value in minutes for repo build timeout.
 	BuildTimeoutMin = 30

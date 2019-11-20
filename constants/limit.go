@@ -6,6 +6,8 @@ package constants
 
 // queue types
 const (
-	// BuildTimeout defines the default route all workers listen on.
-	BuildTimeout = 60
+	// BuildTimeoutMin defines the minimum value in minutes for repo build timeout.
+	BuildTimeoutMin = 30
+	// BuildTimeoutMax defines the maximum value in minutes for repo build timeout.
+	BuildTimeoutMax = 90
 )

@@ -17,3 +17,17 @@ func TestPipeline_Worker_Empty(t *testing.T) {
 		t.Errorf("Worker IsEmpty is %v, want true", got)
 	}
 }
+
+func TestPipeline_Worker_Empty_False(t *testing.T) {
+	// setup types
+	w := Worker{
+		Flavor: "foo",
+	}
+
+	// run test
+	got := w.Empty()
+
+	if got {
+		t.Errorf("Worker IsEmpty is %v, want false", got)
+	}
+}

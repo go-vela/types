@@ -8,6 +8,7 @@ package yaml
 type Build struct {
 	Version   string        `yaml:"version,omitempty"`
 	Metadata  Metadata      `yaml:"metadata,omitempty"`
+	Worker    Worker        `yaml:"worker,omitempty"`
 	Secrets   SecretSlice   `yaml:"secrets,omitempty"`
 	Services  ServiceSlice  `yaml:"services,omitempty"`
 	Stages    StageSlice    `yaml:"stages,omitempty"`

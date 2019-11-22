@@ -21,6 +21,7 @@ func TestService_Getters(t *testing.T) {
 		RepoID:   &num64,
 		Number:   &num,
 		Name:     &str,
+		Image:    &str,
 		Status:   &str,
 		Error:    &str,
 		ExitCode: &num,
@@ -33,6 +34,7 @@ func TestService_Getters(t *testing.T) {
 	wantRepoID := num64
 	wantNumber := num
 	wantName := str
+	wantImage := str
 	wantStatus := str
 	wantError := str
 	wantExitCode := num
@@ -46,6 +48,7 @@ func TestService_Getters(t *testing.T) {
 	gotRepoID := s.GetRepoID()
 	gotNumber := s.GetNumber()
 	gotName := s.GetName()
+	gotImage := s.GetImage()
 	gotStatus := s.GetStatus()
 	gotError := s.GetError()
 	gotExitCode := s.GetExitCode()
@@ -67,6 +70,9 @@ func TestService_Getters(t *testing.T) {
 	}
 	if gotName != wantName {
 		t.Errorf("GetName is %v, want %v", gotName, wantName)
+	}
+	if gotImage != wantImage {
+		t.Errorf("GetImage is %v, want %v", gotImage, wantImage)
 	}
 	if gotStatus != wantStatus {
 		t.Errorf("GetStatus is %v, want %v", gotStatus, wantStatus)
@@ -98,6 +104,7 @@ func TestService_Getters_Empty(t *testing.T) {
 	gotRepoID := s.GetRepoID()
 	gotNumber := s.GetNumber()
 	gotName := s.GetName()
+	gotImage := s.GetImage()
 	gotStatus := s.GetStatus()
 	gotError := s.GetError()
 	gotExitCode := s.GetExitCode()
@@ -119,6 +126,9 @@ func TestService_Getters_Empty(t *testing.T) {
 	}
 	if gotName != "" {
 		t.Errorf("GetName is %v, want \"\"", gotName)
+	}
+	if gotImage != "" {
+		t.Errorf("GetImage is %v, want \"\"", gotImage)
 	}
 	if gotStatus != "" {
 		t.Errorf("GetStatus is %v, want \"\"", gotStatus)
@@ -152,6 +162,7 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	wantRepoID := num64
 	wantNumber := num
 	wantName := str
+	wantImage := str
 	wantStatus := str
 	wantError := str
 	wantExitCode := num
@@ -165,6 +176,7 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	s.SetRepoID(wantRepoID)
 	s.SetNumber(wantNumber)
 	s.SetName(wantName)
+	s.SetImage(wantImage)
 	s.SetStatus(wantStatus)
 	s.SetError(wantError)
 	s.SetExitCode(wantExitCode)
@@ -186,6 +198,9 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	}
 	if s.GetName() != wantName {
 		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
+	}
+	if s.GetImage() != wantImage {
+		t.Errorf("SetImage is %v, want %v", s.GetImage(), wantImage)
 	}
 	if s.GetStatus() != wantStatus {
 		t.Errorf("SetStatus is %v, want %v", s.GetStatus(), wantStatus)
@@ -218,6 +233,7 @@ func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	s.SetRepoID(0)
 	s.SetNumber(0)
 	s.SetName("")
+	s.SetImage("")
 	s.SetStatus("")
 	s.SetError("")
 	s.SetExitCode(0)
@@ -239,6 +255,9 @@ func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	}
 	if s.GetName() != "" {
 		t.Errorf("SetName is %v, want \"\"", s.GetName())
+	}
+	if s.GetImage() != "" {
+		t.Errorf("SetImage is %v, want \"\"", s.GetImage())
 	}
 	if s.GetStatus() != "" {
 		t.Errorf("SetStatus is %v, want \"\"", s.GetStatus())
@@ -271,6 +290,7 @@ func TestService_String(t *testing.T) {
 		RepoID:   &num64,
 		Number:   &num,
 		Name:     &str,
+		Image:    &str,
 		Status:   &str,
 		Error:    &str,
 		ExitCode: &num,

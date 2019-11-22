@@ -20,6 +20,10 @@ var (
 	// Step type has an empty Name field provided.
 	ErrEmptyStepName = errors.New("empty step name provided")
 
+	// ErrEmptyStepImage defines the error type when a
+	// Step type has an empty Image field provided.
+	ErrEmptyStepImage = errors.New("empty step image provided")
+
 	// ErrEmptyStepNumber defines the error type when a
 	// Step type has an empty Number field provided.
 	ErrEmptyStepNumber = errors.New("empty step number provided")
@@ -36,6 +40,7 @@ type Step struct {
 	RepoID       sql.NullInt64  `sql:"repo_id"`
 	Number       sql.NullInt32  `sql:"number"`
 	Name         sql.NullString `sql:"name"`
+	Image        sql.NullString `sql:"image"`
 	Stage        sql.NullString `sql:"stage"`
 	Status       sql.NullString `sql:"status"`
 	Error        sql.NullString `sql:"error"`
@@ -82,6 +87,11 @@ func (s *Step) Nullify() *Step {
 	// check if the Name field should be false
 	if len(s.Name.String) == 0 {
 		s.Name.Valid = false
+	}
+
+	// check if the Image field should be false
+	if len(s.Image.String) == 0 {
+		s.Image.Valid = false
 	}
 
 	// check if the Stage field should be false
@@ -148,6 +158,7 @@ func (s *Step) ToLibrary() *library.Step {
 		RepoID:       &s.RepoID.Int64,
 		Number:       &n,
 		Name:         &s.Name.String,
+		Image:        &s.Image.String,
 		Stage:        &s.Stage.String,
 		Status:       &s.Status.String,
 		Error:        &s.Error.String,
@@ -184,6 +195,11 @@ func (s *Step) Validate() error {
 		return ErrEmptyStepName
 	}
 
+	// verify the Image field is populated
+	if len(s.Image.String) == 0 {
+		return ErrEmptyStepImage
+	}
+
 	return nil
 }
 
@@ -196,6 +212,7 @@ func StepFromLibrary(s *library.Step) *Step {
 		RepoID:       sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
 		Number:       sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
 		Name:         sql.NullString{String: s.GetName(), Valid: true},
+		Image:        sql.NullString{String: s.GetImage(), Valid: true},
 		Stage:        sql.NullString{String: s.GetStage(), Valid: true},
 		Status:       sql.NullString{String: s.GetStatus(), Valid: true},
 		Error:        sql.NullString{String: s.GetError(), Valid: true},

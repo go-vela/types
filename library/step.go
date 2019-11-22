@@ -13,6 +13,7 @@ type Step struct {
 	RepoID       *int64  `json:"repo_id,omitempty"`
 	Number       *int    `json:"number,omitempty"`
 	Name         *string `json:"name,omitempty"`
+	Image        *string `json:"image,omitempty"`
 	Stage        *string `json:"stage,omitempty"`
 	Status       *string `json:"status,omitempty"`
 	Error        *string `json:"error,omitempty"`
@@ -83,6 +84,18 @@ func (s *Step) GetName() string {
 		return ""
 	}
 	return *s.Name
+}
+
+// GetImage returns the Image field.
+//
+// When the provided Step type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Step) GetImage() string {
+	// return zero value if Step type of Image field is nil
+	if s == nil || s.Image == nil {
+		return ""
+	}
+	return *s.Image
 }
 
 // GetStage returns the Stage field.
@@ -263,6 +276,18 @@ func (s *Step) SetName(v string) {
 		return
 	}
 	s.Name = &v
+}
+
+// SetImage sets the Image field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
+func (s *Step) SetImage(v string) {
+	// return if Step type is nil
+	if s == nil {
+		return
+	}
+	s.Image = &v
 }
 
 // SetStage sets the Stage field.

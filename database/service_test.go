@@ -20,6 +20,7 @@ func TestDatabase_Service_Nullify(t *testing.T) {
 		RepoID:   sql.NullInt64{Int64: 0, Valid: true},
 		Number:   sql.NullInt32{Int32: 0, Valid: true},
 		Name:     sql.NullString{String: "", Valid: true},
+		Image:    sql.NullString{String: "", Valid: true},
 		Status:   sql.NullString{String: "", Valid: true},
 		Error:    sql.NullString{String: "", Valid: true},
 		ExitCode: sql.NullInt32{Int32: 0, Valid: true},
@@ -33,6 +34,7 @@ func TestDatabase_Service_Nullify(t *testing.T) {
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
 		Number:   sql.NullInt32{Int32: 0, Valid: false},
 		Name:     sql.NullString{String: "", Valid: false},
+		Image:    sql.NullString{String: "", Valid: false},
 		Status:   sql.NullString{String: "", Valid: false},
 		Error:    sql.NullString{String: "", Valid: false},
 		ExitCode: sql.NullInt32{Int32: 0, Valid: false},
@@ -74,6 +76,7 @@ func TestDatabase_Service_ToLibrary(t *testing.T) {
 		RepoID:   &num64,
 		Number:   &num,
 		Name:     &str,
+		Image:    &str,
 		Status:   &str,
 		Error:    &str,
 		ExitCode: &num,
@@ -87,6 +90,7 @@ func TestDatabase_Service_ToLibrary(t *testing.T) {
 		RepoID:   sql.NullInt64{Int64: num64, Valid: true},
 		Number:   sqlNum,
 		Name:     sql.NullString{String: str, Valid: true},
+		Image:    sql.NullString{String: str, Valid: true},
 		Status:   sql.NullString{String: str, Valid: true},
 		Error:    sql.NullString{String: str, Valid: true},
 		ExitCode: sqlNum,
@@ -111,6 +115,7 @@ func TestDatabase_Service_Validate(t *testing.T) {
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
 		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 
 	// run test
@@ -128,6 +133,7 @@ func TestDatabase_Service_Validate_NoBuildID(t *testing.T) {
 		RepoID: sql.NullInt64{Int64: 1, Valid: true},
 		Number: sql.NullInt32{Int32: 1, Valid: true},
 		Name:   sql.NullString{String: "foo", Valid: true},
+		Image:  sql.NullString{String: "foo", Valid: true},
 	}
 
 	// run test
@@ -145,6 +151,7 @@ func TestDatabase_Service_Validate_NoRepoID(t *testing.T) {
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
 		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -161,6 +168,7 @@ func TestDatabase_Service_Validate_NoNumber(t *testing.T) {
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -186,6 +194,23 @@ func TestDatabase_Service_Validate_NoName(t *testing.T) {
 	}
 }
 
+func TestDatabase_Service_Validate_NoImage(t *testing.T) {
+	// setup types
+	s := &Service{
+		ID:      sql.NullInt64{Int64: 1, Valid: true},
+		BuildID: sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:  sql.NullInt32{Int32: 1, Valid: true},
+		Name:    sql.NullString{String: "", Valid: true},
+	}
+	// run test
+	err := s.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
 func TestDatabase_ServiceFromLibrary(t *testing.T) {
 	// setup types
 	num := 1
@@ -198,6 +223,7 @@ func TestDatabase_ServiceFromLibrary(t *testing.T) {
 		RepoID:   sql.NullInt64{Int64: num64, Valid: true},
 		Number:   sqlNum,
 		Name:     sql.NullString{String: str, Valid: true},
+		Image:    sql.NullString{String: str, Valid: true},
 		Status:   sql.NullString{String: str, Valid: true},
 		Error:    sql.NullString{String: str, Valid: true},
 		ExitCode: sqlNum,
@@ -211,6 +237,7 @@ func TestDatabase_ServiceFromLibrary(t *testing.T) {
 		RepoID:   &num64,
 		Number:   &num,
 		Name:     &str,
+		Image:    &str,
 		Status:   &str,
 		Error:    &str,
 		ExitCode: &num,

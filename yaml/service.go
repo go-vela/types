@@ -22,6 +22,7 @@ type (
 		Entrypoint  raw.StringSlice    `yaml:"entrypoint,omitempty"`
 		Environment raw.StringSliceMap `yaml:"environment,omitempty"`
 		Ports       raw.StringSlice    `yaml:"ports,omitempty"`
+		Pull        bool               `yaml:"pull,omitempty"`
 	}
 )
 
@@ -40,6 +41,7 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 			Entrypoint:  service.Entrypoint,
 			Environment: service.Environment,
 			Ports:       service.Ports,
+			Pull:        service.Pull,
 		})
 	}
 

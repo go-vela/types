@@ -64,7 +64,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		sec  *Secret
 		want bool
 	}{
-		{ // test build events without ruledata
+		{ // test matching secret events
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"BUILD_EVENT": "push"},
@@ -113,7 +113,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 			want: true,
 		},
 
-		{ // test images without ruledata
+		{ // test matching secret images
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"BUILD_EVENT": "push"},
@@ -146,7 +146,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 			want: true,
 		},
 
-		{ // test build events with image ACLs
+		{ // test matching secret events and images
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"BUILD_EVENT": "push"},
@@ -214,20 +214,6 @@ func TestLibrary_Secret_Match(t *testing.T) {
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}, AllowCommand: &booL},
 			want: false,
 		},
-		//TODO: circle back to make this test pass
-		// {
-		// 	step: &pipeline.Container{
-		// 		Image:       "alpine:latest",
-		// 		Environment: map[string]string{"BUILD_EVENT": "pull_request"},
-		// 		Ruleset: pipeline.Ruleset{
-		// 			Unless: pipeline.Rules{
-		// 				Event: []string{"push"},
-		// 			},
-		// 		},
-		// 	},
-		// 	sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"pull_request"}},
-		// 	want: false,
-		// },
 	}
 
 	// run test

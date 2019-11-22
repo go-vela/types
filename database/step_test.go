@@ -166,7 +166,8 @@ func TestDatabase_Step_Validate_NoRepoID(t *testing.T) {
 		ID:      sql.NullInt64{Int64: 1, Valid: true},
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
+		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "baz", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -182,7 +183,8 @@ func TestDatabase_Step_Validate_NoNumber(t *testing.T) {
 		ID:      sql.NullInt64{Int64: 1, Valid: true},
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
+		Name:    sql.NullString{String: "foo", Valid: true},
+		Image:   sql.NullString{String: "baz", Valid: true},
 	}
 	// run test
 	err := s.Validate()
@@ -199,6 +201,7 @@ func TestDatabase_Step_Validate_NoImage(t *testing.T) {
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
+		Name:    sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()

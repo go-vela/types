@@ -201,7 +201,7 @@ func TestDatabase_Service_Validate_NoImage(t *testing.T) {
 		BuildID: sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "", Valid: true},
+		Name:    sql.NullString{String: "foo", Valid: true},
 	}
 	// run test
 	err := s.Validate()

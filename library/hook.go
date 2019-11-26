@@ -11,6 +11,7 @@ type Hook struct {
 	ID       *int64  `json:"id,omitempty"`
 	RepoID   *int64  `json:"repo_id,omitempty"`
 	BuildID  *int64  `json:"build_id,omitempty"`
+	Number   *int    `json:"number,omitempty"`
 	SourceID *string `json:"source_id,omitempty"`
 	Created  *int64  `json:"created,omitempty"`
 	Host     *string `json:"host,omitempty"`
@@ -45,7 +46,7 @@ func (h *Hook) GetRepoID() int64 {
 	return *h.RepoID
 }
 
-// GetBuildID returns the GetBuildID field.
+// GetBuildID returns the BuildID field.
 //
 // When the provided Hook type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -55,6 +56,18 @@ func (h *Hook) GetBuildID() int64 {
 		return 0
 	}
 	return *h.BuildID
+}
+
+// GetNumber returns the Number field.
+//
+// When the provided Hook type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (h *Hook) GetNumber() int {
+	// return zero value if Hook type or BuildID field is nil
+	if h == nil || h.Number == nil {
+		return 0
+	}
+	return *h.Number
 }
 
 // GetSourceID returns the SourceID field.
@@ -187,6 +200,18 @@ func (h *Hook) SetBuildID(v int64) {
 		return
 	}
 	h.BuildID = &v
+}
+
+// SetNumber sets the Number field.
+//
+// When the provided Hook type is nil, it
+// will set nothing and immediately return.
+func (h *Hook) SetNumber(v int) {
+	// return if Hook type is nil
+	if h == nil {
+		return
+	}
+	h.Number = &v
 }
 
 // SetSourceID sets the SourceID field.

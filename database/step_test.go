@@ -177,6 +177,23 @@ func TestDatabase_Step_Validate_NoRepoID(t *testing.T) {
 	}
 }
 
+func TestDatabase_Step_Validate_NoName(t *testing.T) {
+	// setup types
+	s := &Step{
+		ID:      sql.NullInt64{Int64: 1, Valid: true},
+		BuildID: sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:  sql.NullInt32{Int32: 1, Valid: true},
+		Image:   sql.NullString{String: "baz", Valid: true},
+	}
+	// run test
+	err := s.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
 func TestDatabase_Step_Validate_NoNumber(t *testing.T) {
 	// setup types
 	s := &Step{

@@ -16,6 +16,7 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 	wantID := int64(1)
 	wantRepoID := int64(1)
 	wantBuildID := int64(1)
+	wantNumber := 1
 	wantSourceID := "c8da1302-07d6-11ea-882f-4893bca275b8"
 	wantCreated := time.Now().UTC().Unix()
 	wantHost := "github.com"
@@ -29,6 +30,7 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 	h.SetID(wantID)
 	h.SetRepoID(wantRepoID)
 	h.SetBuildID(wantBuildID)
+	h.SetNumber(wantNumber)
 	h.SetSourceID(wantSourceID)
 	h.SetCreated(wantCreated)
 	h.SetHost(wantHost)
@@ -42,6 +44,7 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 	gotID := h.GetID()
 	gotRepoID := h.GetRepoID()
 	gotBuildID := h.GetBuildID()
+	gotNumber := h.GetNumber()
 	gotSourceID := h.GetSourceID()
 	gotCreated := h.GetCreated()
 	gotHost := h.GetHost()
@@ -59,6 +62,9 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 	}
 	if gotBuildID != wantBuildID {
 		t.Errorf("GetBuildID is %v, want %v", gotBuildID, wantBuildID)
+	}
+	if gotNumber != wantNumber {
+		t.Errorf("GetNumber is %v, want %v", gotNumber, wantNumber)
 	}
 	if gotSourceID != wantSourceID {
 		t.Errorf("GetSourceID is %v, want %v", gotSourceID, wantSourceID)
@@ -94,6 +100,7 @@ func TestLibrary_Hook_Getters_Empty(t *testing.T) {
 	gotID := h.GetID()
 	gotRepoID := h.GetRepoID()
 	gotBuildID := h.GetRepoID()
+	gotNumber := h.GetNumber()
 	gotSourceID := h.GetSourceID()
 	gotCreated := h.GetCreated()
 	gotHost := h.GetHost()
@@ -111,6 +118,9 @@ func TestLibrary_Hook_Getters_Empty(t *testing.T) {
 	}
 	if gotBuildID != 0 {
 		t.Errorf("GetBuildID is %v, want 0", gotBuildID)
+	}
+	if gotNumber != 0 {
+		t.Errorf("GetNumber is %v, want 0", gotNumber)
 	}
 	if gotSourceID != "" {
 		t.Errorf("GetSourceID is %v, want \"\"", gotSourceID)
@@ -143,6 +153,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 	wantID := int64(1)
 	wantRepoID := int64(1)
 	wantBuildID := int64(1)
+	wantNumber := 1
 	wantSourceID := "c8da1302-07d6-11ea-882f-4893bca275b8"
 	wantCreated := time.Now().UTC().Unix()
 	wantHost := "github.com"
@@ -158,6 +169,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 	h.SetID(wantID)
 	h.SetRepoID(wantRepoID)
 	h.SetBuildID(wantBuildID)
+	h.SetNumber(wantNumber)
 	h.SetSourceID(wantSourceID)
 	h.SetCreated(wantCreated)
 	h.SetHost(wantHost)
@@ -175,6 +187,9 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 	}
 	if h.GetBuildID() != wantBuildID {
 		t.Errorf("SetBuildID is %v, want %v", h.GetBuildID(), wantBuildID)
+	}
+	if h.GetNumber() != wantNumber {
+		t.Errorf("SetNumber is %v, want %v", h.GetNumber(), wantNumber)
 	}
 	if h.GetSourceID() != wantSourceID {
 		t.Errorf("SetSourceID is %v, want %v", h.GetSourceID(), wantSourceID)
@@ -211,6 +226,7 @@ func TestLibrary_Hook_Setters_Empty(t *testing.T) {
 	h.SetID(0)
 	h.SetRepoID(0)
 	h.SetBuildID(0)
+	h.SetNumber(0)
 	h.SetSourceID("")
 	h.SetCreated(0)
 	h.SetHost("")
@@ -228,6 +244,9 @@ func TestLibrary_Hook_Setters_Empty(t *testing.T) {
 	}
 	if h.GetBuildID() != 0 {
 		t.Errorf("SetBuildID is %v, want 0", h.GetBuildID())
+	}
+	if h.GetNumber() != 0 {
+		t.Errorf("SetNumber is %v, want 0", h.GetNumber())
 	}
 	if h.GetSourceID() != "" {
 		t.Errorf("SetSourceID is %v, want \"\"", h.GetSourceID())
@@ -261,6 +280,7 @@ func TestLibrary_Hook_String(t *testing.T) {
 	h.SetID(1)
 	h.SetRepoID(1)
 	h.SetBuildID(1)
+	h.SetNumber(1)
 	h.SetSourceID("c8da1302-07d6-11ea-882f-4893bca275b8")
 	h.SetCreated(time.Now().UTC().Unix())
 	h.SetHost("github.com")

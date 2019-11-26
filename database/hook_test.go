@@ -19,6 +19,7 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 		ID:       sql.NullInt64{Int64: 0, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: true},
 		BuildID:  sql.NullInt64{Int64: 0, Valid: true},
+		Number:   sql.NullInt32{Int32: 0, Valid: true},
 		SourceID: sql.NullString{String: "", Valid: true},
 		Created:  sql.NullInt64{Int64: 0, Valid: true},
 		Host:     sql.NullString{String: "", Valid: true},
@@ -32,6 +33,7 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
+		Number:   sql.NullInt32{Int32: 0, Valid: false},
 		SourceID: sql.NullString{String: "", Valid: false},
 		Created:  sql.NullInt64{Int64: 0, Valid: false},
 		Host:     sql.NullString{String: "", Valid: false},
@@ -69,6 +71,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 	want.SetID(1)
 	want.SetRepoID(1)
 	want.SetBuildID(1)
+	want.SetNumber(1)
 	want.SetSourceID("c8da1302-07d6-11ea-882f-4893bca275b8")
 	want.SetCreated(time.Now().UTC().Unix())
 	want.SetHost("github.com")
@@ -82,6 +85,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
 		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
 		Created:  sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
 		Host:     sql.NullString{String: "github.com", Valid: true},
@@ -105,6 +109,7 @@ func TestDatabase_Hook_Validate(t *testing.T) {
 	h := &Hook{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
 		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
 	}
 
@@ -116,10 +121,27 @@ func TestDatabase_Hook_Validate(t *testing.T) {
 	}
 }
 
+func TestDatabase_Hook_Validate_NoNumber(t *testing.T) {
+	// setup types
+	h := &Hook{
+		ID:       sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+	}
+
+	// run test
+	err := h.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
 func TestDatabase_Hook_Validate_NoRepoID(t *testing.T) {
 	// setup types
 	h := &Hook{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
 		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
 	}
 
@@ -135,6 +157,7 @@ func TestDatabase_Hook_Validate_NoSourceID(t *testing.T) {
 	// setup types
 	h := &Hook{
 		ID:     sql.NullInt64{Int64: 1, Valid: true},
+		Number: sql.NullInt32{Int32: 1, Valid: true},
 		RepoID: sql.NullInt64{Int64: 1, Valid: true},
 	}
 
@@ -152,6 +175,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
 		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
 		Created:  sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
 		Host:     sql.NullString{String: "github.com", Valid: true},
@@ -166,6 +190,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 	h.SetID(1)
 	h.SetRepoID(1)
 	h.SetBuildID(1)
+	h.SetNumber(1)
 	h.SetSourceID("c8da1302-07d6-11ea-882f-4893bca275b8")
 	h.SetCreated(time.Now().UTC().Unix())
 	h.SetHost("github.com")

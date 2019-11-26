@@ -12,6 +12,10 @@ import (
 )
 
 var (
+	// ErrEmptyHookNumber defines the error type when a
+	// Hook type has an empty Number field provided.
+	ErrEmptyHookNumber = errors.New("empty webhook number provided")
+
 	// ErrEmptyHookRepoID defines the error type when a
 	// Hook type has an empty RepoID field provided.
 	ErrEmptyHookRepoID = errors.New("empty webhook repo_id provided")
@@ -26,6 +30,7 @@ type Hook struct {
 	ID       sql.NullInt64  `sql:"id"`
 	RepoID   sql.NullInt64  `sql:"repo_id"`
 	BuildID  sql.NullInt64  `sql:"build_id"`
+	Number   sql.NullInt32  `sql:"number"`
 	SourceID sql.NullString `sql:"source_id"`
 	Created  sql.NullInt64  `sql:"created"`
 	Host     sql.NullString `sql:"host"`
@@ -60,6 +65,11 @@ func (w *Hook) Nullify() *Hook {
 	// check if the BuildID field should be false
 	if w.BuildID.Int64 == 0 {
 		w.BuildID.Valid = false
+	}
+
+	// check if the Number field should be false
+	if w.Number.Int32 == 0 {
+		w.Number.Valid = false
 	}
 
 	// check if the SourceID field should be false
@@ -108,10 +118,12 @@ func (w *Hook) Nullify() *Hook {
 // ToLibrary converts the Hook type
 // to a library Hook type.
 func (w *Hook) ToLibrary() *library.Hook {
+	n := int(w.Number.Int32)
 	return &library.Hook{
 		ID:       &w.ID.Int64,
 		RepoID:   &w.RepoID.Int64,
 		BuildID:  &w.BuildID.Int64,
+		Number:   &n,
 		SourceID: &w.SourceID.String,
 		Created:  &w.Created.Int64,
 		Host:     &w.Host.String,
@@ -131,6 +143,11 @@ func (w *Hook) Validate() error {
 		return ErrEmptyHookRepoID
 	}
 
+	// verify the Number field is populated
+	if w.Number.Int32 <= 0 {
+		return ErrEmptyHookNumber
+	}
+
 	// verify the SourceID field is populated
 	if len(w.SourceID.String) <= 0 {
 		return ErrEmptyHookSourceID
@@ -146,6 +163,7 @@ func HookFromLibrary(w *library.Hook) *Hook {
 		ID:       sql.NullInt64{Int64: w.GetID(), Valid: true},
 		RepoID:   sql.NullInt64{Int64: w.GetRepoID(), Valid: true},
 		BuildID:  sql.NullInt64{Int64: w.GetBuildID(), Valid: true},
+		Number:   sql.NullInt32{Int32: int32(w.GetNumber()), Valid: true},
 		SourceID: sql.NullString{String: w.GetSourceID(), Valid: true},
 		Created:  sql.NullInt64{Int64: w.GetCreated(), Valid: true},
 		Host:     sql.NullString{String: w.GetHost(), Valid: true},

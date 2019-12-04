@@ -107,21 +107,20 @@ func (s *Secret) Nullify() *Secret {
 // ToLibrary converts the Secret type
 // to a library Secret type.
 func (s *Secret) ToLibrary() *library.Secret {
-	images := []string(s.Images)
-	events := []string(s.Events)
+	secret := new(library.Secret)
 
-	return &library.Secret{
-		ID:           &s.ID.Int64,
-		Org:          &s.Org.String,
-		Repo:         &s.Repo.String,
-		Team:         &s.Team.String,
-		Name:         &s.Name.String,
-		Value:        &s.Value.String,
-		Type:         &s.Type.String,
-		Images:       &images,
-		Events:       &events,
-		AllowCommand: &s.AllowCommand.Bool,
-	}
+	secret.SetID(s.ID.Int64)
+	secret.SetOrg(s.Org.String)
+	secret.SetRepo(s.Repo.String)
+	secret.SetTeam(s.Team.String)
+	secret.SetName(s.Name.String)
+	secret.SetValue(s.Value.String)
+	secret.SetType(s.Type.String)
+	secret.SetImages(s.Images)
+	secret.SetEvents(s.Events)
+	secret.SetAllowCommand(s.AllowCommand.Bool)
+
+	return secret
 }
 
 // Validate verifies the necessary fields for

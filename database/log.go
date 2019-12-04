@@ -77,14 +77,16 @@ func (l *Log) Nullify() *Log {
 // ToLibrary converts the Log type
 // to a library Log type.
 func (l *Log) ToLibrary() *library.Log {
-	return &library.Log{
-		ID:        &l.ID.Int64,
-		BuildID:   &l.BuildID.Int64,
-		RepoID:    &l.RepoID.Int64,
-		ServiceID: &l.ServiceID.Int64,
-		StepID:    &l.StepID.Int64,
-		Data:      &l.Data,
-	}
+	log := new(library.Log)
+
+	log.SetID(l.ID.Int64)
+	log.SetBuildID(l.BuildID.Int64)
+	log.SetRepoID(l.RepoID.Int64)
+	log.SetServiceID(l.ServiceID.Int64)
+	log.SetStepID(l.StepID.Int64)
+	log.SetData(l.Data)
+
+	return log
 }
 
 // Validate verifies the necessary fields for

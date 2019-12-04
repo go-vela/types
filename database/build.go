@@ -208,35 +208,35 @@ func (b *Build) Nullify() *Build {
 // ToLibrary converts the Build type
 // to a library Build type.
 func (b *Build) ToLibrary() *library.Build {
-	n := int(b.Number.Int32)
-	p := int(b.Parent.Int32)
-	return &library.Build{
-		ID:           &b.ID.Int64,
-		RepoID:       &b.RepoID.Int64,
-		Number:       &n,
-		Parent:       &p,
-		Event:        &b.Event.String,
-		Status:       &b.Status.String,
-		Error:        &b.Error.String,
-		Enqueued:     &b.Enqueued.Int64,
-		Created:      &b.Created.Int64,
-		Started:      &b.Started.Int64,
-		Finished:     &b.Finished.Int64,
-		Deploy:       &b.Deploy.String,
-		Clone:        &b.Clone.String,
-		Source:       &b.Source.String,
-		Title:        &b.Title.String,
-		Message:      &b.Message.String,
-		Commit:       &b.Commit.String,
-		Sender:       &b.Sender.String,
-		Author:       &b.Author.String,
-		Branch:       &b.Branch.String,
-		Ref:          &b.Ref.String,
-		BaseRef:      &b.BaseRef.String,
-		Host:         &b.Host.String,
-		Runtime:      &b.Runtime.String,
-		Distribution: &b.Distribution.String,
-	}
+	build := new(library.Build)
+
+	build.SetID(b.ID.Int64)
+	build.SetRepoID(b.RepoID.Int64)
+	build.SetNumber(int(b.Number.Int32))
+	build.SetParent(int(b.Parent.Int32))
+	build.SetEvent(b.Event.String)
+	build.SetStatus(b.Status.String)
+	build.SetError(b.Error.String)
+	build.SetEnqueued(b.Enqueued.Int64)
+	build.SetCreated(b.Created.Int64)
+	build.SetStarted(b.Started.Int64)
+	build.SetFinished(b.Finished.Int64)
+	build.SetDeploy(b.Deploy.String)
+	build.SetClone(b.Clone.String)
+	build.SetSource(b.Source.String)
+	build.SetTitle(b.Title.String)
+	build.SetMessage(b.Message.String)
+	build.SetCommit(b.Commit.String)
+	build.SetSender(b.Sender.String)
+	build.SetAuthor(b.Author.String)
+	build.SetBranch(b.Branch.String)
+	build.SetRef(b.Ref.String)
+	build.SetBaseRef(b.BaseRef.String)
+	build.SetHost(b.Host.String)
+	build.SetRuntime(b.Runtime.String)
+	build.SetDistribution(b.Distribution.String)
+
+	return build
 }
 
 // Validate verifies the necessary fields for

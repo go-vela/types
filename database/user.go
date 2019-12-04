@@ -81,14 +81,16 @@ func (u *User) Nullify() *User {
 // ToLibrary converts the User type
 // to a library User type.
 func (u *User) ToLibrary() *library.User {
-	return &library.User{
-		ID:     &u.ID.Int64,
-		Name:   &u.Name.String,
-		Token:  &u.Token.String,
-		Hash:   &u.Hash.String,
-		Active: &u.Active.Bool,
-		Admin:  &u.Admin.Bool,
-	}
+	user := new(library.User)
+
+	user.SetID(u.ID.Int64)
+	user.SetName(u.Name.String)
+	user.SetToken(u.Token.String)
+	user.SetHash(u.Hash.String)
+	user.SetActive(u.Active.Bool)
+	user.SetAdmin(u.Admin.Bool)
+
+	return user
 }
 
 // Validate verifies the necessary fields for

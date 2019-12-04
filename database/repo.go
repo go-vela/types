@@ -117,25 +117,27 @@ func (r *Repo) Nullify() *Repo {
 // ToLibrary converts the Repo type
 // to a library Repo type.
 func (r *Repo) ToLibrary() *library.Repo {
-	return &library.Repo{
-		ID:          &r.ID.Int64,
-		UserID:      &r.UserID.Int64,
-		Org:         &r.Org.String,
-		Name:        &r.Name.String,
-		FullName:    &r.FullName.String,
-		Link:        &r.Link.String,
-		Clone:       &r.Clone.String,
-		Branch:      &r.Branch.String,
-		Timeout:     &r.Timeout.Int64,
-		Visibility:  &r.Visibility.String,
-		Private:     &r.Private.Bool,
-		Trusted:     &r.Trusted.Bool,
-		Active:      &r.Active.Bool,
-		AllowPull:   &r.AllowPull.Bool,
-		AllowPush:   &r.AllowPush.Bool,
-		AllowDeploy: &r.AllowDeploy.Bool,
-		AllowTag:    &r.AllowTag.Bool,
-	}
+	repo := new(library.Repo)
+
+	repo.SetID(r.ID.Int64)
+	repo.SetUserID(r.UserID.Int64)
+	repo.SetOrg(r.Org.String)
+	repo.SetName(r.Name.String)
+	repo.SetFullName(r.FullName.String)
+	repo.SetLink(r.Link.String)
+	repo.SetClone(r.Clone.String)
+	repo.SetBranch(r.Branch.String)
+	repo.SetTimeout(r.Timeout.Int64)
+	repo.SetVisibility(r.Visibility.String)
+	repo.SetPrivate(r.Private.Bool)
+	repo.SetTrusted(r.Trusted.Bool)
+	repo.SetActive(r.Active.Bool)
+	repo.SetAllowPull(r.AllowPull.Bool)
+	repo.SetAllowPush(r.AllowPush.Bool)
+	repo.SetAllowDeploy(r.AllowDeploy.Bool)
+	repo.SetAllowTag(r.AllowTag.Bool)
+
+	return repo
 }
 
 // Validate verifies the necessary fields for

@@ -47,109 +47,110 @@ type Hook struct {
 // When a field within the Hook type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-func (w *Hook) Nullify() *Hook {
-	if w == nil {
+func (h *Hook) Nullify() *Hook {
+	if h == nil {
 		return nil
 	}
 
 	// check if the ID field should be false
-	if w.ID.Int64 == 0 {
-		w.ID.Valid = false
+	if h.ID.Int64 == 0 {
+		h.ID.Valid = false
 	}
 
 	// check if the RepoID field should be false
-	if w.RepoID.Int64 == 0 {
-		w.RepoID.Valid = false
+	if h.RepoID.Int64 == 0 {
+		h.RepoID.Valid = false
 	}
 
 	// check if the BuildID field should be false
-	if w.BuildID.Int64 == 0 {
-		w.BuildID.Valid = false
+	if h.BuildID.Int64 == 0 {
+		h.BuildID.Valid = false
 	}
 
 	// check if the Number field should be false
-	if w.Number.Int32 == 0 {
-		w.Number.Valid = false
+	if h.Number.Int32 == 0 {
+		h.Number.Valid = false
 	}
 
 	// check if the SourceID field should be false
-	if len(w.SourceID.String) == 0 {
-		w.SourceID.Valid = false
+	if len(h.SourceID.String) == 0 {
+		h.SourceID.Valid = false
 	}
 
 	// check if the Created field should be false
-	if w.Created.Int64 == 0 {
-		w.Created.Valid = false
+	if h.Created.Int64 == 0 {
+		h.Created.Valid = false
 	}
 
 	// check if the Host field should be false
-	if len(w.Host.String) == 0 {
-		w.Host.Valid = false
+	if len(h.Host.String) == 0 {
+		h.Host.Valid = false
 	}
 
 	// check if the Event field should be false
-	if len(w.Event.String) == 0 {
-		w.Event.Valid = false
+	if len(h.Event.String) == 0 {
+		h.Event.Valid = false
 	}
 
 	// check if the Branch field should be false
-	if len(w.Branch.String) == 0 {
-		w.Branch.Valid = false
+	if len(h.Branch.String) == 0 {
+		h.Branch.Valid = false
 	}
 
 	// check if the Error field should be false
-	if len(w.Error.String) == 0 {
-		w.Error.Valid = false
+	if len(h.Error.String) == 0 {
+		h.Error.Valid = false
 	}
 
 	// check if the Status field should be false
-	if len(w.Status.String) == 0 {
-		w.Status.Valid = false
+	if len(h.Status.String) == 0 {
+		h.Status.Valid = false
 	}
 
 	// check if the Link field should be false
-	if len(w.Link.String) == 0 {
-		w.Link.Valid = false
+	if len(h.Link.String) == 0 {
+		h.Link.Valid = false
 	}
 
-	return w
+	return h
 }
 
 // ToLibrary converts the Hook type
 // to a library Hook type.
-func (w *Hook) ToLibrary() *library.Hook {
-	n := int(w.Number.Int32)
-	return &library.Hook{
-		ID:       &w.ID.Int64,
-		RepoID:   &w.RepoID.Int64,
-		BuildID:  &w.BuildID.Int64,
-		Number:   &n,
-		SourceID: &w.SourceID.String,
-		Created:  &w.Created.Int64,
-		Host:     &w.Host.String,
-		Event:    &w.Event.String,
-		Branch:   &w.Branch.String,
-		Error:    &w.Error.String,
-		Status:   &w.Status.String,
-		Link:     &w.Link.String,
-	}
+func (h *Hook) ToLibrary() *library.Hook {
+	hook := new(library.Hook)
+
+	hook.SetID(h.ID.Int64)
+	hook.SetRepoID(h.RepoID.Int64)
+	hook.SetBuildID(h.BuildID.Int64)
+	hook.SetNumber(int(h.Number.Int32))
+	hook.SetSourceID(h.SourceID.String)
+	hook.SetCreated(h.Created.Int64)
+	hook.SetHost(h.Host.String)
+	hook.SetEvent(h.Event.String)
+	hook.SetBranch(h.Branch.String)
+	hook.SetError(h.Error.String)
+	hook.SetStatus(h.Status.String)
+	hook.SetLink(h.Link.String)
+
+	return hook
 }
 
 // Validate verifies the necessary fields for
 // the Hook type are populated correctly.
-func (w *Hook) Validate() error {
+func (h *Hook) Validate() error {
 	// verify the RepoID field is populated
-	if w.RepoID.Int64 <= 0 {
+	if h.RepoID.Int64 <= 0 {
 		return ErrEmptyHookRepoID
 	}
 
 	// verify the Number field is populated
-	if w.Number.Int32 <= 0 {
+	if h.Number.Int32 <= 0 {
 		return ErrEmptyHookNumber
 	}
 
 	// verify the SourceID field is populated
-	if len(w.SourceID.String) <= 0 {
+	if len(h.SourceID.String) <= 0 {
 		return ErrEmptyHookSourceID
 	}
 
@@ -158,21 +159,21 @@ func (w *Hook) Validate() error {
 
 // HookFromLibrary converts the Hook type
 // to a library Hook type.
-func HookFromLibrary(w *library.Hook) *Hook {
-	webhook := &Hook{
-		ID:       sql.NullInt64{Int64: w.GetID(), Valid: true},
-		RepoID:   sql.NullInt64{Int64: w.GetRepoID(), Valid: true},
-		BuildID:  sql.NullInt64{Int64: w.GetBuildID(), Valid: true},
-		Number:   sql.NullInt32{Int32: int32(w.GetNumber()), Valid: true},
-		SourceID: sql.NullString{String: w.GetSourceID(), Valid: true},
-		Created:  sql.NullInt64{Int64: w.GetCreated(), Valid: true},
-		Host:     sql.NullString{String: w.GetHost(), Valid: true},
-		Event:    sql.NullString{String: w.GetEvent(), Valid: true},
-		Branch:   sql.NullString{String: w.GetBranch(), Valid: true},
-		Error:    sql.NullString{String: w.GetError(), Valid: true},
-		Status:   sql.NullString{String: w.GetStatus(), Valid: true},
-		Link:     sql.NullString{String: w.GetLink(), Valid: true},
+func HookFromLibrary(h *library.Hook) *Hook {
+	hook := &Hook{
+		ID:       sql.NullInt64{Int64: h.GetID(), Valid: true},
+		RepoID:   sql.NullInt64{Int64: h.GetRepoID(), Valid: true},
+		BuildID:  sql.NullInt64{Int64: h.GetBuildID(), Valid: true},
+		Number:   sql.NullInt32{Int32: int32(h.GetNumber()), Valid: true},
+		SourceID: sql.NullString{String: h.GetSourceID(), Valid: true},
+		Created:  sql.NullInt64{Int64: h.GetCreated(), Valid: true},
+		Host:     sql.NullString{String: h.GetHost(), Valid: true},
+		Event:    sql.NullString{String: h.GetEvent(), Valid: true},
+		Branch:   sql.NullString{String: h.GetBranch(), Valid: true},
+		Error:    sql.NullString{String: h.GetError(), Valid: true},
+		Status:   sql.NullString{String: h.GetStatus(), Valid: true},
+		Link:     sql.NullString{String: h.GetLink(), Valid: true},
 	}
 
-	return webhook.Nullify()
+	return hook.Nullify()
 }

@@ -126,22 +126,22 @@ func (s *Service) Nullify() *Service {
 // ToLibrary converts the Service type
 // to a library Service type.
 func (s *Service) ToLibrary() *library.Service {
-	n := int(s.Number.Int32)
-	e := int(s.ExitCode.Int32)
-	return &library.Service{
-		ID:       &s.ID.Int64,
-		BuildID:  &s.BuildID.Int64,
-		RepoID:   &s.RepoID.Int64,
-		Number:   &n,
-		Name:     &s.Name.String,
-		Image:    &s.Image.String,
-		Status:   &s.Status.String,
-		Error:    &s.Error.String,
-		ExitCode: &e,
-		Created:  &s.Created.Int64,
-		Started:  &s.Started.Int64,
-		Finished: &s.Finished.Int64,
-	}
+	service := new(library.Service)
+
+	service.SetID(s.ID.Int64)
+	service.SetBuildID(s.BuildID.Int64)
+	service.SetRepoID(s.RepoID.Int64)
+	service.SetNumber(int(s.Number.Int32))
+	service.SetName(s.Name.String)
+	service.SetImage(s.Image.String)
+	service.SetStatus(s.Status.String)
+	service.SetError(s.Error.String)
+	service.SetExitCode(int(s.ExitCode.Int32))
+	service.SetCreated(s.Created.Int64)
+	service.SetStarted(s.Started.Int64)
+	service.SetFinished(s.Finished.Int64)
+
+	return service
 }
 
 // Validate verifies the necessary fields for

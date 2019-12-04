@@ -150,26 +150,26 @@ func (s *Step) Nullify() *Step {
 // ToLibrary converts the Step type
 // to a library Step type.
 func (s *Step) ToLibrary() *library.Step {
-	n := int(s.Number.Int32)
-	e := int(s.ExitCode.Int32)
-	return &library.Step{
-		ID:           &s.ID.Int64,
-		BuildID:      &s.BuildID.Int64,
-		RepoID:       &s.RepoID.Int64,
-		Number:       &n,
-		Name:         &s.Name.String,
-		Image:        &s.Image.String,
-		Stage:        &s.Stage.String,
-		Status:       &s.Status.String,
-		Error:        &s.Error.String,
-		ExitCode:     &e,
-		Created:      &s.Created.Int64,
-		Started:      &s.Started.Int64,
-		Finished:     &s.Finished.Int64,
-		Host:         &s.Host.String,
-		Runtime:      &s.Runtime.String,
-		Distribution: &s.Distribution.String,
-	}
+	step := new(library.Step)
+
+	step.SetID(s.ID.Int64)
+	step.SetBuildID(s.BuildID.Int64)
+	step.SetRepoID(s.RepoID.Int64)
+	step.SetNumber(int(s.Number.Int32))
+	step.SetName(s.Name.String)
+	step.SetImage(s.Image.String)
+	step.SetStage(s.Stage.String)
+	step.SetStatus(s.Status.String)
+	step.SetError(s.Error.String)
+	step.SetExitCode(int(s.ExitCode.Int32))
+	step.SetCreated(s.Created.Int64)
+	step.SetStarted(s.Started.Int64)
+	step.SetFinished(s.Finished.Int64)
+	step.SetHost(s.Host.String)
+	step.SetRuntime(s.Runtime.String)
+	step.SetDistribution(s.Distribution.String)
+
+	return step
 }
 
 // Validate verifies the necessary fields for

@@ -1,0 +1,123 @@
+// Copyright (c) 2019 Target Brands, Inc. All rights reserved.
+//
+// Use of this source code is governed by the LICENSE file in this repository.
+
+package library
+
+import (
+	"fmt"
+
+	"github.com/go-vela/types/pipeline"
+)
+
+// Executor is the library representation of a executor for a worker.
+type Executor struct {
+	ID           *int64          `json:"id,omitempty"`
+	Host         *string         `json:"host,omitempty"`
+	Runtime      *string         `json:"runtime,omitempty"`
+	Distribution *string         `json:"distribution,omitempty"`
+	Build        *Build          `json:"build,omitempty"`
+	Repo         *Repo           `json:"repo,omitempty"`
+	Pipeline     *pipeline.Build `json:"pipeline,omitempty"`
+}
+
+// GetID returns the ID field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetID() int64 {
+	// return zero value if Executor type or ID field is nil
+	if e == nil || e.ID == nil {
+		return 0
+	}
+	return *e.ID
+}
+
+// GetHost returns the Host field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetHost() string {
+	// return zero value if Executor type or Host field is nil
+	if e == nil || e.Host == nil {
+		return ""
+	}
+	return *e.Host
+}
+
+// GetRuntime returns the Runtime field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetRuntime() string {
+	// return zero value if Executor type or Runtime field is nil
+	if e == nil || e.Runtime == nil {
+		return ""
+	}
+	return *e.Runtime
+}
+
+// GetDistribution returns the Distribution field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetDistribution() string {
+	// return zero value if Executor type or Distribution field is nil
+	if e == nil || e.Distribution == nil {
+		return ""
+	}
+	return *e.Distribution
+}
+
+// SetID sets the ID field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetID(v int64) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.ID = &v
+}
+
+// SetHost sets the Host field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetHost(v string) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Host = &v
+}
+
+// SetRuntime sets the Runtime field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetRuntime(v string) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Runtime = &v
+}
+
+// SetDistribution sets the Distribution field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetDistribution(v string) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Distribution = &v
+}
+
+// String implements the Stringer interface for the Executor type.
+func (e *Executor) String() string {
+	return fmt.Sprintf("%+v", *e)
+}

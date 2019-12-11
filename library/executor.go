@@ -10,7 +10,7 @@ import (
 	"github.com/go-vela/types/pipeline"
 )
 
-// Executor is the library representation of a executor for a worker.
+// Executor is the library representation of an executor for a worker.
 type Executor struct {
 	ID           *int64          `json:"id,omitempty"`
 	Host         *string         `json:"host,omitempty"`
@@ -69,6 +69,42 @@ func (e *Executor) GetDistribution() string {
 	return *e.Distribution
 }
 
+// GetBuild returns the Build field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetBuild() Build {
+	// return zero value if Executor type or Build field is nil
+	if e == nil || e.Build == nil {
+		return Build{}
+	}
+	return *e.Build
+}
+
+// GetRepo returns the Repo field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetRepo() Repo {
+	// return zero value if Executor type or Repo field is nil
+	if e == nil || e.Repo == nil {
+		return Repo{}
+	}
+	return *e.Repo
+}
+
+// GetPipeline returns the Pipeline field.
+//
+// When the provided Executor type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (e *Executor) GetPipeline() pipeline.Build {
+	// return zero value if Executor type or Pipeline field is nil
+	if e == nil || e.Pipeline == nil {
+		return pipeline.Build{}
+	}
+	return *e.Pipeline
+}
+
 // SetID sets the ID field.
 //
 // When the provided Executor type is nil, it
@@ -115,6 +151,42 @@ func (e *Executor) SetDistribution(v string) {
 		return
 	}
 	e.Distribution = &v
+}
+
+// SetBuild sets the Build field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetBuild(v Build) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Build = &v
+}
+
+// SetRepo sets the Repo field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetRepo(v Repo) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Repo = &v
+}
+
+// SetPipeline sets the pipeline Build field.
+//
+// When the provided Executor type is nil, it
+// will set nothing and immediately return.
+func (e *Executor) SetPipeline(v pipeline.Build) {
+	// return if Executor type is nil
+	if e == nil {
+		return
+	}
+	e.Pipeline = &v
 }
 
 // String implements the Stringer interface for the Executor type.

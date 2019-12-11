@@ -105,7 +105,6 @@ func TestLibrary_Executor_Setters(t *testing.T) {
 func TestLibrary_Executor_Setters_Empty(t *testing.T) {
 	// setup types
 	e := &Executor{}
-	e = nil
 
 	// Run tests
 	e.SetID(0)

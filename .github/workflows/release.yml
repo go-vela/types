@@ -2,10 +2,12 @@
 name: release
 
 # trigger on push events with `v*` in tag
+# ignore push events with `v*-rc*` in tag
 on:
   push:
     tags:
       - 'v*'
+      - '!v*-rc*'
 
 # pipeline to execute
 jobs:

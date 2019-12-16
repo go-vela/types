@@ -35,6 +35,8 @@ func TestLibrary_Build_Getters(t *testing.T) {
 		Commit:       &str,
 		Sender:       &str,
 		Author:       &str,
+		Email:        &str,
+		Link:         &str,
 		Branch:       &str,
 		Ref:          &str,
 		BaseRef:      &str,
@@ -61,6 +63,8 @@ func TestLibrary_Build_Getters(t *testing.T) {
 	wantCommit := str
 	wantSender := str
 	wantAuthor := str
+	wantEmail := str
+	wantLink := str
 	wantBranch := str
 	wantRef := str
 	wantBaseRef := str
@@ -88,6 +92,8 @@ func TestLibrary_Build_Getters(t *testing.T) {
 	gotCommit := b.GetCommit()
 	gotSender := b.GetSender()
 	gotAuthor := b.GetAuthor()
+	gotEmail := b.GetEmail()
+	gotLink := b.GetLink()
 	gotBranch := b.GetBranch()
 	gotRef := b.GetRef()
 	gotBaseRef := b.GetBaseRef()
@@ -152,6 +158,12 @@ func TestLibrary_Build_Getters(t *testing.T) {
 	if gotAuthor != wantAuthor {
 		t.Errorf("GetAuthor is %v, want %v", gotAuthor, wantAuthor)
 	}
+	if gotEmail != wantEmail {
+		t.Errorf("GetEmail is %v, want %v", gotEmail, wantEmail)
+	}
+	if gotLink != wantLink {
+		t.Errorf("GetLink is %v, want %v", gotLink, wantLink)
+	}
 	if gotBranch != wantBranch {
 		t.Errorf("GetBranch is %v, want %v", gotBranch, wantBranch)
 	}
@@ -196,6 +208,8 @@ func TestLibrary_Build_Getters_Empty(t *testing.T) {
 	gotCommit := b.GetCommit()
 	gotSender := b.GetSender()
 	gotAuthor := b.GetAuthor()
+	gotEmail := b.GetEmail()
+	gotLink := b.GetLink()
 	gotBranch := b.GetBranch()
 	gotRef := b.GetRef()
 	gotBaseRef := b.GetBaseRef()
@@ -260,6 +274,12 @@ func TestLibrary_Build_Getters_Empty(t *testing.T) {
 	if gotAuthor != "" {
 		t.Errorf("GetAuthor is %v, want \"\"", gotAuthor)
 	}
+	if gotEmail != "" {
+		t.Errorf("GetEmail is %v, want \"\"", gotEmail)
+	}
+	if gotLink != "" {
+		t.Errorf("GetLink is %v, want \"\"", gotLink)
+	}
 	if gotBranch != "" {
 		t.Errorf("GetBranch is %v, want \"\"", gotBranch)
 	}
@@ -306,6 +326,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	wantCommit := str
 	wantSender := str
 	wantAuthor := str
+	wantEmail := str
+	wantLink := str
 	wantBranch := str
 	wantRef := str
 	wantBaseRef := str
@@ -333,6 +355,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	b.SetCommit(wantCommit)
 	b.SetSender(wantSender)
 	b.SetAuthor(wantAuthor)
+	b.SetEmail(wantEmail)
+	b.SetLink(wantLink)
 	b.SetBranch(wantBranch)
 	b.SetRef(wantRef)
 	b.SetBaseRef(wantBaseRef)
@@ -397,6 +421,12 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	if b.GetAuthor() != wantAuthor {
 		t.Errorf("SetAuthor is %v, want %v", b.GetAuthor(), wantAuthor)
 	}
+	if b.GetEmail() != wantEmail {
+		t.Errorf("SetEmail is %v, want %v", b.GetEmail(), wantEmail)
+	}
+	if b.GetLink() != wantLink {
+		t.Errorf("SetLink is %v, want %v", b.GetLink(), wantLink)
+	}
 	if b.GetBranch() != wantBranch {
 		t.Errorf("SetBranch is %v, want %v", b.GetBranch(), wantBranch)
 	}
@@ -442,6 +472,8 @@ func TestLibrary_Build_Setters_Empty(t *testing.T) {
 	b.SetCommit("")
 	b.SetSender("")
 	b.SetAuthor("")
+	b.SetEmail("")
+	b.SetLink("")
 	b.SetBranch("")
 	b.SetRef("")
 	b.SetBaseRef("")
@@ -506,6 +538,12 @@ func TestLibrary_Build_Setters_Empty(t *testing.T) {
 	if b.GetAuthor() != "" {
 		t.Errorf("SetAuthor is %v, want \"\"", b.GetAuthor())
 	}
+	if b.GetEmail() != "" {
+		t.Errorf("SetEmail is %v, want \"\"", b.GetEmail())
+	}
+	if b.GetLink() != "" {
+		t.Errorf("SetLink is %v, want \"\"", b.GetLink())
+	}
 	if b.GetBranch() != "" {
 		t.Errorf("SetBranch is %v, want \"\"", b.GetBranch())
 	}
@@ -551,6 +589,8 @@ func TestLibrary_Build_String(t *testing.T) {
 		Commit:       &str,
 		Sender:       &str,
 		Author:       &str,
+		Email:        &str,
+		Link:         &str,
 		Branch:       &str,
 		Ref:          &str,
 		BaseRef:      &str,

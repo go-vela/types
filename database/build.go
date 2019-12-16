@@ -42,6 +42,8 @@ type Build struct {
 	Commit       sql.NullString `sql:"commit"`
 	Sender       sql.NullString `sql:"sender"`
 	Author       sql.NullString `sql:"author"`
+	Email        sql.NullString `sql:"email"`
+	Link         sql.NullString `sql:"link"`
 	Branch       sql.NullString `sql:"branch"`
 	Ref          sql.NullString `sql:"ref"`
 	BaseRef      sql.NullString `sql:"base_ref"`
@@ -172,6 +174,16 @@ func (b *Build) Nullify() *Build {
 		b.Author.Valid = false
 	}
 
+	// check if the Email field should be false
+	if len(b.Email.String) == 0 {
+		b.Email.Valid = false
+	}
+
+	// check if the Link field should be false
+	if len(b.Link.String) == 0 {
+		b.Link.Valid = false
+	}
+
 	// check if the Branch field should be false
 	if len(b.Branch.String) == 0 {
 		b.Branch.Valid = false
@@ -229,6 +241,8 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetCommit(b.Commit.String)
 	build.SetSender(b.Sender.String)
 	build.SetAuthor(b.Author.String)
+	build.SetEmail(b.Email.String)
+	build.SetLink(b.Link.String)
 	build.SetBranch(b.Branch.String)
 	build.SetRef(b.Ref.String)
 	build.SetBaseRef(b.BaseRef.String)
@@ -278,6 +292,8 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Commit:       sql.NullString{String: b.GetCommit(), Valid: true},
 		Sender:       sql.NullString{String: b.GetSender(), Valid: true},
 		Author:       sql.NullString{String: b.GetAuthor(), Valid: true},
+		Email:        sql.NullString{String: b.GetEmail(), Valid: true},
+		Link:         sql.NullString{String: b.GetLink(), Valid: true},
 		Branch:       sql.NullString{String: b.GetBranch(), Valid: true},
 		Ref:          sql.NullString{String: b.GetRef(), Valid: true},
 		BaseRef:      sql.NullString{String: b.GetBaseRef(), Valid: true},

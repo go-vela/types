@@ -27,6 +27,8 @@ type Build struct {
 	Commit       *string `json:"commit,omitempty"`
 	Sender       *string `json:"sender,omitempty"`
 	Author       *string `json:"author,omitempty"`
+	Email        *string `json:"email,omitempty"`
+	Link         *string `json:"link,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
 	Ref          *string `json:"ref,omitempty"`
 	BaseRef      *string `json:"base_ref,omitempty"`
@@ -261,6 +263,30 @@ func (b *Build) GetAuthor() string {
 		return ""
 	}
 	return *b.Author
+}
+
+// GetEmail returns the Email field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetEmail() string {
+	// return zero value if Build type or Email field is nil
+	if b == nil || b.Email == nil {
+		return ""
+	}
+	return *b.Email
+}
+
+// GetLink returns the Link field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetLink() string {
+	// return zero value if Build type or Link field is nil
+	if b == nil || b.Link == nil {
+		return ""
+	}
+	return *b.Link
 }
 
 // GetBranch returns the Branch field.
@@ -561,6 +587,30 @@ func (b *Build) SetAuthor(v string) {
 		return
 	}
 	b.Author = &v
+}
+
+// SetEmail sets the Email field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetEmail(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+	b.Email = &v
+}
+
+// SetLink sets the Link field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetLink(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+	b.Link = &v
 }
 
 // SetBranch sets the Branch field.

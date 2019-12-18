@@ -6,8 +6,6 @@ name: validate
 on:
   pull_request:
   push:
-    tags-ignore:
-      - "*"
 
 # pipeline to execute
 jobs:

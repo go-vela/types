@@ -2,9 +2,12 @@
 name: validate
 
 # trigger on pull_request or push events
+# ignore push events with tag
 on:
   pull_request:
   push:
+    tags-ignore:
+      - "*"
 
 # pipeline to execute
 jobs:

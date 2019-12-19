@@ -2,6 +2,7 @@
 name: test
 
 # trigger on pull_request or push events
+# ignore push events with tag
 on:
   pull_request:
   push:
@@ -15,10 +16,6 @@ jobs:
     steps:
     - name: clone
       uses: actions/checkout@v1
-
-    - name: install
-      run: |
-        go get github.com/mattn/goveralls
 
     - name: test
       run: |

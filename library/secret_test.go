@@ -302,7 +302,7 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 
 func TestLibrary_Secret_Getters_Empty(t *testing.T) {
 	// setup types
-	s := &Secret{}
+	s := new(Secret)
 
 	// run test
 	gotID := s.GetID()
@@ -355,7 +355,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 	arr := []string{"foo", "bar"}
 	booL := true
 
-	s := &Secret{}
+	s := new(Secret)
 
 	wantID := num64
 	wantOrg := str
@@ -414,8 +414,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 
 func TestLibrary_Secret_Setters_Empty(t *testing.T) {
 	// setup types
-	s := &Secret{}
-	s = nil
+	var s *Secret
 
 	// run test
 	s.SetID(0)

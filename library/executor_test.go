@@ -161,7 +161,7 @@ func TestLibrary_Executor_Getters(t *testing.T) {
 
 func TestLibrary_Executor_Getters_Empty(t *testing.T) {
 	// setup types
-	e := &Executor{}
+	e := new(Executor)
 
 	// run test
 	gotID := e.GetID()
@@ -293,7 +293,7 @@ func TestLibrary_Executor_Setters(t *testing.T) {
 			},
 		},
 	}
-	e := &Executor{}
+	e := new(Executor)
 
 	wantID := num64
 	wantHost := str
@@ -337,7 +337,7 @@ func TestLibrary_Executor_Setters(t *testing.T) {
 
 func TestLibrary_Executor_Setters_Empty(t *testing.T) {
 	// setup types
-	e := &Executor{}
+	var e *Executor
 
 	// Run tests
 	e.SetID(0)

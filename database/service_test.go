@@ -53,8 +53,7 @@ func TestDatabase_Service_Nullify(t *testing.T) {
 
 func TestDatabase_Service_Nullify_Empty(t *testing.T) {
 	// setup types
-	s := &Service{}
-	s = nil
+	var s *Service
 
 	// run test
 	got := s.Nullify()

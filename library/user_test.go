@@ -60,7 +60,7 @@ func TestLibrary_User_Getters(t *testing.T) {
 
 func TestLibrary_User_Getters_Empty(t *testing.T) {
 	// setup types
-	u := &User{}
+	u := new(User)
 
 	// run test
 	gotID := u.GetID()
@@ -95,7 +95,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 	booL := false
 	num64 := int64(1)
 	str := "foo"
-	u := &User{}
+	u := new(User)
 
 	wantID := num64
 	wantName := str
@@ -134,8 +134,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 
 func TestLibrary_User_Setters_Empty(t *testing.T) {
 	// setup types
-	u := &User{}
-	u = nil
+	var u *User
 
 	// run test
 	u.SetID(0)

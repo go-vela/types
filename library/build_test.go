@@ -186,7 +186,7 @@ func TestLibrary_Build_Getters(t *testing.T) {
 
 func TestLibrary_Build_Getters_Empty(t *testing.T) {
 	// setup types
-	b := &Build{}
+	var b *Build
 
 	// run test
 	gotID := b.GetID()
@@ -305,7 +305,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	num := 1
 	num64 := int64(num)
 	str := "foo"
-	b := &Build{}
+	b := new(Build)
 
 	wantID := num64
 	wantRepoID := num64
@@ -449,8 +449,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 
 func TestLibrary_Build_Setters_Empty(t *testing.T) {
 	// setup types
-	b := &Build{}
-	b = nil
+	var b *Build
 
 	// Run tests
 	b.SetID(0)

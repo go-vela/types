@@ -54,8 +54,7 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 
 func TestDatabase_Hook_Nullify_Empty(t *testing.T) {
 	// setup types
-	h := &Hook{}
-	h = nil
+	var h *Hook
 
 	// run test
 	got := h.Nullify()

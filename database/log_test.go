@@ -41,8 +41,7 @@ func TestDatabase_Log_Nullify(t *testing.T) {
 
 func TestDatabase_Log_Nullify_Empty(t *testing.T) {
 	// setup types
-	l := &Log{}
-	l = nil
+	var l *Log
 
 	// run test
 	got := l.Nullify()

@@ -63,8 +63,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 
 func TestDatabase_Repo_Nullify_Empty(t *testing.T) {
 	// setup types
-	r := &Repo{}
-	r = nil
+	var r *Repo
 
 	// run test
 	got := r.Nullify()

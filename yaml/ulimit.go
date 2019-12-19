@@ -80,6 +80,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					Soft: value,
 					Hard: value,
 				})
+
 				continue
 			case len(limitParts) == 2:
 				// capture value for soft limit
@@ -100,6 +101,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					Soft: firstValue,
 					Hard: secondValue,
 				})
+
 				continue
 			default:
 				return fmt.Errorf("Ulimit %s can only contain 1 `:` (colon)", ulimit)

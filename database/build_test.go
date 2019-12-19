@@ -107,8 +107,7 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 
 func TestDatabase_Build_Nullify_Empty(t *testing.T) {
 	// setup types
-	b := &Build{}
-	b = nil
+	var b *Build
 
 	// run test
 	got := b.Nullify()

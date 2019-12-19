@@ -25,9 +25,9 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 	// attempt to unmarshal as a string type
 	err := json.Unmarshal(b, &jsonString)
 	if err == nil {
-
 		// overwrite existing StringSlice
 		*s = []string{jsonString}
+
 		return nil
 	}
 
@@ -37,13 +37,13 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 	// attempt to unmarshal as a string slice type
 	err = json.Unmarshal(b, &jsonSlice)
 	if err == nil {
-
 		// overwrite existing StringSlice
 		*s = jsonSlice
+
 		return nil
 	}
 
-	return errors.New("Failed to unmarshal StringSlice")
+	return errors.New("unable to unmarshal into StringSlice")
 }
 
 // UnmarshalYAML implements the Unmarshaler interface for the StringSlice type.
@@ -54,9 +54,9 @@ func (s *StringSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// attempt to unmarshal as a string type
 	err := unmarshal(&yamlString)
 	if err == nil {
-
 		// overwrite existing StringSlice
 		*s = []string{yamlString}
+
 		return nil
 	}
 
@@ -65,11 +65,11 @@ func (s *StringSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// attempt to unmarshal as a string slice type
 	err = unmarshal(&yamlSlice)
 	if err == nil {
-
 		// overwrite existing StringSlice
 		*s = yamlSlice
+
 		return nil
 	}
 
-	return errors.New("Failed to unmarshal StringSlice")
+	return errors.New("unable to unmarshal into StringSlice")
 }

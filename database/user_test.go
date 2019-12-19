@@ -41,8 +41,7 @@ func TestDatabase_User_Nullify(t *testing.T) {
 
 func TestDatabase_User_Nullify_Empty(t *testing.T) {
 	// setup types
-	u := &User{}
-	u = nil
+	var u *User
 
 	// run test
 	got := u.Nullify()

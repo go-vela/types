@@ -127,7 +127,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 
 func TestLibrary_Repo_Getters_Empty(t *testing.T) {
 	// setup types
-	r := &Repo{}
+	r := new(Repo)
 
 	// run test
 	gotID := r.GetID()
@@ -207,7 +207,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	num := 1
 	num64 := int64(num)
 	str := "foo"
-	r := &Repo{}
+	r := new(Repo)
 
 	wantID := num64
 	wantUserID := num64
@@ -301,8 +301,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 
 func TestLibrary_Repo_Setters_Empty(t *testing.T) {
 	// setup types
-	r := &Repo{}
-	r = nil
+	var r *Repo
 
 	// run test
 	r.SetID(0)

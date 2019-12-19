@@ -30,6 +30,7 @@ func (e *Executor) GetID() int64 {
 	if e == nil || e.ID == nil {
 		return 0
 	}
+
 	return *e.ID
 }
 
@@ -42,6 +43,7 @@ func (e *Executor) GetHost() string {
 	if e == nil || e.Host == nil {
 		return ""
 	}
+
 	return *e.Host
 }
 
@@ -54,6 +56,7 @@ func (e *Executor) GetRuntime() string {
 	if e == nil || e.Runtime == nil {
 		return ""
 	}
+
 	return *e.Runtime
 }
 
@@ -66,6 +69,7 @@ func (e *Executor) GetDistribution() string {
 	if e == nil || e.Distribution == nil {
 		return ""
 	}
+
 	return *e.Distribution
 }
 
@@ -78,6 +82,7 @@ func (e *Executor) GetBuild() Build {
 	if e == nil || e.Build == nil {
 		return Build{}
 	}
+
 	return *e.Build
 }
 
@@ -90,6 +95,7 @@ func (e *Executor) GetRepo() Repo {
 	if e == nil || e.Repo == nil {
 		return Repo{}
 	}
+
 	return *e.Repo
 }
 
@@ -102,6 +108,7 @@ func (e *Executor) GetPipeline() pipeline.Build {
 	if e == nil || e.Pipeline == nil {
 		return pipeline.Build{}
 	}
+
 	return *e.Pipeline
 }
 
@@ -114,6 +121,7 @@ func (e *Executor) SetID(v int64) {
 	if e == nil {
 		return
 	}
+
 	e.ID = &v
 }
 
@@ -126,6 +134,7 @@ func (e *Executor) SetHost(v string) {
 	if e == nil {
 		return
 	}
+
 	e.Host = &v
 }
 
@@ -138,6 +147,7 @@ func (e *Executor) SetRuntime(v string) {
 	if e == nil {
 		return
 	}
+
 	e.Runtime = &v
 }
 
@@ -150,6 +160,7 @@ func (e *Executor) SetDistribution(v string) {
 	if e == nil {
 		return
 	}
+
 	e.Distribution = &v
 }
 
@@ -162,6 +173,7 @@ func (e *Executor) SetBuild(v Build) {
 	if e == nil {
 		return
 	}
+
 	e.Build = &v
 }
 
@@ -174,6 +186,7 @@ func (e *Executor) SetRepo(v Repo) {
 	if e == nil {
 		return
 	}
+
 	e.Repo = &v
 }
 
@@ -186,6 +199,7 @@ func (e *Executor) SetPipeline(v pipeline.Build) {
 	if e == nil {
 		return
 	}
+
 	e.Pipeline = &v
 }
 

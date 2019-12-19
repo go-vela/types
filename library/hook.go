@@ -31,6 +31,7 @@ func (h *Hook) GetID() int64 {
 	if h == nil || h.ID == nil {
 		return 0
 	}
+
 	return *h.ID
 }
 
@@ -43,6 +44,7 @@ func (h *Hook) GetRepoID() int64 {
 	if h == nil || h.RepoID == nil {
 		return 0
 	}
+
 	return *h.RepoID
 }
 
@@ -55,6 +57,7 @@ func (h *Hook) GetBuildID() int64 {
 	if h == nil || h.BuildID == nil {
 		return 0
 	}
+
 	return *h.BuildID
 }
 
@@ -67,6 +70,7 @@ func (h *Hook) GetNumber() int {
 	if h == nil || h.Number == nil {
 		return 0
 	}
+
 	return *h.Number
 }
 
@@ -79,6 +83,7 @@ func (h *Hook) GetSourceID() string {
 	if h == nil || h.SourceID == nil {
 		return ""
 	}
+
 	return *h.SourceID
 }
 
@@ -91,6 +96,7 @@ func (h *Hook) GetCreated() int64 {
 	if h == nil || h.Created == nil {
 		return 0
 	}
+
 	return *h.Created
 }
 
@@ -103,6 +109,7 @@ func (h *Hook) GetHost() string {
 	if h == nil || h.Host == nil {
 		return ""
 	}
+
 	return *h.Host
 }
 
@@ -115,6 +122,7 @@ func (h *Hook) GetEvent() string {
 	if h == nil || h.Event == nil {
 		return ""
 	}
+
 	return *h.Event
 }
 
@@ -127,6 +135,7 @@ func (h *Hook) GetBranch() string {
 	if h == nil || h.Branch == nil {
 		return ""
 	}
+
 	return *h.Branch
 }
 
@@ -139,6 +148,7 @@ func (h *Hook) GetError() string {
 	if h == nil || h.Error == nil {
 		return ""
 	}
+
 	return *h.Error
 }
 
@@ -151,6 +161,7 @@ func (h *Hook) GetStatus() string {
 	if h == nil || h.Status == nil {
 		return ""
 	}
+
 	return *h.Status
 }
 
@@ -163,6 +174,7 @@ func (h *Hook) GetLink() string {
 	if h == nil || h.Link == nil {
 		return ""
 	}
+
 	return *h.Link
 }
 
@@ -175,6 +187,7 @@ func (h *Hook) SetID(v int64) {
 	if h == nil {
 		return
 	}
+
 	h.ID = &v
 }
 
@@ -187,6 +200,7 @@ func (h *Hook) SetRepoID(v int64) {
 	if h == nil {
 		return
 	}
+
 	h.RepoID = &v
 }
 
@@ -199,6 +213,7 @@ func (h *Hook) SetBuildID(v int64) {
 	if h == nil {
 		return
 	}
+
 	h.BuildID = &v
 }
 
@@ -211,6 +226,7 @@ func (h *Hook) SetNumber(v int) {
 	if h == nil {
 		return
 	}
+
 	h.Number = &v
 }
 
@@ -223,6 +239,7 @@ func (h *Hook) SetSourceID(v string) {
 	if h == nil {
 		return
 	}
+
 	h.SourceID = &v
 }
 
@@ -235,6 +252,7 @@ func (h *Hook) SetCreated(v int64) {
 	if h == nil {
 		return
 	}
+
 	h.Created = &v
 }
 
@@ -247,6 +265,7 @@ func (h *Hook) SetHost(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Host = &v
 }
 
@@ -271,6 +290,7 @@ func (h *Hook) SetBranch(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Branch = &v
 }
 
@@ -283,6 +303,7 @@ func (h *Hook) SetError(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Error = &v
 }
 
@@ -295,6 +316,7 @@ func (h *Hook) SetStatus(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Status = &v
 }
 
@@ -307,6 +329,7 @@ func (h *Hook) SetLink(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Link = &v
 }
 

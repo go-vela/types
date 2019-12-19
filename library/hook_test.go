@@ -27,6 +27,7 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 	wantLink := "https://github.com/github/octocat/settings/hooks/1"
 
 	h := new(Hook)
+
 	h.SetID(wantID)
 	h.SetRepoID(wantRepoID)
 	h.SetBuildID(wantBuildID)
@@ -94,7 +95,7 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 
 func TestLibrary_Hook_Getters_Empty(t *testing.T) {
 	// setup types
-	h := &Hook{}
+	h := new(Hook)
 
 	// run test
 	gotID := h.GetID()
@@ -163,7 +164,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 	wantStatus := "success"
 	wantLink := "https://github.com/github/octocat/settings/hooks/1"
 
-	h := &Hook{}
+	h := new(Hook)
 
 	// Run tests
 	h.SetID(wantID)
@@ -219,8 +220,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 
 func TestLibrary_Hook_Setters_Empty(t *testing.T) {
 	// setup types
-	h := &Hook{}
-	h = nil
+	var h *Hook
 
 	// Run tests
 	h.SetID(0)

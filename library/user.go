@@ -25,6 +25,7 @@ func (u *User) GetID() int64 {
 	if u == nil || u.ID == nil {
 		return 0
 	}
+
 	return *u.ID
 }
 
@@ -37,6 +38,7 @@ func (u *User) GetName() string {
 	if u == nil || u.Name == nil {
 		return ""
 	}
+
 	return *u.Name
 }
 
@@ -49,6 +51,7 @@ func (u *User) GetToken() string {
 	if u == nil || u.Token == nil {
 		return ""
 	}
+
 	return *u.Token
 }
 
@@ -61,6 +64,7 @@ func (u *User) GetHash() string {
 	if u == nil || u.Hash == nil {
 		return ""
 	}
+
 	return *u.Hash
 }
 
@@ -73,6 +77,7 @@ func (u *User) GetActive() bool {
 	if u == nil || u.Active == nil {
 		return false
 	}
+
 	return *u.Active
 }
 
@@ -85,6 +90,7 @@ func (u *User) GetAdmin() bool {
 	if u == nil || u.Admin == nil {
 		return false
 	}
+
 	return *u.Admin
 }
 
@@ -97,6 +103,7 @@ func (u *User) SetID(v int64) {
 	if u == nil {
 		return
 	}
+
 	u.ID = &v
 }
 
@@ -109,6 +116,7 @@ func (u *User) SetName(v string) {
 	if u == nil {
 		return
 	}
+
 	u.Name = &v
 }
 
@@ -121,6 +129,7 @@ func (u *User) SetToken(v string) {
 	if u == nil {
 		return
 	}
+
 	u.Token = &v
 }
 
@@ -133,6 +142,7 @@ func (u *User) SetHash(v string) {
 	if u == nil {
 		return
 	}
+
 	u.Hash = &v
 }
 
@@ -145,6 +155,7 @@ func (u *User) SetActive(v bool) {
 	if u == nil {
 		return
 	}
+
 	u.Active = &v
 }
 
@@ -157,6 +168,7 @@ func (u *User) SetAdmin(v bool) {
 	if u == nil {
 		return
 	}
+
 	u.Admin = &v
 }
 

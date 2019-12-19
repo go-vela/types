@@ -66,6 +66,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					Destination: parts[0],
 					AccessMode:  "ro",
 				})
+
 				continue
 			case len(parts) == 2:
 				// append the element to the volume slice
@@ -74,6 +75,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					Destination: parts[1],
 					AccessMode:  "ro",
 				})
+
 				continue
 			case len(parts) == 3:
 				// append the element to the volume slice
@@ -82,6 +84,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					Destination: parts[1],
 					AccessMode:  parts[2],
 				})
+
 				continue
 			default:
 				return fmt.Errorf("Volume %s must contain at least 1 but no more than 2 `:`(colons)", volume)

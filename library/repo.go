@@ -36,6 +36,7 @@ func (r *Repo) GetID() int64 {
 	if r == nil || r.ID == nil {
 		return 0
 	}
+
 	return *r.ID
 }
 
@@ -48,6 +49,7 @@ func (r *Repo) GetUserID() int64 {
 	if r == nil || r.UserID == nil {
 		return 0
 	}
+
 	return *r.UserID
 }
 
@@ -60,6 +62,7 @@ func (r *Repo) GetOrg() string {
 	if r == nil || r.Org == nil {
 		return ""
 	}
+
 	return *r.Org
 }
 
@@ -72,6 +75,7 @@ func (r *Repo) GetName() string {
 	if r == nil || r.Name == nil {
 		return ""
 	}
+
 	return *r.Name
 }
 
@@ -84,6 +88,7 @@ func (r *Repo) GetFullName() string {
 	if r == nil || r.FullName == nil {
 		return ""
 	}
+
 	return *r.FullName
 }
 
@@ -96,6 +101,7 @@ func (r *Repo) GetLink() string {
 	if r == nil || r.Link == nil {
 		return ""
 	}
+
 	return *r.Link
 }
 
@@ -108,6 +114,7 @@ func (r *Repo) GetClone() string {
 	if r == nil || r.Clone == nil {
 		return ""
 	}
+
 	return *r.Clone
 }
 
@@ -120,6 +127,7 @@ func (r *Repo) GetBranch() string {
 	if r == nil || r.Branch == nil {
 		return ""
 	}
+
 	return *r.Branch
 }
 
@@ -132,6 +140,7 @@ func (r *Repo) GetTimeout() int64 {
 	if r == nil || r.Timeout == nil {
 		return 0
 	}
+
 	return *r.Timeout
 }
 
@@ -144,6 +153,7 @@ func (r *Repo) GetVisibility() string {
 	if r == nil || r.Visibility == nil {
 		return ""
 	}
+
 	return *r.Visibility
 }
 
@@ -156,6 +166,7 @@ func (r *Repo) GetPrivate() bool {
 	if r == nil || r.Private == nil {
 		return false
 	}
+
 	return *r.Private
 }
 
@@ -168,6 +179,7 @@ func (r *Repo) GetTrusted() bool {
 	if r == nil || r.Trusted == nil {
 		return false
 	}
+
 	return *r.Trusted
 }
 
@@ -180,6 +192,7 @@ func (r *Repo) GetActive() bool {
 	if r == nil || r.Active == nil {
 		return false
 	}
+
 	return *r.Active
 }
 
@@ -192,6 +205,7 @@ func (r *Repo) GetAllowPull() bool {
 	if r == nil || r.AllowPull == nil {
 		return false
 	}
+
 	return *r.AllowPull
 }
 
@@ -204,6 +218,7 @@ func (r *Repo) GetAllowPush() bool {
 	if r == nil || r.AllowPush == nil {
 		return false
 	}
+
 	return *r.AllowPush
 }
 
@@ -216,6 +231,7 @@ func (r *Repo) GetAllowDeploy() bool {
 	if r == nil || r.AllowDeploy == nil {
 		return false
 	}
+
 	return *r.AllowDeploy
 }
 
@@ -228,6 +244,7 @@ func (r *Repo) GetAllowTag() bool {
 	if r == nil || r.AllowTag == nil {
 		return false
 	}
+
 	return *r.AllowTag
 }
 
@@ -240,6 +257,7 @@ func (r *Repo) SetID(v int64) {
 	if r == nil {
 		return
 	}
+
 	r.ID = &v
 }
 
@@ -252,6 +270,7 @@ func (r *Repo) SetUserID(v int64) {
 	if r == nil {
 		return
 	}
+
 	r.UserID = &v
 }
 
@@ -264,6 +283,7 @@ func (r *Repo) SetOrg(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Org = &v
 }
 
@@ -276,6 +296,7 @@ func (r *Repo) SetName(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Name = &v
 }
 
@@ -288,6 +309,7 @@ func (r *Repo) SetFullName(v string) {
 	if r == nil {
 		return
 	}
+
 	r.FullName = &v
 }
 
@@ -300,6 +322,7 @@ func (r *Repo) SetLink(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Link = &v
 }
 
@@ -312,6 +335,7 @@ func (r *Repo) SetClone(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Clone = &v
 }
 
@@ -324,6 +348,7 @@ func (r *Repo) SetBranch(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Branch = &v
 }
 
@@ -336,6 +361,7 @@ func (r *Repo) SetTimeout(v int64) {
 	if r == nil {
 		return
 	}
+
 	r.Timeout = &v
 }
 
@@ -348,6 +374,7 @@ func (r *Repo) SetVisibility(v string) {
 	if r == nil {
 		return
 	}
+
 	r.Visibility = &v
 }
 
@@ -360,6 +387,7 @@ func (r *Repo) SetPrivate(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.Private = &v
 }
 
@@ -372,6 +400,7 @@ func (r *Repo) SetTrusted(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.Trusted = &v
 }
 
@@ -384,6 +413,7 @@ func (r *Repo) SetActive(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.Active = &v
 }
 
@@ -396,6 +426,7 @@ func (r *Repo) SetAllowPull(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.AllowPull = &v
 }
 
@@ -408,6 +439,7 @@ func (r *Repo) SetAllowPush(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.AllowPush = &v
 }
 
@@ -420,6 +452,7 @@ func (r *Repo) SetAllowDeploy(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.AllowDeploy = &v
 }
 
@@ -432,6 +465,7 @@ func (r *Repo) SetAllowTag(v bool) {
 	if r == nil {
 		return
 	}
+
 	r.AllowTag = &v
 }
 

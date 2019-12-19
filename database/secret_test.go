@@ -47,8 +47,7 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 
 func TestDatabase_Secret_Nullify_Empty(t *testing.T) {
 	// setup types
-	s := &Secret{}
-	s = nil
+	var s *Secret
 
 	// run test
 	got := s.Nullify()

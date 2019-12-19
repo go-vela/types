@@ -56,7 +56,7 @@ func TestLibrary_Login_Getters(t *testing.T) {
 
 func TestLibrary_Login_Getters_Empty(t *testing.T) {
 	// setup types
-	l := &Login{}
+	l := new(Login)
 
 	// run test
 	gotUsername := l.GetUsername()
@@ -81,7 +81,7 @@ func TestLibrary_Login_Getters_Empty(t *testing.T) {
 func TestLibrary_Login_Setters(t *testing.T) {
 	// setup types
 	str := "foo"
-	l := &Login{}
+	l := new(Login)
 	wantUsername := str
 	wantPassword := str
 	wantOTP := str
@@ -109,8 +109,7 @@ func TestLibrary_Login_Setters(t *testing.T) {
 
 func TestLibrary_Login_Setters_Empty(t *testing.T) {
 	// setup types
-	l := &Login{}
-	l = nil
+	var l *Login
 
 	// run test
 	l.SetUsername("")

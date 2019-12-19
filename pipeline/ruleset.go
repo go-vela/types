@@ -103,10 +103,8 @@ func (r *Rules) Empty() bool {
 func (r *Rules) Match(from *RuleData, op string) bool {
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
-
 		// if the "or" operator is provided in the ruleset
 		if strings.EqualFold(op, "or") {
-
 			// iterate through each path in the ruletype
 			for _, p := range from.Path {
 

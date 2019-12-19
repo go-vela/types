@@ -25,6 +25,7 @@ func (l *Log) GetID() int64 {
 	if l == nil || l.ID == nil {
 		return 0
 	}
+
 	return *l.ID
 }
 
@@ -37,6 +38,7 @@ func (l *Log) GetBuildID() int64 {
 	if l == nil || l.BuildID == nil {
 		return 0
 	}
+
 	return *l.BuildID
 }
 
@@ -49,6 +51,7 @@ func (l *Log) GetRepoID() int64 {
 	if l == nil || l.RepoID == nil {
 		return 0
 	}
+
 	return *l.RepoID
 }
 
@@ -61,6 +64,7 @@ func (l *Log) GetServiceID() int64 {
 	if l == nil || l.ServiceID == nil {
 		return 0
 	}
+
 	return *l.ServiceID
 }
 
@@ -73,6 +77,7 @@ func (l *Log) GetStepID() int64 {
 	if l == nil || l.StepID == nil {
 		return 0
 	}
+
 	return *l.StepID
 }
 
@@ -85,6 +90,7 @@ func (l *Log) GetData() []byte {
 	if l == nil || l.Data == nil {
 		return []byte{}
 	}
+
 	return *l.Data
 }
 
@@ -97,6 +103,7 @@ func (l *Log) SetID(v int64) {
 	if l == nil {
 		return
 	}
+
 	l.ID = &v
 }
 
@@ -109,6 +116,7 @@ func (l *Log) SetBuildID(v int64) {
 	if l == nil {
 		return
 	}
+
 	l.BuildID = &v
 }
 
@@ -121,6 +129,7 @@ func (l *Log) SetRepoID(v int64) {
 	if l == nil {
 		return
 	}
+
 	l.RepoID = &v
 }
 
@@ -133,6 +142,7 @@ func (l *Log) SetServiceID(v int64) {
 	if l == nil {
 		return
 	}
+
 	l.ServiceID = &v
 }
 
@@ -145,6 +155,7 @@ func (l *Log) SetStepID(v int64) {
 	if l == nil {
 		return
 	}
+
 	l.StepID = &v
 }
 
@@ -157,6 +168,7 @@ func (l *Log) SetData(v []byte) {
 	if l == nil {
 		return
 	}
+
 	l.Data = &v
 }
 

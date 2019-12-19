@@ -46,6 +46,7 @@ func (b *Build) GetID() int64 {
 	if b == nil || b.ID == nil {
 		return 0
 	}
+
 	return *b.ID
 }
 
@@ -58,6 +59,7 @@ func (b *Build) GetRepoID() int64 {
 	if b == nil || b.RepoID == nil {
 		return 0
 	}
+
 	return *b.RepoID
 }
 
@@ -70,6 +72,7 @@ func (b *Build) GetNumber() int {
 	if b == nil || b.Number == nil {
 		return 0
 	}
+
 	return *b.Number
 }
 
@@ -82,6 +85,7 @@ func (b *Build) GetParent() int {
 	if b == nil || b.Parent == nil {
 		return 0
 	}
+
 	return *b.Parent
 }
 
@@ -94,6 +98,7 @@ func (b *Build) GetEvent() string {
 	if b == nil || b.Event == nil {
 		return ""
 	}
+
 	return *b.Event
 }
 
@@ -106,6 +111,7 @@ func (b *Build) GetStatus() string {
 	if b == nil || b.Status == nil {
 		return ""
 	}
+
 	return *b.Status
 }
 
@@ -118,6 +124,7 @@ func (b *Build) GetError() string {
 	if b == nil || b.Error == nil {
 		return ""
 	}
+
 	return *b.Error
 }
 
@@ -130,6 +137,7 @@ func (b *Build) GetEnqueued() int64 {
 	if b == nil || b.Enqueued == nil {
 		return 0
 	}
+
 	return *b.Enqueued
 }
 
@@ -142,6 +150,7 @@ func (b *Build) GetCreated() int64 {
 	if b == nil || b.Created == nil {
 		return 0
 	}
+
 	return *b.Created
 }
 
@@ -154,6 +163,7 @@ func (b *Build) GetStarted() int64 {
 	if b == nil || b.Started == nil {
 		return 0
 	}
+
 	return *b.Started
 }
 
@@ -166,6 +176,7 @@ func (b *Build) GetFinished() int64 {
 	if b == nil || b.Finished == nil {
 		return 0
 	}
+
 	return *b.Finished
 }
 
@@ -178,6 +189,7 @@ func (b *Build) GetDeploy() string {
 	if b == nil || b.Deploy == nil {
 		return ""
 	}
+
 	return *b.Deploy
 }
 
@@ -190,6 +202,7 @@ func (b *Build) GetClone() string {
 	if b == nil || b.Clone == nil {
 		return ""
 	}
+
 	return *b.Clone
 }
 
@@ -202,6 +215,7 @@ func (b *Build) GetSource() string {
 	if b == nil || b.Source == nil {
 		return ""
 	}
+
 	return *b.Source
 }
 
@@ -214,6 +228,7 @@ func (b *Build) GetTitle() string {
 	if b == nil || b.Title == nil {
 		return ""
 	}
+
 	return *b.Title
 }
 
@@ -226,6 +241,7 @@ func (b *Build) GetMessage() string {
 	if b == nil || b.Message == nil {
 		return ""
 	}
+
 	return *b.Message
 }
 
@@ -238,6 +254,7 @@ func (b *Build) GetCommit() string {
 	if b == nil || b.Commit == nil {
 		return ""
 	}
+
 	return *b.Commit
 }
 
@@ -250,6 +267,7 @@ func (b *Build) GetSender() string {
 	if b == nil || b.Sender == nil {
 		return ""
 	}
+
 	return *b.Sender
 }
 
@@ -262,6 +280,7 @@ func (b *Build) GetAuthor() string {
 	if b == nil || b.Author == nil {
 		return ""
 	}
+
 	return *b.Author
 }
 
@@ -274,6 +293,7 @@ func (b *Build) GetEmail() string {
 	if b == nil || b.Email == nil {
 		return ""
 	}
+
 	return *b.Email
 }
 
@@ -286,6 +306,7 @@ func (b *Build) GetLink() string {
 	if b == nil || b.Link == nil {
 		return ""
 	}
+
 	return *b.Link
 }
 
@@ -298,6 +319,7 @@ func (b *Build) GetBranch() string {
 	if b == nil || b.Branch == nil {
 		return ""
 	}
+
 	return *b.Branch
 }
 
@@ -310,6 +332,7 @@ func (b *Build) GetRef() string {
 	if b == nil || b.Ref == nil {
 		return ""
 	}
+
 	return *b.Ref
 }
 
@@ -322,6 +345,7 @@ func (b *Build) GetBaseRef() string {
 	if b == nil || b.BaseRef == nil {
 		return ""
 	}
+
 	return *b.BaseRef
 }
 
@@ -334,6 +358,7 @@ func (b *Build) GetHost() string {
 	if b == nil || b.Host == nil {
 		return ""
 	}
+
 	return *b.Host
 }
 
@@ -346,6 +371,7 @@ func (b *Build) GetRuntime() string {
 	if b == nil || b.Runtime == nil {
 		return ""
 	}
+
 	return *b.Runtime
 }
 
@@ -358,6 +384,7 @@ func (b *Build) GetDistribution() string {
 	if b == nil || b.Distribution == nil {
 		return ""
 	}
+
 	return *b.Distribution
 }
 
@@ -370,6 +397,7 @@ func (b *Build) SetID(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.ID = &v
 }
 
@@ -382,6 +410,7 @@ func (b *Build) SetRepoID(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.RepoID = &v
 }
 
@@ -394,6 +423,7 @@ func (b *Build) SetNumber(v int) {
 	if b == nil {
 		return
 	}
+
 	b.Number = &v
 }
 
@@ -406,6 +436,7 @@ func (b *Build) SetParent(v int) {
 	if b == nil {
 		return
 	}
+
 	b.Parent = &v
 }
 
@@ -418,6 +449,7 @@ func (b *Build) SetEvent(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Event = &v
 }
 
@@ -430,6 +462,7 @@ func (b *Build) SetStatus(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Status = &v
 }
 
@@ -442,6 +475,7 @@ func (b *Build) SetError(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Error = &v
 }
 
@@ -454,6 +488,7 @@ func (b *Build) SetEnqueued(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.Enqueued = &v
 }
 
@@ -466,6 +501,7 @@ func (b *Build) SetCreated(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.Created = &v
 }
 
@@ -478,6 +514,7 @@ func (b *Build) SetStarted(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.Started = &v
 }
 
@@ -490,6 +527,7 @@ func (b *Build) SetFinished(v int64) {
 	if b == nil {
 		return
 	}
+
 	b.Finished = &v
 }
 
@@ -502,6 +540,7 @@ func (b *Build) SetDeploy(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Deploy = &v
 }
 
@@ -514,6 +553,7 @@ func (b *Build) SetClone(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Clone = &v
 }
 
@@ -526,6 +566,7 @@ func (b *Build) SetSource(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Source = &v
 }
 
@@ -538,6 +579,7 @@ func (b *Build) SetTitle(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Title = &v
 }
 
@@ -550,6 +592,7 @@ func (b *Build) SetMessage(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Message = &v
 }
 
@@ -562,6 +605,7 @@ func (b *Build) SetCommit(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Commit = &v
 }
 
@@ -574,6 +618,7 @@ func (b *Build) SetSender(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Sender = &v
 }
 
@@ -586,6 +631,7 @@ func (b *Build) SetAuthor(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Author = &v
 }
 
@@ -598,6 +644,7 @@ func (b *Build) SetEmail(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Email = &v
 }
 
@@ -610,6 +657,7 @@ func (b *Build) SetLink(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Link = &v
 }
 
@@ -622,6 +670,7 @@ func (b *Build) SetBranch(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Branch = &v
 }
 
@@ -634,6 +683,7 @@ func (b *Build) SetRef(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Ref = &v
 }
 
@@ -646,6 +696,7 @@ func (b *Build) SetBaseRef(v string) {
 	if b == nil {
 		return
 	}
+
 	b.BaseRef = &v
 }
 
@@ -658,6 +709,7 @@ func (b *Build) SetHost(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Host = &v
 }
 
@@ -670,6 +722,7 @@ func (b *Build) SetRuntime(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Runtime = &v
 }
 
@@ -682,6 +735,7 @@ func (b *Build) SetDistribution(v string) {
 	if b == nil {
 		return
 	}
+
 	b.Distribution = &v
 }
 

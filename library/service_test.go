@@ -96,7 +96,7 @@ func TestService_Getters(t *testing.T) {
 
 func TestService_Getters_Empty(t *testing.T) {
 	// setup types
-	s := &Service{}
+	s := new(Service)
 
 	// run test
 	gotID := s.GetID()
@@ -155,7 +155,7 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	num := 1
 	num64 := int64(num)
 	str := "foo"
-	s := &Service{}
+	s := new(Service)
 
 	wantID := num64
 	wantBuildID := num64
@@ -224,8 +224,7 @@ func TestLibrary_Service_Setters(t *testing.T) {
 
 func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	// setup types
-	s := &Service{}
-	s = nil
+	var s *Service
 
 	// run test
 	s.SetID(0)

@@ -59,7 +59,7 @@ func TestLibrary_Log_Getters(t *testing.T) {
 
 func TestLibrary_Log_Getters_Empty(t *testing.T) {
 	// setup types
-	l := &Log{}
+	l := new(Log)
 
 	// run test
 	gotID := l.GetID()
@@ -89,7 +89,7 @@ func TestLibrary_Log_Setters(t *testing.T) {
 	// setup types
 	num64 := int64(1)
 	bytes := []byte("foo")
-	l := &Log{}
+	l := new(Log)
 
 	wantID := num64
 	wantServiceID := num64
@@ -128,8 +128,7 @@ func TestLibrary_Log_Setters(t *testing.T) {
 
 func TestLibrary_Log_Setters_Empty(t *testing.T) {
 	// setup types
-	l := &Log{}
-	l = nil
+	var l *Log
 
 	// run test
 	l.SetID(0)

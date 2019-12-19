@@ -120,7 +120,7 @@ func TestStep_Getters(t *testing.T) {
 
 func TestStep_Getters_Empty(t *testing.T) {
 	// setup types
-	s := &Step{}
+	s := new(Step)
 
 	// run test
 	gotID := s.GetID()
@@ -195,7 +195,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	num := 1
 	num64 := int64(num)
 	str := "foo"
-	s := &Step{}
+	s := new(Step)
 
 	wantID := num64
 	wantBuildID := num64
@@ -284,8 +284,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 
 func TestLibrary_Step_Setters_Empty(t *testing.T) {
 	// setup types
-	s := &Step{}
-	s = nil
+	var s *Step
 
 	// run test
 	s.SetID(0)

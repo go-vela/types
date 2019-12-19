@@ -31,6 +31,7 @@ func (s *Service) GetID() int64 {
 	if s == nil || s.ID == nil {
 		return 0
 	}
+
 	return *s.ID
 }
 
@@ -43,6 +44,7 @@ func (s *Service) GetBuildID() int64 {
 	if s == nil || s.BuildID == nil {
 		return 0
 	}
+
 	return *s.BuildID
 }
 
@@ -55,6 +57,7 @@ func (s *Service) GetRepoID() int64 {
 	if s == nil || s.RepoID == nil {
 		return 0
 	}
+
 	return *s.RepoID
 }
 
@@ -67,6 +70,7 @@ func (s *Service) GetNumber() int {
 	if s == nil || s.Number == nil {
 		return 0
 	}
+
 	return *s.Number
 }
 
@@ -79,6 +83,7 @@ func (s *Service) GetName() string {
 	if s == nil || s.Name == nil {
 		return ""
 	}
+
 	return *s.Name
 }
 
@@ -91,6 +96,7 @@ func (s *Service) GetImage() string {
 	if s == nil || s.Image == nil {
 		return ""
 	}
+
 	return *s.Image
 }
 
@@ -103,6 +109,7 @@ func (s *Service) GetStatus() string {
 	if s == nil || s.Status == nil {
 		return ""
 	}
+
 	return *s.Status
 }
 
@@ -115,6 +122,7 @@ func (s *Service) GetError() string {
 	if s == nil || s.Error == nil {
 		return ""
 	}
+
 	return *s.Error
 }
 
@@ -127,6 +135,7 @@ func (s *Service) GetExitCode() int {
 	if s == nil || s.ExitCode == nil {
 		return 0
 	}
+
 	return *s.ExitCode
 }
 
@@ -139,6 +148,7 @@ func (s *Service) GetCreated() int64 {
 	if s == nil || s.Created == nil {
 		return 0
 	}
+
 	return *s.Created
 }
 
@@ -151,6 +161,7 @@ func (s *Service) GetStarted() int64 {
 	if s == nil || s.Started == nil {
 		return 0
 	}
+
 	return *s.Started
 }
 
@@ -163,6 +174,7 @@ func (s *Service) GetFinished() int64 {
 	if s == nil || s.Finished == nil {
 		return 0
 	}
+
 	return *s.Finished
 }
 
@@ -175,6 +187,7 @@ func (s *Service) SetID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.ID = &v
 }
 
@@ -187,6 +200,7 @@ func (s *Service) SetBuildID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.BuildID = &v
 }
 
@@ -199,6 +213,7 @@ func (s *Service) SetRepoID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.RepoID = &v
 }
 
@@ -211,6 +226,7 @@ func (s *Service) SetNumber(v int) {
 	if s == nil {
 		return
 	}
+
 	s.Number = &v
 }
 
@@ -223,6 +239,7 @@ func (s *Service) SetName(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Name = &v
 }
 
@@ -235,6 +252,7 @@ func (s *Service) SetImage(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Image = &v
 }
 
@@ -247,6 +265,7 @@ func (s *Service) SetStatus(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Status = &v
 }
 
@@ -259,6 +278,7 @@ func (s *Service) SetError(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Error = &v
 }
 
@@ -271,6 +291,7 @@ func (s *Service) SetExitCode(v int) {
 	if s == nil {
 		return
 	}
+
 	s.ExitCode = &v
 }
 
@@ -283,6 +304,7 @@ func (s *Service) SetCreated(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Created = &v
 }
 
@@ -295,6 +317,7 @@ func (s *Service) SetStarted(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Started = &v
 }
 
@@ -307,6 +330,7 @@ func (s *Service) SetFinished(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Finished = &v
 }
 

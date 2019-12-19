@@ -97,6 +97,7 @@ func (s *Secret) GetID() int64 {
 	if s == nil || s.ID == nil {
 		return 0
 	}
+
 	return *s.ID
 }
 
@@ -109,6 +110,7 @@ func (s *Secret) GetOrg() string {
 	if s == nil || s.Org == nil {
 		return ""
 	}
+
 	return *s.Org
 }
 
@@ -121,6 +123,7 @@ func (s *Secret) GetRepo() string {
 	if s == nil || s.Repo == nil {
 		return ""
 	}
+
 	return *s.Repo
 }
 
@@ -133,6 +136,7 @@ func (s *Secret) GetTeam() string {
 	if s == nil || s.Team == nil {
 		return ""
 	}
+
 	return *s.Team
 }
 
@@ -145,6 +149,7 @@ func (s *Secret) GetName() string {
 	if s == nil || s.Name == nil {
 		return ""
 	}
+
 	return *s.Name
 }
 
@@ -157,6 +162,7 @@ func (s *Secret) GetValue() string {
 	if s == nil || s.Value == nil {
 		return ""
 	}
+
 	return *s.Value
 }
 
@@ -169,6 +175,7 @@ func (s *Secret) GetType() string {
 	if s == nil || s.Type == nil {
 		return ""
 	}
+
 	return *s.Type
 }
 
@@ -181,6 +188,7 @@ func (s *Secret) GetImages() []string {
 	if s == nil || s.Images == nil {
 		return []string{}
 	}
+
 	return *s.Images
 }
 
@@ -193,6 +201,7 @@ func (s *Secret) GetEvents() []string {
 	if s == nil || s.Events == nil {
 		return []string{}
 	}
+
 	return *s.Events
 }
 
@@ -205,6 +214,7 @@ func (s *Secret) GetAllowCommand() bool {
 	if s == nil || s.AllowCommand == nil {
 		return false
 	}
+
 	return *s.AllowCommand
 }
 
@@ -217,6 +227,7 @@ func (s *Secret) SetID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.ID = &v
 }
 
@@ -229,6 +240,7 @@ func (s *Secret) SetOrg(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Org = &v
 }
 
@@ -241,6 +253,7 @@ func (s *Secret) SetRepo(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Repo = &v
 }
 
@@ -253,6 +266,7 @@ func (s *Secret) SetTeam(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Team = &v
 }
 
@@ -265,6 +279,7 @@ func (s *Secret) SetName(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Name = &v
 }
 
@@ -277,6 +292,7 @@ func (s *Secret) SetValue(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Value = &v
 }
 
@@ -289,6 +305,7 @@ func (s *Secret) SetType(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Type = &v
 }
 
@@ -301,6 +318,7 @@ func (s *Secret) SetImages(v []string) {
 	if s == nil {
 		return
 	}
+
 	s.Images = &v
 }
 
@@ -313,6 +331,7 @@ func (s *Secret) SetEvents(v []string) {
 	if s == nil {
 		return
 	}
+
 	s.Events = &v
 }
 
@@ -321,9 +340,11 @@ func (s *Secret) SetEvents(v []string) {
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
 func (s *Secret) SetAllowCommand(v bool) {
+	// return if Secret type is nil
 	if s == nil {
 		return
 	}
+
 	s.AllowCommand = &v
 }
 

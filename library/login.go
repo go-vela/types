@@ -33,6 +33,7 @@ func (l *Login) GetUsername() string {
 	if l == nil || l.Username == nil {
 		return ""
 	}
+
 	return *l.Username
 }
 
@@ -45,6 +46,7 @@ func (l *Login) GetPassword() string {
 	if l == nil || l.Password == nil {
 		return ""
 	}
+
 	return *l.Password
 }
 
@@ -57,6 +59,7 @@ func (l *Login) GetOTP() string {
 	if l == nil || l.OTP == nil {
 		return ""
 	}
+
 	return *l.OTP
 }
 
@@ -69,6 +72,7 @@ func (l *Login) GetToken() string {
 	if l == nil || l.Token == nil {
 		return ""
 	}
+
 	return *l.Token
 }
 
@@ -81,6 +85,7 @@ func (l *Login) SetUsername(v string) {
 	if l == nil {
 		return
 	}
+
 	l.Username = &v
 }
 
@@ -93,6 +98,7 @@ func (l *Login) SetPassword(v string) {
 	if l == nil {
 		return
 	}
+
 	l.Password = &v
 }
 
@@ -105,6 +111,7 @@ func (l *Login) SetOTP(v string) {
 	if l == nil {
 		return
 	}
+
 	l.OTP = &v
 }
 
@@ -117,6 +124,7 @@ func (l *Login) SetToken(v string) {
 	if l == nil {
 		return
 	}
+
 	l.Token = &v
 }
 

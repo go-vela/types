@@ -35,6 +35,7 @@ func (s *Step) GetID() int64 {
 	if s == nil || s.ID == nil {
 		return 0
 	}
+
 	return *s.ID
 }
 
@@ -47,6 +48,7 @@ func (s *Step) GetBuildID() int64 {
 	if s == nil || s.BuildID == nil {
 		return 0
 	}
+
 	return *s.BuildID
 }
 
@@ -59,6 +61,7 @@ func (s *Step) GetRepoID() int64 {
 	if s == nil || s.RepoID == nil {
 		return 0
 	}
+
 	return *s.RepoID
 }
 
@@ -71,6 +74,7 @@ func (s *Step) GetNumber() int {
 	if s == nil || s.Number == nil {
 		return 0
 	}
+
 	return *s.Number
 }
 
@@ -83,6 +87,7 @@ func (s *Step) GetName() string {
 	if s == nil || s.Name == nil {
 		return ""
 	}
+
 	return *s.Name
 }
 
@@ -95,6 +100,7 @@ func (s *Step) GetImage() string {
 	if s == nil || s.Image == nil {
 		return ""
 	}
+
 	return *s.Image
 }
 
@@ -107,6 +113,7 @@ func (s *Step) GetStage() string {
 	if s == nil || s.Stage == nil {
 		return ""
 	}
+
 	return *s.Stage
 }
 
@@ -119,6 +126,7 @@ func (s *Step) GetStatus() string {
 	if s == nil || s.Status == nil {
 		return ""
 	}
+
 	return *s.Status
 }
 
@@ -131,6 +139,7 @@ func (s *Step) GetError() string {
 	if s == nil || s.Error == nil {
 		return ""
 	}
+
 	return *s.Error
 }
 
@@ -143,6 +152,7 @@ func (s *Step) GetExitCode() int {
 	if s == nil || s.ExitCode == nil {
 		return 0
 	}
+
 	return *s.ExitCode
 }
 
@@ -155,6 +165,7 @@ func (s *Step) GetCreated() int64 {
 	if s == nil || s.Created == nil {
 		return 0
 	}
+
 	return *s.Created
 }
 
@@ -167,6 +178,7 @@ func (s *Step) GetStarted() int64 {
 	if s == nil || s.Started == nil {
 		return 0
 	}
+
 	return *s.Started
 }
 
@@ -179,6 +191,7 @@ func (s *Step) GetFinished() int64 {
 	if s == nil || s.Finished == nil {
 		return 0
 	}
+
 	return *s.Finished
 }
 
@@ -191,6 +204,7 @@ func (s *Step) GetHost() string {
 	if s == nil || s.Host == nil {
 		return ""
 	}
+
 	return *s.Host
 }
 
@@ -203,6 +217,7 @@ func (s *Step) GetRuntime() string {
 	if s == nil || s.Runtime == nil {
 		return ""
 	}
+
 	return *s.Runtime
 }
 
@@ -215,6 +230,7 @@ func (s *Step) GetDistribution() string {
 	if s == nil || s.Distribution == nil {
 		return ""
 	}
+
 	return *s.Distribution
 }
 
@@ -227,6 +243,7 @@ func (s *Step) SetID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.ID = &v
 }
 
@@ -239,6 +256,7 @@ func (s *Step) SetBuildID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.BuildID = &v
 }
 
@@ -251,6 +269,7 @@ func (s *Step) SetRepoID(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.RepoID = &v
 }
 
@@ -263,6 +282,7 @@ func (s *Step) SetNumber(v int) {
 	if s == nil {
 		return
 	}
+
 	s.Number = &v
 }
 
@@ -275,6 +295,7 @@ func (s *Step) SetName(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Name = &v
 }
 
@@ -287,6 +308,7 @@ func (s *Step) SetImage(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Image = &v
 }
 
@@ -299,6 +321,7 @@ func (s *Step) SetStage(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Stage = &v
 }
 
@@ -323,6 +346,7 @@ func (s *Step) SetError(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Error = &v
 }
 
@@ -335,6 +359,7 @@ func (s *Step) SetExitCode(v int) {
 	if s == nil {
 		return
 	}
+
 	s.ExitCode = &v
 }
 
@@ -347,6 +372,7 @@ func (s *Step) SetCreated(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Created = &v
 }
 
@@ -359,6 +385,7 @@ func (s *Step) SetStarted(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Started = &v
 }
 
@@ -371,6 +398,7 @@ func (s *Step) SetFinished(v int64) {
 	if s == nil {
 		return
 	}
+
 	s.Finished = &v
 }
 
@@ -383,6 +411,7 @@ func (s *Step) SetHost(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Host = &v
 }
 
@@ -395,6 +424,7 @@ func (s *Step) SetRuntime(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Runtime = &v
 }
 
@@ -407,6 +437,7 @@ func (s *Step) SetDistribution(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Distribution = &v
 }
 

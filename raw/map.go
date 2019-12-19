@@ -29,7 +29,6 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 	// attempt to unmarshal as a string slice type
 	err := json.Unmarshal(b, &jsonSlice)
 	if err == nil {
-
 		// iterate through each element in the json slice
 		for _, v := range jsonSlice {
 			// split each slice element into key/value pairs
@@ -41,6 +40,7 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 
 		// overwrite existing StringSliceMap
 		*s = targetMap
+
 		return nil
 	}
 
@@ -50,7 +50,6 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 	// attempt to unmarshal as map of strings
 	err = json.Unmarshal(b, &jsonMap)
 	if err == nil {
-
 		// iterate through each item in the json map
 		for k, v := range jsonMap {
 			// append each key/value pair to our target map
@@ -59,6 +58,7 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 
 		// overwrite existing StringSliceMap
 		*s = targetMap
+
 		return nil
 	}
 
@@ -76,7 +76,6 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	// attempt to unmarshal as a string slice type
 	err := unmarshal(&yamlSlice)
 	if err == nil {
-
 		// iterate through each element in the yaml slice
 		for _, v := range yamlSlice {
 			// split each slice element into key/value pairs
@@ -88,6 +87,7 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 
 		// overwrite existing StringSliceMap
 		*s = targetMap
+
 		return nil
 	}
 
@@ -97,7 +97,6 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	// attempt to unmarshal as map of strings
 	err = unmarshal(&yamlMap)
 	if err == nil {
-
 		// iterate through each item in the yaml map
 		for k, v := range yamlMap {
 			// append each key/value pair to our target map
@@ -106,6 +105,7 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 
 		// overwrite existing StringSliceMap
 		*s = targetMap
+
 		return nil
 	}
 

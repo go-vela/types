@@ -43,7 +43,7 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
-	return errors.New("Failed to unmarshal StringSlice")
+	return errors.New("unable to unmarshal into StringSlice")
 }
 
 // UnmarshalYAML implements the Unmarshaler interface for the StringSlice type.
@@ -71,5 +71,5 @@ func (s *StringSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	return errors.New("Failed to unmarshal StringSlice")
+	return errors.New("unable to unmarshal into StringSlice")
 }

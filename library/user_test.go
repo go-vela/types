@@ -16,17 +16,19 @@ func TestLibrary_User_Getters(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	u := &User{
-		ID:     &num64,
-		Name:   &str,
-		Token:  &str,
-		Hash:   &str,
-		Active: &booL,
-		Admin:  &booL,
+		ID:        &num64,
+		Name:      &str,
+		Token:     &str,
+		Hash:      &str,
+		Favorites: &str,
+		Active:    &booL,
+		Admin:     &booL,
 	}
 	wantID := num64
 	wantName := str
 	wantToken := str
 	wantHash := str
+	wantFavorites := str
 	wantActive := booL
 	wantAdmin := booL
 
@@ -35,6 +37,7 @@ func TestLibrary_User_Getters(t *testing.T) {
 	gotName := u.GetName()
 	gotToken := u.GetToken()
 	gotHash := u.GetHash()
+	gotFavorites := u.GetFavorites()
 	gotActive := u.GetActive()
 	gotAdmin := u.GetAdmin()
 
@@ -49,6 +52,9 @@ func TestLibrary_User_Getters(t *testing.T) {
 	}
 	if gotHash != wantHash {
 		t.Errorf("GetHash is %v, want %v", gotHash, wantHash)
+	}
+	if gotFavorites != wantFavorites {
+		t.Errorf("GetFavorites is %v, want %v", gotFavorites, wantFavorites)
 	}
 	if gotActive != wantActive {
 		t.Errorf("GetActive is %v, want %v", gotActive, wantActive)
@@ -67,6 +73,7 @@ func TestLibrary_User_Getters_Empty(t *testing.T) {
 	gotName := u.GetName()
 	gotToken := u.GetToken()
 	gotHash := u.GetHash()
+	gotFavorites := u.GetFavorites()
 	gotActive := u.GetActive()
 	gotAdmin := u.GetAdmin()
 
@@ -81,6 +88,9 @@ func TestLibrary_User_Getters_Empty(t *testing.T) {
 	}
 	if gotHash != "" {
 		t.Errorf("GetHash is %v, want \"\"", gotHash)
+	}
+	if gotFavorites != "" {
+		t.Errorf("GetFavorites is %v, want \"\"", gotFavorites)
 	}
 	if gotActive != false {
 		t.Errorf("GetActive is %v, want false", gotActive)
@@ -101,6 +111,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 	wantName := str
 	wantToken := str
 	wantHash := str
+	wantFavorites := str
 	wantActive := booL
 	wantAdmin := booL
 
@@ -109,6 +120,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 	u.SetName(wantName)
 	u.SetToken(wantToken)
 	u.SetHash(wantHash)
+	u.SetFavorites(wantFavorites)
 	u.SetActive(wantActive)
 	u.SetAdmin(wantAdmin)
 
@@ -123,6 +135,9 @@ func TestLibrary_User_Setters(t *testing.T) {
 	}
 	if u.GetHash() != wantHash {
 		t.Errorf("SetHash is %v, want %v", u.GetHash(), wantHash)
+	}
+	if u.GetFavorites() != wantFavorites {
+		t.Errorf("SetFavorites is %v, want %v", u.GetFavorites(), wantFavorites)
 	}
 	if u.GetActive() != wantActive {
 		t.Errorf("SetActive is %v, want %v", u.GetActive(), wantActive)
@@ -141,6 +156,7 @@ func TestLibrary_User_Setters_Empty(t *testing.T) {
 	u.SetName("")
 	u.SetToken("")
 	u.SetHash("")
+	u.SetFavorites("")
 	u.SetActive(false)
 	u.SetAdmin(false)
 
@@ -156,6 +172,9 @@ func TestLibrary_User_Setters_Empty(t *testing.T) {
 	if u.GetHash() != "" {
 		t.Errorf("SetHash is %v, want \"\"", u.GetHash())
 	}
+	if u.GetFavorites() != "" {
+		t.Errorf("GetFavorites is %v, want \"\"", u.GetFavorites())
+	}
 	if u.GetActive() != false {
 		t.Errorf("SetActive is %v, want false", u.GetActive())
 	}
@@ -170,12 +189,13 @@ func TestLibrary_User_String(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	u := &User{
-		ID:     &num64,
-		Name:   &str,
-		Token:  &str,
-		Hash:   &str,
-		Active: &booL,
-		Admin:  &booL,
+		ID:        &num64,
+		Name:      &str,
+		Token:     &str,
+		Hash:      &str,
+		Favorites: &str,
+		Active:    &booL,
+		Admin:     &booL,
 	}
 	want := fmt.Sprintf("%+v", *u)
 

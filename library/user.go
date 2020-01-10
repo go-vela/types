@@ -100,7 +100,7 @@ func (u *User) GetAdmin() bool {
 // When the provided User type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (u *User) GetFavorites() string {
-	// return zero value if User type or Admin field is nil
+	// return zero value if User type or Favorites field is nil
 	if u == nil || u.Favorites == nil {
 		return ""
 	}

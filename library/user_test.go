@@ -44,21 +44,27 @@ func TestLibrary_User_Getters(t *testing.T) {
 	if gotID != wantID {
 		t.Errorf("GetID is %v, want %v", gotID, wantID)
 	}
+
 	if gotName != wantName {
 		t.Errorf("GetName is %v, want %v", gotName, wantName)
 	}
+
 	if gotToken != wantToken {
 		t.Errorf("GetToken is %v, want %v", gotToken, wantToken)
 	}
+
 	if gotHash != wantHash {
 		t.Errorf("GetHash is %v, want %v", gotHash, wantHash)
 	}
+
 	if gotFavorites != wantFavorites {
 		t.Errorf("GetFavorites is %v, want %v", gotFavorites, wantFavorites)
 	}
+
 	if gotActive != wantActive {
 		t.Errorf("GetActive is %v, want %v", gotActive, wantActive)
 	}
+
 	if gotAdmin != wantAdmin {
 		t.Errorf("GetAdmin is %v, want %v", gotAdmin, wantAdmin)
 	}
@@ -80,21 +86,27 @@ func TestLibrary_User_Getters_Empty(t *testing.T) {
 	if gotID != 0 {
 		t.Errorf("GetID is %v, want 0", gotID)
 	}
+
 	if gotName != "" {
 		t.Errorf("GetName is %v, want \"\"", gotName)
 	}
+
 	if gotToken != "" {
 		t.Errorf("GetToken is %v, want \"\"", gotToken)
 	}
+
 	if gotHash != "" {
 		t.Errorf("GetHash is %v, want \"\"", gotHash)
 	}
+
 	if gotFavorites != "" {
 		t.Errorf("GetFavorites is %v, want \"\"", gotFavorites)
 	}
+
 	if gotActive != false {
 		t.Errorf("GetActive is %v, want false", gotActive)
 	}
+
 	if gotAdmin != false {
 		t.Errorf("GetAdmin is %v, want false", gotAdmin)
 	}
@@ -127,21 +139,27 @@ func TestLibrary_User_Setters(t *testing.T) {
 	if u.GetID() != wantID {
 		t.Errorf("SetID is %v, want %v", u.GetID(), wantID)
 	}
+
 	if u.GetName() != wantName {
 		t.Errorf("SetName is %v, want %v", u.GetName(), wantName)
 	}
+
 	if u.GetToken() != wantToken {
 		t.Errorf("SetToken is %v, want %v", u.GetToken(), wantToken)
 	}
+
 	if u.GetHash() != wantHash {
 		t.Errorf("SetHash is %v, want %v", u.GetHash(), wantHash)
 	}
+
 	if u.GetFavorites() != wantFavorites {
 		t.Errorf("SetFavorites is %v, want %v", u.GetFavorites(), wantFavorites)
 	}
+
 	if u.GetActive() != wantActive {
 		t.Errorf("SetActive is %v, want %v", u.GetActive(), wantActive)
 	}
+
 	if u.GetAdmin() != wantAdmin {
 		t.Errorf("SetAdmin is %v, want %v", u.GetAdmin(), wantAdmin)
 	}

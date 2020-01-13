@@ -10,6 +10,7 @@ import (
 	"regexp"
 
 	"github.com/go-vela/types/library"
+	"github.com/lib/pq"
 )
 
 var (
@@ -40,7 +41,7 @@ type User struct {
 	Name      sql.NullString `sql:"name"`
 	Token     sql.NullString `sql:"token"`
 	Hash      sql.NullString `sql:"hash"`
-	Favorites sql.NullString `sql:"favorites"`
+	Favorites pq.StringArray `sql:"favorites"`
 	Active    sql.NullBool   `sql:"active"`
 	Admin     sql.NullBool   `sql:"admin"`
 }
@@ -90,7 +91,7 @@ func (u *User) ToLibrary() *library.User {
 	user.SetHash(u.Hash.String)
 	user.SetActive(u.Active.Bool)
 	user.SetAdmin(u.Admin.Bool)
-	user.SetFavorites(u.Favorites.String)
+	user.SetFavorites(u.Favorites)
 
 	return user
 }
@@ -131,7 +132,7 @@ func UserFromLibrary(u *library.User) *User {
 		Hash:      sql.NullString{String: u.GetHash(), Valid: true},
 		Active:    sql.NullBool{Bool: u.GetActive(), Valid: true},
 		Admin:     sql.NullBool{Bool: u.GetAdmin(), Valid: true},
-		Favorites: sql.NullString{String: u.GetFavorites(), Valid: true},
+		Favorites: u.GetFavorites(),
 	}
 
 	return user.Nullify()

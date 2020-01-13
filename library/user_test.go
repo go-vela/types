@@ -15,12 +15,13 @@ func TestLibrary_User_Getters(t *testing.T) {
 	booL := false
 	num64 := int64(1)
 	str := "foo"
+	arr := []string{"foo", "bar"}
 	u := &User{
 		ID:        &num64,
 		Name:      &str,
 		Token:     &str,
 		Hash:      &str,
-		Favorites: &str,
+		Favorites: &arr,
 		Active:    &booL,
 		Admin:     &booL,
 	}
@@ -28,7 +29,7 @@ func TestLibrary_User_Getters(t *testing.T) {
 	wantName := str
 	wantToken := str
 	wantHash := str
-	wantFavorites := str
+	wantFavorites := arr
 	wantActive := booL
 	wantAdmin := booL
 
@@ -57,7 +58,7 @@ func TestLibrary_User_Getters(t *testing.T) {
 		t.Errorf("GetHash is %v, want %v", gotHash, wantHash)
 	}
 
-	if gotFavorites != wantFavorites {
+	if !reflect.DeepEqual(gotFavorites, wantFavorites) {
 		t.Errorf("GetFavorites is %v, want %v", gotFavorites, wantFavorites)
 	}
 
@@ -99,8 +100,8 @@ func TestLibrary_User_Getters_Empty(t *testing.T) {
 		t.Errorf("GetHash is %v, want \"\"", gotHash)
 	}
 
-	if gotFavorites != "" {
-		t.Errorf("GetFavorites is %v, want \"\"", gotFavorites)
+	if !reflect.DeepEqual(gotFavorites, []string{}) {
+		t.Errorf("GetFavorites is %v, want []string{}", gotFavorites)
 	}
 
 	if gotActive != false {
@@ -118,12 +119,13 @@ func TestLibrary_User_Setters(t *testing.T) {
 	num64 := int64(1)
 	str := "foo"
 	u := new(User)
+	arr := []string{"foo", "bar"}
 
 	wantID := num64
 	wantName := str
 	wantToken := str
 	wantHash := str
-	wantFavorites := str
+	wantFavorites := arr
 	wantActive := booL
 	wantAdmin := booL
 
@@ -152,7 +154,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 		t.Errorf("SetHash is %v, want %v", u.GetHash(), wantHash)
 	}
 
-	if u.GetFavorites() != wantFavorites {
+	if !reflect.DeepEqual(u.GetFavorites(), wantFavorites) {
 		t.Errorf("SetFavorites is %v, want %v", u.GetFavorites(), wantFavorites)
 	}
 
@@ -174,7 +176,7 @@ func TestLibrary_User_Setters_Empty(t *testing.T) {
 	u.SetName("")
 	u.SetToken("")
 	u.SetHash("")
-	u.SetFavorites("")
+	u.SetFavorites([]string{})
 	u.SetActive(false)
 	u.SetAdmin(false)
 
@@ -190,8 +192,8 @@ func TestLibrary_User_Setters_Empty(t *testing.T) {
 	if u.GetHash() != "" {
 		t.Errorf("SetHash is %v, want \"\"", u.GetHash())
 	}
-	if u.GetFavorites() != "" {
-		t.Errorf("GetFavorites is %v, want \"\"", u.GetFavorites())
+	if !reflect.DeepEqual(u.GetFavorites(), []string{}) {
+		t.Errorf("GetFavorites is %v, want []string{}", u.GetFavorites())
 	}
 	if u.GetActive() != false {
 		t.Errorf("SetActive is %v, want false", u.GetActive())
@@ -206,12 +208,13 @@ func TestLibrary_User_String(t *testing.T) {
 	booL := false
 	num64 := int64(1)
 	str := "foo"
+	arr := []string{"foo", "bar"}
 	u := &User{
 		ID:        &num64,
 		Name:      &str,
 		Token:     &str,
 		Hash:      &str,
-		Favorites: &str,
+		Favorites: &arr,
 		Active:    &booL,
 		Admin:     &booL,
 	}

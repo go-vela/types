@@ -19,7 +19,7 @@ func TestDatabase_User_Nullify(t *testing.T) {
 		Name:      sql.NullString{String: "", Valid: true},
 		Token:     sql.NullString{String: "", Valid: true},
 		Hash:      sql.NullString{String: "", Valid: true},
-		Favorites: sql.NullString{String: "", Valid: true},
+		Favorites: []string{},
 		Active:    sql.NullBool{Bool: false, Valid: true},
 		Admin:     sql.NullBool{Bool: false, Valid: true},
 	}
@@ -28,7 +28,7 @@ func TestDatabase_User_Nullify(t *testing.T) {
 		Name:      sql.NullString{String: "", Valid: false},
 		Token:     sql.NullString{String: "", Valid: false},
 		Hash:      sql.NullString{String: "", Valid: false},
-		Favorites: sql.NullString{String: "", Valid: true},
+		Favorites: []string{},
 		Active:    sql.NullBool{Bool: false, Valid: true},
 		Admin:     sql.NullBool{Bool: false, Valid: true},
 	}
@@ -58,12 +58,13 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 	booL := false
 	num64 := int64(1)
 	str := "foo"
+	arr := []string{"foo", "bar"}
 	want := &library.User{
 		ID:        &num64,
 		Name:      &str,
 		Token:     &str,
 		Hash:      &str,
-		Favorites: &str,
+		Favorites: &arr,
 		Active:    &booL,
 		Admin:     &booL,
 	}
@@ -72,7 +73,7 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 		Name:      sql.NullString{String: str, Valid: true},
 		Token:     sql.NullString{String: str, Valid: true},
 		Hash:      sql.NullString{String: str, Valid: true},
-		Favorites: sql.NullString{String: str, Valid: true},
+		Favorites: arr,
 		Active:    sql.NullBool{Bool: booL, Valid: true},
 		Admin:     sql.NullBool{Bool: booL, Valid: true},
 	}
@@ -184,12 +185,13 @@ func TestDatabase_UserFromLibrary(t *testing.T) {
 	booL := false
 	num64 := int64(1)
 	str := "foo"
+	arr := []string{"foo", "bar"}
 	want := &User{
 		ID:        sql.NullInt64{Int64: num64, Valid: true},
 		Name:      sql.NullString{String: str, Valid: true},
 		Token:     sql.NullString{String: str, Valid: true},
 		Hash:      sql.NullString{String: str, Valid: true},
-		Favorites: sql.NullString{String: str, Valid: true},
+		Favorites: arr,
 		Active:    sql.NullBool{Bool: booL, Valid: true},
 		Admin:     sql.NullBool{Bool: booL, Valid: true},
 	}
@@ -198,7 +200,7 @@ func TestDatabase_UserFromLibrary(t *testing.T) {
 		Name:      &str,
 		Token:     &str,
 		Hash:      &str,
-		Favorites: &str,
+		Favorites: &arr,
 		Active:    &booL,
 		Admin:     &booL,
 	}

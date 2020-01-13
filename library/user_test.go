@@ -183,21 +183,27 @@ func TestLibrary_User_Setters_Empty(t *testing.T) {
 	if u.GetID() != 0 {
 		t.Errorf("SetID is %v, want 0", u.GetID())
 	}
+
 	if u.GetName() != "" {
 		t.Errorf("SetName is %v, want \"\"", u.GetName())
 	}
+
 	if u.GetToken() != "" {
 		t.Errorf("SetToken is %v, want \"\"", u.GetToken())
 	}
+
 	if u.GetHash() != "" {
 		t.Errorf("SetHash is %v, want \"\"", u.GetHash())
 	}
+
 	if !reflect.DeepEqual(u.GetFavorites(), []string{}) {
 		t.Errorf("GetFavorites is %v, want []string{}", u.GetFavorites())
 	}
+
 	if u.GetActive() != false {
 		t.Errorf("SetActive is %v, want false", u.GetActive())
 	}
+
 	if u.GetAdmin() != false {
 		t.Errorf("SetAdmin is %v, want false", u.GetAdmin())
 	}

@@ -8,12 +8,13 @@ import "fmt"
 
 // User is the library representation of a user.
 type User struct {
-	ID     *int64  `json:"id,omitempty"`
-	Name   *string `json:"name,omitempty"`
-	Token  *string `json:"token,omitempty"`
-	Hash   *string `json:"-"`
-	Active *bool   `json:"active,omitempty"`
-	Admin  *bool   `json:"admin,omitempty"`
+	ID        *int64    `json:"id,omitempty"`
+	Name      *string   `json:"name,omitempty"`
+	Token     *string   `json:"token,omitempty"`
+	Hash      *string   `json:"-"`
+	Favorites *[]string `json:"favorites,omitempty"`
+	Active    *bool     `json:"active,omitempty"`
+	Admin     *bool     `json:"admin,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -94,6 +95,19 @@ func (u *User) GetAdmin() bool {
 	return *u.Admin
 }
 
+// GetFavorites returns the Favorites field.
+//
+// When the provided User type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (u *User) GetFavorites() []string {
+	// return zero value if User type or Favorites field is nil
+	if u == nil || u.Favorites == nil {
+		return []string{}
+	}
+
+	return *u.Favorites
+}
+
 // SetID sets the ID field.
 //
 // When the provided User type is nil, it
@@ -170,6 +184,19 @@ func (u *User) SetAdmin(v bool) {
 	}
 
 	u.Admin = &v
+}
+
+// SetFavorites sets the Favorites field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
+func (u *User) SetFavorites(v []string) {
+	// return if User type is nil
+	if u == nil {
+		return
+	}
+
+	u.Favorites = &v
 }
 
 // String implements the Stringer interface for the User type.

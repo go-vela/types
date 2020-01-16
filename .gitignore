@@ -20,3 +20,12 @@
 
 
 # End of https://www.gitignore.io/api/go
+
+# IntelliJ project folder
+.idea/
+
+# IntelliJ project files
+*.iml
+*.ipr
+*.iws
+*.xml

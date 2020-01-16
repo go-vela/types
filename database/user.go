@@ -10,6 +10,7 @@ import (
 	"regexp"
 
 	"github.com/go-vela/types/library"
+	"github.com/lib/pq"
 )
 
 var (
@@ -36,12 +37,13 @@ var (
 
 // User is the database representation of a user.
 type User struct {
-	ID     sql.NullInt64  `sql:"id"`
-	Name   sql.NullString `sql:"name"`
-	Token  sql.NullString `sql:"token"`
-	Hash   sql.NullString `sql:"hash"`
-	Active sql.NullBool   `sql:"active"`
-	Admin  sql.NullBool   `sql:"admin"`
+	ID        sql.NullInt64  `sql:"id"`
+	Name      sql.NullString `sql:"name"`
+	Token     sql.NullString `sql:"token"`
+	Hash      sql.NullString `sql:"hash"`
+	Favorites pq.StringArray `sql:"favorites"`
+	Active    sql.NullBool   `sql:"active"`
+	Admin     sql.NullBool   `sql:"admin"`
 }
 
 // Nullify ensures the valid flag for
@@ -89,6 +91,7 @@ func (u *User) ToLibrary() *library.User {
 	user.SetHash(u.Hash.String)
 	user.SetActive(u.Active.Bool)
 	user.SetAdmin(u.Admin.Bool)
+	user.SetFavorites(u.Favorites)
 
 	return user
 }
@@ -123,12 +126,13 @@ func (u *User) Validate() error {
 // to a database User type.
 func UserFromLibrary(u *library.User) *User {
 	user := &User{
-		ID:     sql.NullInt64{Int64: u.GetID(), Valid: true},
-		Name:   sql.NullString{String: u.GetName(), Valid: true},
-		Token:  sql.NullString{String: u.GetToken(), Valid: true},
-		Hash:   sql.NullString{String: u.GetHash(), Valid: true},
-		Active: sql.NullBool{Bool: u.GetActive(), Valid: true},
-		Admin:  sql.NullBool{Bool: u.GetAdmin(), Valid: true},
+		ID:        sql.NullInt64{Int64: u.GetID(), Valid: true},
+		Name:      sql.NullString{String: u.GetName(), Valid: true},
+		Token:     sql.NullString{String: u.GetToken(), Valid: true},
+		Hash:      sql.NullString{String: u.GetHash(), Valid: true},
+		Active:    sql.NullBool{Bool: u.GetActive(), Valid: true},
+		Admin:     sql.NullBool{Bool: u.GetAdmin(), Valid: true},
+		Favorites: u.GetFavorites(),
 	}
 
 	return user.Nullify()

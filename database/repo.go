@@ -16,6 +16,10 @@ var (
 	// Repo type has an empty FullName field provided.
 	ErrEmptyRepoFullName = errors.New("empty repo full_name provided")
 
+	// ErrEmptyRepoHash defines the error type when a
+	// Repo type has an empty Hash field provided.
+	ErrEmptyRepoHash = errors.New("empty repo hash provided")
+
 	// ErrEmptyRepoName defines the error type when a
 	// Repo type has an empty Name field provided.
 	ErrEmptyRepoName = errors.New("empty repo name provided")
@@ -33,6 +37,7 @@ var (
 type Repo struct {
 	ID          sql.NullInt64  `sql:"id"`
 	UserID      sql.NullInt64  `sql:"user_id"`
+	Hash        sql.NullString `sql:"hash"`
 	Org         sql.NullString `sql:"org"`
 	Name        sql.NullString `sql:"name"`
 	FullName    sql.NullString `sql:"full_name"`
@@ -69,6 +74,11 @@ func (r *Repo) Nullify() *Repo {
 	// check if the UserID field should be false
 	if r.UserID.Int64 == 0 {
 		r.UserID.Valid = false
+	}
+
+	// check if the Hash field should be false
+	if len(r.Hash.String) == 0 {
+		r.Hash.Valid = false
 	}
 
 	// check if the Org field should be false
@@ -121,6 +131,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 
 	repo.SetID(r.ID.Int64)
 	repo.SetUserID(r.UserID.Int64)
+	repo.SetHash(r.Hash.String)
 	repo.SetOrg(r.Org.String)
 	repo.SetName(r.Name.String)
 	repo.SetFullName(r.FullName.String)
@@ -148,6 +159,11 @@ func (r *Repo) Validate() error {
 		return ErrEmptyRepoUserID
 	}
 
+	// verify the Hash field is populated
+	if len(r.Hash.String) == 0 {
+		return ErrEmptyRepoHash
+	}
+
 	// verify the Org field is populated
 	if len(r.Org.String) == 0 {
 		return ErrEmptyRepoOrg
@@ -172,6 +188,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 	repo := &Repo{
 		ID:          sql.NullInt64{Int64: r.GetID(), Valid: true},
 		UserID:      sql.NullInt64{Int64: r.GetUserID(), Valid: true},
+		Hash:        sql.NullString{String: r.GetHash(), Valid: true},
 		Org:         sql.NullString{String: r.GetOrg(), Valid: true},
 		Name:        sql.NullString{String: r.GetName(), Valid: true},
 		FullName:    sql.NullString{String: r.GetFullName(), Valid: true},

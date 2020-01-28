@@ -17,6 +17,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 	r := &Repo{
 		ID:          sql.NullInt64{Int64: 0, Valid: true},
 		UserID:      sql.NullInt64{Int64: 0, Valid: true},
+		Hash:        sql.NullString{String: "", Valid: true},
 		Org:         sql.NullString{String: "", Valid: true},
 		Name:        sql.NullString{String: "", Valid: true},
 		FullName:    sql.NullString{String: "", Valid: true},
@@ -36,6 +37,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 	want := &Repo{
 		ID:          sql.NullInt64{Int64: 0, Valid: false},
 		UserID:      sql.NullInt64{Int64: 0, Valid: false},
+		Hash:        sql.NullString{String: "", Valid: false},
 		Org:         sql.NullString{String: "", Valid: false},
 		Name:        sql.NullString{String: "", Valid: false},
 		FullName:    sql.NullString{String: "", Valid: false},
@@ -82,6 +84,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want := &library.Repo{
 		ID:          &num64,
 		UserID:      &num64,
+		Hash:        &str,
 		Org:         &str,
 		Name:        &str,
 		FullName:    &str,
@@ -101,6 +104,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	r := &Repo{
 		ID:          sql.NullInt64{Int64: num64, Valid: true},
 		UserID:      sql.NullInt64{Int64: num64, Valid: true},
+		Hash:        sql.NullString{String: str, Valid: true},
 		Org:         sql.NullString{String: str, Valid: true},
 		Name:        sql.NullString{String: str, Valid: true},
 		FullName:    sql.NullString{String: str, Valid: true},
@@ -131,6 +135,7 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 	r := &Repo{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		UserID:   sql.NullInt64{Int64: 1, Valid: true},
+		Hash:     sql.NullString{String: "baz", Valid: true},
 		Org:      sql.NullString{String: "foo", Valid: true},
 		Name:     sql.NullString{String: "bar", Valid: true},
 		FullName: sql.NullString{String: "foo/bar", Valid: true},
@@ -149,6 +154,25 @@ func TestDatabase_Repo_Validate_NoUserID(t *testing.T) {
 	r := &Repo{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		Org:      sql.NullString{String: "foo", Valid: true},
+		Hash:     sql.NullString{String: "baz", Valid: true},
+		Name:     sql.NullString{String: "bar", Valid: true},
+		FullName: sql.NullString{String: "foo/bar", Valid: true},
+	}
+
+	// run test
+	err := r.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDatabase_Repo_Validate_NoHash(t *testing.T) {
+	// setup types
+	r := &Repo{
+		ID:       sql.NullInt64{Int64: 1, Valid: true},
+		UserID:   sql.NullInt64{Int64: 1, Valid: true},
+		Org:      sql.NullString{String: "foo", Valid: true},
 		Name:     sql.NullString{String: "bar", Valid: true},
 		FullName: sql.NullString{String: "foo/bar", Valid: true},
 	}
@@ -166,6 +190,7 @@ func TestDatabase_Repo_Validate_NoOrg(t *testing.T) {
 	r := &Repo{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		UserID:   sql.NullInt64{Int64: 1, Valid: true},
+		Hash:     sql.NullString{String: "baz", Valid: true},
 		Name:     sql.NullString{String: "bar", Valid: true},
 		FullName: sql.NullString{String: "foo/bar", Valid: true},
 	}
@@ -183,6 +208,7 @@ func TestDatabase_Repo_Validate_NoName(t *testing.T) {
 	r := &Repo{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		UserID:   sql.NullInt64{Int64: 1, Valid: true},
+		Hash:     sql.NullString{String: "baz", Valid: true},
 		Org:      sql.NullString{String: "foo", Valid: true},
 		FullName: sql.NullString{String: "foo/bar", Valid: true},
 	}
@@ -199,6 +225,7 @@ func TestDatabase_Repo_Validate_NoFullName(t *testing.T) {
 	r := &Repo{
 		ID:     sql.NullInt64{Int64: 1, Valid: true},
 		UserID: sql.NullInt64{Int64: 1, Valid: true},
+		Hash:   sql.NullString{String: "baz", Valid: true},
 		Org:    sql.NullString{String: "foo", Valid: true},
 		Name:   sql.NullString{String: "bar", Valid: true},
 	}
@@ -219,6 +246,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	want := &Repo{
 		ID:          sql.NullInt64{Int64: num64, Valid: true},
 		UserID:      sql.NullInt64{Int64: num64, Valid: true},
+		Hash:        sql.NullString{String: str, Valid: true},
 		Org:         sql.NullString{String: str, Valid: true},
 		Name:        sql.NullString{String: str, Valid: true},
 		FullName:    sql.NullString{String: str, Valid: true},
@@ -238,6 +266,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r := &library.Repo{
 		ID:          &num64,
 		UserID:      &num64,
+		Hash:        &str,
 		Org:         &str,
 		Name:        &str,
 		FullName:    &str,

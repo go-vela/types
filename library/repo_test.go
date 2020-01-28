@@ -19,6 +19,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	r := &Repo{
 		ID:          &num64,
 		UserID:      &num64,
+		Hash:        &str,
 		Org:         &str,
 		Name:        &str,
 		FullName:    &str,
@@ -37,6 +38,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	}
 	wantID := num64
 	wantUserID := num64
+	wantHash := str
 	wantOrg := str
 	wantName := str
 	wantFullName := str
@@ -56,6 +58,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	// run test
 	gotID := r.GetID()
 	gotUserID := r.GetUserID()
+	gotHash := r.GetHash()
 	gotOrg := r.GetOrg()
 	gotName := r.GetName()
 	gotFullName := r.GetFullName()
@@ -77,6 +80,9 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	}
 	if gotUserID != wantUserID {
 		t.Errorf("GetUserID is %v, want %v", gotUserID, wantUserID)
+	}
+	if gotHash != wantHash {
+		t.Errorf("GetHash is %v, want %v", gotHash, wantHash)
 	}
 	if gotOrg != wantOrg {
 		t.Errorf("GetOrg is %v, want %v", gotOrg, wantOrg)
@@ -132,6 +138,7 @@ func TestLibrary_Repo_Getters_Empty(t *testing.T) {
 	// run test
 	gotID := r.GetID()
 	gotUserID := r.GetUserID()
+	gotHash := r.GetHash()
 	gotOrg := r.GetOrg()
 	gotName := r.GetName()
 	gotFullName := r.GetFullName()
@@ -153,6 +160,9 @@ func TestLibrary_Repo_Getters_Empty(t *testing.T) {
 	}
 	if gotUserID != 0 {
 		t.Errorf("GetUserID is %v, want 0", gotUserID)
+	}
+	if gotHash != "" {
+		t.Errorf("GetHash is %v, want \"\"", gotHash)
 	}
 	if gotOrg != "" {
 		t.Errorf("GetOrg is %v, want \"\"", gotOrg)
@@ -211,6 +221,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 
 	wantID := num64
 	wantUserID := num64
+	wantHash := str
 	wantOrg := str
 	wantName := str
 	wantFullName := str
@@ -230,6 +241,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	// run test
 	r.SetID(wantID)
 	r.SetUserID(wantUserID)
+	r.SetHash(wantHash)
 	r.SetOrg(wantOrg)
 	r.SetName(wantName)
 	r.SetFullName(wantFullName)
@@ -251,6 +263,9 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	}
 	if r.GetUserID() != wantUserID {
 		t.Errorf("GetUserID is %v, want %v", r.GetUserID(), wantUserID)
+	}
+	if r.GetHash() != wantHash {
+		t.Errorf("GetHash is %v, want %v", r.GetHash(), wantHash)
 	}
 	if r.GetOrg() != wantOrg {
 		t.Errorf("GetOrg is %v, want %v", r.GetOrg(), wantOrg)
@@ -306,6 +321,7 @@ func TestLibrary_Repo_Setters_Empty(t *testing.T) {
 	// run test
 	r.SetID(0)
 	r.SetUserID(0)
+	r.SetHash("")
 	r.SetOrg("")
 	r.SetName("")
 	r.SetFullName("")
@@ -327,6 +343,9 @@ func TestLibrary_Repo_Setters_Empty(t *testing.T) {
 	}
 	if r.GetUserID() != 0 {
 		t.Errorf("GetUserID is %v, want 0", r.GetUserID())
+	}
+	if r.GetHash() != "" {
+		t.Errorf("GetHash is %v, want \"\"", r.GetHash())
 	}
 	if r.GetOrg() != "" {
 		t.Errorf("GetOrg is %v, want \"\"", r.GetOrg())
@@ -384,6 +403,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 	r := &Repo{
 		ID:          &num64,
 		UserID:      &num64,
+		Hash:        &str,
 		Org:         &str,
 		Name:        &str,
 		FullName:    &str,

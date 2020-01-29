@@ -10,6 +10,7 @@ import "fmt"
 type Repo struct {
 	ID          *int64  `json:"id,omitempty"`
 	UserID      *int64  `json:"user_id,omitempty"`
+	Hash        *string `json:"-"`
 	Org         *string `json:"org,omitempty"`
 	Name        *string `json:"name,omitempty"`
 	FullName    *string `json:"full_name,omitempty"`
@@ -51,6 +52,19 @@ func (r *Repo) GetUserID() int64 {
 	}
 
 	return *r.UserID
+}
+
+// GetHash returns the Hash field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetHash() string {
+	// return zero value if Repo type or Hash field is nil
+	if r == nil || r.Hash == nil {
+		return ""
+	}
+
+	return *r.Hash
 }
 
 // GetOrg returns the Org field.
@@ -272,6 +286,19 @@ func (r *Repo) SetUserID(v int64) {
 	}
 
 	r.UserID = &v
+}
+
+// SetHash sets the Hash field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetHash(v string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.Hash = &v
 }
 
 // SetOrg sets the Org field.

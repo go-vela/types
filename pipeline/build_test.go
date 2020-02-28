@@ -7,6 +7,8 @@ package pipeline
 import (
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestPipeline_Build_Purge_Stages(t *testing.T) {
@@ -222,5 +224,198 @@ func TestPipeline_Build_Purge_Invalid(t *testing.T) {
 
 	if got != nil {
 		t.Errorf("Purge is %v, want nil", got)
+	}
+}
+
+func TestPipeline_Build_Sanitize_Stages(t *testing.T) {
+	// setup types
+	p := &Build{
+		ID: "foo bar_1",
+		Stages: StageSlice{
+			{
+				Name: "test",
+				Steps: ContainerSlice{
+					{
+						ID:       "foo_bar_1_test_echo foo",
+						Commands: []string{"echo foo"},
+						Image:    "alpine:latest",
+						Name:     "echo foo",
+						Number:   1,
+						Pull:     true,
+					},
+				},
+			},
+		},
+	}
+
+	want := &Build{
+		ID: "foo-bar_1",
+		Stages: StageSlice{
+			{
+				Name: "test",
+				Steps: ContainerSlice{
+					{
+						ID:       "foo_bar_1_test_echo-foo",
+						Commands: []string{"echo foo"},
+						Image:    "alpine:latest",
+						Name:     "echo foo",
+						Number:   1,
+						Pull:     true,
+					},
+				},
+			},
+		},
+	}
+
+	// run test
+	got := p.Sanitize(constants.DriverDocker)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_Build_Sanitize_Steps(t *testing.T) {
+	// setup types
+	p := &Build{
+		ID: "foo bar_1",
+		Steps: ContainerSlice{
+			{
+				ID:       "step_foo_bar_1_echo foo",
+				Commands: []string{"echo foo"},
+				Image:    "alpine:latest",
+				Name:     "echo foo",
+				Number:   1,
+				Pull:     true,
+			},
+		},
+	}
+
+	want := &Build{
+		ID: "foo-bar_1",
+		Steps: ContainerSlice{
+			{
+				ID:       "step_foo_bar_1_echo-foo",
+				Commands: []string{"echo foo"},
+				Image:    "alpine:latest",
+				Name:     "echo foo",
+				Number:   1,
+				Pull:     true,
+			},
+		},
+	}
+
+	// run test
+	got := p.Sanitize(constants.DriverDocker)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_Build_Sanitize_StagesAndSteps(t *testing.T) {
+	// setup types
+	p := &Build{
+		ID: "foo bar_1",
+		Stages: StageSlice{
+			{
+				Name: "test",
+				Steps: ContainerSlice{
+					{
+						ID:       "foo_bar_1_test_echo foo",
+						Commands: []string{"echo foo"},
+						Image:    "alpine:latest",
+						Name:     "echo foo",
+						Number:   1,
+						Pull:     true,
+					},
+				},
+			},
+		},
+		Steps: ContainerSlice{
+			{
+				ID:       "step_foo_bar_1_echo foo",
+				Commands: []string{"echo foo"},
+				Image:    "alpine:latest",
+				Name:     "echo foo",
+				Number:   1,
+				Pull:     true,
+			},
+		},
+	}
+
+	// run test
+	got := p.Sanitize(constants.DriverDocker)
+
+	if got != nil {
+		t.Errorf("Sanitize is %v, want nil", got)
+	}
+}
+
+func TestPipeline_Build_Sanitize_Docker(t *testing.T) {
+	// setup types
+	p := &Build{
+		ID: "foo bar_1",
+		Services: ContainerSlice{
+			{
+				ID:     "service_foo bar_1_postgres",
+				Image:  "postgres:latest",
+				Name:   "postgres",
+				Number: 1,
+			},
+		},
+	}
+
+	want := &Build{
+		ID: "foo-bar_1",
+		Services: ContainerSlice{
+			{
+				ID:     "service_foo-bar_1_postgres",
+				Image:  "postgres:latest",
+				Name:   "postgres",
+				Number: 1,
+			},
+		},
+	}
+
+	// run test
+	got := p.Sanitize(constants.DriverDocker)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_Build_Sanitize_Kubernetes(t *testing.T) {
+	// setup types
+	p := &Build{
+		ID: "foo bar_1.",
+		Services: ContainerSlice{
+			{
+				ID:     "service_foo bar_1_postgres",
+				Image:  "postgres:latest",
+				Name:   "postgres",
+				Number: 1,
+			},
+		},
+	}
+
+	want := &Build{
+		ID: "foo-bar-1-",
+		Services: ContainerSlice{
+			{
+				ID:     "service-foo-bar-1-postgres",
+				Image:  "postgres:latest",
+				Name:   "postgres",
+				Number: 1,
+			},
+		},
+	}
+
+	// run test
+	got := p.Sanitize(constants.DriverKubernetes)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
 	}
 }

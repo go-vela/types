@@ -7,6 +7,8 @@ package pipeline
 import (
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestPipeline_ContainerSlice_Purge(t *testing.T) {
@@ -58,6 +60,114 @@ func TestPipeline_ContainerSlice_Purge(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Purge is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_ContainerSlice_Sanitize_Docker(t *testing.T) {
+	// setup types
+	c := &ContainerSlice{
+		{
+			ID:       "step_foo_bar_1_echo foo",
+			Commands: []string{"echo foo"},
+			Image:    "alpine:latest",
+			Name:     "echo foo",
+			Number:   1,
+			Pull:     true,
+		},
+	}
+
+	want := &ContainerSlice{
+		{
+			ID:       "step_foo_bar_1_echo-foo",
+			Commands: []string{"echo foo"},
+			Image:    "alpine:latest",
+			Name:     "echo foo",
+			Number:   1,
+			Pull:     true,
+		},
+	}
+
+	// run test
+	got := c.Sanitize(constants.DriverDocker)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_ContainerSlice_Sanitize_Kubernetes(t *testing.T) {
+	// setup types
+	c := &ContainerSlice{
+		{
+			ID:       "step_foo_bar_1_echo foo",
+			Commands: []string{"echo foo"},
+			Image:    "alpine:latest",
+			Name:     "echo foo",
+			Number:   1,
+			Pull:     true,
+		},
+		{
+			ID:       "step_foo_bar_1_echo_bar",
+			Commands: []string{"echo bar"},
+			Image:    "alpine:latest",
+			Name:     "echo_bar",
+			Number:   2,
+			Pull:     true,
+		},
+		{
+			ID:       "step_foo_bar_1_echo.baz",
+			Commands: []string{"echo baz"},
+			Image:    "alpine:latest",
+			Name:     "echo.baz",
+			Number:   3,
+			Pull:     true,
+		},
+	}
+
+	want := &ContainerSlice{
+		{
+			ID:       "step-foo-bar-1-echo-foo",
+			Commands: []string{"echo foo"},
+			Image:    "alpine:latest",
+			Name:     "echo foo",
+			Number:   1,
+			Pull:     true,
+		},
+		{
+			ID:       "step-foo-bar-1-echo-bar",
+			Commands: []string{"echo bar"},
+			Image:    "alpine:latest",
+			Name:     "echo_bar",
+			Number:   2,
+			Pull:     true,
+		},
+		{
+			ID:       "step-foo-bar-1-echo-baz",
+			Commands: []string{"echo baz"},
+			Image:    "alpine:latest",
+			Name:     "echo.baz",
+			Number:   3,
+			Pull:     true,
+		},
+	}
+
+	// run test
+	got := c.Sanitize(constants.DriverKubernetes)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
+
+func TestPipeline_ContainerSlice_Sanitize_NoDriver(t *testing.T) {
+	// setup types
+	c := &ContainerSlice{}
+
+	// run test
+	got := c.Sanitize("")
+
+	if got != nil {
+		t.Errorf("Sanitize is %v, want nil", got)
 	}
 }
 

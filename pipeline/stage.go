@@ -4,6 +4,10 @@
 
 package pipeline
 
+import (
+	"github.com/go-vela/types/constants"
+)
+
 type (
 	// StageSlice is the pipeline representation
 	// of the stages block for a pipeline.
@@ -60,4 +64,40 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 
 	// return the new slice of stages
 	return stages
+}
+
+// Sanitize cleans the fields for every step in each stage so they
+// can be safely executed on the worker. The fields are sanitized
+// based off of the provided runtime driver which is setup on every
+// worker. Currently, this function supports the following runtimes:
+//
+//   * Docker
+//   * Kubernetes
+func (s *StageSlice) Sanitize(driver string) *StageSlice {
+	stages := new(StageSlice)
+
+	switch driver {
+	// sanitize container for Docker
+	case constants.DriverDocker:
+		for _, stage := range *s {
+			stage.Steps.Sanitize(driver)
+
+			*stages = append(*stages, stage)
+		}
+
+		return stages
+	// sanitize container for Kubernetes
+	case constants.DriverKubernetes:
+		for _, stage := range *s {
+			stage.Steps.Sanitize(driver)
+
+			*stages = append(*stages, stage)
+		}
+
+		return stages
+	// unrecognized driver
+	default:
+		// log here?
+		return nil
+	}
 }

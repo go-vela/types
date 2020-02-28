@@ -4,7 +4,11 @@
 
 package pipeline
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/go-vela/types/constants"
+)
 
 type (
 	// ContainerSlice is the pipeline representation
@@ -60,6 +64,58 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 
 	// return the new slice of Containers
 	return containers
+}
+
+// Sanitize cleans the fields for every step in the pipeline so they
+// can be safely executed on the worker. The fields are sanitized
+// based off of the provided runtime driver which is setup on every
+// worker. Currently, this function supports the following runtimes:
+//
+//   * Docker
+//   * Kubernetes
+func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
+	containers := new(ContainerSlice)
+
+	switch driver {
+	// sanitize container for Docker
+	case constants.DriverDocker:
+		// iterate through each Container in the pipeline
+		for _, container := range *c {
+			if strings.Contains(container.ID, " ") {
+				container.ID = strings.ReplaceAll(container.ID, " ", "-")
+			}
+
+			// append the Container to the new slice of Containers
+			*containers = append(*containers, container)
+		}
+
+		return containers
+	// sanitize container for Kubernetes
+	case constants.DriverKubernetes:
+		// iterate through each Container in the pipeline
+		for _, container := range *c {
+			if strings.Contains(container.ID, " ") {
+				container.ID = strings.ReplaceAll(container.ID, " ", "-")
+			}
+
+			if strings.Contains(container.ID, "_") {
+				container.ID = strings.ReplaceAll(container.ID, "_", "-")
+			}
+
+			if strings.Contains(container.ID, ".") {
+				container.ID = strings.ReplaceAll(container.ID, ".", "-")
+			}
+
+			// append the Container to the new slice of Containers
+			*containers = append(*containers, container)
+		}
+
+		return containers
+	// unrecognized driver
+	default:
+		// log here?
+		return nil
+	}
 }
 
 // Sanitize cleans the ID for the container which

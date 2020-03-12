@@ -133,12 +133,13 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 func TestDatabase_Repo_Validate(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		UserID:   sql.NullInt64{Int64: 1, Valid: true},
-		Hash:     sql.NullString{String: "baz", Valid: true},
-		Org:      sql.NullString{String: "foo", Valid: true},
-		Name:     sql.NullString{String: "bar", Valid: true},
-		FullName: sql.NullString{String: "foo/bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		UserID:     sql.NullInt64{Int64: 1, Valid: true},
+		Hash:       sql.NullString{String: "baz", Valid: true},
+		Org:        sql.NullString{String: "foo", Valid: true},
+		Name:       sql.NullString{String: "bar", Valid: true},
+		FullName:   sql.NullString{String: "foo/bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
 	}
 
 	// run test
@@ -152,11 +153,12 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 func TestDatabase_Repo_Validate_NoUserID(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		Org:      sql.NullString{String: "foo", Valid: true},
-		Hash:     sql.NullString{String: "baz", Valid: true},
-		Name:     sql.NullString{String: "bar", Valid: true},
-		FullName: sql.NullString{String: "foo/bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		Org:        sql.NullString{String: "foo", Valid: true},
+		Hash:       sql.NullString{String: "baz", Valid: true},
+		Name:       sql.NullString{String: "bar", Valid: true},
+		FullName:   sql.NullString{String: "foo/bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
 	}
 
 	// run test
@@ -170,11 +172,12 @@ func TestDatabase_Repo_Validate_NoUserID(t *testing.T) {
 func TestDatabase_Repo_Validate_NoHash(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		UserID:   sql.NullInt64{Int64: 1, Valid: true},
-		Org:      sql.NullString{String: "foo", Valid: true},
-		Name:     sql.NullString{String: "bar", Valid: true},
-		FullName: sql.NullString{String: "foo/bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		UserID:     sql.NullInt64{Int64: 1, Valid: true},
+		Org:        sql.NullString{String: "foo", Valid: true},
+		Name:       sql.NullString{String: "bar", Valid: true},
+		FullName:   sql.NullString{String: "foo/bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
 	}
 
 	// run test
@@ -188,11 +191,12 @@ func TestDatabase_Repo_Validate_NoHash(t *testing.T) {
 func TestDatabase_Repo_Validate_NoOrg(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		UserID:   sql.NullInt64{Int64: 1, Valid: true},
-		Hash:     sql.NullString{String: "baz", Valid: true},
-		Name:     sql.NullString{String: "bar", Valid: true},
-		FullName: sql.NullString{String: "foo/bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		UserID:     sql.NullInt64{Int64: 1, Valid: true},
+		Hash:       sql.NullString{String: "baz", Valid: true},
+		Name:       sql.NullString{String: "bar", Valid: true},
+		FullName:   sql.NullString{String: "foo/bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
 	}
 
 	// run test
@@ -206,11 +210,12 @@ func TestDatabase_Repo_Validate_NoOrg(t *testing.T) {
 func TestDatabase_Repo_Validate_NoName(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		UserID:   sql.NullInt64{Int64: 1, Valid: true},
-		Hash:     sql.NullString{String: "baz", Valid: true},
-		Org:      sql.NullString{String: "foo", Valid: true},
-		FullName: sql.NullString{String: "foo/bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		UserID:     sql.NullInt64{Int64: 1, Valid: true},
+		Hash:       sql.NullString{String: "baz", Valid: true},
+		Org:        sql.NullString{String: "foo", Valid: true},
+		FullName:   sql.NullString{String: "foo/bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
 	}
 	// run test
 	err := r.Validate()
@@ -223,11 +228,30 @@ func TestDatabase_Repo_Validate_NoName(t *testing.T) {
 func TestDatabase_Repo_Validate_NoFullName(t *testing.T) {
 	// setup types
 	r := &Repo{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		UserID: sql.NullInt64{Int64: 1, Valid: true},
-		Hash:   sql.NullString{String: "baz", Valid: true},
-		Org:    sql.NullString{String: "foo", Valid: true},
-		Name:   sql.NullString{String: "bar", Valid: true},
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		UserID:     sql.NullInt64{Int64: 1, Valid: true},
+		Hash:       sql.NullString{String: "baz", Valid: true},
+		Org:        sql.NullString{String: "foo", Valid: true},
+		Name:       sql.NullString{String: "bar", Valid: true},
+		Visibility: sql.NullString{String: "public", Valid: true},
+	}
+	// run test
+	err := r.Validate()
+
+	if err == nil {
+		t.Errorf("Validate should have returned err")
+	}
+}
+
+func TestDatabase_Repo_Validate_NoVisibility(t *testing.T) {
+	// setup types
+	r := &Repo{
+		ID:       sql.NullInt64{Int64: 1, Valid: true},
+		UserID:   sql.NullInt64{Int64: 1, Valid: true},
+		Hash:     sql.NullString{String: "baz", Valid: true},
+		Org:      sql.NullString{String: "foo", Valid: true},
+		Name:     sql.NullString{String: "bar", Valid: true},
+		FullName: sql.NullString{String: "foo/bar", Valid: true},
 	}
 	// run test
 	err := r.Validate()

@@ -31,6 +31,10 @@ var (
 	// ErrEmptyRepoUserID defines the error type when a
 	// Repo type has an empty UserID field provided.
 	ErrEmptyRepoUserID = errors.New("empty repo user_id provided")
+
+	// ErrEmptyRepoVisibility defines the error type when a
+	// Repo type has an empty Visibility field provided.
+	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
 )
 
 // Repo is the database representation of a repo.
@@ -177,6 +181,11 @@ func (r *Repo) Validate() error {
 	// verify the FullName field is populated
 	if len(r.FullName.String) == 0 {
 		return ErrEmptyRepoFullName
+	}
+
+	// verify the Visibility field is populated
+	if len(r.Visibility.String) == 0 {
+		return ErrEmptyRepoVisibility
 	}
 
 	return nil

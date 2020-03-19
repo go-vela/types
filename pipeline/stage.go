@@ -16,6 +16,7 @@ type (
 	// Stage is the pipeline representation
 	// of a stage in a pipeline.
 	Stage struct {
+		Done  chan error     `json:"-"`
 		Name  string         `json:"name,omitempty"`
 		Needs []string       `json:"needs,omitempty"`
 		Steps ContainerSlice `json:"steps,omitempty"`

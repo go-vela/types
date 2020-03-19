@@ -13,8 +13,11 @@ import (
 
 func TestPipeline_StageSlice_Purge(t *testing.T) {
 	// setup types
+	done := make(chan error)
+
 	s := StageSlice{
 		&Stage{
+			Done:  done,
 			Name:  "install",
 			Needs: []string{"clone"},
 			Steps: ContainerSlice{
@@ -28,6 +31,7 @@ func TestPipeline_StageSlice_Purge(t *testing.T) {
 			},
 		},
 		&Stage{
+			Done:  done,
 			Name:  "test",
 			Needs: []string{"install"},
 			Steps: ContainerSlice{
@@ -59,6 +63,7 @@ func TestPipeline_StageSlice_Purge(t *testing.T) {
 
 	want := &StageSlice{
 		&Stage{
+			Done:  done,
 			Name:  "install",
 			Needs: []string{"clone"},
 			Steps: ContainerSlice{
@@ -83,8 +88,11 @@ func TestPipeline_StageSlice_Purge(t *testing.T) {
 
 func TestPipeline_StageSlice_Sanitize_Docker(t *testing.T) {
 	// setup types
+	done := make(chan error)
+
 	s := &StageSlice{
 		{
+			Done: done,
 			Name: "test",
 			Steps: ContainerSlice{
 				{
@@ -101,6 +109,7 @@ func TestPipeline_StageSlice_Sanitize_Docker(t *testing.T) {
 
 	want := &StageSlice{
 		{
+			Done: done,
 			Name: "test",
 			Steps: ContainerSlice{
 				{
@@ -125,8 +134,11 @@ func TestPipeline_StageSlice_Sanitize_Docker(t *testing.T) {
 
 func TestPipeline_StageSlice_Sanitize_Kubernetes(t *testing.T) {
 	// setup types
+	done := make(chan error)
+
 	s := &StageSlice{
 		{
+			Done: done,
 			Name: "test",
 			Steps: ContainerSlice{
 				{
@@ -159,6 +171,7 @@ func TestPipeline_StageSlice_Sanitize_Kubernetes(t *testing.T) {
 
 	want := &StageSlice{
 		{
+			Done: done,
 			Name: "test",
 			Steps: ContainerSlice{
 				{

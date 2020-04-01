@@ -10,6 +10,53 @@ import (
 	"testing"
 )
 
+func TestLibrary_Log_Append(t *testing.T) {
+	// setup types
+	wantOne := new(Log)
+	wantOne.SetID(1)
+	wantOne.SetServiceID(1)
+	wantOne.SetStepID(1)
+	wantOne.SetBuildID(1)
+	wantOne.SetRepoID(1)
+	wantOne.SetData([]byte("bar"))
+
+	wantTwo := new(Log)
+	wantTwo.SetID(1)
+	wantTwo.SetServiceID(1)
+	wantTwo.SetStepID(1)
+	wantTwo.SetBuildID(1)
+	wantTwo.SetRepoID(1)
+	wantTwo.SetData([]byte("foobar"))
+
+	gotOne := new(Log)
+	gotOne.SetID(1)
+	gotOne.SetServiceID(1)
+	gotOne.SetStepID(1)
+	gotOne.SetBuildID(1)
+	gotOne.SetRepoID(1)
+
+	gotTwo := new(Log)
+	gotTwo.SetID(1)
+	gotTwo.SetServiceID(1)
+	gotTwo.SetStepID(1)
+	gotTwo.SetBuildID(1)
+	gotTwo.SetRepoID(1)
+	gotTwo.SetData([]byte("foo"))
+
+	// run test
+	gotOne.AppendData([]byte("bar"))
+
+	gotTwo.AppendData([]byte("bar"))
+
+	if !reflect.DeepEqual(gotOne, wantOne) {
+		t.Errorf("Append is %v, want %v", gotOne, wantOne)
+	}
+
+	if !reflect.DeepEqual(gotTwo, wantTwo) {
+		t.Errorf("Append is %v, want %v", gotTwo, wantTwo)
+	}
+}
+
 func TestLibrary_Log_Getters(t *testing.T) {
 	// setup types
 	num64 := int64(1)

@@ -16,6 +16,23 @@ type Log struct {
 	Data      *[]byte `json:"data,omitempty"`
 }
 
+// AppendData adds the provided data to the end of
+// the Data field for the Log type. If the Data
+// field is empty, then the function overwrites
+// the entire Data field.
+func (l *Log) AppendData(data []byte) {
+	// check if Data field is empty
+	if len(l.GetData()) == 0 {
+		// overwrite the Data field
+		l.SetData(data)
+
+		return
+	}
+
+	// add the data to the Data field
+	l.SetData(append(l.GetData(), data...))
+}
+
 // GetID returns the ID field.
 //
 // When the provided Log type is nil, or the field within

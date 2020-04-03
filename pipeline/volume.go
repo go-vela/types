@@ -12,8 +12,8 @@ type (
 	// Volume is the pipeline representation of a volume
 	// from a volumes block for a step in a pipeline.
 	Volume struct {
-		Source      string `json:"source,omitempty"`
-		Destination string `json:"destination,omitempty"`
-		AccessMode  string `json:"access_mode,omitempty"`
+		Source      string `json:"source,omitempty"      yaml:"source,omitempty"`
+		Destination string `json:"destination,omitempty" yaml:"destination,omitempty"`
+		AccessMode  string `json:"access_mode,omitempty" yaml:"access_mode,omitempty"`
 	}
 )

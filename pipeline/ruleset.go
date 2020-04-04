@@ -13,21 +13,21 @@ type (
 	// Ruleset is the pipeline representation of
 	// a ruleset block for a step in a pipeline.
 	Ruleset struct {
-		If       Rules  `json:"if,omitempty"`
-		Unless   Rules  `json:"unless,omitempty"`
-		Operator string `json:"operator,omitempty"`
-		Continue bool   `json:"continue,omitempty"`
+		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
+		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
+		Operator string `json:"operator,omitempty" yaml:"operator,omitempty"`
+		Continue bool   `json:"continue,omitempty" yaml:"continue,omitempty"`
 	}
 
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch Ruletype `json:"branch,omitempty"`
-		Event  Ruletype `json:"event,omitempty"`
-		Path   Ruletype `json:"path,omitempty"`
-		Repo   Ruletype `json:"repo,omitempty"`
-		Status Ruletype `json:"status,omitempty"`
-		Tag    Ruletype `json:"tag,omitempty"`
+		Branch Ruletype `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Event  Ruletype `json:"event,omitempty"  yaml:"event,omitempty"`
+		Path   Ruletype `json:"path,omitempty"   yaml:"path,omitempty"`
+		Repo   Ruletype `json:"repo,omitempty"   yaml:"repo,omitempty"`
+		Status Ruletype `json:"status,omitempty" yaml:"status,omitempty"`
+		Tag    Ruletype `json:"tag,omitempty"    yaml:"tag,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -37,12 +37,12 @@ type (
 	// RuleData is the data to check our ruleset
 	// against for a step in a pipeline.
 	RuleData struct {
-		Branch string
-		Event  string
-		Path   []string
-		Repo   string
-		Status string
-		Tag    string
+		Branch string   `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Event  string   `json:"event,omitempty"  yaml:"event,omitempty"`
+		Path   []string `json:"path,omitempty"   yaml:"path,omitempty"`
+		Repo   string   `json:"repo,omitempty"   yaml:"repo,omitempty"`
+		Status string   `json:"status,omitempty" yaml:"status,omitempty"`
+		Tag    string   `json:"tag,omitempty"    yaml:"tag,omitempty"`
 	}
 )
 

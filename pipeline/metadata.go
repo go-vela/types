@@ -6,5 +6,5 @@ package pipeline
 
 // Metadata is the yaml representation of the metadata block for a pipeline.
 type Metadata struct {
-	Template bool `json:"template,omitempty"`
+	Template bool `json:"template,omitempty" yaml:"template,omitempty"`
 }

@@ -12,8 +12,8 @@ type (
 	// Port is the pipeline representation
 	// of a port for a step in a pipeline.
 	Port struct {
-		Port     int    `json:"port,omitempty"`
-		Host     int    `json:"host,omitempty"`
-		Protocol string `json:"protocol,omitempty"`
+		Port     int    `json:"port,omitempty"     yaml:"port,omitempty"`
+		Host     int    `json:"host,omitempty"     yaml:"host,omitempty"`
+		Protocol string `json:"protocol,omitempty" yaml:"protocol,omitempty"`
 	}
 )

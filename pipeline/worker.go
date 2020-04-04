@@ -6,8 +6,8 @@ package pipeline
 
 // Worker is the yaml representation of the worker block for a pipeline.
 type Worker struct {
-	Flavor   string `yaml:"flavor,omitempty"`
-	Platform string `yaml:"platform,omitempty"`
+	Flavor   string `json:"flavor,omitempty"   yaml:"flavor,omitempty"`
+	Platform string `json:"platform,omitempty" yaml:"platform,omitempty"`
 }
 
 // Empty returns true if the provided worker is empty.

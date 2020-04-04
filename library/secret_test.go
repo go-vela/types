@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -21,6 +22,7 @@ func TestLibrary_Secret_Sanitize(t *testing.T) {
 	images := []string{"foo"}
 	events := []string{"bar"}
 	cmd := true
+	value := constants.SecretMask
 	s := &Secret{
 		ID:           &one,
 		Org:          &foo,
@@ -38,6 +40,7 @@ func TestLibrary_Secret_Sanitize(t *testing.T) {
 		Org:          &foo,
 		Repo:         &bar,
 		Name:         &foo,
+		Value:        &value,
 		Type:         &repo,
 		Images:       &images,
 		Events:       &events,

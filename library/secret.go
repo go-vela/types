@@ -28,12 +28,18 @@ type Secret struct {
 
 // Sanitize creates a duplicate of the Secret without the value.
 func (s *Secret) Sanitize() *Secret {
+	// create a variable since constants can not be addressable
+	//
+	// https://golang.org/ref/spec#Address_operators
+	value := constants.SecretMask
+
 	return &Secret{
 		ID:           s.ID,
 		Org:          s.Org,
 		Repo:         s.Repo,
 		Team:         s.Team,
 		Name:         s.Name,
+		Value:        &value,
 		Type:         s.Type,
 		Images:       s.Images,
 		Events:       s.Events,

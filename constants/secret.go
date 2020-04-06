@@ -14,4 +14,7 @@ const (
 
 	// SecretShared defines the secret type for a secret shared across the installation.
 	SecretShared = "shared"
+
+	// SecretMask defines the secret mask to be used in place of secret values returned to users.
+	SecretMask = "[secure]"
 )

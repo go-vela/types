@@ -22,12 +22,13 @@ type (
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch Ruletype `json:"branch,omitempty" yaml:"branch,omitempty"`
-		Event  Ruletype `json:"event,omitempty"  yaml:"event,omitempty"`
-		Path   Ruletype `json:"path,omitempty"   yaml:"path,omitempty"`
-		Repo   Ruletype `json:"repo,omitempty"   yaml:"repo,omitempty"`
-		Status Ruletype `json:"status,omitempty" yaml:"status,omitempty"`
-		Tag    Ruletype `json:"tag,omitempty"    yaml:"tag,omitempty"`
+		Branch  Ruletype `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Comment Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
+		Event   Ruletype `json:"event,omitempty"  yaml:"event,omitempty"`
+		Path    Ruletype `json:"path,omitempty"   yaml:"path,omitempty"`
+		Repo    Ruletype `json:"repo,omitempty"   yaml:"repo,omitempty"`
+		Status  Ruletype `json:"status,omitempty" yaml:"status,omitempty"`
+		Tag     Ruletype `json:"tag,omitempty"    yaml:"tag,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -37,12 +38,13 @@ type (
 	// RuleData is the data to check our ruleset
 	// against for a step in a pipeline.
 	RuleData struct {
-		Branch string   `json:"branch,omitempty" yaml:"branch,omitempty"`
-		Event  string   `json:"event,omitempty"  yaml:"event,omitempty"`
-		Path   []string `json:"path,omitempty"   yaml:"path,omitempty"`
-		Repo   string   `json:"repo,omitempty"   yaml:"repo,omitempty"`
-		Status string   `json:"status,omitempty" yaml:"status,omitempty"`
-		Tag    string   `json:"tag,omitempty"    yaml:"tag,omitempty"`
+		Branch  string   `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Comment string   `json:"comment,omitempty" yaml:"comment,omitempty"`
+		Event   string   `json:"event,omitempty"  yaml:"event,omitempty"`
+		Path    []string `json:"path,omitempty"   yaml:"path,omitempty"`
+		Repo    string   `json:"repo,omitempty"   yaml:"repo,omitempty"`
+		Status  string   `json:"status,omitempty" yaml:"status,omitempty"`
+		Tag     string   `json:"tag,omitempty"    yaml:"tag,omitempty"`
 	}
 )
 
@@ -82,6 +84,7 @@ func (r *Ruleset) Match(from *RuleData) bool {
 func (r *Rules) Empty() bool {
 	// return true if every ruletype is empty
 	if len(r.Branch) == 0 &&
+		len(r.Comment) == 0 &&
 		len(r.Event) == 0 &&
 		len(r.Path) == 0 &&
 		len(r.Repo) == 0 &&
@@ -110,6 +113,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 				// return true if any ruletype matches the ruledata
 				if r.Branch.MatchOr(from.Branch) ||
+					r.Comment.MatchOr(from.Comment) ||
 					r.Event.MatchOr(from.Event) ||
 					r.Path.MatchOr(p) ||
 					r.Repo.MatchOr(from.Repo) ||
@@ -128,6 +132,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 			// return true if every ruletype matches the ruledata
 			if r.Branch.MatchAnd(from.Branch) &&
+				r.Comment.MatchAnd(from.Comment) &&
 				r.Event.MatchAnd(from.Event) &&
 				r.Path.MatchAnd(p) &&
 				r.Repo.MatchAnd(from.Repo) &&
@@ -146,6 +151,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 		// return true if any ruletype matches the ruledata
 		if r.Branch.MatchOr(from.Branch) ||
+			r.Comment.MatchOr(from.Comment) ||
 			r.Event.MatchOr(from.Event) ||
 			r.Path.MatchOr("") ||
 			r.Repo.MatchOr(from.Repo) ||
@@ -160,6 +166,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 	// return true if every ruletype matches the ruledata
 	if r.Branch.MatchAnd(from.Branch) &&
+		r.Comment.MatchAnd(from.Comment) &&
 		r.Event.MatchAnd(from.Event) &&
 		r.Path.MatchAnd("") &&
 		r.Repo.MatchAnd(from.Repo) &&

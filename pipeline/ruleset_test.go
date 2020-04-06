@@ -20,105 +20,115 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 		// If with and operator
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}}},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}}},
-			data:    &RuleData{Branch: "dev", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Path: []string{"foo.txt", "/foo/bar.txt"}}},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			want:    false,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Comment: []string{"rerun"}}},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Comment: []string{"rerun"}}},
+			data:    &RuleData{Branch: "dev", Comment: "ok to test", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		// If with or operator
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "dev", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "dev", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{If: Rules{Path: []string{"foo.txt", "/foo/bar.txt"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		// Unless with and operator
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}}},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}}},
-			data:    &RuleData{Branch: "dev", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Path: []string{"foo.txt", "/foo/bar.txt"}}},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		// Unless with or operator
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "dev", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
-			data:    &RuleData{Branch: "dev", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "dev", Comment: "rerun", Event: "pull_request", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		{
 			ruleset: &Ruleset{Unless: Rules{Path: []string{"foo.txt", "/foo/bar.txt"}}, Operator: "or"},
-			data:    &RuleData{Branch: "master", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data:    &RuleData{Branch: "master", Comment: "rerun", Event: "pull_request", Path: []string{}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    true,
 		},
 		// Advanced Rulesets
@@ -130,7 +140,7 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 				},
 				Operator: "or",
 			},
-			data: &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "release/*"},
+			data: &RuleData{Branch: "master", Comment: "rerun", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "release/*"},
 			want: true,
 		},
 		{
@@ -141,7 +151,7 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 				},
 				Operator: "or",
 			},
-			data: &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "release/*"},
+			data: &RuleData{Branch: "master", Comment: "rerun", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "release/*"},
 			want: true,
 		},
 		{
@@ -152,7 +162,7 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 				},
 				Operator: "or",
 			},
-			data: &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			data: &RuleData{Branch: "master", Comment: "rerun", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want: false,
 		},
 	}
@@ -321,6 +331,9 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Branch
 		{rule: []string{"master"}, pattern: "master", want: true},
 		{rule: []string{"master"}, pattern: "dev", want: false},
+		// Branch
+		{rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{rule: []string{"ok to test"}, pattern: "rerun", want: false},
 		// Event
 		{rule: []string{"push"}, pattern: "push", want: true},
 		{rule: []string{"push"}, pattern: "pull_request", want: false},
@@ -361,6 +374,9 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 		// Branch
 		{rule: []string{"master"}, pattern: "master", want: true},
 		{rule: []string{"master"}, pattern: "dev", want: false},
+		// Comment
+		{rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{rule: []string{"ok to test"}, pattern: "rerun", want: false},
 		// Event
 		{rule: []string{"push"}, pattern: "push", want: true},
 		{rule: []string{"push"}, pattern: "pull_request", want: false},

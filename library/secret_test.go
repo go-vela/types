@@ -102,6 +102,14 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
+				Environment: map[string]string{"BUILD_EVENT": "comment"},
+			},
+			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"comment"}},
+			want: true,
+		},
+		{
+			step: &pipeline.Container{
+				Image:       "alpine:latest",
 				Environment: map[string]string{"BUILD_EVENT": "fake_event"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push"}},

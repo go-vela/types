@@ -19,20 +19,22 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 	slice := []string{"foo"}
 	want := &pipeline.Ruleset{
 		If: pipeline.Rules{
-			Branch: slice,
-			Event:  slice,
-			Path:   slice,
-			Repo:   slice,
-			Status: slice,
-			Tag:    slice,
+			Branch:  slice,
+			Comment: slice,
+			Event:   slice,
+			Path:    slice,
+			Repo:    slice,
+			Status:  slice,
+			Tag:     slice,
 		},
 		Unless: pipeline.Rules{
-			Branch: slice,
-			Event:  slice,
-			Path:   slice,
-			Repo:   slice,
-			Status: slice,
-			Tag:    slice,
+			Branch:  slice,
+			Comment: slice,
+			Event:   slice,
+			Path:    slice,
+			Repo:    slice,
+			Status:  slice,
+			Tag:     slice,
 		},
 		Operator: str,
 		Continue: false,
@@ -40,20 +42,22 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 
 	r := &Ruleset{
 		If: Rules{
-			Branch: slice,
-			Event:  slice,
-			Path:   slice,
-			Repo:   slice,
-			Status: slice,
-			Tag:    slice,
+			Branch:  slice,
+			Comment: slice,
+			Event:   slice,
+			Path:    slice,
+			Repo:    slice,
+			Status:  slice,
+			Tag:     slice,
 		},
 		Unless: Rules{
-			Branch: slice,
-			Event:  slice,
-			Path:   slice,
-			Repo:   slice,
-			Status: slice,
-			Tag:    slice,
+			Branch:  slice,
+			Comment: slice,
+			Event:   slice,
+			Path:    slice,
+			Repo:    slice,
+			Status:  slice,
+			Tag:     slice,
 		},
 		Operator: str,
 		Continue: false,
@@ -71,9 +75,10 @@ func TestYaml_Ruleset_UnmarshalYAML_Simple(t *testing.T) {
 	// setup types
 	want := &Ruleset{
 		If: Rules{
-			Branch: []string{"master"},
-			Event:  []string{"push"},
-			Path:   []string{"foo.txt", "/foo/bar.txt"},
+			Branch:  []string{"master"},
+			Event:   []string{"push"},
+			Path:    []string{"foo.txt", "/foo/bar.txt"},
+			Comment: []string{"ok to test", "rerun"},
 		},
 		Operator: "and",
 		Continue: true,
@@ -134,21 +139,23 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 	// setup types
 	slice := []string{"foo"}
 	want := &pipeline.Rules{
-		Branch: slice,
-		Event:  slice,
-		Path:   slice,
-		Repo:   slice,
-		Status: slice,
-		Tag:    slice,
+		Branch:  slice,
+		Comment: slice,
+		Event:   slice,
+		Path:    slice,
+		Repo:    slice,
+		Status:  slice,
+		Tag:     slice,
 	}
 
 	r := &Rules{
-		Branch: slice,
-		Event:  slice,
-		Path:   slice,
-		Repo:   slice,
-		Status: slice,
-		Tag:    slice,
+		Branch:  slice,
+		Comment: slice,
+		Event:   slice,
+		Path:    slice,
+		Repo:    slice,
+		Status:  slice,
+		Tag:     slice,
 	}
 
 	// run test
@@ -162,9 +169,10 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 	// setup types
 	want := &Rules{
-		Branch: []string{"master"},
-		Event:  []string{"push"},
-		Path:   []string{"foo.txt", "/foo/bar.txt"},
+		Branch:  []string{"master"},
+		Event:   []string{"push"},
+		Path:    []string{"foo.txt", "/foo/bar.txt"},
+		Comment: []string{"ok to test", "rerun"},
 	}
 	got := new(Rules)
 

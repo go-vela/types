@@ -37,6 +37,7 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 	for _, stage := range *s {
 		// append the element to the pipeline stage slice
 		*stageSlice = append(*stageSlice, &pipeline.Stage{
+			Done:  make(chan error, 1),
 			Name:  stage.Name,
 			Needs: stage.Needs,
 			Steps: *stage.Steps.ToPipeline(),

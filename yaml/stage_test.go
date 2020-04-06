@@ -21,6 +21,7 @@ func TestYaml_StageSlice_ToPipeline(t *testing.T) {
 	str := "foo"
 	slice := []string{"foo"}
 	mapp := map[string]string{"foo": "bar"}
+
 	want := &pipeline.StageSlice{
 		&pipeline.Stage{
 			Name:  str,
@@ -141,6 +142,18 @@ func TestYaml_StageSlice_ToPipeline(t *testing.T) {
 
 	// run test
 	got := s.ToPipeline()
+
+	// WARNING: hack to compare stages
+	//
+	// Channel values can only be compared for equality.
+	// Two channel values are considered equal if they
+	// originated from the same make call meaning they
+	// refer to the same channel value in memory.
+	for i, stage := range *got {
+		tmp := *want
+
+		tmp[i].Done = stage.Done
+	}
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToPipeline is %v, want %v", got, want)

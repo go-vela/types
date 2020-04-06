@@ -12,14 +12,14 @@ import (
 
 // Build is the pipeline representation of a build for a pipeline.
 type Build struct {
-	ID       string         `json:"id,omitempty"`
-	Version  string         `json:"version,omitempty"`
-	Metadata Metadata       `json:"metadata,omitempty"`
-	Worker   Worker         `json:"worker,omitempty"`
-	Secrets  SecretSlice    `json:"secrets,omitempty"`
-	Services ContainerSlice `json:"services,omitempty"`
-	Stages   StageSlice     `json:"stages,omitempty"`
-	Steps    ContainerSlice `json:"steps,omitempty"`
+	ID       string         `json:"id,omitempty"       yaml:"id,omitempty"`
+	Version  string         `json:"version,omitempty"  yaml:"version,omitempty"`
+	Metadata Metadata       `json:"metadata,omitempty" yaml:"metadata,omitempty"`
+	Worker   Worker         `json:"worker,omitempty"   yaml:"worker,omitempty"`
+	Secrets  SecretSlice    `json:"secrets,omitempty"  yaml:"secrets,omitempty"`
+	Services ContainerSlice `json:"services,omitempty" yaml:"services,omitempty"`
+	Stages   StageSlice     `json:"stages,omitempty"   yaml:"stages,omitempty"`
+	Steps    ContainerSlice `json:"steps,omitempty"    yaml:"steps,omitempty"`
 }
 
 // Purge removes the steps, in every stage, that contain a ruleset

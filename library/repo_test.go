@@ -17,24 +17,25 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	num64 := int64(num)
 	str := "foo"
 	r := &Repo{
-		ID:          &num64,
-		UserID:      &num64,
-		Hash:        &str,
-		Org:         &str,
-		Name:        &str,
-		FullName:    &str,
-		Link:        &str,
-		Clone:       &str,
-		Branch:      &str,
-		Timeout:     &num64,
-		Visibility:  &str,
-		Private:     &booL,
-		Trusted:     &booL,
-		Active:      &booL,
-		AllowPull:   &booL,
-		AllowPush:   &booL,
-		AllowDeploy: &booL,
-		AllowTag:    &booL,
+		ID:           &num64,
+		UserID:       &num64,
+		Hash:         &str,
+		Org:          &str,
+		Name:         &str,
+		FullName:     &str,
+		Link:         &str,
+		Clone:        &str,
+		Branch:       &str,
+		Timeout:      &num64,
+		Visibility:   &str,
+		Private:      &booL,
+		Trusted:      &booL,
+		Active:       &booL,
+		AllowPull:    &booL,
+		AllowPush:    &booL,
+		AllowDeploy:  &booL,
+		AllowTag:     &booL,
+		AllowComment: &booL,
 	}
 	wantID := num64
 	wantUserID := num64
@@ -54,6 +55,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	wantAllowPush := booL
 	wantAllowDeploy := booL
 	wantAllowTag := booL
+	wantAllowComment := booL
 
 	// run test
 	gotID := r.GetID()
@@ -74,6 +76,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	gotAllowPush := r.GetAllowPush()
 	gotAllowDeploy := r.GetAllowDeploy()
 	gotAllowTag := r.GetAllowTag()
+	gotAllowComment := r.GetAllowComment()
 
 	if gotID != wantID {
 		t.Errorf("GetID is %v, want %v", gotID, wantID)
@@ -146,6 +149,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 	if gotAllowTag != wantAllowTag {
 		t.Errorf("GetAllowTag is %v, want %v", gotAllowTag, wantAllowTag)
 	}
+
+	if gotAllowComment != wantAllowComment {
+		t.Errorf("gotAllowComment is %v, want %v", gotAllowComment, wantAllowComment)
+	}
 }
 
 func TestLibrary_Repo_Getters_Empty(t *testing.T) {
@@ -171,6 +178,7 @@ func TestLibrary_Repo_Getters_Empty(t *testing.T) {
 	gotAllowPush := r.GetAllowPush()
 	gotAllowDeploy := r.GetAllowDeploy()
 	gotAllowTag := r.GetAllowTag()
+	gotAllowComment := r.GetAllowComment()
 
 	if gotID != 0 {
 		t.Errorf("GetID is %v, want 0", gotID)
@@ -243,6 +251,10 @@ func TestLibrary_Repo_Getters_Empty(t *testing.T) {
 	if gotAllowTag != false {
 		t.Errorf("GetAllowTag is %v, want false", gotAllowTag)
 	}
+
+	if gotAllowComment != false {
+		t.Errorf("GetAllowComment is %v, want false", gotAllowComment)
+	}
 }
 
 func TestLibrary_Repo_Setters(t *testing.T) {
@@ -271,6 +283,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	wantAllowPush := booL
 	wantAllowDeploy := booL
 	wantAllowTag := booL
+	wantAllowComment := booL
 
 	// run test
 	r.SetID(wantID)
@@ -291,6 +304,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	r.SetAllowPush(wantAllowPush)
 	r.SetAllowDeploy(wantAllowDeploy)
 	r.SetAllowTag(wantAllowTag)
+	r.SetAllowComment(wantAllowComment)
 
 	if r.GetID() != wantID {
 		t.Errorf("GetID is %v, want %v", r.GetID(), wantID)
@@ -363,6 +377,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	if r.GetAllowTag() != wantAllowTag {
 		t.Errorf("GetAllowTag is %v, want %v", r.GetAllowTag(), wantAllowTag)
 	}
+
+	if r.GetAllowComment() != wantAllowComment {
+		t.Errorf("GetAllowComment is %v, want %v", r.GetAllowComment(), wantAllowComment)
+	}
 }
 
 func TestLibrary_Repo_Setters_Empty(t *testing.T) {
@@ -388,6 +406,7 @@ func TestLibrary_Repo_Setters_Empty(t *testing.T) {
 	r.SetAllowPush(false)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
+	r.SetAllowComment(false)
 
 	if r.GetID() != 0 {
 		t.Errorf("GetID is %v, want 0", r.GetID())
@@ -460,6 +479,10 @@ func TestLibrary_Repo_Setters_Empty(t *testing.T) {
 	if r.GetAllowTag() != false {
 		t.Errorf("GetAllowTag is %v, want false", r.GetAllowTag())
 	}
+
+	if r.GetAllowComment() != false {
+		t.Errorf("GetAllowComment is %v, want false", r.GetAllowComment())
+	}
 }
 
 func TestLibrary_Repo_String(t *testing.T) {
@@ -469,24 +492,25 @@ func TestLibrary_Repo_String(t *testing.T) {
 	num64 := int64(num)
 	str := "foo"
 	r := &Repo{
-		ID:          &num64,
-		UserID:      &num64,
-		Hash:        &str,
-		Org:         &str,
-		Name:        &str,
-		FullName:    &str,
-		Link:        &str,
-		Clone:       &str,
-		Branch:      &str,
-		Timeout:     &num64,
-		Visibility:  &str,
-		Private:     &booL,
-		Trusted:     &booL,
-		Active:      &booL,
-		AllowPull:   &booL,
-		AllowPush:   &booL,
-		AllowDeploy: &booL,
-		AllowTag:    &booL,
+		ID:           &num64,
+		UserID:       &num64,
+		Hash:         &str,
+		Org:          &str,
+		Name:         &str,
+		FullName:     &str,
+		Link:         &str,
+		Clone:        &str,
+		Branch:       &str,
+		Timeout:      &num64,
+		Visibility:   &str,
+		Private:      &booL,
+		Trusted:      &booL,
+		Active:       &booL,
+		AllowPull:    &booL,
+		AllowPush:    &booL,
+		AllowDeploy:  &booL,
+		AllowTag:     &booL,
+		AllowComment: &booL,
 	}
 	want := fmt.Sprintf("%+v", *r)
 

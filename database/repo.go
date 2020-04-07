@@ -39,24 +39,25 @@ var (
 
 // Repo is the database representation of a repo.
 type Repo struct {
-	ID          sql.NullInt64  `sql:"id"`
-	UserID      sql.NullInt64  `sql:"user_id"`
-	Hash        sql.NullString `sql:"hash"`
-	Org         sql.NullString `sql:"org"`
-	Name        sql.NullString `sql:"name"`
-	FullName    sql.NullString `sql:"full_name"`
-	Link        sql.NullString `sql:"link"`
-	Clone       sql.NullString `sql:"clone"`
-	Branch      sql.NullString `sql:"branch"`
-	Timeout     sql.NullInt64  `sql:"timeout"`
-	Visibility  sql.NullString `sql:"visibility"`
-	Private     sql.NullBool   `sql:"private"`
-	Trusted     sql.NullBool   `sql:"trusted"`
-	Active      sql.NullBool   `sql:"active"`
-	AllowPull   sql.NullBool   `sql:"allow_pull"`
-	AllowPush   sql.NullBool   `sql:"allow_push"`
-	AllowDeploy sql.NullBool   `sql:"allow_deploy"`
-	AllowTag    sql.NullBool   `sql:"allow_tag"`
+	ID           sql.NullInt64  `sql:"id"`
+	UserID       sql.NullInt64  `sql:"user_id"`
+	Hash         sql.NullString `sql:"hash"`
+	Org          sql.NullString `sql:"org"`
+	Name         sql.NullString `sql:"name"`
+	FullName     sql.NullString `sql:"full_name"`
+	Link         sql.NullString `sql:"link"`
+	Clone        sql.NullString `sql:"clone"`
+	Branch       sql.NullString `sql:"branch"`
+	Timeout      sql.NullInt64  `sql:"timeout"`
+	Visibility   sql.NullString `sql:"visibility"`
+	Private      sql.NullBool   `sql:"private"`
+	Trusted      sql.NullBool   `sql:"trusted"`
+	Active       sql.NullBool   `sql:"active"`
+	AllowPull    sql.NullBool   `sql:"allow_pull"`
+	AllowPush    sql.NullBool   `sql:"allow_push"`
+	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
+	AllowTag     sql.NullBool   `sql:"allow_tag"`
+	AllowComment sql.NullBool   `sql:"allow_comment"`
 }
 
 // Nullify ensures the valid flag for
@@ -151,6 +152,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowPush(r.AllowPush.Bool)
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
+	repo.SetAllowComment(r.AllowComment.Bool)
 
 	return repo
 }
@@ -195,24 +197,25 @@ func (r *Repo) Validate() error {
 // to a database repo type.
 func RepoFromLibrary(r *library.Repo) *Repo {
 	repo := &Repo{
-		ID:          sql.NullInt64{Int64: r.GetID(), Valid: true},
-		UserID:      sql.NullInt64{Int64: r.GetUserID(), Valid: true},
-		Hash:        sql.NullString{String: r.GetHash(), Valid: true},
-		Org:         sql.NullString{String: r.GetOrg(), Valid: true},
-		Name:        sql.NullString{String: r.GetName(), Valid: true},
-		FullName:    sql.NullString{String: r.GetFullName(), Valid: true},
-		Link:        sql.NullString{String: r.GetLink(), Valid: true},
-		Clone:       sql.NullString{String: r.GetClone(), Valid: true},
-		Branch:      sql.NullString{String: r.GetBranch(), Valid: true},
-		Timeout:     sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
-		Visibility:  sql.NullString{String: r.GetVisibility(), Valid: true},
-		Private:     sql.NullBool{Bool: r.GetPrivate(), Valid: true},
-		Trusted:     sql.NullBool{Bool: r.GetTrusted(), Valid: true},
-		Active:      sql.NullBool{Bool: r.GetActive(), Valid: true},
-		AllowPull:   sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
-		AllowPush:   sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
-		AllowDeploy: sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
-		AllowTag:    sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
+		ID:           sql.NullInt64{Int64: r.GetID(), Valid: true},
+		UserID:       sql.NullInt64{Int64: r.GetUserID(), Valid: true},
+		Hash:         sql.NullString{String: r.GetHash(), Valid: true},
+		Org:          sql.NullString{String: r.GetOrg(), Valid: true},
+		Name:         sql.NullString{String: r.GetName(), Valid: true},
+		FullName:     sql.NullString{String: r.GetFullName(), Valid: true},
+		Link:         sql.NullString{String: r.GetLink(), Valid: true},
+		Clone:        sql.NullString{String: r.GetClone(), Valid: true},
+		Branch:       sql.NullString{String: r.GetBranch(), Valid: true},
+		Timeout:      sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
+		Visibility:   sql.NullString{String: r.GetVisibility(), Valid: true},
+		Private:      sql.NullBool{Bool: r.GetPrivate(), Valid: true},
+		Trusted:      sql.NullBool{Bool: r.GetTrusted(), Valid: true},
+		Active:       sql.NullBool{Bool: r.GetActive(), Valid: true},
+		AllowPull:    sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
+		AllowPush:    sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
+		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
+		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
+		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 	}
 
 	return repo.Nullify()

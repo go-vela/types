@@ -22,12 +22,13 @@ type (
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch []string `yaml:"branch,omitempty"`
-		Event  []string `yaml:"event,omitempty"`
-		Path   []string `yaml:"path,omitempty"`
-		Repo   []string `yaml:"repo,omitempty"`
-		Status []string `yaml:"status,omitempty"`
-		Tag    []string `yaml:"tag,omitempty"`
+		Branch  []string `yaml:"branch,omitempty"`
+		Comment []string `yaml:"comment,omitempty"`
+		Event   []string `yaml:"event,omitempty"`
+		Path    []string `yaml:"path,omitempty"`
+		Repo    []string `yaml:"repo,omitempty"`
+		Status  []string `yaml:"status,omitempty"`
+		Tag     []string `yaml:"tag,omitempty"`
 	}
 )
 
@@ -69,6 +70,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// implicitly add simple ruleset to the advanced ruleset for each rule type
 	advanced.If.Branch = append(advanced.If.Branch, simple.Branch...)
+	advanced.If.Comment = append(advanced.If.Comment, simple.Comment...)
 	advanced.If.Event = append(advanced.If.Event, simple.Event...)
 	advanced.If.Path = append(advanced.If.Path, simple.Path...)
 	advanced.If.Repo = append(advanced.If.Repo, simple.Repo...)
@@ -90,12 +92,13 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 // type to a pipeline Rules type.
 func (r *Rules) ToPipeline() *pipeline.Rules {
 	return &pipeline.Rules{
-		Branch: r.Branch,
-		Event:  r.Event,
-		Path:   r.Path,
-		Repo:   r.Repo,
-		Status: r.Status,
-		Tag:    r.Tag,
+		Branch:  r.Branch,
+		Comment: r.Comment,
+		Event:   r.Event,
+		Path:    r.Path,
+		Repo:    r.Repo,
+		Status:  r.Status,
+		Tag:     r.Tag,
 	}
 }
 
@@ -103,18 +106,20 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// rules struct we try unmarshaling to
 	rules := new(struct {
-		Branch raw.StringSlice
-		Event  raw.StringSlice
-		Path   raw.StringSlice
-		Repo   raw.StringSlice
-		Status raw.StringSlice
-		Tag    raw.StringSlice
+		Branch  raw.StringSlice
+		Comment raw.StringSlice
+		Event   raw.StringSlice
+		Path    raw.StringSlice
+		Repo    raw.StringSlice
+		Status  raw.StringSlice
+		Tag     raw.StringSlice
 	})
 
 	// attempt to unmarshal rules
 	err := unmarshal(rules)
 	if err == nil {
 		r.Branch = []string(rules.Branch)
+		r.Comment = []string(rules.Comment)
 		r.Event = []string(rules.Event)
 		r.Path = []string(rules.Path)
 		r.Repo = []string(rules.Repo)

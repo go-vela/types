@@ -8,24 +8,25 @@ import "fmt"
 
 // Repo is the library representation of a repo.
 type Repo struct {
-	ID          *int64  `json:"id,omitempty"`
-	UserID      *int64  `json:"user_id,omitempty"`
-	Hash        *string `json:"-"`
-	Org         *string `json:"org,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	FullName    *string `json:"full_name,omitempty"`
-	Link        *string `json:"link,omitempty"`
-	Clone       *string `json:"clone,omitempty"`
-	Branch      *string `json:"branch,omitempty"`
-	Timeout     *int64  `json:"timeout,omitempty"`
-	Visibility  *string `json:"visibility,omitempty"`
-	Private     *bool   `json:"private,omitempty"`
-	Trusted     *bool   `json:"trusted,omitempty"`
-	Active      *bool   `json:"active,omitempty"`
-	AllowPull   *bool   `json:"allow_pull,omitempty"`
-	AllowPush   *bool   `json:"allow_push,omitempty"`
-	AllowDeploy *bool   `json:"allow_deploy,omitempty"`
-	AllowTag    *bool   `json:"allow_tag,omitempty"`
+	ID           *int64  `json:"id,omitempty"`
+	UserID       *int64  `json:"user_id,omitempty"`
+	Hash         *string `json:"-"`
+	Org          *string `json:"org,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	FullName     *string `json:"full_name,omitempty"`
+	Link         *string `json:"link,omitempty"`
+	Clone        *string `json:"clone,omitempty"`
+	Branch       *string `json:"branch,omitempty"`
+	Timeout      *int64  `json:"timeout,omitempty"`
+	Visibility   *string `json:"visibility,omitempty"`
+	Private      *bool   `json:"private,omitempty"`
+	Trusted      *bool   `json:"trusted,omitempty"`
+	Active       *bool   `json:"active,omitempty"`
+	AllowPull    *bool   `json:"allow_pull,omitempty"`
+	AllowPush    *bool   `json:"allow_push,omitempty"`
+	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
+	AllowTag     *bool   `json:"allow_tag,omitempty"`
+	AllowComment *bool   `json:"allow_comment,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -262,6 +263,19 @@ func (r *Repo) GetAllowTag() bool {
 	return *r.AllowTag
 }
 
+// GetAllowComment returns the AllowTag field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowComment() bool {
+	// return zero value if Repo type or AllowTag field is nil
+	if r == nil || r.AllowComment == nil {
+		return false
+	}
+
+	return *r.AllowComment
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -494,6 +508,19 @@ func (r *Repo) SetAllowTag(v bool) {
 	}
 
 	r.AllowTag = &v
+}
+
+// SetAllowComment sets the AllowComment field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowComment(v bool) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowComment = &v
 }
 
 // String implements the Stringer interface for the Repo type.

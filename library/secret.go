@@ -70,6 +70,8 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 		eACL = checkEvent(events, constants.EventTag)
 	case constants.EventDeploy:
 		eACL = checkEvent(events, constants.EventDeploy)
+	case constants.EventComment:
+		eACL = checkEvent(events, constants.EventComment)
 	}
 
 	// check images whitelist

@@ -35,18 +35,21 @@ var (
 
 // Service is the database representation of a service in a build.
 type Service struct {
-	ID       sql.NullInt64  `sql:"id"`
-	BuildID  sql.NullInt64  `sql:"build_id"`
-	RepoID   sql.NullInt64  `sql:"repo_id"`
-	Number   sql.NullInt32  `sql:"number"`
-	Name     sql.NullString `sql:"name"`
-	Image    sql.NullString `sql:"image"`
-	Status   sql.NullString `sql:"status"`
-	Error    sql.NullString `sql:"error"`
-	ExitCode sql.NullInt32  `sql:"exit_code"`
-	Created  sql.NullInt64  `sql:"created"`
-	Started  sql.NullInt64  `sql:"started"`
-	Finished sql.NullInt64  `sql:"finished"`
+	ID           sql.NullInt64  `sql:"id"`
+	BuildID      sql.NullInt64  `sql:"build_id"`
+	RepoID       sql.NullInt64  `sql:"repo_id"`
+	Number       sql.NullInt32  `sql:"number"`
+	Name         sql.NullString `sql:"name"`
+	Image        sql.NullString `sql:"image"`
+	Status       sql.NullString `sql:"status"`
+	Error        sql.NullString `sql:"error"`
+	ExitCode     sql.NullInt32  `sql:"exit_code"`
+	Created      sql.NullInt64  `sql:"created"`
+	Started      sql.NullInt64  `sql:"started"`
+	Finished     sql.NullInt64  `sql:"finished"`
+	Host         sql.NullString `sql:"host"`
+	Runtime      sql.NullString `sql:"runtime"`
+	Distribution sql.NullString `sql:"distribution"`
 }
 
 // Nullify ensures the valid flag for
@@ -120,6 +123,21 @@ func (s *Service) Nullify() *Service {
 		s.Finished.Valid = false
 	}
 
+	// check if the Host field should be false
+	if len(s.Host.String) == 0 {
+		s.Host.Valid = false
+	}
+
+	// check if the Runtime field should be false
+	if len(s.Runtime.String) == 0 {
+		s.Runtime.Valid = false
+	}
+
+	// check if the Distribution field should be false
+	if len(s.Distribution.String) == 0 {
+		s.Distribution.Valid = false
+	}
+
 	return s
 }
 
@@ -140,6 +158,9 @@ func (s *Service) ToLibrary() *library.Service {
 	service.SetCreated(s.Created.Int64)
 	service.SetStarted(s.Started.Int64)
 	service.SetFinished(s.Finished.Int64)
+	service.SetHost(s.Host.String)
+	service.SetRuntime(s.Runtime.String)
+	service.SetDistribution(s.Distribution.String)
 
 	return service
 }
@@ -179,18 +200,21 @@ func (s *Service) Validate() error {
 // to a database Service type.
 func ServiceFromLibrary(s *library.Service) *Service {
 	service := &Service{
-		ID:       sql.NullInt64{Int64: s.GetID(), Valid: true},
-		BuildID:  sql.NullInt64{Int64: s.GetBuildID(), Valid: true},
-		RepoID:   sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
-		Number:   sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
-		Name:     sql.NullString{String: s.GetName(), Valid: true},
-		Image:    sql.NullString{String: s.GetImage(), Valid: true},
-		Status:   sql.NullString{String: s.GetStatus(), Valid: true},
-		Error:    sql.NullString{String: s.GetError(), Valid: true},
-		ExitCode: sql.NullInt32{Int32: int32(s.GetExitCode()), Valid: true},
-		Created:  sql.NullInt64{Int64: s.GetCreated(), Valid: true},
-		Started:  sql.NullInt64{Int64: s.GetStarted(), Valid: true},
-		Finished: sql.NullInt64{Int64: s.GetFinished(), Valid: true},
+		ID:           sql.NullInt64{Int64: s.GetID(), Valid: true},
+		BuildID:      sql.NullInt64{Int64: s.GetBuildID(), Valid: true},
+		RepoID:       sql.NullInt64{Int64: s.GetRepoID(), Valid: true},
+		Number:       sql.NullInt32{Int32: int32(s.GetNumber()), Valid: true},
+		Name:         sql.NullString{String: s.GetName(), Valid: true},
+		Image:        sql.NullString{String: s.GetImage(), Valid: true},
+		Status:       sql.NullString{String: s.GetStatus(), Valid: true},
+		Error:        sql.NullString{String: s.GetError(), Valid: true},
+		ExitCode:     sql.NullInt32{Int32: int32(s.GetExitCode()), Valid: true},
+		Created:      sql.NullInt64{Int64: s.GetCreated(), Valid: true},
+		Started:      sql.NullInt64{Int64: s.GetStarted(), Valid: true},
+		Finished:     sql.NullInt64{Int64: s.GetFinished(), Valid: true},
+		Host:         sql.NullString{String: s.GetHost(), Valid: true},
+		Runtime:      sql.NullString{String: s.GetRuntime(), Valid: true},
+		Distribution: sql.NullString{String: s.GetDistribution(), Valid: true},
 	}
 
 	return service.Nullify()

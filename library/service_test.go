@@ -251,45 +251,59 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	if s.GetID() != wantID {
 		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
 	}
+
 	if s.GetBuildID() != wantBuildID {
 		t.Errorf("SetBuildID is %v, want %v", s.GetBuildID(), wantBuildID)
 	}
+
 	if s.GetRepoID() != wantRepoID {
 		t.Errorf("SetRepoID is %v, want %v", s.GetRepoID(), wantRepoID)
 	}
+
 	if s.GetNumber() != wantNumber {
 		t.Errorf("SetNumber is %v, want %v", s.GetNumber(), wantNumber)
 	}
+
 	if s.GetName() != wantName {
 		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
 	}
+
 	if s.GetImage() != wantImage {
 		t.Errorf("SetImage is %v, want %v", s.GetImage(), wantImage)
 	}
+
 	if s.GetStatus() != wantStatus {
 		t.Errorf("SetStatus is %v, want %v", s.GetStatus(), wantStatus)
 	}
+
 	if s.GetError() != wantError {
 		t.Errorf("SetError is %v, want %v", s.GetError(), wantError)
 	}
+
 	if s.GetExitCode() != wantExitCode {
 		t.Errorf("SetExitCode is %v, want %v", s.GetExitCode(), wantExitCode)
 	}
+
 	if s.GetCreated() != wantCreated {
 		t.Errorf("SetCreated is %v, want %v", s.GetCreated(), wantCreated)
 	}
+
 	if s.GetStarted() != wantStarted {
 		t.Errorf("SetStarted is %v, want %v", s.GetStarted(), wantStarted)
 	}
+
 	if s.GetFinished() != wantFinished {
 		t.Errorf("SetFinished is %v, want %v", s.GetFinished(), wantFinished)
 	}
+
 	if s.GetHost() != wantHost {
 		t.Errorf("SetHost is %v, want %v", s.GetHost(), wantHost)
 	}
+
 	if s.GetRuntime() != wantRuntime {
 		t.Errorf("SetRuntime is %v, want %v", s.GetRuntime(), wantRuntime)
 	}
+
 	if s.GetDistribution() != wantDistribution {
 		t.Errorf("SetDistribution is %v, want %v", s.GetDistribution(), wantDistribution)
 	}
@@ -319,45 +333,59 @@ func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	if s.GetID() != 0 {
 		t.Errorf("SetID is %v, want 0", s.GetID())
 	}
+
 	if s.GetBuildID() != 0 {
 		t.Errorf("SetBuildID is %v, want 0", s.GetBuildID())
 	}
+
 	if s.GetRepoID() != 0 {
 		t.Errorf("SetRepoID is %v, want 0", s.GetRepoID())
 	}
+
 	if s.GetNumber() != 0 {
 		t.Errorf("SetNumber is %v, want 0", s.GetNumber())
 	}
+
 	if s.GetName() != "" {
 		t.Errorf("SetName is %v, want \"\"", s.GetName())
 	}
+
 	if s.GetImage() != "" {
 		t.Errorf("SetImage is %v, want \"\"", s.GetImage())
 	}
+
 	if s.GetStatus() != "" {
 		t.Errorf("SetStatus is %v, want \"\"", s.GetStatus())
 	}
+
 	if s.GetError() != "" {
 		t.Errorf("SetError is %v, want \"\"", s.GetError())
 	}
+
 	if s.GetExitCode() != 0 {
 		t.Errorf("SetExitCode is %v, want 0", s.GetExitCode())
 	}
+
 	if s.GetCreated() != 0 {
 		t.Errorf("SetCreated is %v, want 0", s.GetCreated())
 	}
+
 	if s.GetStarted() != 0 {
 		t.Errorf("SetStarted is %v, want 0", s.GetStarted())
 	}
+
 	if s.GetFinished() != 0 {
 		t.Errorf("SetFinished is %v, want 0", s.GetFinished())
 	}
+
 	if s.GetHost() != "" {
 		t.Errorf("SetHost is %v, want \"\"", s.GetHost())
 	}
+
 	if s.GetRuntime() != "" {
 		t.Errorf("SetRuntime is %v, want \"\"", s.GetRuntime())
 	}
+
 	if s.GetDistribution() != "" {
 		t.Errorf("SetDistribution is %v, want \"\"", s.GetDistribution())
 	}
@@ -385,6 +413,7 @@ func TestService_String(t *testing.T) {
 		Runtime:      &str,
 		Distribution: &str,
 	}
+
 	want := fmt.Sprintf("%+v", *s)
 
 	// run test

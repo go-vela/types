@@ -8,18 +8,21 @@ import "fmt"
 
 // Service is the library representation of a service in a build.
 type Service struct {
-	ID       *int64  `json:"id,omitempty"`
-	BuildID  *int64  `json:"build_id,omitempty"`
-	RepoID   *int64  `json:"repo_id,omitempty"`
-	Number   *int    `json:"number,omitempty"`
-	Name     *string `json:"name,omitempty"`
-	Image    *string `json:"image,omitempty"`
-	Status   *string `json:"status,omitempty"`
-	Error    *string `json:"error,omitempty"`
-	ExitCode *int    `json:"exit_code,omitempty"`
-	Created  *int64  `json:"created,omitempty"`
-	Started  *int64  `json:"started,omitempty"`
-	Finished *int64  `json:"finished,omitempty"`
+	ID           *int64  `json:"id,omitempty"`
+	BuildID      *int64  `json:"build_id,omitempty"`
+	RepoID       *int64  `json:"repo_id,omitempty"`
+	Number       *int    `json:"number,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	Image        *string `json:"image,omitempty"`
+	Status       *string `json:"status,omitempty"`
+	Error        *string `json:"error,omitempty"`
+	ExitCode     *int    `json:"exit_code,omitempty"`
+	Created      *int64  `json:"created,omitempty"`
+	Started      *int64  `json:"started,omitempty"`
+	Finished     *int64  `json:"finished,omitempty"`
+	Host         *string `json:"host,omitempty"`
+	Runtime      *string `json:"runtime,omitempty"`
+	Distribution *string `json:"distribution,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -178,6 +181,45 @@ func (s *Service) GetFinished() int64 {
 	return *s.Finished
 }
 
+// GetHost returns the Host field.
+//
+// When the provided Service type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Service) GetHost() string {
+	// return zero value if Service type or Host field is nil
+	if s == nil || s.Host == nil {
+		return ""
+	}
+
+	return *s.Host
+}
+
+// GetRuntime returns the Runtime field.
+//
+// When the provided Service type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Service) GetRuntime() string {
+	// return zero value if Service type or Runtime field is nil
+	if s == nil || s.Runtime == nil {
+		return ""
+	}
+
+	return *s.Runtime
+}
+
+// GetDistribution returns the Runtime field.
+//
+// When the provided Service type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Service) GetDistribution() string {
+	// return zero value if Service type or Distribution field is nil
+	if s == nil || s.Distribution == nil {
+		return ""
+	}
+
+	return *s.Distribution
+}
+
 // SetID sets the ID field.
 //
 // When the provided Service type is nil, it
@@ -332,6 +374,45 @@ func (s *Service) SetFinished(v int64) {
 	}
 
 	s.Finished = &v
+}
+
+// SetHost sets the Host field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
+func (s *Service) SetHost(v string) {
+	// return if Service type is nil
+	if s == nil {
+		return
+	}
+
+	s.Host = &v
+}
+
+// SetRuntime sets the Runtime field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
+func (s *Service) SetRuntime(v string) {
+	// return if Service type is nil
+	if s == nil {
+		return
+	}
+
+	s.Runtime = &v
+}
+
+// SetDistribution sets the Runtime field.
+//
+// When the provided Service type is nil, it
+// will set nothing and immediately return.
+func (s *Service) SetDistribution(v string) {
+	// return if Service type is nil
+	if s == nil {
+		return
+	}
+
+	s.Distribution = &v
 }
 
 // String implements the Stringer interface for the Service type.

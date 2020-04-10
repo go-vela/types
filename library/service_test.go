@@ -16,18 +16,21 @@ func TestService_Getters(t *testing.T) {
 	num64 := int64(num)
 	str := "foo"
 	s := &Service{
-		ID:       &num64,
-		BuildID:  &num64,
-		RepoID:   &num64,
-		Number:   &num,
-		Name:     &str,
-		Image:    &str,
-		Status:   &str,
-		Error:    &str,
-		ExitCode: &num,
-		Created:  &num64,
-		Started:  &num64,
-		Finished: &num64,
+		ID:           &num64,
+		BuildID:      &num64,
+		RepoID:       &num64,
+		Number:       &num,
+		Name:         &str,
+		Image:        &str,
+		Status:       &str,
+		Error:        &str,
+		ExitCode:     &num,
+		Created:      &num64,
+		Started:      &num64,
+		Finished:     &num64,
+		Host:         &str,
+		Runtime:      &str,
+		Distribution: &str,
 	}
 	wantID := num64
 	wantBuildID := num64
@@ -41,6 +44,9 @@ func TestService_Getters(t *testing.T) {
 	wantCreated := num64
 	wantStarted := num64
 	wantFinished := num64
+	wantHost := str
+	wantRuntime := str
+	wantDistribution := str
 
 	// run test
 	gotID := s.GetID()
@@ -55,6 +61,9 @@ func TestService_Getters(t *testing.T) {
 	gotCreated := s.GetCreated()
 	gotStarted := s.GetStarted()
 	gotFinished := s.GetFinished()
+	gotHost := s.GetHost()
+	gotRuntime := s.GetRuntime()
+	gotDistribution := s.GetDistribution()
 
 	if gotID != wantID {
 		t.Errorf("GetID is %v, want %v", gotID, wantID)
@@ -92,6 +101,15 @@ func TestService_Getters(t *testing.T) {
 	if gotFinished != wantFinished {
 		t.Errorf("GetFinished is %v, want %v", gotFinished, wantFinished)
 	}
+	if gotHost != wantHost {
+		t.Errorf("GetHost is %v, want %v", gotHost, wantHost)
+	}
+	if gotRuntime != wantRuntime {
+		t.Errorf("GetRuntime is %v, want %v", gotRuntime, wantRuntime)
+	}
+	if gotDistribution != wantDistribution {
+		t.Errorf("GetDistribution is %v, want %v", gotDistribution, wantDistribution)
+	}
 }
 
 func TestService_Getters_Empty(t *testing.T) {
@@ -111,6 +129,9 @@ func TestService_Getters_Empty(t *testing.T) {
 	gotCreated := s.GetCreated()
 	gotStarted := s.GetStarted()
 	gotFinished := s.GetFinished()
+	gotHost := s.GetHost()
+	gotRuntime := s.GetRuntime()
+	gotDistribution := s.GetDistribution()
 
 	if gotID != 0 {
 		t.Errorf("GetID is %v, want 0", gotID)
@@ -148,6 +169,15 @@ func TestService_Getters_Empty(t *testing.T) {
 	if gotFinished != 0 {
 		t.Errorf("GetFinished is %v, want 0", gotFinished)
 	}
+	if gotHost != "" {
+		t.Errorf("GetHost is %v, want \"\"", gotHost)
+	}
+	if gotRuntime != "" {
+		t.Errorf("GetRuntime is %v, want \"\"", gotRuntime)
+	}
+	if gotDistribution != "" {
+		t.Errorf("GetDistribution is %v, want \"\"", gotDistribution)
+	}
 }
 
 func TestLibrary_Service_Setters(t *testing.T) {
@@ -169,6 +199,9 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	wantCreated := num64
 	wantStarted := num64
 	wantFinished := num64
+	wantHost := str
+	wantRuntime := str
+	wantDistribution := str
 
 	// run test
 	s.SetID(wantID)
@@ -183,6 +216,9 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	s.SetCreated(wantCreated)
 	s.SetStarted(wantStarted)
 	s.SetFinished(wantFinished)
+	s.SetHost(wantHost)
+	s.SetRuntime(wantRuntime)
+	s.SetDistribution(wantDistribution)
 
 	if s.GetID() != wantID {
 		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
@@ -220,6 +256,15 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	if s.GetFinished() != wantFinished {
 		t.Errorf("SetFinished is %v, want %v", s.GetFinished(), wantFinished)
 	}
+	if s.GetHost() != wantHost {
+		t.Errorf("SetHost is %v, want %v", s.GetHost(), wantHost)
+	}
+	if s.GetRuntime() != wantRuntime {
+		t.Errorf("SetRuntime is %v, want %v", s.GetRuntime(), wantRuntime)
+	}
+	if s.GetDistribution() != wantDistribution {
+		t.Errorf("SetDistribution is %v, want %v", s.GetDistribution(), wantDistribution)
+	}
 }
 
 func TestLibrary_Service_Setters_Empty(t *testing.T) {
@@ -239,6 +284,9 @@ func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	s.SetCreated(0)
 	s.SetStarted(0)
 	s.SetFinished(0)
+	s.SetHost("")
+	s.SetRuntime("")
+	s.SetDistribution("")
 
 	if s.GetID() != 0 {
 		t.Errorf("SetID is %v, want 0", s.GetID())
@@ -276,6 +324,15 @@ func TestLibrary_Service_Setters_Empty(t *testing.T) {
 	if s.GetFinished() != 0 {
 		t.Errorf("SetFinished is %v, want 0", s.GetFinished())
 	}
+	if s.GetHost() != "" {
+		t.Errorf("SetHost is %v, want \"\"", s.GetHost())
+	}
+	if s.GetRuntime() != "" {
+		t.Errorf("SetRuntime is %v, want \"\"", s.GetRuntime())
+	}
+	if s.GetDistribution() != "" {
+		t.Errorf("SetDistribution is %v, want \"\"", s.GetDistribution())
+	}
 }
 
 func TestService_String(t *testing.T) {
@@ -284,18 +341,21 @@ func TestService_String(t *testing.T) {
 	num64 := int64(num)
 	str := "foo"
 	s := &Service{
-		ID:       &num64,
-		BuildID:  &num64,
-		RepoID:   &num64,
-		Number:   &num,
-		Name:     &str,
-		Image:    &str,
-		Status:   &str,
-		Error:    &str,
-		ExitCode: &num,
-		Created:  &num64,
-		Started:  &num64,
-		Finished: &num64,
+		ID:           &num64,
+		BuildID:      &num64,
+		RepoID:       &num64,
+		Number:       &num,
+		Name:         &str,
+		Image:        &str,
+		Status:       &str,
+		Error:        &str,
+		ExitCode:     &num,
+		Created:      &num64,
+		Started:      &num64,
+		Finished:     &num64,
+		Host:         &str,
+		Runtime:      &str,
+		Distribution: &str,
 	}
 	want := fmt.Sprintf("%+v", *s)
 

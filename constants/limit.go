@@ -8,6 +8,7 @@ package constants
 const (
 	// BuildTimeoutMin defines the minimum value in minutes for repo build timeout.
 	BuildTimeoutMin = 30
+
 	// BuildTimeoutMax defines the maximum value in minutes for repo build timeout.
 	BuildTimeoutMax = 90
 )

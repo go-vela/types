@@ -117,7 +117,6 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 					r.Event.MatchOr(from.Event) ||
 					r.Path.MatchOr(p) ||
 					r.Repo.MatchOr(from.Repo) ||
-					r.Status.MatchOr(from.Status) ||
 					r.Tag.MatchOr(from.Tag) {
 					return true
 				}
@@ -136,7 +135,6 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 				r.Event.MatchAnd(from.Event) &&
 				r.Path.MatchAnd(p) &&
 				r.Repo.MatchAnd(from.Repo) &&
-				r.Status.MatchAnd(from.Status) &&
 				r.Tag.MatchAnd(from.Tag) {
 				return true
 			}
@@ -155,7 +153,6 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 			r.Event.MatchOr(from.Event) ||
 			r.Path.MatchOr("") ||
 			r.Repo.MatchOr(from.Repo) ||
-			r.Status.MatchOr(from.Status) ||
 			r.Tag.MatchOr(from.Tag) {
 			return true
 		}
@@ -170,7 +167,6 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 		r.Event.MatchAnd(from.Event) &&
 		r.Path.MatchAnd("") &&
 		r.Repo.MatchAnd(from.Repo) &&
-		r.Status.MatchAnd(from.Status) &&
 		r.Tag.MatchAnd(from.Tag) {
 		return true
 	}

@@ -53,6 +53,11 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 			data:    &RuleData{Branch: "dev", Comment: "ok to test", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			want:    false,
 		},
+		{
+			ruleset: &Ruleset{If: Rules{Status: []string{"success", "failure"}}},
+			data:    &RuleData{Branch: "dev", Comment: "ok to test", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			want:    true,
+		},
 		// If with or operator
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
@@ -252,6 +257,12 @@ func TestPipeline_Rules_Match(t *testing.T) {
 			data:     &RuleData{Branch: "master", Event: "pull_request", Path: []string{"foo.txt", "/foo/bar.txt"}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
 			operator: "and",
 			want:     false,
+		},
+		{
+			rules:    &Rules{Status: []string{"success", "failure"}},
+			data:     &RuleData{Branch: "master", Event: "pull_request", Path: []string{"foo.txt", "/foo/bar.txt"}, Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master"},
+			operator: "and",
+			want:     true,
 		},
 		// or operator
 		{

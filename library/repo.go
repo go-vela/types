@@ -29,6 +29,47 @@ type Repo struct {
 	AllowComment *bool   `json:"allow_comment,omitempty"`
 }
 
+// Environment returns a list of environment variables
+// provided from the fields of the Repo type.
+func (r *Repo) Environment() map[string]string {
+	return map[string]string{
+		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
+		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
+		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
+		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
+		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
+		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
+		"VELA_REPO_CLONE":         ToString(r.GetClone()),
+		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
+		"VELA_REPO_LINK":          ToString(r.GetLink()),
+		"VELA_REPO_NAME":          ToString(r.GetName()),
+		"VELA_REPO_ORG":           ToString(r.GetOrg()),
+		"VELA_REPO_PRIVATE":       ToString(r.GetPrivate()),
+		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
+		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
+		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
+
+		// deprecated environment variables
+		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
+		"REPOSITORY_ALLOW_COMMENT": ToString(r.GetAllowComment()),
+		"REPOSITORY_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
+		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
+		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
+		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
+		"REPOSITORY_CLONE":         ToString(r.GetClone()),
+		"REPOSITORY_FULL_NAME":     ToString(r.GetFullName()),
+		"REPOSITORY_LINK":          ToString(r.GetLink()),
+		"REPOSITORY_NAME":          ToString(r.GetName()),
+		"REPOSITORY_ORG":           ToString(r.GetOrg()),
+		"REPOSITORY_PRIVATE":       ToString(r.GetPrivate()),
+		"REPOSITORY_TIMEOUT":       ToString(r.GetTimeout()),
+		"REPOSITORY_TRUSTED":       ToString(r.GetTrusted()),
+		"REPOSITORY_VISIBILITY":    ToString(r.GetVisibility()),
+	}
+}
+
 // GetID returns the ID field.
 //
 // When the provided Repo type is nil, or the field within

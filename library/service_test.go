@@ -10,6 +10,30 @@ import (
 	"testing"
 )
 
+func TestLibrary_Service_Environment(t *testing.T) {
+	// setup types
+	want := map[string]string{
+		"VELA_SERVICE_CREATED":      "1563474076",
+		"VELA_SERVICE_DISTRIBUTION": "linux",
+		"VELA_SERVICE_EXIT_CODE":    "0",
+		"VELA_SERVICE_FINISHED":     "1563474079",
+		"VELA_SERVICE_HOST":         "example.company.com",
+		"VELA_SERVICE_IMAGE":        "postgres:12-alpine",
+		"VELA_SERVICE_NAME":         "postgres",
+		"VELA_SERVICE_NUMBER":       "1",
+		"VELA_SERVICE_RUNTIME":      "docker",
+		"VELA_SERVICE_STARTED":      "1563474078",
+		"VELA_SERVICE_STATUS":       "running",
+	}
+
+	// run test
+	got := testService().Environment()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Environment is %v, want %v", got, want)
+	}
+}
+
 func TestService_Getters(t *testing.T) {
 	// setup types
 	num := 1
@@ -422,4 +446,27 @@ func TestService_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testService is a test helper function to create a Service
+// type with all fields set to a fake value.
+func testService() *Service {
+	s := new(Service)
+
+	s.SetID(1)
+	s.SetBuildID(1)
+	s.SetRepoID(1)
+	s.SetNumber(1)
+	s.SetName("postgres")
+	s.SetImage("postgres:12-alpine")
+	s.SetStatus("running")
+	s.SetExitCode(0)
+	s.SetCreated(1563474076)
+	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
+	s.SetHost("example.company.com")
+	s.SetRuntime("docker")
+	s.SetDistribution("linux")
+
+	return s
 }

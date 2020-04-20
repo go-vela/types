@@ -10,6 +10,51 @@ import (
 	"testing"
 )
 
+func TestLibrary_Repo_Environment(t *testing.T) {
+	// setup types
+	want := map[string]string{
+		"VELA_REPO_ACTIVE":         "true",
+		"VELA_REPO_ALLOW_COMMENT":  "false",
+		"VELA_REPO_ALLOW_DEPLOY":   "false",
+		"VELA_REPO_ALLOW_PULL":     "false",
+		"VELA_REPO_ALLOW_PUSH":     "true",
+		"VELA_REPO_ALLOW_TAG":      "false",
+		"VELA_REPO_BRANCH":         "master",
+		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
+		"VELA_REPO_FULL_NAME":      "github/octocat",
+		"VELA_REPO_LINK":           "https://github.com/github/octocat",
+		"VELA_REPO_NAME":           "octocat",
+		"VELA_REPO_ORG":            "github",
+		"VELA_REPO_PRIVATE":        "false",
+		"VELA_REPO_TIMEOUT":        "30",
+		"VELA_REPO_TRUSTED":        "false",
+		"VELA_REPO_VISIBILITY":     "public",
+		"REPOSITORY_ACTIVE":        "true",
+		"REPOSITORY_ALLOW_COMMENT": "false",
+		"REPOSITORY_ALLOW_DEPLOY":  "false",
+		"REPOSITORY_ALLOW_PULL":    "false",
+		"REPOSITORY_ALLOW_PUSH":    "true",
+		"REPOSITORY_ALLOW_TAG":     "false",
+		"REPOSITORY_BRANCH":        "master",
+		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
+		"REPOSITORY_FULL_NAME":     "github/octocat",
+		"REPOSITORY_LINK":          "https://github.com/github/octocat",
+		"REPOSITORY_NAME":          "octocat",
+		"REPOSITORY_ORG":           "github",
+		"REPOSITORY_PRIVATE":       "false",
+		"REPOSITORY_TIMEOUT":       "30",
+		"REPOSITORY_TRUSTED":       "false",
+		"REPOSITORY_VISIBILITY":    "public",
+	}
+
+	// run test
+	got := testRepo().Environment()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Environment is %v, want %v", got, want)
+	}
+}
+
 func TestLibrary_Repo_Getters(t *testing.T) {
 	// setup types
 	booL := false
@@ -520,4 +565,30 @@ func TestLibrary_Repo_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testRepo is a test helper function to create a Repo
+// type with all fields set to a fake value.
+func testRepo() *Repo {
+	r := new(Repo)
+
+	r.SetID(1)
+	r.SetOrg("github")
+	r.SetName("octocat")
+	r.SetFullName("github/octocat")
+	r.SetLink("https://github.com/github/octocat")
+	r.SetClone("https://github.com/github/octocat.git")
+	r.SetBranch("master")
+	r.SetTimeout(30)
+	r.SetVisibility("public")
+	r.SetPrivate(false)
+	r.SetTrusted(false)
+	r.SetActive(true)
+	r.SetAllowPull(false)
+	r.SetAllowPush(true)
+	r.SetAllowDeploy(false)
+	r.SetAllowTag(false)
+	r.SetAllowComment(false)
+
+	return r
 }

@@ -4,7 +4,12 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/go-vela/types/constants"
+)
 
 // Build is the library representation of a build for a pipeline.
 type Build struct {
@@ -35,6 +40,97 @@ type Build struct {
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
+}
+
+// Environment returns a list of environment variables
+// provided from the fields of the Build type.
+func (b *Build) Environment() map[string]string {
+	envs := map[string]string{
+		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
+		"VELA_BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
+		"VELA_BUILD_BASE_REF":     ToString(b.GetBaseRef()),
+		"VELA_BUILD_BRANCH":       ToString(b.GetBranch()),
+		"VELA_BUILD_CHANNEL":      ToString("TODO"),
+		"VELA_BUILD_CLONE":        ToString(b.GetClone()),
+		"VELA_BUILD_COMMIT":       ToString(b.GetCommit()),
+		"VELA_BUILD_CREATED":      ToString(b.GetCreated()),
+		"VELA_BUILD_DISTRIBUTION": ToString(b.GetDistribution()),
+		"VELA_BUILD_ENQUEUED":     ToString(b.GetEnqueued()),
+		"VELA_BUILD_EVENT":        ToString(b.GetEvent()),
+		"VELA_BUILD_FINISHED":     ToString(b.GetFinished()),
+		"VELA_BUILD_HOST":         ToString(b.GetHost()),
+		"VELA_BUILD_LINK":         ToString(b.GetLink()),
+		"VELA_BUILD_MESSAGE":      ToString(b.GetMessage()),
+		"VELA_BUILD_NUMBER":       ToString(b.GetNumber()),
+		"VELA_BUILD_PARENT":       ToString(b.GetParent()),
+		"VELA_BUILD_REF":          ToString(b.GetRef()),
+		"VELA_BUILD_RUNTIME":      ToString(b.GetRuntime()),
+		"VELA_BUILD_SENDER":       ToString(b.GetSender()),
+		"VELA_BUILD_STARTED":      ToString(b.GetStarted()),
+		"VELA_BUILD_SOURCE":       ToString(b.GetSource()),
+		"VELA_BUILD_STATUS":       ToString(b.GetStatus()),
+		"VELA_BUILD_TITLE":        ToString(b.GetTitle()),
+		"VELA_BUILD_WORKSPACE":    ToString("TODO"),
+
+		// deprecated environment variables
+		"BUILD_AUTHOR":       ToString(b.GetAuthor()),
+		"BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
+		"BUILD_BASE_REF":     ToString(b.GetBaseRef()),
+		"BUILD_BRANCH":       ToString(b.GetBranch()),
+		"BUILD_CHANNEL":      ToString("TODO"),
+		"BUILD_CLONE":        ToString(b.GetClone()),
+		"BUILD_COMMIT":       ToString(b.GetCommit()),
+		"BUILD_CREATED":      ToString(b.GetCreated()),
+		"BUILD_ENQUEUED":     ToString(b.GetEnqueued()),
+		"BUILD_EVENT":        ToString(b.GetEvent()),
+		"BUILD_FINISHED":     ToString(b.GetFinished()),
+		"BUILD_HOST":         ToString(b.GetHost()),
+		"BUILD_LINK":         ToString(b.GetLink()),
+		"BUILD_MESSAGE":      ToString(b.GetMessage()),
+		"BUILD_NUMBER":       ToString(b.GetNumber()),
+		"BUILD_PARENT":       ToString(b.GetParent()),
+		"BUILD_REF":          ToString(b.GetRef()),
+		"BUILD_SENDER":       ToString(b.GetSender()),
+		"BUILD_STARTED":      ToString(b.GetStarted()),
+		"BUILD_SOURCE":       ToString(b.GetSource()),
+		"BUILD_STATUS":       ToString(b.GetStatus()),
+		"BUILD_TITLE":        ToString(b.GetTitle()),
+		"BUILD_WORKSPACE":    ToString("TODO"),
+	}
+
+	// check if the Build event is comment
+	if strings.EqualFold(b.GetEvent(), constants.EventComment) {
+		// capture the pull request number
+		number := ToString(strings.SplitN(b.GetRef(), "/", 4)[2])
+
+		// add the pull request number to the list
+		envs["BUILD_PULL_REQUEST_NUMBER"] = number
+		envs["VELA_BUILD_PULL_REQUEST"] = number
+		envs["VELA_PULL_REQUEST"] = number
+	}
+
+	// check if the Build event is pull_request
+	if strings.EqualFold(b.GetEvent(), constants.EventPull) {
+		// capture the pull request number
+		number := ToString(strings.SplitN(b.GetRef(), "/", 4)[2])
+
+		// add the pull request number to the list
+		envs["BUILD_PULL_REQUEST_NUMBER"] = number
+		envs["VELA_BUILD_PULL_REQUEST"] = number
+		envs["VELA_PULL_REQUEST"] = number
+	}
+
+	// check if the Build event is tag
+	if strings.EqualFold(b.GetEvent(), constants.EventTag) {
+		// capture the tag reference
+		tag := ToString(strings.TrimPrefix(b.GetRef(), "refs/tags/"))
+
+		// add the tag reference to the list
+		envs["BUILD_TAG"] = tag
+		envs["VELA_BUILD_TAG"] = tag
+	}
+
+	return envs
 }
 
 // GetID returns the ID field.

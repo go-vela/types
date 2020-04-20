@@ -25,6 +25,24 @@ type Service struct {
 	Distribution *string `json:"distribution,omitempty"`
 }
 
+// Environment returns a list of environment variables
+// provided from the fields of the Service type.
+func (s *Service) Environment() map[string]string {
+	return map[string]string{
+		"VELA_SERVICE_CREATED":      ToString(s.GetCreated()),
+		"VELA_SERVICE_DISTRIBUTION": ToString(s.GetDistribution()),
+		"VELA_SERVICE_EXIT_CODE":    ToString(s.GetExitCode()),
+		"VELA_SERVICE_FINISHED":     ToString(s.GetFinished()),
+		"VELA_SERVICE_HOST":         ToString(s.GetHost()),
+		"VELA_SERVICE_IMAGE":        ToString(s.GetImage()),
+		"VELA_SERVICE_NAME":         ToString(s.GetName()),
+		"VELA_SERVICE_NUMBER":       ToString(s.GetNumber()),
+		"VELA_SERVICE_RUNTIME":      ToString(s.GetRuntime()),
+		"VELA_SERVICE_STARTED":      ToString(s.GetStarted()),
+		"VELA_SERVICE_STATUS":       ToString(s.GetStatus()),
+	}
+}
+
 // GetID returns the ID field.
 //
 // When the provided Service type is nil, or the field within

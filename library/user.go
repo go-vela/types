@@ -17,6 +17,17 @@ type User struct {
 	Admin     *bool     `json:"admin,omitempty"`
 }
 
+// Environment returns a list of environment variables
+// provided from the fields of the User type.
+func (u *User) Environment() map[string]string {
+	return map[string]string{
+		"VELA_USER_ACTIVE":    ToString(u.GetActive()),
+		"VELA_USER_ADMIN":     ToString(u.GetAdmin()),
+		"VELA_USER_FAVORITES": ToString(u.GetFavorites()),
+		"VELA_USER_NAME":      ToString(u.GetName()),
+	}
+}
+
 // GetID returns the ID field.
 //
 // When the provided User type is nil, or the field within

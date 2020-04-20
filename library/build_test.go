@@ -10,6 +10,257 @@ import (
 	"testing"
 )
 
+func TestLibrary_Build_Environment(t *testing.T) {
+	// setup types
+	_comment := testBuild()
+	_comment.SetEvent("comment")
+	_comment.SetRef("refs/pulls/1/head")
+
+	_pull := testBuild()
+	_pull.SetEvent("pull_request")
+	_pull.SetRef("refs/pulls/1/head")
+
+	_tag := testBuild()
+	_tag.SetEvent("tag")
+	_tag.SetRef("refs/tags/v0.1.0")
+
+	// setup tests
+	tests := []struct {
+		build *Build
+		want  map[string]string
+	}{
+		{
+			build: testBuild(),
+			want: map[string]string{
+				"VELA_BUILD_AUTHOR":       "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":     "",
+				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_CHANNEL":      "TODO",
+				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":      "1563474076",
+				"VELA_BUILD_DISTRIBUTION": "linux",
+				"VELA_BUILD_ENQUEUED":     "1563474077",
+				"VELA_BUILD_EVENT":        "push",
+				"VELA_BUILD_FINISHED":     "1563474079",
+				"VELA_BUILD_HOST":         "example.company.com",
+				"VELA_BUILD_LINK":         "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":      "First commit...",
+				"VELA_BUILD_NUMBER":       "1",
+				"VELA_BUILD_PARENT":       "1",
+				"VELA_BUILD_REF":          "refs/heads/master",
+				"VELA_BUILD_RUNTIME":      "docker",
+				"VELA_BUILD_SENDER":       "OctoKitty",
+				"VELA_BUILD_STARTED":      "1563474078",
+				"VELA_BUILD_SOURCE":       "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":       "running",
+				"VELA_BUILD_TITLE":        "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":    "TODO",
+				"BUILD_AUTHOR":            "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
+				"BUILD_BASE_REF":          "",
+				"BUILD_BRANCH":            "master",
+				"BUILD_CHANNEL":           "TODO",
+				"BUILD_CLONE":             "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":           "1563474076",
+				"BUILD_ENQUEUED":          "1563474077",
+				"BUILD_EVENT":             "push",
+				"BUILD_FINISHED":          "1563474079",
+				"BUILD_HOST":              "example.company.com",
+				"BUILD_LINK":              "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":           "First commit...",
+				"BUILD_NUMBER":            "1",
+				"BUILD_PARENT":            "1",
+				"BUILD_REF":               "refs/heads/master",
+				"BUILD_SENDER":            "OctoKitty",
+				"BUILD_STARTED":           "1563474078",
+				"BUILD_SOURCE":            "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":            "running",
+				"BUILD_TITLE":             "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":         "TODO",
+			},
+		},
+		{
+			build: _comment,
+			want: map[string]string{
+				"VELA_BUILD_AUTHOR":         "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":       "",
+				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_CHANNEL":        "TODO",
+				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":        "1563474076",
+				"VELA_BUILD_DISTRIBUTION":   "linux",
+				"VELA_BUILD_ENQUEUED":       "1563474077",
+				"VELA_BUILD_EVENT":          "comment",
+				"VELA_BUILD_FINISHED":       "1563474079",
+				"VELA_BUILD_HOST":           "example.company.com",
+				"VELA_BUILD_LINK":           "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":        "First commit...",
+				"VELA_BUILD_NUMBER":         "1",
+				"VELA_BUILD_PARENT":         "1",
+				"VELA_BUILD_PULL_REQUEST":   "1",
+				"VELA_BUILD_REF":            "refs/pulls/1/head",
+				"VELA_BUILD_RUNTIME":        "docker",
+				"VELA_BUILD_SENDER":         "OctoKitty",
+				"VELA_BUILD_STARTED":        "1563474078",
+				"VELA_BUILD_SOURCE":         "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":         "running",
+				"VELA_BUILD_TITLE":          "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":      "TODO",
+				"VELA_PULL_REQUEST":         "1",
+				"BUILD_AUTHOR":              "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
+				"BUILD_BASE_REF":            "",
+				"BUILD_BRANCH":              "master",
+				"BUILD_CHANNEL":             "TODO",
+				"BUILD_CLONE":               "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":             "1563474076",
+				"BUILD_ENQUEUED":            "1563474077",
+				"BUILD_EVENT":               "comment",
+				"BUILD_FINISHED":            "1563474079",
+				"BUILD_HOST":                "example.company.com",
+				"BUILD_LINK":                "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":             "First commit...",
+				"BUILD_NUMBER":              "1",
+				"BUILD_PARENT":              "1",
+				"BUILD_PULL_REQUEST_NUMBER": "1",
+				"BUILD_REF":                 "refs/pulls/1/head",
+				"BUILD_SENDER":              "OctoKitty",
+				"BUILD_STARTED":             "1563474078",
+				"BUILD_SOURCE":              "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":              "running",
+				"BUILD_TITLE":               "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":           "TODO",
+			},
+		},
+		{
+			build: _pull,
+			want: map[string]string{
+				"VELA_BUILD_AUTHOR":         "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":       "",
+				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_CHANNEL":        "TODO",
+				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":        "1563474076",
+				"VELA_BUILD_DISTRIBUTION":   "linux",
+				"VELA_BUILD_ENQUEUED":       "1563474077",
+				"VELA_BUILD_EVENT":          "pull_request",
+				"VELA_BUILD_FINISHED":       "1563474079",
+				"VELA_BUILD_HOST":           "example.company.com",
+				"VELA_BUILD_LINK":           "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":        "First commit...",
+				"VELA_BUILD_NUMBER":         "1",
+				"VELA_BUILD_PARENT":         "1",
+				"VELA_BUILD_PULL_REQUEST":   "1",
+				"VELA_BUILD_REF":            "refs/pulls/1/head",
+				"VELA_BUILD_RUNTIME":        "docker",
+				"VELA_BUILD_SENDER":         "OctoKitty",
+				"VELA_BUILD_STARTED":        "1563474078",
+				"VELA_BUILD_SOURCE":         "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":         "running",
+				"VELA_BUILD_TITLE":          "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":      "TODO",
+				"VELA_PULL_REQUEST":         "1",
+				"BUILD_AUTHOR":              "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
+				"BUILD_BASE_REF":            "",
+				"BUILD_BRANCH":              "master",
+				"BUILD_CHANNEL":             "TODO",
+				"BUILD_CLONE":               "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":             "1563474076",
+				"BUILD_ENQUEUED":            "1563474077",
+				"BUILD_EVENT":               "pull_request",
+				"BUILD_FINISHED":            "1563474079",
+				"BUILD_HOST":                "example.company.com",
+				"BUILD_LINK":                "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":             "First commit...",
+				"BUILD_NUMBER":              "1",
+				"BUILD_PARENT":              "1",
+				"BUILD_PULL_REQUEST_NUMBER": "1",
+				"BUILD_REF":                 "refs/pulls/1/head",
+				"BUILD_SENDER":              "OctoKitty",
+				"BUILD_STARTED":             "1563474078",
+				"BUILD_SOURCE":              "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":              "running",
+				"BUILD_TITLE":               "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":           "TODO",
+			},
+		},
+		{
+			build: _tag,
+			want: map[string]string{
+				"VELA_BUILD_AUTHOR":       "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":     "",
+				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_CHANNEL":      "TODO",
+				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":      "1563474076",
+				"VELA_BUILD_DISTRIBUTION": "linux",
+				"VELA_BUILD_ENQUEUED":     "1563474077",
+				"VELA_BUILD_EVENT":        "tag",
+				"VELA_BUILD_FINISHED":     "1563474079",
+				"VELA_BUILD_HOST":         "example.company.com",
+				"VELA_BUILD_LINK":         "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":      "First commit...",
+				"VELA_BUILD_NUMBER":       "1",
+				"VELA_BUILD_PARENT":       "1",
+				"VELA_BUILD_REF":          "refs/tags/v0.1.0",
+				"VELA_BUILD_RUNTIME":      "docker",
+				"VELA_BUILD_SENDER":       "OctoKitty",
+				"VELA_BUILD_STARTED":      "1563474078",
+				"VELA_BUILD_SOURCE":       "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":       "running",
+				"VELA_BUILD_TAG":          "v0.1.0",
+				"VELA_BUILD_TITLE":        "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":    "TODO",
+				"BUILD_AUTHOR":            "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
+				"BUILD_BASE_REF":          "",
+				"BUILD_BRANCH":            "master",
+				"BUILD_CHANNEL":           "TODO",
+				"BUILD_CLONE":             "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":           "1563474076",
+				"BUILD_ENQUEUED":          "1563474077",
+				"BUILD_EVENT":             "tag",
+				"BUILD_FINISHED":          "1563474079",
+				"BUILD_HOST":              "example.company.com",
+				"BUILD_LINK":              "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":           "First commit...",
+				"BUILD_NUMBER":            "1",
+				"BUILD_PARENT":            "1",
+				"BUILD_REF":               "refs/tags/v0.1.0",
+				"BUILD_SENDER":            "OctoKitty",
+				"BUILD_STARTED":           "1563474078",
+				"BUILD_SOURCE":            "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":            "running",
+				"BUILD_TAG":               "v0.1.0",
+				"BUILD_TITLE":             "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":         "TODO",
+			},
+		},
+	}
+
+	// run test
+	for _, test := range tests {
+		got := test.build.Environment()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Environment is %v, want %v", got, test.want)
+		}
+	}
+}
+
 func TestLibrary_Build_Getters(t *testing.T) {
 	// setup types
 	num := 1
@@ -605,4 +856,40 @@ func TestLibrary_Build_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testBuild is a test helper function to create a Build
+// type with all fields set to a fake value.
+func testBuild() *Build {
+	b := new(Build)
+
+	b.SetID(1)
+	b.SetRepoID(1)
+	b.SetNumber(1)
+	b.SetParent(1)
+	b.SetEvent("push")
+	b.SetStatus("running")
+	b.SetError("")
+	b.SetEnqueued(1563474077)
+	b.SetCreated(1563474076)
+	b.SetStarted(1563474078)
+	b.SetFinished(1563474079)
+	b.SetDeploy("")
+	b.SetClone("https://github.com/github/octocat.git")
+	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
+	b.SetTitle("push received from https://github.com/github/octocat")
+	b.SetMessage("First commit...")
+	b.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
+	b.SetSender("OctoKitty")
+	b.SetAuthor("OctoKitty")
+	b.SetEmail("OctoKitty@github.com")
+	b.SetLink("https://example.company.com/github/octocat/1")
+	b.SetBranch("master")
+	b.SetRef("refs/heads/master")
+	b.SetBaseRef("")
+	b.SetHost("example.company.com")
+	b.SetRuntime("docker")
+	b.SetDistribution("linux")
+
+	return b
 }

@@ -10,6 +10,23 @@ import (
 	"testing"
 )
 
+func TestLibrary_User_Environment(t *testing.T) {
+	// setup types
+	want := map[string]string{
+		"VELA_USER_ACTIVE":    "true",
+		"VELA_USER_ADMIN":     "false",
+		"VELA_USER_FAVORITES": "[\"github/octocat\"]",
+		"VELA_USER_NAME":      "octocat",
+	}
+
+	// run test
+	got := testUser().Environment()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Environment is %v, want %v", got, want)
+	}
+}
+
 func TestLibrary_User_Getters(t *testing.T) {
 	// setup types
 	booL := false
@@ -232,4 +249,20 @@ func TestLibrary_User_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testUser is a test helper function to create a User
+// type with all fields set to a fake value.
+func testUser() *User {
+	u := new(User)
+
+	u.SetID(1)
+	u.SetName("octocat")
+	u.SetToken("superSecretToken")
+	u.SetHash("MzM4N2MzMDAtNmY4Mi00OTA5LWFhZDAtNWIzMTlkNTJkODMy")
+	u.SetFavorites([]string{"github/octocat"})
+	u.SetActive(true)
+	u.SetAdmin(false)
+
+	return u
 }

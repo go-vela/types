@@ -26,6 +26,25 @@ type Step struct {
 	Distribution *string `json:"distribution,omitempty"`
 }
 
+// Environment returns a list of environment variables
+// provided from the fields of the Step type.
+func (s *Step) Environment() map[string]string {
+	return map[string]string{
+		"VELA_STEP_CREATED":      ToString(s.GetCreated()),
+		"VELA_STEP_DISTRIBUTION": ToString(s.GetDistribution()),
+		"VELA_STEP_EXIT_CODE":    ToString(s.GetExitCode()),
+		"VELA_STEP_FINISHED":     ToString(s.GetFinished()),
+		"VELA_STEP_HOST":         ToString(s.GetHost()),
+		"VELA_STEP_IMAGE":        ToString(s.GetImage()),
+		"VELA_STEP_NAME":         ToString(s.GetName()),
+		"VELA_STEP_NUMBER":       ToString(s.GetNumber()),
+		"VELA_STEP_RUNTIME":      ToString(s.GetRuntime()),
+		"VELA_STEP_STAGE":        ToString(s.GetStage()),
+		"VELA_STEP_STARTED":      ToString(s.GetStarted()),
+		"VELA_STEP_STATUS":       ToString(s.GetStatus()),
+	}
+}
+
 // GetID returns the ID field.
 //
 // When the provided Step type is nil, or the field within

@@ -11,57 +11,43 @@ import (
 
 func TestLibrary_BuildFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Build{ID: &id}
+	b := testBuild()
 
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, want)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != want {
-		t.Errorf("BuildFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Build
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, b),
+			want: b,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_BuildFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := BuildFromContext(test.ctx)
 
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_BuildFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, id)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("BuildFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_BuildWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Build{ID: &id}
+	want := testBuild()
 
 	// setup context
-	ctx = BuildWithContext(ctx, want)
+	ctx := BuildWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(buildKey)
@@ -73,57 +59,43 @@ func TestLibrary_BuildWithContext(t *testing.T) {
 
 func TestLibrary_LogFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Log{ID: &id}
+	l := testLog()
 
-	// setup context
-	ctx = context.WithValue(ctx, logKey, want)
-
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != want {
-		t.Errorf("LogFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Log
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), logKey, l),
+			want: l,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), logKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_LogFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := LogFromContext(test.ctx)
 
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("LogFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_LogFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, logKey, id)
-
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("LogFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("LogFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_LogWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Log{ID: &id}
+	want := testLog()
 
 	// setup context
-	ctx = LogWithContext(ctx, want)
+	ctx := LogWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(logKey)
@@ -135,57 +107,43 @@ func TestLibrary_LogWithContext(t *testing.T) {
 
 func TestLibrary_RepoFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Repo{ID: &id}
+	r := testRepo()
 
-	// setup context
-	ctx = context.WithValue(ctx, repoKey, want)
-
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != want {
-		t.Errorf("RepoFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Repo
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), repoKey, r),
+			want: r,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), repoKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_RepoFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := RepoFromContext(test.ctx)
 
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("RepoFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_RepoFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, repoKey, id)
-
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("RepoFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("RepoFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_RepoWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Repo{ID: &id}
+	want := testRepo()
 
 	// setup context
-	ctx = RepoWithContext(ctx, want)
+	ctx := RepoWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(repoKey)
@@ -197,57 +155,43 @@ func TestLibrary_RepoWithContext(t *testing.T) {
 
 func TestLibrary_SecretFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Secret{ID: &id}
+	s := testSecret()
 
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, want)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != want {
-		t.Errorf("SecretFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Secret
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_SecretFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := SecretFromContext(test.ctx)
 
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_SecretFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, id)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("SecretFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_SecretWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Secret{ID: &id}
+	want := testSecret()
 
 	// setup context
-	ctx = SecretWithContext(ctx, want)
+	ctx := SecretWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(secretKey)
@@ -259,57 +203,43 @@ func TestLibrary_SecretWithContext(t *testing.T) {
 
 func TestLibrary_StepFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Step{ID: &id}
+	s := testStep()
 
-	// setup context
-	ctx = context.WithValue(ctx, stepKey, want)
-
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != want {
-		t.Errorf("StepFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Step
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), stepKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), stepKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_StepFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := StepFromContext(test.ctx)
 
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StepFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_StepFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, stepKey, id)
-
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StepFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("StepFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_StepWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &Step{ID: &id}
+	want := testStep()
 
 	// setup context
-	ctx = StepWithContext(ctx, want)
+	ctx := StepWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(stepKey)
@@ -321,57 +251,43 @@ func TestLibrary_StepWithContext(t *testing.T) {
 
 func TestLibrary_UserFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &User{ID: &id}
+	u := testUser()
 
-	// setup context
-	ctx = context.WithValue(ctx, userKey, want)
-
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != want {
-		t.Errorf("UserFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *User
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), userKey, u),
+			want: u,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), userKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestLibrary_UserFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := UserFromContext(test.ctx)
 
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("UserFromContext is %v, want nil", got)
-	}
-}
-
-func TestLibrary_UserFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, userKey, id)
-
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("UserFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("UserFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestLibrary_UserWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	id := int64(1)
-	want := &User{ID: &id}
+	want := testUser()
 
 	// setup context
-	ctx = UserWithContext(ctx, want)
+	ctx := UserWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(userKey)

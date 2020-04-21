@@ -56,507 +56,224 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 }
 
 func TestLibrary_Repo_Getters(t *testing.T) {
-	// setup types
-	booL := false
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	r := &Repo{
-		ID:           &num64,
-		UserID:       &num64,
-		Hash:         &str,
-		Org:          &str,
-		Name:         &str,
-		FullName:     &str,
-		Link:         &str,
-		Clone:        &str,
-		Branch:       &str,
-		Timeout:      &num64,
-		Visibility:   &str,
-		Private:      &booL,
-		Trusted:      &booL,
-		Active:       &booL,
-		AllowPull:    &booL,
-		AllowPush:    &booL,
-		AllowDeploy:  &booL,
-		AllowTag:     &booL,
-		AllowComment: &booL,
-	}
-	wantID := num64
-	wantUserID := num64
-	wantHash := str
-	wantOrg := str
-	wantName := str
-	wantFullName := str
-	wantLink := str
-	wantClone := str
-	wantBranch := str
-	wantTimeout := num64
-	wantVisibility := str
-	wantPrivate := booL
-	wantTrusted := booL
-	wantActive := booL
-	wantAllowPull := booL
-	wantAllowPush := booL
-	wantAllowDeploy := booL
-	wantAllowTag := booL
-	wantAllowComment := booL
-
-	// run test
-	gotID := r.GetID()
-	gotUserID := r.GetUserID()
-	gotHash := r.GetHash()
-	gotOrg := r.GetOrg()
-	gotName := r.GetName()
-	gotFullName := r.GetFullName()
-	gotLink := r.GetLink()
-	gotClone := r.GetClone()
-	gotBranch := r.GetBranch()
-	gotTimeout := r.GetTimeout()
-	gotVisibility := r.GetVisibility()
-	gotPrivate := r.GetPrivate()
-	gotTrusted := r.GetTrusted()
-	gotActive := r.GetActive()
-	gotAllowPull := r.GetAllowPull()
-	gotAllowPush := r.GetAllowPush()
-	gotAllowDeploy := r.GetAllowDeploy()
-	gotAllowTag := r.GetAllowTag()
-	gotAllowComment := r.GetAllowComment()
-
-	if gotID != wantID {
-		t.Errorf("GetID is %v, want %v", gotID, wantID)
+	// setup tests
+	tests := []struct {
+		repo *Repo
+		want *Repo
+	}{
+		{
+			repo: testRepo(),
+			want: testRepo(),
+		},
+		{
+			repo: new(Repo),
+			want: new(Repo),
+		},
 	}
 
-	if gotUserID != wantUserID {
-		t.Errorf("GetUserID is %v, want %v", gotUserID, wantUserID)
-	}
+	// run tests
+	for _, test := range tests {
+		if test.repo.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.repo.GetID(), test.want.GetID())
+		}
 
-	if gotHash != wantHash {
-		t.Errorf("GetHash is %v, want %v", gotHash, wantHash)
-	}
+		if test.repo.GetUserID() != test.want.GetUserID() {
+			t.Errorf("GetUserID is %v, want %v", test.repo.GetUserID(), test.want.GetUserID())
+		}
 
-	if gotOrg != wantOrg {
-		t.Errorf("GetOrg is %v, want %v", gotOrg, wantOrg)
-	}
+		if test.repo.GetHash() != test.want.GetHash() {
+			t.Errorf("GetHash is %v, want %v", test.repo.GetHash(), test.want.GetHash())
+		}
 
-	if gotName != wantName {
-		t.Errorf("GetName is %v, want %v", gotName, wantName)
-	}
+		if test.repo.GetOrg() != test.want.GetOrg() {
+			t.Errorf("GetOrg is %v, want %v", test.repo.GetOrg(), test.want.GetOrg())
+		}
 
-	if gotFullName != wantFullName {
-		t.Errorf("GetFullName is %v, want %v", gotFullName, wantFullName)
-	}
+		if test.repo.GetName() != test.want.GetName() {
+			t.Errorf("GetName is %v, want %v", test.repo.GetName(), test.want.GetName())
+		}
 
-	if gotLink != wantLink {
-		t.Errorf("GetLink is %v, want %v", gotLink, wantLink)
-	}
+		if test.repo.GetFullName() != test.want.GetFullName() {
+			t.Errorf("GetFullName is %v, want %v", test.repo.GetFullName(), test.want.GetFullName())
+		}
 
-	if gotClone != wantClone {
-		t.Errorf("GetClone is %v, want %v", gotClone, wantClone)
-	}
+		if test.repo.GetLink() != test.want.GetLink() {
+			t.Errorf("GetLink is %v, want %v", test.repo.GetLink(), test.want.GetLink())
+		}
 
-	if gotBranch != wantBranch {
-		t.Errorf("GetBranch is %v, want %v", gotBranch, wantBranch)
-	}
+		if test.repo.GetClone() != test.want.GetClone() {
+			t.Errorf("GetClone is %v, want %v", test.repo.GetClone(), test.want.GetClone())
+		}
 
-	if gotTimeout != wantTimeout {
-		t.Errorf("GetTimeout is %v, want %v", gotTimeout, wantTimeout)
-	}
+		if test.repo.GetBranch() != test.want.GetBranch() {
+			t.Errorf("GetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
+		}
 
-	if gotVisibility != wantVisibility {
-		t.Errorf("GetVisibility is %v, want %v", gotVisibility, wantVisibility)
-	}
+		if test.repo.GetTimeout() != test.want.GetTimeout() {
+			t.Errorf("GetTimeout is %v, want %v", test.repo.GetTimeout(), test.want.GetTimeout())
+		}
 
-	if gotPrivate != wantPrivate {
-		t.Errorf("GetPrivate is %v, want %v", gotPrivate, wantPrivate)
-	}
+		if test.repo.GetVisibility() != test.want.GetVisibility() {
+			t.Errorf("GetVisibility is %v, want %v", test.repo.GetVisibility(), test.want.GetVisibility())
+		}
 
-	if gotTrusted != wantTrusted {
-		t.Errorf("GetTrusted is %v, want %v", gotTrusted, wantTrusted)
-	}
+		if test.repo.GetPrivate() != test.want.GetPrivate() {
+			t.Errorf("GetPrivate is %v, want %v", test.repo.GetPrivate(), test.want.GetPrivate())
+		}
 
-	if gotActive != wantActive {
-		t.Errorf("GetActive is %v, want %v", gotActive, wantActive)
-	}
+		if test.repo.GetTrusted() != test.want.GetTrusted() {
+			t.Errorf("GetTrusted is %v, want %v", test.repo.GetTrusted(), test.want.GetTrusted())
+		}
 
-	if gotAllowPull != wantAllowPull {
-		t.Errorf("GetAllowPull is %v, want %v", gotAllowPull, wantAllowPull)
-	}
+		if test.repo.GetActive() != test.want.GetActive() {
+			t.Errorf("GetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
+		}
 
-	if gotAllowPush != wantAllowPush {
-		t.Errorf("GetAllowPush is %v, want %v", gotAllowPush, wantAllowPush)
-	}
+		if test.repo.GetAllowPull() != test.want.GetAllowPull() {
+			t.Errorf("GetAllowPull is %v, want %v", test.repo.GetAllowPull(), test.want.GetAllowPull())
+		}
 
-	if gotAllowDeploy != wantAllowDeploy {
-		t.Errorf("GetAllowDeploy is %v, want %v", gotAllowDeploy, wantAllowDeploy)
-	}
+		if test.repo.GetAllowPush() != test.want.GetAllowPush() {
+			t.Errorf("GetAllowPush is %v, want %v", test.repo.GetAllowPush(), test.want.GetAllowPush())
+		}
 
-	if gotAllowTag != wantAllowTag {
-		t.Errorf("GetAllowTag is %v, want %v", gotAllowTag, wantAllowTag)
-	}
+		if test.repo.GetAllowDeploy() != test.want.GetAllowDeploy() {
+			t.Errorf("GetAllowDeploy is %v, want %v", test.repo.GetAllowDeploy(), test.want.GetAllowDeploy())
+		}
 
-	if gotAllowComment != wantAllowComment {
-		t.Errorf("gotAllowComment is %v, want %v", gotAllowComment, wantAllowComment)
-	}
-}
+		if test.repo.GetAllowTag() != test.want.GetAllowTag() {
+			t.Errorf("GetAllowTag is %v, want %v", test.repo.GetAllowTag(), test.want.GetAllowTag())
+		}
 
-func TestLibrary_Repo_Getters_Empty(t *testing.T) {
-	// setup types
-	r := new(Repo)
-
-	// run test
-	gotID := r.GetID()
-	gotUserID := r.GetUserID()
-	gotHash := r.GetHash()
-	gotOrg := r.GetOrg()
-	gotName := r.GetName()
-	gotFullName := r.GetFullName()
-	gotLink := r.GetLink()
-	gotClone := r.GetClone()
-	gotBranch := r.GetBranch()
-	gotTimeout := r.GetTimeout()
-	gotVisibility := r.GetVisibility()
-	gotPrivate := r.GetPrivate()
-	gotTrusted := r.GetTrusted()
-	gotActive := r.GetActive()
-	gotAllowPull := r.GetAllowPull()
-	gotAllowPush := r.GetAllowPush()
-	gotAllowDeploy := r.GetAllowDeploy()
-	gotAllowTag := r.GetAllowTag()
-	gotAllowComment := r.GetAllowComment()
-
-	if gotID != 0 {
-		t.Errorf("GetID is %v, want 0", gotID)
-	}
-
-	if gotUserID != 0 {
-		t.Errorf("GetUserID is %v, want 0", gotUserID)
-	}
-
-	if gotHash != "" {
-		t.Errorf("GetHash is %v, want \"\"", gotHash)
-	}
-
-	if gotOrg != "" {
-		t.Errorf("GetOrg is %v, want \"\"", gotOrg)
-	}
-
-	if gotName != "" {
-		t.Errorf("GetName is %v, want \"\"", gotName)
-	}
-
-	if gotFullName != "" {
-		t.Errorf("GetFullName is %v, want \"\"", gotFullName)
-	}
-
-	if gotLink != "" {
-		t.Errorf("GetLink is %v, want \"\"", gotLink)
-	}
-
-	if gotClone != "" {
-		t.Errorf("GetClone is %v, want \"\"", gotClone)
-	}
-
-	if gotBranch != "" {
-		t.Errorf("GetBranch is %v, want \"\"", gotBranch)
-	}
-
-	if gotTimeout != 0 {
-		t.Errorf("GetTimeout is %v, want 0", gotTimeout)
-	}
-
-	if gotVisibility != "" {
-		t.Errorf("GetVisibility is %v, want \"\"", gotVisibility)
-	}
-
-	if gotPrivate != false {
-		t.Errorf("GetPrivate is %v, want false", gotPrivate)
-	}
-
-	if gotTrusted != false {
-		t.Errorf("GetTrusted is %v, want false", gotTrusted)
-	}
-
-	if gotActive != false {
-		t.Errorf("GetActive is %v, want false", gotActive)
-	}
-
-	if gotAllowPull != false {
-		t.Errorf("GetAllowPull is %v, want false", gotAllowPull)
-	}
-
-	if gotAllowPush != false {
-		t.Errorf("GetAllowPush is %v, want false", gotAllowPush)
-	}
-
-	if gotAllowDeploy != false {
-		t.Errorf("GetAllowDeploy is %v, want false", gotAllowDeploy)
-	}
-
-	if gotAllowTag != false {
-		t.Errorf("GetAllowTag is %v, want false", gotAllowTag)
-	}
-
-	if gotAllowComment != false {
-		t.Errorf("GetAllowComment is %v, want false", gotAllowComment)
+		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
+			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
+		}
 	}
 }
 
 func TestLibrary_Repo_Setters(t *testing.T) {
 	// setup types
-	booL := false
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	r := new(Repo)
-
-	wantID := num64
-	wantUserID := num64
-	wantHash := str
-	wantOrg := str
-	wantName := str
-	wantFullName := str
-	wantLink := str
-	wantClone := str
-	wantBranch := str
-	wantTimeout := num64
-	wantVisibility := str
-	wantPrivate := booL
-	wantTrusted := booL
-	wantActive := booL
-	wantAllowPull := booL
-	wantAllowPush := booL
-	wantAllowDeploy := booL
-	wantAllowTag := booL
-	wantAllowComment := booL
-
-	// run test
-	r.SetID(wantID)
-	r.SetUserID(wantUserID)
-	r.SetHash(wantHash)
-	r.SetOrg(wantOrg)
-	r.SetName(wantName)
-	r.SetFullName(wantFullName)
-	r.SetLink(wantLink)
-	r.SetClone(wantClone)
-	r.SetBranch(wantBranch)
-	r.SetTimeout(wantTimeout)
-	r.SetVisibility(wantVisibility)
-	r.SetPrivate(wantPrivate)
-	r.SetTrusted(wantTrusted)
-	r.SetActive(wantActive)
-	r.SetAllowPull(wantAllowPull)
-	r.SetAllowPush(wantAllowPush)
-	r.SetAllowDeploy(wantAllowDeploy)
-	r.SetAllowTag(wantAllowTag)
-	r.SetAllowComment(wantAllowComment)
-
-	if r.GetID() != wantID {
-		t.Errorf("GetID is %v, want %v", r.GetID(), wantID)
-	}
-
-	if r.GetUserID() != wantUserID {
-		t.Errorf("GetUserID is %v, want %v", r.GetUserID(), wantUserID)
-	}
-
-	if r.GetHash() != wantHash {
-		t.Errorf("GetHash is %v, want %v", r.GetHash(), wantHash)
-	}
-
-	if r.GetOrg() != wantOrg {
-		t.Errorf("GetOrg is %v, want %v", r.GetOrg(), wantOrg)
-	}
-
-	if r.GetName() != wantName {
-		t.Errorf("GetName is %v, want %v", r.GetName(), wantName)
-	}
-
-	if r.GetFullName() != wantFullName {
-		t.Errorf("GetFullName is %v, want %v", r.GetFullName(), wantFullName)
-	}
-
-	if r.GetLink() != wantLink {
-		t.Errorf("GetLink is %v, want %v", r.GetLink(), wantLink)
-	}
-
-	if r.GetClone() != wantClone {
-		t.Errorf("GetClone is %v, want %v", r.GetClone(), wantClone)
-	}
-
-	if r.GetBranch() != wantBranch {
-		t.Errorf("GetBranch is %v, want %v", r.GetBranch(), wantBranch)
-	}
-
-	if r.GetTimeout() != wantTimeout {
-		t.Errorf("GetTimeout is %v, want %v", r.GetTimeout(), wantTimeout)
-	}
-
-	if r.GetVisibility() != wantVisibility {
-		t.Errorf("GetVisibility is %v, want %v", r.GetVisibility(), wantVisibility)
-	}
-
-	if r.GetPrivate() != wantPrivate {
-		t.Errorf("GetPrivate is %v, want %v", r.GetPrivate(), wantPrivate)
-	}
-
-	if r.GetTrusted() != wantTrusted {
-		t.Errorf("GetTrusted is %v, want %v", r.GetTrusted(), wantTrusted)
-	}
-
-	if r.GetActive() != wantActive {
-		t.Errorf("GetActive is %v, want %v", r.GetActive(), wantActive)
-	}
-
-	if r.GetAllowPull() != wantAllowPull {
-		t.Errorf("GetAllowPull is %v, want %v", r.GetAllowPull(), wantAllowPull)
-	}
-
-	if r.GetAllowPush() != wantAllowPush {
-		t.Errorf("GetAllowPush is %v, want %v", r.GetAllowPush(), wantAllowPush)
-	}
-
-	if r.GetAllowDeploy() != wantAllowDeploy {
-		t.Errorf("GetAllowDeploy is %v, want %v", r.GetAllowDeploy(), wantAllowDeploy)
-	}
-
-	if r.GetAllowTag() != wantAllowTag {
-		t.Errorf("GetAllowTag is %v, want %v", r.GetAllowTag(), wantAllowTag)
-	}
-
-	if r.GetAllowComment() != wantAllowComment {
-		t.Errorf("GetAllowComment is %v, want %v", r.GetAllowComment(), wantAllowComment)
-	}
-}
-
-func TestLibrary_Repo_Setters_Empty(t *testing.T) {
-	// setup types
 	var r *Repo
 
-	// run test
-	r.SetID(0)
-	r.SetUserID(0)
-	r.SetHash("")
-	r.SetOrg("")
-	r.SetName("")
-	r.SetFullName("")
-	r.SetLink("")
-	r.SetClone("")
-	r.SetBranch("")
-	r.SetTimeout(0)
-	r.SetVisibility("")
-	r.SetPrivate(false)
-	r.SetTrusted(false)
-	r.SetActive(false)
-	r.SetAllowPull(false)
-	r.SetAllowPush(false)
-	r.SetAllowDeploy(false)
-	r.SetAllowTag(false)
-	r.SetAllowComment(false)
-
-	if r.GetID() != 0 {
-		t.Errorf("GetID is %v, want 0", r.GetID())
+	// setup tests
+	tests := []struct {
+		repo *Repo
+		want *Repo
+	}{
+		{
+			repo: testRepo(),
+			want: testRepo(),
+		},
+		{
+			repo: r,
+			want: new(Repo),
+		},
 	}
 
-	if r.GetUserID() != 0 {
-		t.Errorf("GetUserID is %v, want 0", r.GetUserID())
-	}
+	// run tests
+	for _, test := range tests {
+		test.repo.SetID(test.want.GetID())
+		test.repo.SetUserID(test.want.GetUserID())
+		test.repo.SetHash(test.want.GetHash())
+		test.repo.SetOrg(test.want.GetOrg())
+		test.repo.SetName(test.want.GetName())
+		test.repo.SetFullName(test.want.GetFullName())
+		test.repo.SetLink(test.want.GetLink())
+		test.repo.SetClone(test.want.GetClone())
+		test.repo.SetBranch(test.want.GetBranch())
+		test.repo.SetTimeout(test.want.GetTimeout())
+		test.repo.SetVisibility(test.want.GetVisibility())
+		test.repo.SetPrivate(test.want.GetPrivate())
+		test.repo.SetTrusted(test.want.GetTrusted())
+		test.repo.SetActive(test.want.GetActive())
+		test.repo.SetAllowPull(test.want.GetAllowPull())
+		test.repo.SetAllowPush(test.want.GetAllowPush())
+		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
+		test.repo.SetAllowTag(test.want.GetAllowTag())
+		test.repo.SetAllowComment(test.want.GetAllowComment())
 
-	if r.GetHash() != "" {
-		t.Errorf("GetHash is %v, want \"\"", r.GetHash())
-	}
+		if test.repo.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
+		}
 
-	if r.GetOrg() != "" {
-		t.Errorf("GetOrg is %v, want \"\"", r.GetOrg())
-	}
+		if test.repo.GetUserID() != test.want.GetUserID() {
+			t.Errorf("SetUserID is %v, want %v", test.repo.GetUserID(), test.want.GetUserID())
+		}
 
-	if r.GetName() != "" {
-		t.Errorf("GetName is %v, want \"\"", r.GetName())
-	}
+		if test.repo.GetHash() != test.want.GetHash() {
+			t.Errorf("SetHash is %v, want %v", test.repo.GetHash(), test.want.GetHash())
+		}
 
-	if r.GetFullName() != "" {
-		t.Errorf("GetFullName is %v, want \"\"", r.GetFullName())
-	}
+		if test.repo.GetOrg() != test.want.GetOrg() {
+			t.Errorf("SetOrg is %v, want %v", test.repo.GetOrg(), test.want.GetOrg())
+		}
 
-	if r.GetLink() != "" {
-		t.Errorf("GetLink is %v, want \"\"", r.GetLink())
-	}
+		if test.repo.GetName() != test.want.GetName() {
+			t.Errorf("SetName is %v, want %v", test.repo.GetName(), test.want.GetName())
+		}
 
-	if r.GetClone() != "" {
-		t.Errorf("GetClone is %v, want \"\"", r.GetClone())
-	}
+		if test.repo.GetFullName() != test.want.GetFullName() {
+			t.Errorf("SetFullName is %v, want %v", test.repo.GetFullName(), test.want.GetFullName())
+		}
 
-	if r.GetBranch() != "" {
-		t.Errorf("GetBranch is %v, want \"\"", r.GetBranch())
-	}
+		if test.repo.GetLink() != test.want.GetLink() {
+			t.Errorf("SetLink is %v, want %v", test.repo.GetLink(), test.want.GetLink())
+		}
 
-	if r.GetTimeout() != 0 {
-		t.Errorf("GetTimeout is %v, want 0", r.GetTimeout())
-	}
+		if test.repo.GetClone() != test.want.GetClone() {
+			t.Errorf("SetClone is %v, want %v", test.repo.GetClone(), test.want.GetClone())
+		}
 
-	if r.GetVisibility() != "" {
-		t.Errorf("GetVisibility is %v, want \"\"", r.GetVisibility())
-	}
+		if test.repo.GetBranch() != test.want.GetBranch() {
+			t.Errorf("SetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
+		}
 
-	if r.GetPrivate() != false {
-		t.Errorf("GetPrivate is %v, want false", r.GetPrivate())
-	}
+		if test.repo.GetTimeout() != test.want.GetTimeout() {
+			t.Errorf("SetTimeout is %v, want %v", test.repo.GetTimeout(), test.want.GetTimeout())
+		}
 
-	if r.GetTrusted() != false {
-		t.Errorf("GetTrusted is %v, want false", r.GetTrusted())
-	}
+		if test.repo.GetVisibility() != test.want.GetVisibility() {
+			t.Errorf("SetVisibility is %v, want %v", test.repo.GetVisibility(), test.want.GetVisibility())
+		}
 
-	if r.GetActive() != false {
-		t.Errorf("GetActive is %v, want false", r.GetActive())
-	}
+		if test.repo.GetPrivate() != test.want.GetPrivate() {
+			t.Errorf("SetPrivate is %v, want %v", test.repo.GetPrivate(), test.want.GetPrivate())
+		}
 
-	if r.GetAllowPull() != false {
-		t.Errorf("GetAllowPull is %v, want false", r.GetAllowPull())
-	}
+		if test.repo.GetTrusted() != test.want.GetTrusted() {
+			t.Errorf("SetTrusted is %v, want %v", test.repo.GetTrusted(), test.want.GetTrusted())
+		}
 
-	if r.GetAllowPush() != false {
-		t.Errorf("GetAllowPush is %v, want false", r.GetAllowPush())
-	}
+		if test.repo.GetActive() != test.want.GetActive() {
+			t.Errorf("SetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
+		}
 
-	if r.GetAllowDeploy() != false {
-		t.Errorf("GetAllowDeploy is %v, want false", r.GetAllowDeploy())
-	}
+		if test.repo.GetAllowPull() != test.want.GetAllowPull() {
+			t.Errorf("SetAllowPull is %v, want %v", test.repo.GetAllowPull(), test.want.GetAllowPull())
+		}
 
-	if r.GetAllowTag() != false {
-		t.Errorf("GetAllowTag is %v, want false", r.GetAllowTag())
-	}
+		if test.repo.GetAllowPush() != test.want.GetAllowPush() {
+			t.Errorf("SetAllowPush is %v, want %v", test.repo.GetAllowPush(), test.want.GetAllowPush())
+		}
 
-	if r.GetAllowComment() != false {
-		t.Errorf("GetAllowComment is %v, want false", r.GetAllowComment())
+		if test.repo.GetAllowDeploy() != test.want.GetAllowDeploy() {
+			t.Errorf("SetAllowDeploy is %v, want %v", test.repo.GetAllowDeploy(), test.want.GetAllowDeploy())
+		}
+
+		if test.repo.GetAllowTag() != test.want.GetAllowTag() {
+			t.Errorf("SetAllowTag is %v, want %v", test.repo.GetAllowTag(), test.want.GetAllowTag())
+		}
+
+		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
+			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
+		}
 	}
 }
 
 func TestLibrary_Repo_String(t *testing.T) {
 	// setup types
-	booL := false
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	r := &Repo{
-		ID:           &num64,
-		UserID:       &num64,
-		Hash:         &str,
-		Org:          &str,
-		Name:         &str,
-		FullName:     &str,
-		Link:         &str,
-		Clone:        &str,
-		Branch:       &str,
-		Timeout:      &num64,
-		Visibility:   &str,
-		Private:      &booL,
-		Trusted:      &booL,
-		Active:       &booL,
-		AllowPull:    &booL,
-		AllowPush:    &booL,
-		AllowDeploy:  &booL,
-		AllowTag:     &booL,
-		AllowComment: &booL,
-	}
+	r := testRepo()
+
 	want := fmt.Sprintf("%+v", *r)
 
 	// run test

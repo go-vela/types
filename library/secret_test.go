@@ -15,37 +15,10 @@ import (
 
 func TestLibrary_Secret_Sanitize(t *testing.T) {
 	// setup types
-	one := int64(1)
-	foo := "foo"
-	bar := "bar"
-	repo := "repo"
-	images := []string{"foo"}
-	events := []string{"bar"}
-	cmd := true
-	value := constants.SecretMask
-	s := &Secret{
-		ID:           &one,
-		Org:          &foo,
-		Repo:         &bar,
-		Name:         &foo,
-		Value:        &bar,
-		Type:         &repo,
-		Images:       &images,
-		Events:       &events,
-		AllowCommand: &cmd,
-	}
+	s := testSecret()
 
-	want := &Secret{
-		ID:           &one,
-		Org:          &foo,
-		Repo:         &bar,
-		Name:         &foo,
-		Value:        &value,
-		Type:         &repo,
-		Images:       &images,
-		Events:       &events,
-		AllowCommand: &cmd,
-	}
+	want := testSecret()
+	want.SetValue(constants.SecretMask)
 
 	// run test
 	got := s.Sanitize()
@@ -56,12 +29,11 @@ func TestLibrary_Secret_Sanitize(t *testing.T) {
 }
 
 func TestLibrary_Secret_Match(t *testing.T) {
-
-	// name and value of secret
+	// setup types
 	v := "foo"
 	booL := false
 
-	// setup types
+	// setup tests
 	tests := []struct {
 		step *pipeline.Container
 		sec  *Secret
@@ -227,268 +199,136 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		},
 	}
 
-	// run test
+	// run tests
 	for _, test := range tests {
+		got := test.sec.Match(test.step)
 
-		inject := test.sec.Match(test.step)
-
-		if !inject == test.want {
-			t.Errorf("Match should have been %v", inject)
+		if got != test.want {
+			t.Errorf("Match is %v, want %v", got, test.want)
 		}
 	}
 }
 
 func TestLibrary_Secret_Getters(t *testing.T) {
-	// setup types
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	booL := true
-	s := &Secret{
-		ID:           &num64,
-		Org:          &str,
-		Repo:         &str,
-		Team:         &str,
-		Name:         &str,
-		Value:        &str,
-		Type:         &str,
-		Images:       &arr,
-		Events:       &arr,
-		AllowCommand: &booL,
+	// setup tests
+	tests := []struct {
+		secret *Secret
+		want   *Secret
+	}{
+		{
+			secret: testSecret(),
+			want:   testSecret(),
+		},
+		{
+			secret: new(Secret),
+			want:   new(Secret),
+		},
 	}
-	wantID := num64
-	wantOrg := str
-	wantRepo := str
-	wantTeam := str
-	wantName := str
-	wantValue := str
-	wantType := str
-	wantImages := arr
-	wantEvents := arr
-	wantAllowCommand := booL
 
-	// run test
-	gotID := s.GetID()
-	gotOrg := s.GetOrg()
-	gotRepo := s.GetRepo()
-	gotTeam := s.GetTeam()
-	gotName := s.GetName()
-	gotValue := s.GetValue()
-	gotType := s.GetType()
-	gotImages := s.GetImages()
-	gotEvents := s.GetEvents()
-	gotAllowCommand := s.GetAllowCommand()
-
-	if gotID != wantID {
-		t.Errorf("GetID is %v, want %v", gotID, wantID)
-	}
-	if gotOrg != wantOrg {
-		t.Errorf("GetOrg is %v, want %v", gotOrg, wantOrg)
-	}
-	if gotRepo != wantRepo {
-		t.Errorf("GetRepo is %v, want %v", gotRepo, wantRepo)
-	}
-	if gotTeam != wantTeam {
-		t.Errorf("GetTeam is %v, want %v", gotTeam, wantTeam)
-	}
-	if gotName != wantName {
-		t.Errorf("GetName is %v, want %v", gotName, wantName)
-	}
-	if gotValue != wantValue {
-		t.Errorf("GetValue is %v, want %v", gotValue, wantValue)
-	}
-	if gotType != wantType {
-		t.Errorf("GetType is %v, want %v", gotType, wantType)
-	}
-	if !reflect.DeepEqual(gotImages, wantImages) {
-		t.Errorf("GetImages is %v, want %v", gotImages, wantImages)
-	}
-	if !reflect.DeepEqual(gotEvents, wantEvents) {
-		t.Errorf("GetEvents is %v, want %v", gotEvents, wantEvents)
-	}
-	if gotAllowCommand != wantAllowCommand {
-		t.Errorf("GetAllowCommand is %v, want %v", gotAllowCommand, wantAllowCommand)
-	}
-}
-
-func TestLibrary_Secret_Getters_Empty(t *testing.T) {
-	// setup types
-	s := new(Secret)
-
-	// run test
-	gotID := s.GetID()
-	gotOrg := s.GetOrg()
-	gotRepo := s.GetRepo()
-	gotTeam := s.GetTeam()
-	gotName := s.GetName()
-	gotValue := s.GetValue()
-	gotType := s.GetType()
-	gotImages := s.GetImages()
-	gotEvents := s.GetEvents()
-	gotAllowCommand := s.GetAllowCommand()
-
-	if gotID != 0 {
-		t.Errorf("GetID is %v, want 0", gotID)
-	}
-	if gotOrg != "" {
-		t.Errorf("GetOrg is %v, want \"\"", gotOrg)
-	}
-	if gotRepo != "" {
-		t.Errorf("GetRepo is %v, want \"\"", gotRepo)
-	}
-	if gotTeam != "" {
-		t.Errorf("GetTeam is %v, want \"\"", gotTeam)
-	}
-	if gotName != "" {
-		t.Errorf("GetName is %v, want \"\"", gotName)
-	}
-	if gotValue != "" {
-		t.Errorf("GetValue is %v, want \"\"", gotValue)
-	}
-	if gotType != "" {
-		t.Errorf("GetType is %v, want \"\"", gotType)
-	}
-	if !reflect.DeepEqual(gotImages, []string{}) {
-		t.Errorf("GetImages is %v, want []string{}", gotImages)
-	}
-	if !reflect.DeepEqual(gotEvents, []string{}) {
-		t.Errorf("GetEvents is %v, want []string{}", gotEvents)
-	}
-	if gotAllowCommand != false {
-		t.Errorf("GetAllowCommand is %v, want false", gotAllowCommand)
+	// run tests
+	for _, test := range tests {
+		if test.secret.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.secret.GetID(), test.want.GetID())
+		}
+		if test.secret.GetOrg() != test.want.GetOrg() {
+			t.Errorf("GetOrg is %v, want %v", test.secret.GetOrg(), test.want.GetOrg())
+		}
+		if test.secret.GetRepo() != test.want.GetRepo() {
+			t.Errorf("GetRepo is %v, want %v", test.secret.GetRepo(), test.want.GetRepo())
+		}
+		if test.secret.GetTeam() != test.want.GetTeam() {
+			t.Errorf("GetTeam is %v, want %v", test.secret.GetTeam(), test.want.GetTeam())
+		}
+		if test.secret.GetName() != test.want.GetName() {
+			t.Errorf("GetName is %v, want %v", test.secret.GetName(), test.want.GetName())
+		}
+		if test.secret.GetValue() != test.want.GetValue() {
+			t.Errorf("GetValue is %v, want %v", test.secret.GetValue(), test.want.GetValue())
+		}
+		if test.secret.GetType() != test.want.GetType() {
+			t.Errorf("GetType is %v, want %v", test.secret.GetType(), test.want.GetType())
+		}
+		if !reflect.DeepEqual(test.secret.GetImages(), test.want.GetImages()) {
+			t.Errorf("GetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
+		}
+		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
+			t.Errorf("GetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
+		}
+		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
+			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
+		}
 	}
 }
 
 func TestLibrary_Secret_Setters(t *testing.T) {
 	// setup types
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	booL := true
-
-	s := new(Secret)
-
-	wantID := num64
-	wantOrg := str
-	wantRepo := str
-	wantTeam := str
-	wantName := str
-	wantValue := str
-	wantType := str
-	wantImages := arr
-	wantEvents := arr
-	wantAllowCommand := booL
-
-	// run test
-	s.SetID(wantID)
-	s.SetOrg(wantOrg)
-	s.SetRepo(wantRepo)
-	s.SetTeam(wantTeam)
-	s.SetName(wantName)
-	s.SetValue(wantValue)
-	s.SetType(wantType)
-	s.SetImages(wantImages)
-	s.SetEvents(wantEvents)
-	s.SetAllowCommand(wantAllowCommand)
-
-	if s.GetID() != wantID {
-		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
-	}
-	if s.GetOrg() != wantOrg {
-		t.Errorf("SetOrg is %v, want %v", s.GetOrg(), wantOrg)
-	}
-	if s.GetRepo() != wantRepo {
-		t.Errorf("SetRepo is %v, want %v", s.GetRepo(), wantRepo)
-	}
-	if s.GetTeam() != wantTeam {
-		t.Errorf("SetTeam is %v, want %v", s.GetTeam(), wantTeam)
-	}
-	if s.GetName() != wantName {
-		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
-	}
-	if s.GetValue() != wantValue {
-		t.Errorf("SetValue is %v, want %v", s.GetValue(), wantValue)
-	}
-	if s.GetType() != wantType {
-		t.Errorf("SetType is %v, want %v", s.GetType(), wantType)
-	}
-	if !reflect.DeepEqual(s.GetImages(), wantImages) {
-		t.Errorf("SetImages is %v, want %v", s.GetImages(), wantImages)
-	}
-	if !reflect.DeepEqual(s.GetEvents(), wantEvents) {
-		t.Errorf("SetEvents is %v, want %v", s.GetEvents(), wantEvents)
-	}
-	if s.GetAllowCommand() != wantAllowCommand {
-		t.Errorf("SetAllowCommand is %v, want %v", s.GetAllowCommand(), wantAllowCommand)
-	}
-}
-
-func TestLibrary_Secret_Setters_Empty(t *testing.T) {
-	// setup types
 	var s *Secret
 
-	// run test
-	s.SetID(0)
-	s.SetOrg("")
-	s.SetRepo("")
-	s.SetTeam("")
-	s.SetName("")
-	s.SetValue("")
-	s.SetType("")
-	s.SetImages([]string{})
-	s.SetEvents([]string{})
-	s.SetAllowCommand(false)
+	// setup tests
+	tests := []struct {
+		secret *Secret
+		want   *Secret
+	}{
+		{
+			secret: testSecret(),
+			want:   testSecret(),
+		},
+		{
+			secret: s,
+			want:   new(Secret),
+		},
+	}
 
-	if s.GetID() != 0 {
-		t.Errorf("SetID is %v, want 0", s.GetID())
-	}
-	if s.GetOrg() != "" {
-		t.Errorf("SetOrg is %v, want \"\"", s.GetOrg())
-	}
-	if s.GetRepo() != "" {
-		t.Errorf("SetRepo is %v, want \"\"", s.GetRepo())
-	}
-	if s.GetTeam() != "" {
-		t.Errorf("SetTeam is %v, want \"\"", s.GetTeam())
-	}
-	if s.GetName() != "" {
-		t.Errorf("SetName is %v, want \"\"", s.GetName())
-	}
-	if s.GetValue() != "" {
-		t.Errorf("SetValue is %v, want \"\"", s.GetValue())
-	}
-	if s.GetType() != "" {
-		t.Errorf("SetType is %v, want \"\"", s.GetType())
-	}
-	if !reflect.DeepEqual(s.GetImages(), []string{}) {
-		t.Errorf("SetImages is %v, want []string{}", s.GetImages())
-	}
-	if !reflect.DeepEqual(s.GetEvents(), []string{}) {
-		t.Errorf("SetEvents is %v, want []string{}", s.GetEvents())
-	}
-	if s.GetAllowCommand() != false {
-		t.Errorf("SetAllowCommand is %v, want false", s.GetAllowCommand())
+	// run tests
+	for _, test := range tests {
+		test.secret.SetID(test.want.GetID())
+		test.secret.SetOrg(test.want.GetOrg())
+		test.secret.SetRepo(test.want.GetRepo())
+		test.secret.SetTeam(test.want.GetTeam())
+		test.secret.SetName(test.want.GetName())
+		test.secret.SetValue(test.want.GetValue())
+		test.secret.SetType(test.want.GetType())
+		test.secret.SetImages(test.want.GetImages())
+		test.secret.SetEvents(test.want.GetEvents())
+		test.secret.SetAllowCommand(test.want.GetAllowCommand())
+
+		if test.secret.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.secret.GetID(), test.want.GetID())
+		}
+		if test.secret.GetOrg() != test.want.GetOrg() {
+			t.Errorf("SetOrg is %v, want %v", test.secret.GetOrg(), test.want.GetOrg())
+		}
+		if test.secret.GetRepo() != test.want.GetRepo() {
+			t.Errorf("SetRepo is %v, want %v", test.secret.GetRepo(), test.want.GetRepo())
+		}
+		if test.secret.GetTeam() != test.want.GetTeam() {
+			t.Errorf("SetTeam is %v, want %v", test.secret.GetTeam(), test.want.GetTeam())
+		}
+		if test.secret.GetName() != test.want.GetName() {
+			t.Errorf("SetName is %v, want %v", test.secret.GetName(), test.want.GetName())
+		}
+		if test.secret.GetValue() != test.want.GetValue() {
+			t.Errorf("SetValue is %v, want %v", test.secret.GetValue(), test.want.GetValue())
+		}
+		if test.secret.GetType() != test.want.GetType() {
+			t.Errorf("SetType is %v, want %v", test.secret.GetType(), test.want.GetType())
+		}
+		if !reflect.DeepEqual(test.secret.GetImages(), test.want.GetImages()) {
+			t.Errorf("SetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
+		}
+		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
+			t.Errorf("SetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
+		}
+		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
+			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
+		}
 	}
 }
 
 func TestLibrary_Secret_String(t *testing.T) {
 	// setup types
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	booL := true
-	s := &Secret{
-		ID:           &num64,
-		Org:          &str,
-		Repo:         &str,
-		Team:         &str,
-		Name:         &str,
-		Value:        &str,
-		Type:         &str,
-		Images:       &arr,
-		Events:       &arr,
-		AllowCommand: &booL,
-	}
+	s := testSecret()
+
 	want := fmt.Sprintf("%+v", *s)
 
 	// run test
@@ -497,4 +337,23 @@ func TestLibrary_Secret_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testSecret is a test helper function to create a Secret
+// type with all fields set to a fake value.
+func testSecret() *Secret {
+	s := new(Secret)
+
+	s.SetID(1)
+	s.SetOrg("github")
+	s.SetRepo("octocat")
+	s.SetTeam("octokitties")
+	s.SetName("foo")
+	s.SetValue("bar")
+	s.SetType("repo")
+	s.SetImages([]string{"alpine"})
+	s.SetEvents([]string{"push", "tag", "deployment"})
+	s.SetAllowCommand(true)
+
+	return s
 }

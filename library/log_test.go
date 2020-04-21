@@ -10,212 +10,140 @@ import (
 	"testing"
 )
 
-func TestLibrary_Log_Append(t *testing.T) {
+func TestLibrary_Log_AppendData(t *testing.T) {
 	// setup types
-	wantOne := new(Log)
-	wantOne.SetID(1)
-	wantOne.SetServiceID(1)
-	wantOne.SetStepID(1)
-	wantOne.SetBuildID(1)
-	wantOne.SetRepoID(1)
-	wantOne.SetData([]byte("bar"))
+	data := []byte("bar")
 
-	wantTwo := new(Log)
-	wantTwo.SetID(1)
-	wantTwo.SetServiceID(1)
-	wantTwo.SetStepID(1)
-	wantTwo.SetBuildID(1)
-	wantTwo.SetRepoID(1)
-	wantTwo.SetData([]byte("foobar"))
+	want := testLog()
+	want.SetData([]byte("foobar"))
 
-	gotOne := new(Log)
-	gotOne.SetID(1)
-	gotOne.SetServiceID(1)
-	gotOne.SetStepID(1)
-	gotOne.SetBuildID(1)
-	gotOne.SetRepoID(1)
-
-	gotTwo := new(Log)
-	gotTwo.SetID(1)
-	gotTwo.SetServiceID(1)
-	gotTwo.SetStepID(1)
-	gotTwo.SetBuildID(1)
-	gotTwo.SetRepoID(1)
-	gotTwo.SetData([]byte("foo"))
-
-	// run test
-	gotOne.AppendData([]byte("bar"))
-
-	gotTwo.AppendData([]byte("bar"))
-
-	if !reflect.DeepEqual(gotOne, wantOne) {
-		t.Errorf("Append is %v, want %v", gotOne, wantOne)
+	// setup tests
+	tests := []struct {
+		log  *Log
+		want *Log
+	}{
+		{
+			log:  testLog(),
+			want: want,
+		},
+		{
+			log:  new(Log),
+			want: &Log{Data: &data},
+		},
 	}
 
-	if !reflect.DeepEqual(gotTwo, wantTwo) {
-		t.Errorf("Append is %v, want %v", gotTwo, wantTwo)
+	// run tests
+	for _, test := range tests {
+		test.log.AppendData(data)
+
+		if !reflect.DeepEqual(test.log, test.want) {
+			t.Errorf("AppendData is %v, want %v", test.log, test.want)
+		}
 	}
 }
 
 func TestLibrary_Log_Getters(t *testing.T) {
-	// setup types
-	num64 := int64(1)
-	bytes := []byte("foo")
-	l := &Log{
-		ID:        &num64,
-		ServiceID: &num64,
-		StepID:    &num64,
-		BuildID:   &num64,
-		RepoID:    &num64,
-		Data:      &bytes,
+	// setup tests
+	tests := []struct {
+		log  *Log
+		want *Log
+	}{
+		{
+			log:  testLog(),
+			want: testLog(),
+		},
+		{
+			log:  new(Log),
+			want: new(Log),
+		},
 	}
-	wantID := num64
-	wantServiceID := num64
-	wantStepID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantData := bytes
 
-	// run test
-	gotID := l.GetID()
-	gotServiceID := l.GetServiceID()
-	gotStepID := l.GetStepID()
-	gotBuildID := l.GetBuildID()
-	gotRepoID := l.GetRepoID()
-	gotData := l.GetData()
+	// run tests
+	for _, test := range tests {
+		if test.log.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.log.GetID(), test.want.GetID())
+		}
 
-	if gotID != wantID {
-		t.Errorf("GetID is %v, want %v", gotID, wantID)
-	}
-	if gotServiceID != wantServiceID {
-		t.Errorf("GetServiceID is %v, want %v", gotServiceID, wantServiceID)
-	}
-	if gotStepID != wantStepID {
-		t.Errorf("GetStepID is %v, want %v", gotStepID, wantStepID)
-	}
-	if gotBuildID != wantBuildID {
-		t.Errorf("GetBuildID is %v, want %v", gotBuildID, wantBuildID)
-	}
-	if gotRepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", gotRepoID, wantRepoID)
-	}
-	if !reflect.DeepEqual(gotData, wantData) {
-		t.Errorf("GetData is %v, want %v", gotData, wantData)
-	}
-}
+		if test.log.GetServiceID() != test.want.GetServiceID() {
+			t.Errorf("GetServiceID is %v, want %v", test.log.GetServiceID(), test.want.GetServiceID())
+		}
 
-func TestLibrary_Log_Getters_Empty(t *testing.T) {
-	// setup types
-	l := new(Log)
+		if test.log.GetStepID() != test.want.GetStepID() {
+			t.Errorf("GetStepID is %v, want %v", test.log.GetStepID(), test.want.GetStepID())
+		}
 
-	// run test
-	gotID := l.GetID()
-	gotStepID := l.GetStepID()
-	gotBuildID := l.GetBuildID()
-	gotRepoID := l.GetRepoID()
-	gotData := l.GetData()
+		if test.log.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("GetBuildID is %v, want %v", test.log.GetBuildID(), test.want.GetBuildID())
+		}
 
-	if gotID != 0 {
-		t.Errorf("GetID is %v, want 0", gotID)
-	}
-	if gotStepID != 0 {
-		t.Errorf("GetStepID is %v, want 0", gotStepID)
-	}
-	if gotBuildID != 0 {
-		t.Errorf("GetBuildID is %v, want 0", gotBuildID)
-	}
-	if gotRepoID != 0 {
-		t.Errorf("GetRepoID is %v, want 0", gotRepoID)
-	}
-	if !reflect.DeepEqual(gotData, []byte{}) {
-		t.Errorf("GetData is %v, want []byte{}", gotData)
+		if test.log.GetRepoID() != test.want.GetRepoID() {
+			t.Errorf("GetRepoID is %v, want %v", test.log.GetRepoID(), test.want.GetRepoID())
+		}
+
+		if !reflect.DeepEqual(test.log.GetData(), test.want.GetData()) {
+			t.Errorf("GetData is %v, want %v", test.log.GetData(), test.want.GetData())
+		}
 	}
 }
 
 func TestLibrary_Log_Setters(t *testing.T) {
 	// setup types
-	num64 := int64(1)
-	bytes := []byte("foo")
-	l := new(Log)
-
-	wantID := num64
-	wantServiceID := num64
-	wantStepID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantData := bytes
-
-	// run test
-	l.SetID(wantID)
-	l.SetServiceID(wantServiceID)
-	l.SetStepID(wantStepID)
-	l.SetBuildID(wantBuildID)
-	l.SetRepoID(wantRepoID)
-	l.SetData(wantData)
-
-	if l.GetID() != wantID {
-		t.Errorf("SetID is %v, want %v", l.GetID(), wantID)
-	}
-	if l.GetServiceID() != wantServiceID {
-		t.Errorf("SetServiceID is %v, want %v", l.GetServiceID(), wantServiceID)
-	}
-	if l.GetStepID() != wantStepID {
-		t.Errorf("SetStepID is %v, want %v", l.GetStepID(), wantStepID)
-	}
-	if l.GetBuildID() != wantBuildID {
-		t.Errorf("SetBuildID is %v, want %v", l.GetBuildID(), wantBuildID)
-	}
-	if l.GetRepoID() != wantRepoID {
-		t.Errorf("SetRepoID is %v, want %v", l.GetRepoID(), wantRepoID)
-	}
-	if !reflect.DeepEqual(l.GetData(), wantData) {
-		t.Errorf("SetData is %v, want %v", l.GetData(), wantData)
-	}
-}
-
-func TestLibrary_Log_Setters_Empty(t *testing.T) {
-	// setup types
 	var l *Log
 
-	// run test
-	l.SetID(0)
-	l.SetServiceID(0)
-	l.SetStepID(0)
-	l.SetBuildID(0)
-	l.SetRepoID(0)
-	l.SetData([]byte{})
+	// setup tests
+	tests := []struct {
+		log  *Log
+		want *Log
+	}{
+		{
+			log:  testLog(),
+			want: testLog(),
+		},
+		{
+			log:  l,
+			want: new(Log),
+		},
+	}
 
-	if l.GetID() != 0 {
-		t.Errorf("SetID is %v, want 0", l.GetID())
-	}
-	if l.GetServiceID() != 0 {
-		t.Errorf("SetServiceID is %v, want 0", l.GetServiceID())
-	}
-	if l.GetStepID() != 0 {
-		t.Errorf("SetStepID is %v, want 0", l.GetStepID())
-	}
-	if l.GetBuildID() != 0 {
-		t.Errorf("SetBuildID is %v, want 0", l.GetBuildID())
-	}
-	if l.GetRepoID() != 0 {
-		t.Errorf("SetRepoID is %v, want 0", l.GetRepoID())
-	}
-	if !reflect.DeepEqual(l.GetData(), []byte{}) {
-		t.Errorf("SetData is %v, want []byte{}", l.GetData())
+	// run tests
+	for _, test := range tests {
+		test.log.SetID(test.want.GetID())
+		test.log.SetServiceID(test.want.GetServiceID())
+		test.log.SetStepID(test.want.GetStepID())
+		test.log.SetBuildID(test.want.GetBuildID())
+		test.log.SetRepoID(test.want.GetRepoID())
+		test.log.SetData(test.want.GetData())
+
+		if test.log.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.log.GetID(), test.want.GetID())
+		}
+
+		if test.log.GetServiceID() != test.want.GetServiceID() {
+			t.Errorf("SetServiceID is %v, want %v", test.log.GetServiceID(), test.want.GetServiceID())
+		}
+
+		if test.log.GetStepID() != test.want.GetStepID() {
+			t.Errorf("SetStepID is %v, want %v", test.log.GetStepID(), test.want.GetStepID())
+		}
+
+		if test.log.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("SetBuildID is %v, want %v", test.log.GetBuildID(), test.want.GetBuildID())
+		}
+
+		if test.log.GetRepoID() != test.want.GetRepoID() {
+			t.Errorf("SetRepoID is %v, want %v", test.log.GetRepoID(), test.want.GetRepoID())
+		}
+
+		if !reflect.DeepEqual(test.log.GetData(), test.want.GetData()) {
+			t.Errorf("SetData is %v, want %v", test.log.GetData(), test.want.GetData())
+		}
 	}
 }
 
 func TestLibrary_Log_String(t *testing.T) {
 	// setup types
-	num64 := int64(1)
-	bytes := []byte("foo")
-	l := &Log{
-		ID:      &num64,
-		StepID:  &num64,
-		BuildID: &num64,
-		RepoID:  &num64,
-		Data:    &bytes,
-	}
+	l := testLog()
+
 	want := fmt.Sprintf("%+v", *l)
 
 	// run test
@@ -224,4 +152,19 @@ func TestLibrary_Log_String(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
+}
+
+// testLog is a test helper function to create a Log
+// type with all fields set to a fake value.
+func testLog() *Log {
+	l := new(Log)
+
+	l.SetID(1)
+	l.SetServiceID(1)
+	l.SetStepID(1)
+	l.SetBuildID(1)
+	l.SetRepoID(1)
+	l.SetData([]byte("foo"))
+
+	return l
 }

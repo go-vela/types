@@ -35,408 +35,187 @@ func TestLibrary_Service_Environment(t *testing.T) {
 }
 
 func TestService_Getters(t *testing.T) {
-	// setup types
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	s := &Service{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
-	wantID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantNumber := num
-	wantName := str
-	wantImage := str
-	wantStatus := str
-	wantError := str
-	wantExitCode := num
-	wantCreated := num64
-	wantStarted := num64
-	wantFinished := num64
-	wantHost := str
-	wantRuntime := str
-	wantDistribution := str
-
-	// run test
-	gotID := s.GetID()
-	gotBuildID := s.GetBuildID()
-	gotRepoID := s.GetRepoID()
-	gotNumber := s.GetNumber()
-	gotName := s.GetName()
-	gotImage := s.GetImage()
-	gotStatus := s.GetStatus()
-	gotError := s.GetError()
-	gotExitCode := s.GetExitCode()
-	gotCreated := s.GetCreated()
-	gotStarted := s.GetStarted()
-	gotFinished := s.GetFinished()
-	gotHost := s.GetHost()
-	gotRuntime := s.GetRuntime()
-	gotDistribution := s.GetDistribution()
-
-	if gotID != wantID {
-		t.Errorf("GetID is %v, want %v", gotID, wantID)
+	// setup tests
+	tests := []struct {
+		service *Service
+		want    *Service
+	}{
+		{
+			service: testService(),
+			want:    testService(),
+		},
+		{
+			service: new(Service),
+			want:    new(Service),
+		},
 	}
 
-	if gotBuildID != wantBuildID {
-		t.Errorf("GetBuildID is %v, want %v", gotBuildID, wantBuildID)
-	}
+	// run tests
+	for _, test := range tests {
+		if test.service.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.service.GetID(), test.want.GetID())
+		}
 
-	if gotRepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", gotRepoID, wantRepoID)
-	}
+		if test.service.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("GetBuildID is %v, want %v", test.service.GetBuildID(), test.want.GetBuildID())
+		}
 
-	if gotNumber != wantNumber {
-		t.Errorf("GetNumber is %v, want %v", gotNumber, wantNumber)
-	}
+		if test.service.GetRepoID() != test.want.GetRepoID() {
+			t.Errorf("GetRepoID is %v, want %v", test.service.GetRepoID(), test.want.GetRepoID())
+		}
 
-	if gotName != wantName {
-		t.Errorf("GetName is %v, want %v", gotName, wantName)
-	}
+		if test.service.GetNumber() != test.want.GetNumber() {
+			t.Errorf("GetNumber is %v, want %v", test.service.GetNumber(), test.want.GetNumber())
+		}
 
-	if gotImage != wantImage {
-		t.Errorf("GetImage is %v, want %v", gotImage, wantImage)
-	}
+		if test.service.GetName() != test.want.GetName() {
+			t.Errorf("GetName is %v, want %v", test.service.GetName(), test.want.GetName())
+		}
 
-	if gotStatus != wantStatus {
-		t.Errorf("GetStatus is %v, want %v", gotStatus, wantStatus)
-	}
+		if test.service.GetImage() != test.want.GetImage() {
+			t.Errorf("GetImage is %v, want %v", test.service.GetImage(), test.want.GetImage())
+		}
 
-	if gotError != wantError {
-		t.Errorf("GetError is %v, want %v", gotError, wantError)
-	}
+		if test.service.GetStatus() != test.want.GetStatus() {
+			t.Errorf("GetStatus is %v, want %v", test.service.GetStatus(), test.want.GetStatus())
+		}
 
-	if gotExitCode != wantExitCode {
-		t.Errorf("GetExitCode is %v, want %v", gotExitCode, wantExitCode)
-	}
+		if test.service.GetError() != test.want.GetError() {
+			t.Errorf("GetError is %v, want %v", test.service.GetError(), test.want.GetError())
+		}
 
-	if gotCreated != wantCreated {
-		t.Errorf("GetCreated is %v, want %v", gotCreated, wantCreated)
-	}
+		if test.service.GetExitCode() != test.want.GetExitCode() {
+			t.Errorf("GetExitCode is %v, want %v", test.service.GetExitCode(), test.want.GetExitCode())
+		}
 
-	if gotStarted != wantStarted {
-		t.Errorf("GetStarted is %v, want %v", gotStarted, wantStarted)
-	}
+		if test.service.GetCreated() != test.want.GetCreated() {
+			t.Errorf("GetCreated is %v, want %v", test.service.GetCreated(), test.want.GetCreated())
+		}
 
-	if gotFinished != wantFinished {
-		t.Errorf("GetFinished is %v, want %v", gotFinished, wantFinished)
-	}
+		if test.service.GetStarted() != test.want.GetStarted() {
+			t.Errorf("GetStarted is %v, want %v", test.service.GetStarted(), test.want.GetStarted())
+		}
 
-	if gotHost != wantHost {
-		t.Errorf("GetHost is %v, want %v", gotHost, wantHost)
-	}
+		if test.service.GetFinished() != test.want.GetFinished() {
+			t.Errorf("GetFinished is %v, want %v", test.service.GetFinished(), test.want.GetFinished())
+		}
 
-	if gotRuntime != wantRuntime {
-		t.Errorf("GetRuntime is %v, want %v", gotRuntime, wantRuntime)
-	}
+		if test.service.GetHost() != test.want.GetHost() {
+			t.Errorf("GetHost is %v, want %v", test.service.GetHost(), test.want.GetHost())
+		}
 
-	if gotDistribution != wantDistribution {
-		t.Errorf("GetDistribution is %v, want %v", gotDistribution, wantDistribution)
-	}
-}
+		if test.service.GetRuntime() != test.want.GetRuntime() {
+			t.Errorf("GetRuntime is %v, want %v", test.service.GetRuntime(), test.want.GetRuntime())
+		}
 
-func TestService_Getters_Empty(t *testing.T) {
-	// setup types
-	s := new(Service)
-
-	// run test
-	gotID := s.GetID()
-	gotBuildID := s.GetBuildID()
-	gotRepoID := s.GetRepoID()
-	gotNumber := s.GetNumber()
-	gotName := s.GetName()
-	gotImage := s.GetImage()
-	gotStatus := s.GetStatus()
-	gotError := s.GetError()
-	gotExitCode := s.GetExitCode()
-	gotCreated := s.GetCreated()
-	gotStarted := s.GetStarted()
-	gotFinished := s.GetFinished()
-	gotHost := s.GetHost()
-	gotRuntime := s.GetRuntime()
-	gotDistribution := s.GetDistribution()
-
-	if gotID != 0 {
-		t.Errorf("GetID is %v, want 0", gotID)
-	}
-
-	if gotBuildID != 0 {
-		t.Errorf("GetBuildID is %v, want 0", gotBuildID)
-	}
-
-	if gotRepoID != 0 {
-		t.Errorf("GetRepoID is %v, want 0", gotRepoID)
-	}
-
-	if gotNumber != 0 {
-		t.Errorf("GetNumber is %v, want 0", gotNumber)
-	}
-
-	if gotName != "" {
-		t.Errorf("GetName is %v, want \"\"", gotName)
-	}
-
-	if gotImage != "" {
-		t.Errorf("GetImage is %v, want \"\"", gotImage)
-	}
-
-	if gotStatus != "" {
-		t.Errorf("GetStatus is %v, want \"\"", gotStatus)
-	}
-
-	if gotError != "" {
-		t.Errorf("GetError is %v, want \"\"", gotError)
-	}
-
-	if gotExitCode != 0 {
-		t.Errorf("GetExitCode is %v, want 0", gotExitCode)
-	}
-
-	if gotCreated != 0 {
-		t.Errorf("GetCreated is %v, want 0", gotCreated)
-	}
-
-	if gotStarted != 0 {
-		t.Errorf("GetStarted is %v, want 0", gotStarted)
-	}
-
-	if gotFinished != 0 {
-		t.Errorf("GetFinished is %v, want 0", gotFinished)
-	}
-
-	if gotHost != "" {
-		t.Errorf("GetHost is %v, want \"\"", gotHost)
-	}
-
-	if gotRuntime != "" {
-		t.Errorf("GetRuntime is %v, want \"\"", gotRuntime)
-	}
-
-	if gotDistribution != "" {
-		t.Errorf("GetDistribution is %v, want \"\"", gotDistribution)
+		if test.service.GetDistribution() != test.want.GetDistribution() {
+			t.Errorf("GetDistribution is %v, want %v", test.service.GetDistribution(), test.want.GetDistribution())
+		}
 	}
 }
 
 func TestLibrary_Service_Setters(t *testing.T) {
 	// setup types
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	s := new(Service)
-
-	wantID := num64
-	wantBuildID := num64
-	wantRepoID := num64
-	wantNumber := num
-	wantName := str
-	wantImage := str
-	wantStatus := str
-	wantError := str
-	wantExitCode := num
-	wantCreated := num64
-	wantStarted := num64
-	wantFinished := num64
-	wantHost := str
-	wantRuntime := str
-	wantDistribution := str
-
-	// run test
-	s.SetID(wantID)
-	s.SetBuildID(wantBuildID)
-	s.SetRepoID(wantRepoID)
-	s.SetNumber(wantNumber)
-	s.SetName(wantName)
-	s.SetImage(wantImage)
-	s.SetStatus(wantStatus)
-	s.SetError(wantError)
-	s.SetExitCode(wantExitCode)
-	s.SetCreated(wantCreated)
-	s.SetStarted(wantStarted)
-	s.SetFinished(wantFinished)
-	s.SetHost(wantHost)
-	s.SetRuntime(wantRuntime)
-	s.SetDistribution(wantDistribution)
-
-	if s.GetID() != wantID {
-		t.Errorf("SetID is %v, want %v", s.GetID(), wantID)
-	}
-
-	if s.GetBuildID() != wantBuildID {
-		t.Errorf("SetBuildID is %v, want %v", s.GetBuildID(), wantBuildID)
-	}
-
-	if s.GetRepoID() != wantRepoID {
-		t.Errorf("SetRepoID is %v, want %v", s.GetRepoID(), wantRepoID)
-	}
-
-	if s.GetNumber() != wantNumber {
-		t.Errorf("SetNumber is %v, want %v", s.GetNumber(), wantNumber)
-	}
-
-	if s.GetName() != wantName {
-		t.Errorf("SetName is %v, want %v", s.GetName(), wantName)
-	}
-
-	if s.GetImage() != wantImage {
-		t.Errorf("SetImage is %v, want %v", s.GetImage(), wantImage)
-	}
-
-	if s.GetStatus() != wantStatus {
-		t.Errorf("SetStatus is %v, want %v", s.GetStatus(), wantStatus)
-	}
-
-	if s.GetError() != wantError {
-		t.Errorf("SetError is %v, want %v", s.GetError(), wantError)
-	}
-
-	if s.GetExitCode() != wantExitCode {
-		t.Errorf("SetExitCode is %v, want %v", s.GetExitCode(), wantExitCode)
-	}
-
-	if s.GetCreated() != wantCreated {
-		t.Errorf("SetCreated is %v, want %v", s.GetCreated(), wantCreated)
-	}
-
-	if s.GetStarted() != wantStarted {
-		t.Errorf("SetStarted is %v, want %v", s.GetStarted(), wantStarted)
-	}
-
-	if s.GetFinished() != wantFinished {
-		t.Errorf("SetFinished is %v, want %v", s.GetFinished(), wantFinished)
-	}
-
-	if s.GetHost() != wantHost {
-		t.Errorf("SetHost is %v, want %v", s.GetHost(), wantHost)
-	}
-
-	if s.GetRuntime() != wantRuntime {
-		t.Errorf("SetRuntime is %v, want %v", s.GetRuntime(), wantRuntime)
-	}
-
-	if s.GetDistribution() != wantDistribution {
-		t.Errorf("SetDistribution is %v, want %v", s.GetDistribution(), wantDistribution)
-	}
-}
-
-func TestLibrary_Service_Setters_Empty(t *testing.T) {
-	// setup types
 	var s *Service
 
-	// run test
-	s.SetID(0)
-	s.SetBuildID(0)
-	s.SetRepoID(0)
-	s.SetNumber(0)
-	s.SetName("")
-	s.SetImage("")
-	s.SetStatus("")
-	s.SetError("")
-	s.SetExitCode(0)
-	s.SetCreated(0)
-	s.SetStarted(0)
-	s.SetFinished(0)
-	s.SetHost("")
-	s.SetRuntime("")
-	s.SetDistribution("")
-
-	if s.GetID() != 0 {
-		t.Errorf("SetID is %v, want 0", s.GetID())
+	// setup tests
+	tests := []struct {
+		service *Service
+		want    *Service
+	}{
+		{
+			service: testService(),
+			want:    testService(),
+		},
+		{
+			service: s,
+			want:    new(Service),
+		},
 	}
 
-	if s.GetBuildID() != 0 {
-		t.Errorf("SetBuildID is %v, want 0", s.GetBuildID())
-	}
+	// run tests
+	for _, test := range tests {
+		test.service.SetID(test.service.GetID())
+		test.service.SetBuildID(test.service.GetBuildID())
+		test.service.SetRepoID(test.service.GetRepoID())
+		test.service.SetNumber(test.service.GetNumber())
+		test.service.SetName(test.service.GetName())
+		test.service.SetImage(test.service.GetImage())
+		test.service.SetStatus(test.service.GetStatus())
+		test.service.SetError(test.service.GetError())
+		test.service.SetExitCode(test.service.GetExitCode())
+		test.service.SetCreated(test.service.GetCreated())
+		test.service.SetStarted(test.service.GetStarted())
+		test.service.SetFinished(test.service.GetFinished())
+		test.service.SetHost(test.service.GetHost())
+		test.service.SetRuntime(test.service.GetRuntime())
+		test.service.SetDistribution(test.service.GetDistribution())
 
-	if s.GetRepoID() != 0 {
-		t.Errorf("SetRepoID is %v, want 0", s.GetRepoID())
-	}
+		if test.service.GetID() != test.service.GetID() {
+			t.Errorf("SetID is %v, want %v", test.service.GetID(), test.service.GetID())
+		}
 
-	if s.GetNumber() != 0 {
-		t.Errorf("SetNumber is %v, want 0", s.GetNumber())
-	}
+		if test.service.GetBuildID() != test.service.GetBuildID() {
+			t.Errorf("SetBuildID is %v, want %v", test.service.GetBuildID(), test.service.GetBuildID())
+		}
 
-	if s.GetName() != "" {
-		t.Errorf("SetName is %v, want \"\"", s.GetName())
-	}
+		if test.service.GetRepoID() != test.service.GetRepoID() {
+			t.Errorf("SetRepoID is %v, want %v", test.service.GetRepoID(), test.service.GetRepoID())
+		}
 
-	if s.GetImage() != "" {
-		t.Errorf("SetImage is %v, want \"\"", s.GetImage())
-	}
+		if test.service.GetNumber() != test.service.GetNumber() {
+			t.Errorf("SetNumber is %v, want %v", test.service.GetNumber(), test.service.GetNumber())
+		}
 
-	if s.GetStatus() != "" {
-		t.Errorf("SetStatus is %v, want \"\"", s.GetStatus())
-	}
+		if test.service.GetName() != test.service.GetName() {
+			t.Errorf("SetName is %v, want %v", test.service.GetName(), test.service.GetName())
+		}
 
-	if s.GetError() != "" {
-		t.Errorf("SetError is %v, want \"\"", s.GetError())
-	}
+		if test.service.GetImage() != test.service.GetImage() {
+			t.Errorf("SetImage is %v, want %v", test.service.GetImage(), test.service.GetImage())
+		}
 
-	if s.GetExitCode() != 0 {
-		t.Errorf("SetExitCode is %v, want 0", s.GetExitCode())
-	}
+		if test.service.GetStatus() != test.service.GetStatus() {
+			t.Errorf("SetStatus is %v, want %v", test.service.GetStatus(), test.service.GetStatus())
+		}
 
-	if s.GetCreated() != 0 {
-		t.Errorf("SetCreated is %v, want 0", s.GetCreated())
-	}
+		if test.service.GetError() != test.service.GetError() {
+			t.Errorf("SetError is %v, want %v", test.service.GetError(), test.service.GetError())
+		}
 
-	if s.GetStarted() != 0 {
-		t.Errorf("SetStarted is %v, want 0", s.GetStarted())
-	}
+		if test.service.GetExitCode() != test.service.GetExitCode() {
+			t.Errorf("SetExitCode is %v, want %v", test.service.GetExitCode(), test.service.GetExitCode())
+		}
 
-	if s.GetFinished() != 0 {
-		t.Errorf("SetFinished is %v, want 0", s.GetFinished())
-	}
+		if test.service.GetCreated() != test.service.GetCreated() {
+			t.Errorf("SetCreated is %v, want %v", test.service.GetCreated(), test.service.GetCreated())
+		}
 
-	if s.GetHost() != "" {
-		t.Errorf("SetHost is %v, want \"\"", s.GetHost())
-	}
+		if test.service.GetStarted() != test.service.GetStarted() {
+			t.Errorf("SetStarted is %v, want %v", test.service.GetStarted(), test.service.GetStarted())
+		}
 
-	if s.GetRuntime() != "" {
-		t.Errorf("SetRuntime is %v, want \"\"", s.GetRuntime())
-	}
+		if test.service.GetFinished() != test.service.GetFinished() {
+			t.Errorf("SetFinished is %v, want %v", test.service.GetFinished(), test.service.GetFinished())
+		}
 
-	if s.GetDistribution() != "" {
-		t.Errorf("SetDistribution is %v, want \"\"", s.GetDistribution())
+		if test.service.GetHost() != test.service.GetHost() {
+			t.Errorf("SetHost is %v, want %v", test.service.GetHost(), test.service.GetHost())
+		}
+
+		if test.service.GetRuntime() != test.service.GetRuntime() {
+			t.Errorf("SetRuntime is %v, want %v", test.service.GetRuntime(), test.service.GetRuntime())
+		}
+
+		if test.service.GetDistribution() != test.service.GetDistribution() {
+			t.Errorf("SetDistribution is %v, want %v", test.service.GetDistribution(), test.service.GetDistribution())
+		}
 	}
 }
 
 func TestService_String(t *testing.T) {
 	// setup types
-	num := 1
-	num64 := int64(num)
-	str := "foo"
-	s := &Service{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
+	s := testService()
 
 	want := fmt.Sprintf("%+v", *s)
 

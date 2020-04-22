@@ -14,24 +14,8 @@ import (
 
 func TestDatabase_Step_Nullify(t *testing.T) {
 	// setup types
-	s := &Step{
-		ID:           sql.NullInt64{Int64: 0, Valid: true},
-		BuildID:      sql.NullInt64{Int64: 0, Valid: true},
-		RepoID:       sql.NullInt64{Int64: 0, Valid: true},
-		Number:       sql.NullInt32{Int32: 0, Valid: true},
-		Name:         sql.NullString{String: "", Valid: true},
-		Image:        sql.NullString{String: "", Valid: true},
-		Stage:        sql.NullString{String: "", Valid: true},
-		Status:       sql.NullString{String: "", Valid: true},
-		Error:        sql.NullString{String: "", Valid: true},
-		ExitCode:     sql.NullInt32{Int32: 0, Valid: true},
-		Created:      sql.NullInt64{Int64: 0, Valid: true},
-		Started:      sql.NullInt64{Int64: 0, Valid: true},
-		Finished:     sql.NullInt64{Int64: 0, Valid: true},
-		Host:         sql.NullString{String: "", Valid: true},
-		Runtime:      sql.NullString{String: "", Valid: true},
-		Distribution: sql.NullString{String: "", Valid: true},
-	}
+	var s *Step
+
 	want := &Step{
 		ID:           sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:      sql.NullInt64{Int64: 0, Valid: false},
@@ -51,71 +35,58 @@ func TestDatabase_Step_Nullify(t *testing.T) {
 		Distribution: sql.NullString{String: "", Valid: false},
 	}
 
-	// run test
-	got := s.Nullify()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Nullify is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		step *Step
+		want *Step
+	}{
+		{
+			step: testStep(),
+			want: testStep(),
+		},
+		{
+			step: s,
+			want: nil,
+		},
+		{
+			step: new(Step),
+			want: want,
+		},
 	}
-}
 
-func TestDatabase_Step_Nullify_Empty(t *testing.T) {
-	// setup types
-	var s *Step
+	// run tests
+	for _, test := range tests {
+		got := test.step.Nullify()
 
-	// run test
-	got := s.Nullify()
-
-	if got != nil {
-		t.Errorf("Nullify is %v, want nil", got)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Nullify is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_Step_ToLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
-	num64 := int64(num)
-	str := "foo"
-	want := &library.Step{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Stage:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
-	s := &Step{
-		ID:           sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:      sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
-		Number:       sqlNum,
-		Name:         sql.NullString{String: str, Valid: true},
-		Image:        sql.NullString{String: str, Valid: true},
-		Stage:        sql.NullString{String: str, Valid: true},
-		Status:       sql.NullString{String: str, Valid: true},
-		Error:        sql.NullString{String: str, Valid: true},
-		ExitCode:     sqlNum,
-		Created:      sql.NullInt64{Int64: num64, Valid: true},
-		Started:      sql.NullInt64{Int64: num64, Valid: true},
-		Finished:     sql.NullInt64{Int64: num64, Valid: true},
-		Host:         sql.NullString{String: str, Valid: true},
-		Runtime:      sql.NullString{String: str, Valid: true},
-		Distribution: sql.NullString{String: str, Valid: true},
-	}
+	want := new(library.Step)
+
+	want.SetID(1)
+	want.SetBuildID(1)
+	want.SetRepoID(1)
+	want.SetNumber(1)
+	want.SetName("clone")
+	want.SetImage("target/vela-git:v0.3.0")
+	want.SetStage("")
+	want.SetStatus("running")
+	want.SetError("")
+	want.SetExitCode(0)
+	want.SetCreated(1563474076)
+	want.SetStarted(1563474078)
+	want.SetFinished(1563474079)
+	want.SetHost("example.company.com")
+	want.SetRuntime("docker")
+	want.SetDistribution("linux")
 
 	// run test
-	got := s.ToLibrary()
+	got := testStep().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
@@ -124,156 +95,134 @@ func TestDatabase_Step_ToLibrary(t *testing.T) {
 
 func TestDatabase_Step_Validate(t *testing.T) {
 	// setup types
-	s := &Step{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
+	tests := []struct {
+		failure bool
+		step    *Step
+	}{
+		{
+			failure: false,
+			step:    testStep(),
+		},
+		{ // no build_id set for step
+			failure: true,
+			step: &Step{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt32{Int32: 1, Valid: true},
+				Name:   sql.NullString{String: "clone", Valid: true},
+				Image:  sql.NullString{String: "target/vela-git:v0.3.0", Valid: true},
+			},
+		},
+		{ // no repo_id set for step
+			failure: true,
+			step: &Step{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "clone", Valid: true},
+				Image:   sql.NullString{String: "target/vela-git:v0.3.0", Valid: true},
+			},
+		},
+		{ // no name set for step
+			failure: true,
+			step: &Step{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Image:   sql.NullString{String: "target/vela-git:v0.3.0", Valid: true},
+			},
+		},
+		{ // no number set for step
+			failure: true,
+			step: &Step{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Name:    sql.NullString{String: "clone", Valid: true},
+				Image:   sql.NullString{String: "target/vela-git:v0.3.0", Valid: true},
+			},
+		},
+		{ // no image set for step
+			failure: true,
+			step: &Step{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "clone", Valid: true},
+			},
+		},
 	}
 
-	// run test
-	err := s.Validate()
+	// run tests
+	for _, test := range tests {
+		err := test.step.Validate()
 
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
 
-func TestDatabase_Step_Validate_NoBuildID(t *testing.T) {
-	// setup types
-	s := &Step{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-		Number: sql.NullInt32{Int32: 1, Valid: true},
-		Name:   sql.NullString{String: "foo", Valid: true},
-		Image:  sql.NullString{String: "foo", Valid: true},
-	}
+			continue
+		}
 
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Step_Validate_NoRepoID(t *testing.T) {
-	// setup types
-	s := &Step{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "baz", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Step_Validate_NoName(t *testing.T) {
-	// setup types
-	s := &Step{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Image:   sql.NullString{String: "baz", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Step_Validate_NoNumber(t *testing.T) {
-	// setup types
-	s := &Step{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "baz", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Step_Validate_NoImage(t *testing.T) {
-	// setup types
-	s := &Step{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
 	}
 }
 
 func TestDatabase_StepFromLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
-	num64 := int64(num)
-	str := "foo"
-	want := &Step{
-		ID:           sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:      sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
-		Number:       sqlNum,
-		Name:         sql.NullString{String: str, Valid: true},
-		Image:        sql.NullString{String: str, Valid: true},
-		Stage:        sql.NullString{String: str, Valid: true},
-		Status:       sql.NullString{String: str, Valid: true},
-		Error:        sql.NullString{String: str, Valid: true},
-		ExitCode:     sqlNum,
-		Created:      sql.NullInt64{Int64: num64, Valid: true},
-		Started:      sql.NullInt64{Int64: num64, Valid: true},
-		Finished:     sql.NullInt64{Int64: num64, Valid: true},
-		Host:         sql.NullString{String: str, Valid: true},
-		Runtime:      sql.NullString{String: str, Valid: true},
-		Distribution: sql.NullString{String: str, Valid: true},
-	}
-	s := &library.Step{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Stage:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
+	s := new(library.Step)
+
+	s.SetID(1)
+	s.SetBuildID(1)
+	s.SetRepoID(1)
+	s.SetNumber(1)
+	s.SetName("clone")
+	s.SetImage("target/vela-git:v0.3.0")
+	s.SetStage("")
+	s.SetStatus("running")
+	s.SetError("")
+	s.SetExitCode(0)
+	s.SetCreated(1563474076)
+	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
+	s.SetHost("example.company.com")
+	s.SetRuntime("docker")
+	s.SetDistribution("linux")
+
+	want := testStep()
 
 	// run test
 	got := StepFromLibrary(s)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("StepFromLibrary is %v, want %v", got, want)
+	}
+}
+
+// testStep is a test helper function to create a Step
+// type with all fields set to a fake value.
+func testStep() *Step {
+	return &Step{
+		ID:           sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:      sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:       sql.NullInt64{Int64: 1, Valid: true},
+		Number:       sql.NullInt32{Int32: 1, Valid: true},
+		Name:         sql.NullString{String: "clone", Valid: true},
+		Image:        sql.NullString{String: "target/vela-git:v0.3.0", Valid: true},
+		Stage:        sql.NullString{String: "", Valid: false},
+		Status:       sql.NullString{String: "running", Valid: true},
+		Error:        sql.NullString{String: "", Valid: false},
+		ExitCode:     sql.NullInt32{Int32: 0, Valid: false},
+		Created:      sql.NullInt64{Int64: 1563474076, Valid: true},
+		Started:      sql.NullInt64{Int64: 1563474078, Valid: true},
+		Finished:     sql.NullInt64{Int64: 1563474079, Valid: true},
+		Host:         sql.NullString{String: "example.company.com", Valid: true},
+		Runtime:      sql.NullString{String: "docker", Valid: true},
+		Distribution: sql.NullString{String: "linux", Valid: true},
 	}
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func TestLibrary_ToString(t *testing.T) {
-	// setup types
+	// setup tests
 	tests := []struct {
 		parameter interface{}
 		want      interface{}
@@ -48,7 +48,7 @@ func TestLibrary_ToString(t *testing.T) {
 		},
 	}
 
-	// run test
+	// run tests
 	for _, test := range tests {
 		got := ToString(test.parameter)
 

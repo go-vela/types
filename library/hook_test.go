@@ -12,271 +12,176 @@ import (
 )
 
 func TestLibrary_Hook_Getters(t *testing.T) {
-	// setup types
-	wantID := int64(1)
-	wantRepoID := int64(1)
-	wantBuildID := int64(1)
-	wantNumber := 1
-	wantSourceID := "c8da1302-07d6-11ea-882f-4893bca275b8"
-	wantCreated := time.Now().UTC().Unix()
-	wantHost := "github.com"
-	wantEvent := "push"
-	wantBranch := "master"
-	wantError := ""
-	wantStatus := "success"
-	wantLink := "https://github.com/github/octocat/settings/hooks/1"
+	// setup tests
+	tests := []struct {
+		hook *Hook
+		want *Hook
+	}{
+		{
+			hook: testHook(),
+			want: testHook(),
+		},
+		{
+			hook: new(Hook),
+			want: new(Hook),
+		},
+	}
 
-	h := new(Hook)
+	// run tests
+	for _, test := range tests {
+		if test.hook.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.hook.GetID(), test.want.GetID())
+		}
 
-	h.SetID(wantID)
-	h.SetRepoID(wantRepoID)
-	h.SetBuildID(wantBuildID)
-	h.SetNumber(wantNumber)
-	h.SetSourceID(wantSourceID)
-	h.SetCreated(wantCreated)
-	h.SetHost(wantHost)
-	h.SetEvent(wantEvent)
-	h.SetBranch(wantBranch)
-	h.SetError(wantError)
-	h.SetStatus(wantStatus)
-	h.SetLink(wantLink)
+		if test.hook.GetRepoID() != test.want.GetRepoID() {
+			t.Errorf("GetRepoID is %v, want %v", test.hook.GetRepoID(), test.want.GetRepoID())
+		}
 
-	// run test
-	gotID := h.GetID()
-	gotRepoID := h.GetRepoID()
-	gotBuildID := h.GetBuildID()
-	gotNumber := h.GetNumber()
-	gotSourceID := h.GetSourceID()
-	gotCreated := h.GetCreated()
-	gotHost := h.GetHost()
-	gotEvent := h.GetEvent()
-	gotBranch := h.GetBranch()
-	gotError := h.GetError()
-	gotStatus := h.GetStatus()
-	gotLink := h.GetLink()
+		if test.hook.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("GetBuildID is %v, want %v", test.hook.GetBuildID(), test.want.GetBuildID())
+		}
 
-	if gotID != wantID {
-		t.Errorf("GetID is %v, want %v", gotID, wantID)
-	}
-	if gotRepoID != wantRepoID {
-		t.Errorf("GetRepoID is %v, want %v", gotRepoID, wantRepoID)
-	}
-	if gotBuildID != wantBuildID {
-		t.Errorf("GetBuildID is %v, want %v", gotBuildID, wantBuildID)
-	}
-	if gotNumber != wantNumber {
-		t.Errorf("GetNumber is %v, want %v", gotNumber, wantNumber)
-	}
-	if gotSourceID != wantSourceID {
-		t.Errorf("GetSourceID is %v, want %v", gotSourceID, wantSourceID)
-	}
-	if gotCreated != wantCreated {
-		t.Errorf("GetCreated is %v, want %v", gotCreated, wantCreated)
-	}
-	if gotHost != wantHost {
-		t.Errorf("GetHost is %v, want %v", gotHost, wantHost)
-	}
-	if gotEvent != wantEvent {
-		t.Errorf("GetEvent is %v, want %v", gotEvent, wantEvent)
-	}
-	if gotBranch != wantBranch {
-		t.Errorf("GetBranch is %v, want %v", gotBranch, wantBranch)
-	}
-	if gotError != wantError {
-		t.Errorf("GetError is %v, want %v", gotError, wantError)
-	}
-	if gotStatus != wantStatus {
-		t.Errorf("GetStatus is %v, want %v", gotStatus, wantStatus)
-	}
-	if gotLink != wantLink {
-		t.Errorf("GetLink is %v, want %v", gotLink, wantLink)
-	}
-}
+		if test.hook.GetNumber() != test.want.GetNumber() {
+			t.Errorf("GetNumber is %v, want %v", test.hook.GetNumber(), test.want.GetNumber())
+		}
 
-func TestLibrary_Hook_Getters_Empty(t *testing.T) {
-	// setup types
-	h := new(Hook)
+		if test.hook.GetSourceID() != test.want.GetSourceID() {
+			t.Errorf("GetSourceID is %v, want %v", test.hook.GetSourceID(), test.want.GetSourceID())
+		}
 
-	// run test
-	gotID := h.GetID()
-	gotRepoID := h.GetRepoID()
-	gotBuildID := h.GetRepoID()
-	gotNumber := h.GetNumber()
-	gotSourceID := h.GetSourceID()
-	gotCreated := h.GetCreated()
-	gotHost := h.GetHost()
-	gotEvent := h.GetEvent()
-	gotBranch := h.GetBranch()
-	gotError := h.GetError()
-	gotStatus := h.GetStatus()
-	gotLink := h.GetLink()
+		if test.hook.GetCreated() != test.want.GetCreated() {
+			t.Errorf("GetCreated is %v, want %v", test.hook.GetCreated(), test.want.GetCreated())
+		}
 
-	if gotID != 0 {
-		t.Errorf("GetID is %v, want 0", gotID)
-	}
-	if gotRepoID != 0 {
-		t.Errorf("GetRepoID is %v, want 0", gotRepoID)
-	}
-	if gotBuildID != 0 {
-		t.Errorf("GetBuildID is %v, want 0", gotBuildID)
-	}
-	if gotNumber != 0 {
-		t.Errorf("GetNumber is %v, want 0", gotNumber)
-	}
-	if gotSourceID != "" {
-		t.Errorf("GetSourceID is %v, want \"\"", gotSourceID)
-	}
-	if gotCreated != 0 {
-		t.Errorf("GetCreated is %v, want 0", gotCreated)
-	}
-	if gotHost != "" {
-		t.Errorf("GetHost is %v, want \"\"", gotHost)
-	}
-	if gotEvent != "" {
-		t.Errorf("GetEvent is %v, want \"\"", gotEvent)
-	}
-	if gotBranch != "" {
-		t.Errorf("GetBranch is %v, want \"\"", gotBranch)
-	}
-	if gotError != "" {
-		t.Errorf("GetError is %v, want \"\"", gotError)
-	}
-	if gotStatus != "" {
-		t.Errorf("GetStatus is %v, want \"\"", gotStatus)
-	}
-	if gotLink != "" {
-		t.Errorf("GetStatus is %v, want \"\"", gotLink)
+		if test.hook.GetHost() != test.want.GetHost() {
+			t.Errorf("GetHost is %v, want %v", test.hook.GetHost(), test.want.GetHost())
+		}
+
+		if test.hook.GetEvent() != test.want.GetEvent() {
+			t.Errorf("GetEvent is %v, want %v", test.hook.GetEvent(), test.want.GetEvent())
+		}
+
+		if test.hook.GetBranch() != test.want.GetBranch() {
+			t.Errorf("GetBranch is %v, want %v", test.hook.GetBranch(), test.want.GetBranch())
+		}
+
+		if test.hook.GetError() != test.want.GetError() {
+			t.Errorf("GetError is %v, want %v", test.hook.GetError(), test.want.GetError())
+		}
+
+		if test.hook.GetStatus() != test.want.GetStatus() {
+			t.Errorf("GetStatus is %v, want %v", test.hook.GetStatus(), test.want.GetStatus())
+		}
+
+		if test.hook.GetLink() != test.want.GetLink() {
+			t.Errorf("GetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
+		}
 	}
 }
 
 func TestLibrary_Hook_Setters(t *testing.T) {
 	// setup types
-	wantID := int64(1)
-	wantRepoID := int64(1)
-	wantBuildID := int64(1)
-	wantNumber := 1
-	wantSourceID := "c8da1302-07d6-11ea-882f-4893bca275b8"
-	wantCreated := time.Now().UTC().Unix()
-	wantHost := "github.com"
-	wantEvent := "push"
-	wantBranch := "master"
-	wantError := ""
-	wantStatus := "success"
-	wantLink := "https://github.com/github/octocat/settings/hooks/1"
-
-	h := new(Hook)
-
-	// Run tests
-	h.SetID(wantID)
-	h.SetRepoID(wantRepoID)
-	h.SetBuildID(wantBuildID)
-	h.SetNumber(wantNumber)
-	h.SetSourceID(wantSourceID)
-	h.SetCreated(wantCreated)
-	h.SetHost(wantHost)
-	h.SetEvent(wantEvent)
-	h.SetBranch(wantBranch)
-	h.SetError(wantError)
-	h.SetStatus(wantStatus)
-	h.SetLink(wantLink)
-
-	if h.GetID() != wantID {
-		t.Errorf("SetID is %v, want %v", h.GetID(), wantID)
-	}
-	if h.GetRepoID() != wantRepoID {
-		t.Errorf("SetRepoID is %v, want %v", h.GetRepoID(), wantRepoID)
-	}
-	if h.GetBuildID() != wantBuildID {
-		t.Errorf("SetBuildID is %v, want %v", h.GetBuildID(), wantBuildID)
-	}
-	if h.GetNumber() != wantNumber {
-		t.Errorf("SetNumber is %v, want %v", h.GetNumber(), wantNumber)
-	}
-	if h.GetSourceID() != wantSourceID {
-		t.Errorf("SetSourceID is %v, want %v", h.GetSourceID(), wantSourceID)
-	}
-	if h.GetCreated() != wantCreated {
-		t.Errorf("SetCreated is %v, want %v", h.GetCreated(), wantCreated)
-	}
-	if h.GetHost() != wantHost {
-		t.Errorf("SetHost is %v, want %v", h.GetHost(), wantHost)
-	}
-	if h.GetEvent() != wantEvent {
-		t.Errorf("SetEvent is %v, want %v", h.GetEvent(), wantEvent)
-	}
-	if h.GetBranch() != wantBranch {
-		t.Errorf("SetBranch is %v, want %v", h.GetBranch(), wantBranch)
-	}
-	if h.GetError() != wantError {
-		t.Errorf("SetError is %v, want %v", h.GetError(), wantError)
-	}
-	if h.GetStatus() != wantStatus {
-		t.Errorf("SetStatus is %v, want %v", h.GetStatus(), wantStatus)
-	}
-	if h.GetLink() != wantLink {
-		t.Errorf("SetLink is %v, want %v", h.GetLink(), wantLink)
-	}
-}
-
-func TestLibrary_Hook_Setters_Empty(t *testing.T) {
-	// setup types
 	var h *Hook
 
-	// Run tests
-	h.SetID(0)
-	h.SetRepoID(0)
-	h.SetBuildID(0)
-	h.SetNumber(0)
-	h.SetSourceID("")
-	h.SetCreated(0)
-	h.SetHost("")
-	h.SetEvent("")
-	h.SetBranch("")
-	h.SetError("")
-	h.SetStatus("")
-	h.SetLink("")
+	// setup tests
+	tests := []struct {
+		hook *Hook
+		want *Hook
+	}{
+		{
+			hook: testHook(),
+			want: testHook(),
+		},
+		{
+			hook: h,
+			want: new(Hook),
+		},
+	}
 
-	if h.GetID() != 0 {
-		t.Errorf("SetID is %v, want 0", h.GetID())
-	}
-	if h.GetRepoID() != 0 {
-		t.Errorf("SetRepoID is %v, want 0", h.GetRepoID())
-	}
-	if h.GetBuildID() != 0 {
-		t.Errorf("SetBuildID is %v, want 0", h.GetBuildID())
-	}
-	if h.GetNumber() != 0 {
-		t.Errorf("SetNumber is %v, want 0", h.GetNumber())
-	}
-	if h.GetSourceID() != "" {
-		t.Errorf("SetSourceID is %v, want \"\"", h.GetSourceID())
-	}
-	if h.GetCreated() != 0 {
-		t.Errorf("SetCreated is %v, want 0", h.GetCreated())
-	}
-	if h.GetHost() != "" {
-		t.Errorf("SetHost is %v, want \"\"", h.GetHost())
-	}
-	if h.GetEvent() != "" {
-		t.Errorf("SetEvent is %v, want \"\"", h.GetEvent())
-	}
-	if h.GetBranch() != "" {
-		t.Errorf("SetBranch is %v, want \"\"", h.GetBranch())
-	}
-	if h.GetError() != "" {
-		t.Errorf("SetError is %v, want \"\"", h.GetError())
-	}
-	if h.GetStatus() != "" {
-		t.Errorf("SetStatus is %v, want \"\"", h.GetStatus())
-	}
-	if h.GetLink() != "" {
-		t.Errorf("SetLink is %v, want \"\"", h.GetLink())
+	// run tests
+	for _, test := range tests {
+		test.hook.SetID(test.want.GetID())
+		test.hook.SetRepoID(test.want.GetRepoID())
+		test.hook.SetBuildID(test.want.GetBuildID())
+		test.hook.SetNumber(test.want.GetNumber())
+		test.hook.SetSourceID(test.want.GetSourceID())
+		test.hook.SetCreated(test.want.GetCreated())
+		test.hook.SetHost(test.want.GetHost())
+		test.hook.SetEvent(test.want.GetEvent())
+		test.hook.SetBranch(test.want.GetBranch())
+		test.hook.SetError(test.want.GetError())
+		test.hook.SetStatus(test.want.GetStatus())
+		test.hook.SetLink(test.want.GetLink())
+
+		if test.hook.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.hook.GetID(), test.want.GetID())
+		}
+
+		if test.hook.GetRepoID() != test.want.GetRepoID() {
+			t.Errorf("SetRepoID is %v, want %v", test.hook.GetRepoID(), test.want.GetRepoID())
+		}
+
+		if test.hook.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("SetBuildID is %v, want %v", test.hook.GetBuildID(), test.want.GetBuildID())
+		}
+
+		if test.hook.GetNumber() != test.want.GetNumber() {
+			t.Errorf("SetNumber is %v, want %v", test.hook.GetNumber(), test.want.GetNumber())
+		}
+
+		if test.hook.GetSourceID() != test.want.GetSourceID() {
+			t.Errorf("SetSourceID is %v, want %v", test.hook.GetSourceID(), test.want.GetSourceID())
+		}
+
+		if test.hook.GetCreated() != test.want.GetCreated() {
+			t.Errorf("SetCreated is %v, want %v", test.hook.GetCreated(), test.want.GetCreated())
+		}
+
+		if test.hook.GetHost() != test.want.GetHost() {
+			t.Errorf("SetHost is %v, want %v", test.hook.GetHost(), test.want.GetHost())
+		}
+
+		if test.hook.GetEvent() != test.want.GetEvent() {
+			t.Errorf("SetEvent is %v, want %v", test.hook.GetEvent(), test.want.GetEvent())
+		}
+
+		if test.hook.GetBranch() != test.want.GetBranch() {
+			t.Errorf("SetBranch is %v, want %v", test.hook.GetBranch(), test.want.GetBranch())
+		}
+
+		if test.hook.GetError() != test.want.GetError() {
+			t.Errorf("SetError is %v, want %v", test.hook.GetError(), test.want.GetError())
+		}
+
+		if test.hook.GetStatus() != test.want.GetStatus() {
+			t.Errorf("SetStatus is %v, want %v", test.hook.GetStatus(), test.want.GetStatus())
+		}
+
+		if test.hook.GetLink() != test.want.GetLink() {
+			t.Errorf("SetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
+		}
 	}
 }
 
 func TestLibrary_Hook_String(t *testing.T) {
 	// setup types
+	h := testHook()
+
+	want := fmt.Sprintf("%+v", *h)
+
+	// run test
+	got := h.String()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("String is %v, want %v", got, want)
+	}
+}
+
+// testHook is a test helper function to create a Hook
+// type with all fields set to a fake value.
+func testHook() *Hook {
 	h := new(Hook)
+
 	h.SetID(1)
 	h.SetRepoID(1)
 	h.SetBuildID(1)
@@ -290,12 +195,5 @@ func TestLibrary_Hook_String(t *testing.T) {
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
 
-	want := fmt.Sprintf("%+v", *h)
-
-	// run test
-	got := h.String()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("String is %v, want %v", got, want)
-	}
+	return h
 }

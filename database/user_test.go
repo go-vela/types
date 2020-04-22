@@ -14,72 +14,60 @@ import (
 
 func TestDatabase_User_Nullify(t *testing.T) {
 	// setup types
-	u := &User{
-		ID:        sql.NullInt64{Int64: 0, Valid: true},
-		Name:      sql.NullString{String: "", Valid: true},
-		Token:     sql.NullString{String: "", Valid: true},
-		Hash:      sql.NullString{String: "", Valid: true},
-		Favorites: []string{},
-		Active:    sql.NullBool{Bool: false, Valid: true},
-		Admin:     sql.NullBool{Bool: false, Valid: true},
-	}
-	want := &User{
-		ID:        sql.NullInt64{Int64: 0, Valid: false},
-		Name:      sql.NullString{String: "", Valid: false},
-		Token:     sql.NullString{String: "", Valid: false},
-		Hash:      sql.NullString{String: "", Valid: false},
-		Favorites: []string{},
-		Active:    sql.NullBool{Bool: false, Valid: true},
-		Admin:     sql.NullBool{Bool: false, Valid: true},
-	}
-
-	// run test
-	got := u.Nullify()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Nullify is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_User_Nullify_Empty(t *testing.T) {
-	// setup types
 	var u *User
 
-	// run test
-	got := u.Nullify()
+	want := &User{
+		ID:     sql.NullInt64{Int64: 0, Valid: false},
+		Name:   sql.NullString{String: "", Valid: false},
+		Token:  sql.NullString{String: "", Valid: false},
+		Hash:   sql.NullString{String: "", Valid: false},
+		Active: sql.NullBool{Bool: false, Valid: false},
+		Admin:  sql.NullBool{Bool: false, Valid: false},
+	}
 
-	if got != nil {
-		t.Errorf("Nullify is %v, want nil", got)
+	// setup tests
+	tests := []struct {
+		user *User
+		want *User
+	}{
+		{
+			user: testUser(),
+			want: testUser(),
+		},
+		{
+			user: u,
+			want: nil,
+		},
+		{
+			user: new(User),
+			want: want,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.user.Nullify()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Nullify is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_User_ToLibrary(t *testing.T) {
 	// setup types
-	booL := false
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	want := &library.User{
-		ID:        &num64,
-		Name:      &str,
-		Token:     &str,
-		Hash:      &str,
-		Favorites: &arr,
-		Active:    &booL,
-		Admin:     &booL,
-	}
-	u := &User{
-		ID:        sql.NullInt64{Int64: num64, Valid: true},
-		Name:      sql.NullString{String: str, Valid: true},
-		Token:     sql.NullString{String: str, Valid: true},
-		Hash:      sql.NullString{String: str, Valid: true},
-		Favorites: arr,
-		Active:    sql.NullBool{Bool: booL, Valid: true},
-		Admin:     sql.NullBool{Bool: booL, Valid: true},
-	}
+	want := new(library.User)
+
+	want.SetID(1)
+	want.SetName("octocat")
+	want.SetToken("superSecretToken")
+	want.SetHash("superSecretHash")
+	want.SetFavorites([]string{"github/octocat"})
+	want.SetActive(true)
+	want.SetAdmin(false)
 
 	// run test
-	got := u.ToLibrary()
+	got := testUser().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
@@ -87,128 +75,100 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 }
 
 func TestDatabase_User_Validate(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:    sql.NullInt64{Int64: 1, Valid: true},
-		Name:  sql.NullString{String: "foo", Valid: true},
-		Token: sql.NullString{String: "bar", Valid: true},
-		Hash:  sql.NullString{String: "baz", Valid: true},
+	// setup tests
+	tests := []struct {
+		failure bool
+		user    *User
+	}{
+		{
+			failure: false,
+			user:    testUser(),
+		},
+		{ // no name set for user
+			failure: true,
+			user: &User{
+				ID:    sql.NullInt64{Int64: 1, Valid: true},
+				Token: sql.NullString{String: "superSecretToken", Valid: true},
+				Hash:  sql.NullString{String: "superSecretHash", Valid: true},
+			},
+		},
+		{ // no token set for user
+			failure: true,
+			user: &User{
+				ID:   sql.NullInt64{Int64: 1, Valid: true},
+				Name: sql.NullString{String: "octocat", Valid: true},
+				Hash: sql.NullString{String: "superSecretHash", Valid: true},
+			},
+		},
+		{ // no hash set for user
+			failure: true,
+			user: &User{
+				ID:    sql.NullInt64{Int64: 1, Valid: true},
+				Name:  sql.NullString{String: "octocat", Valid: true},
+				Token: sql.NullString{String: "superSecretToken", Valid: true},
+			},
+		},
+		{ // invalid name set for user
+			failure: true,
+			user: &User{
+				ID:    sql.NullInt64{Int64: 1, Valid: true},
+				Name:  sql.NullString{String: "!@#$%^&*()", Valid: true},
+				Token: sql.NullString{String: "superSecretToken", Valid: true},
+				Hash:  sql.NullString{String: "superSecretHash", Valid: true},
+			},
+		},
 	}
 
-	// run test
-	err := u.Validate()
+	// run tests
+	for _, test := range tests {
+		err := test.user.Validate()
 
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
 
-func TestDatabase_User_Validate_NoName(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:    sql.NullInt64{Int64: 1, Valid: true},
-		Token: sql.NullString{String: "bar", Valid: true},
-	}
-	// run test
-	err := u.Validate()
+			continue
+		}
 
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_User_Validate_NoToken(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:   sql.NullInt64{Int64: 1, Valid: true},
-		Name: sql.NullString{String: "foo", Valid: true},
-	}
-	// run test
-	err := u.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_User_Validate_NoHash(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:    sql.NullInt64{Int64: 1, Valid: true},
-		Name:  sql.NullString{String: "foo", Valid: true},
-		Token: sql.NullString{String: "bar", Valid: true},
-	}
-	// run test
-	err := u.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_User_Validate_NameInvalid(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:    sql.NullInt64{Int64: 1, Valid: true},
-		Name:  sql.NullString{String: "!@#$%^&*()", Valid: true},
-		Token: sql.NullString{String: "bar", Valid: true},
-		Hash:  sql.NullString{String: "baz", Valid: true},
-	}
-
-	// run test
-	err := u.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_User_Validate_NoFavorites(t *testing.T) {
-	// setup types
-	u := &User{
-		ID:    sql.NullInt64{Int64: 1, Valid: true},
-		Name:  sql.NullString{String: "foo", Valid: true},
-		Token: sql.NullString{String: "bar", Valid: true},
-		Hash:  sql.NullString{String: "baz", Valid: true},
-	}
-
-	// run test
-	err := u.Validate()
-
-	if err != nil {
-		t.Errorf("Validate should not have returned err")
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
 	}
 }
 
 func TestDatabase_UserFromLibrary(t *testing.T) {
 	// setup types
-	booL := false
-	num64 := int64(1)
-	str := "foo"
-	arr := []string{"foo", "bar"}
-	want := &User{
-		ID:        sql.NullInt64{Int64: num64, Valid: true},
-		Name:      sql.NullString{String: str, Valid: true},
-		Token:     sql.NullString{String: str, Valid: true},
-		Hash:      sql.NullString{String: str, Valid: true},
-		Favorites: arr,
-		Active:    sql.NullBool{Bool: booL, Valid: true},
-		Admin:     sql.NullBool{Bool: booL, Valid: true},
-	}
-	u := &library.User{
-		ID:        &num64,
-		Name:      &str,
-		Token:     &str,
-		Hash:      &str,
-		Favorites: &arr,
-		Active:    &booL,
-		Admin:     &booL,
-	}
+	u := new(library.User)
+
+	u.SetID(1)
+	u.SetName("octocat")
+	u.SetToken("superSecretToken")
+	u.SetHash("superSecretHash")
+	u.SetFavorites([]string{"github/octocat"})
+	u.SetActive(true)
+	u.SetAdmin(false)
+
+	want := testUser()
 
 	// run test
 	got := UserFromLibrary(u)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("UserFromLibrary is %v, want %v", got, want)
+	}
+}
+
+// testUser is a test helper function to create a User
+// type with all fields set to a fake value.
+func testUser() *User {
+	return &User{
+		ID:        sql.NullInt64{Int64: 1, Valid: true},
+		Name:      sql.NullString{String: "octocat", Valid: true},
+		Token:     sql.NullString{String: "superSecretToken", Valid: true},
+		Hash:      sql.NullString{String: "superSecretHash", Valid: true},
+		Favorites: []string{"github/octocat"},
+		Active:    sql.NullBool{Bool: true, Valid: true},
+		Admin:     sql.NullBool{Bool: false, Valid: true},
 	}
 }

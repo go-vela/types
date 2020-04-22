@@ -15,20 +15,8 @@ import (
 
 func TestDatabase_Hook_Nullify(t *testing.T) {
 	// setup types
-	h := &Hook{
-		ID:       sql.NullInt64{Int64: 0, Valid: true},
-		RepoID:   sql.NullInt64{Int64: 0, Valid: true},
-		BuildID:  sql.NullInt64{Int64: 0, Valid: true},
-		Number:   sql.NullInt32{Int32: 0, Valid: true},
-		SourceID: sql.NullString{String: "", Valid: true},
-		Created:  sql.NullInt64{Int64: 0, Valid: true},
-		Host:     sql.NullString{String: "", Valid: true},
-		Event:    sql.NullString{String: "", Valid: true},
-		Branch:   sql.NullString{String: "", Valid: true},
-		Error:    sql.NullString{String: "", Valid: true},
-		Status:   sql.NullString{String: "", Valid: true},
-		Link:     sql.NullString{String: "", Valid: true},
-	}
+	var h *Hook
+
 	want := &Hook{
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
@@ -44,23 +32,32 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 		Link:     sql.NullString{String: "", Valid: false},
 	}
 
-	// run test
-	got := h.Nullify()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Nullify is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		hook *Hook
+		want *Hook
+	}{
+		{
+			hook: testHook(),
+			want: testHook(),
+		},
+		{
+			hook: h,
+			want: nil,
+		},
+		{
+			hook: new(Hook),
+			want: want,
+		},
 	}
-}
 
-func TestDatabase_Hook_Nullify_Empty(t *testing.T) {
-	// setup types
-	var h *Hook
+	// run tests
+	for _, test := range tests {
+		got := test.hook.Nullify()
 
-	// run test
-	got := h.Nullify()
-
-	if got != nil {
-		t.Errorf("Nullify is %v, want nil", got)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Nullify is %v, want %v", got, test.want)
+		}
 	}
 }
 
@@ -204,5 +201,24 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("HookFromLibrary is %v, want %v", got, want)
+	}
+}
+
+// testHook is a test helper function to create a Hook
+// type with all fields set to a fake value.
+func testHook() *Hook {
+	return &Hook{
+		ID:       sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
+		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+		Created:  sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
+		Host:     sql.NullString{String: "github.com", Valid: true},
+		Event:    sql.NullString{String: "push", Valid: true},
+		Branch:   sql.NullString{String: "master", Valid: true},
+		Error:    sql.NullString{String: "", Valid: false},
+		Status:   sql.NullString{String: "success", Valid: true},
+		Link:     sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
 	}
 }

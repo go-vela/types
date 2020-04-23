@@ -5,7 +5,6 @@
 package raw
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"reflect"
 	"testing"
@@ -13,186 +12,130 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func TestRaw_StringSliceMap_UnmarshalJSON_String(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/string_map.json")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
+func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StringSliceMap
+	}{
+		{
+			failure: false,
+			file:    "testdata/string_map.json",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: false,
+			file:    "testdata/slice_map.json",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: false,
+			file:    "testdata/map.json",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: false,
+			file:    "",
+			want:    new(StringSliceMap),
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid.json",
+			want:    nil,
+		},
 	}
 
-	err = json.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalJSON returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		var (
+			err error
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalJSON is %v, want %v", got, want)
-	}
-}
+			b   = []byte{}
+			got = new(StringSliceMap)
+		)
 
-func TestRaw_StringSliceMap_UnmarshalJSON_Slice(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
+		if len(test.file) > 0 {
+			b, err = ioutil.ReadFile(test.file)
+			if err != nil {
+				t.Errorf("unable to read %s file: %v", test.file, err)
+			}
+		}
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/slice_map.json")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+		err = got.UnmarshalJSON(b)
 
-	err = json.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalJSON returned err: %v", err)
-	}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalJSON should have returned err")
+			}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalJSON is %v, want %v", got, want)
-	}
-}
+			continue
+		}
 
-func TestRaw_StringSliceMap_UnmarshalJSON_Map(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
+		if err != nil {
+			t.Errorf("UnmarshalJSON returned err: %v", err)
+		}
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/map.json")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
-
-	err = json.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalJSON returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalJSON is %v, want %v", got, want)
-	}
-}
-
-func TestRaw_StringSliceMap_UnmarshalJSON_Empty(t *testing.T) {
-	// setup types
-	want := new(StringSliceMap)
-	got := new(StringSliceMap)
-
-	// run test
-	err := got.UnmarshalJSON([]byte(""))
-	if err != nil {
-		t.Errorf("UnmarshalJSON returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalJSON is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalJSON is %v, want %v", got, test.want)
+		}
 	}
 }
 
-func TestRaw_StringSliceMap_UnmarshalJSON_Invalid(t *testing.T) {
-	// setup types
-	want := new(StringSliceMap)
-	got := new(StringSliceMap)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.json")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
+func TestRaw_StringSliceMap_UnmarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StringSliceMap
+	}{
+		{
+			failure: false,
+			file:    "testdata/string_map.yml",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: false,
+			file:    "testdata/slice_map.yml",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: false,
+			file:    "testdata/map.yml",
+			want:    &StringSliceMap{"foo": "bar"},
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
 	}
 
-	err = json.Unmarshal(b, got)
-	if err == nil {
-		t.Errorf("UnmarshalJSON should have returned err")
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(StringSliceMap)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalJSON is %v, want %v", got, want)
-	}
-}
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read %s file: %v", test.file, err)
+		}
 
-func TestRaw_StringSliceMap_UnmarshalYAML_String(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
+		err = yaml.Unmarshal(b, got)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/string_map.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-	err = yaml.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
+			continue
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-func TestRaw_StringSliceMap_UnmarshalYAML_Slice(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/slice_map.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestRaw_StringSliceMap_UnmarshalYAML_Map(t *testing.T) {
-	// setup types
-	want := &StringSliceMap{"foo": "bar"}
-	got := new(StringSliceMap)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/map.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestRaw_StringSliceMap_UnmarshalYAML_Invalid(t *testing.T) {
-	// setup types
-	want := new(StringSliceMap)
-	got := new(StringSliceMap)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-	if err == nil {
-		t.Errorf("UnmarshalYAML should have returned err")
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

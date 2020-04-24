@@ -104,10 +104,19 @@ func (r *Rules) Empty() bool {
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
 func (r *Rules) Match(from *RuleData, op string) bool {
+	// set defaults
+	status := true
+
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
 		// if the "or" operator is provided in the ruleset
 		if strings.EqualFold(op, "or") {
+
+			// override the default to the "or"
+			if len(from.Status) != 0 {
+				status = r.Status.MatchOr(from.Status)
+			}
+
 			// iterate through each path in the ruletype
 			for _, p := range from.Path {
 
@@ -117,6 +126,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 					r.Event.MatchOr(from.Event) ||
 					r.Path.MatchOr(p) ||
 					r.Repo.MatchOr(from.Repo) ||
+					status ||
 					r.Tag.MatchOr(from.Tag) {
 					return true
 				}
@@ -124,6 +134,11 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 			// return false if no match is found
 			return false
+		}
+
+		// override the default to the "and"
+		if len(from.Status) != 0 {
+			status = r.Status.MatchAnd(from.Status)
 		}
 
 		// iterate through each path in the ruletype
@@ -135,6 +150,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 				r.Event.MatchAnd(from.Event) &&
 				r.Path.MatchAnd(p) &&
 				r.Repo.MatchAnd(from.Repo) &&
+				status &&
 				r.Tag.MatchAnd(from.Tag) {
 				return true
 			}
@@ -147,12 +163,18 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 	// if the "or" operator is provided in the ruleset
 	if strings.EqualFold(op, "or") {
 
+		// override the default to the "or"
+		if len(from.Status) != 0 {
+			status = r.Status.MatchOr(from.Status)
+		}
+
 		// return true if any ruletype matches the ruledata
 		if r.Branch.MatchOr(from.Branch) ||
 			r.Comment.MatchOr(from.Comment) ||
 			r.Event.MatchOr(from.Event) ||
 			r.Path.MatchOr("") ||
 			r.Repo.MatchOr(from.Repo) ||
+			status ||
 			r.Tag.MatchOr(from.Tag) {
 			return true
 		}
@@ -161,12 +183,18 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 		return false
 	}
 
+	// override the default to the "and"
+	if len(from.Status) != 0 {
+		status = r.Status.MatchAnd(from.Status)
+	}
+
 	// return true if every ruletype matches the ruledata
 	if r.Branch.MatchAnd(from.Branch) &&
 		r.Comment.MatchAnd(from.Comment) &&
 		r.Event.MatchAnd(from.Event) &&
 		r.Path.MatchAnd("") &&
 		r.Repo.MatchAnd(from.Repo) &&
+		status &&
 		r.Tag.MatchAnd(from.Tag) {
 		return true
 	}

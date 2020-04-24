@@ -260,7 +260,7 @@ func TestPipeline_Rules_Match(t *testing.T) {
 		},
 		{
 			rules:    &Rules{Status: []string{"success", "failure"}},
-			data:     &RuleData{Branch: "master", Event: "pull_request", Path: []string{"foo.txt", "/foo/bar.txt"}, Repo: "octocat/hello-world", Status: "failure", Tag: "refs/heads/master"},
+			data:     &RuleData{Branch: "master", Event: "pull_request", Path: []string{"foo.txt", "/foo/bar.txt"}, Repo: "octocat/hello-world", Tag: "refs/heads/master"},
 			operator: "and",
 			want:     true,
 		},

@@ -184,7 +184,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 // ruletype is empty, the function returns true.
 func (r *Ruletype) MatchAnd(data string) bool {
 	// return true if an empty ruletype is provided
-	if len(*r) == 0 {
+	if len(*r) == 0 || len(data) == 0 {
 		return true
 	}
 
@@ -206,7 +206,7 @@ func (r *Ruletype) MatchAnd(data string) bool {
 // ruletype is empty, the function returns false.
 func (r *Ruletype) MatchOr(data string) bool {
 	// return false if an empty ruletype is provided
-	if len(*r) == 0 {
+	if len(*r) == 0 || len(data) == 0 {
 		return false
 	}
 

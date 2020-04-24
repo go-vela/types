@@ -11,55 +11,43 @@ import (
 
 func TestPipeline_BuildFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Build{ID: "1"}
+	b := &Build{ID: "1"}
 
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, want)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != want {
-		t.Errorf("BuildFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Build
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, b),
+			want: b,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestPipeline_BuildFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := BuildFromContext(test.ctx)
 
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
-	}
-}
-
-func TestPipeline_BuildFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, id)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("BuildFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestPipeline_BuildWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
 	want := &Build{ID: "1"}
 
 	// setup context
-	ctx = BuildWithContext(ctx, want)
+	ctx := BuildWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(buildKey)
@@ -71,55 +59,43 @@ func TestPipeline_BuildWithContext(t *testing.T) {
 
 func TestPipeline_SecretFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Secret{Name: "1"}
+	s := &Secret{Name: "foo"}
 
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, want)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != want {
-		t.Errorf("SecretFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Secret
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestPipeline_SecretFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := SecretFromContext(test.ctx)
 
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
-	}
-}
-
-func TestPipeline_SecretFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, id)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("SecretFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestPipeline_SecretWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Secret{Name: "1"}
+	want := &Secret{Name: "foo"}
 
 	// setup context
-	ctx = SecretWithContext(ctx, want)
+	ctx := SecretWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(secretKey)
@@ -131,55 +107,43 @@ func TestPipeline_SecretWithContext(t *testing.T) {
 
 func TestPipeline_StageFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Stage{Name: "foo"}
+	s := &Stage{Name: "foo"}
 
-	// setup context
-	ctx = context.WithValue(ctx, stageKey, want)
-
-	// run test
-	got := StageFromContext(ctx)
-
-	if got != want {
-		t.Errorf("StageFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Stage
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), stageKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), stageKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestPipeline_StageFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := StageFromContext(test.ctx)
 
-	// run test
-	got := StageFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StageFromContext is %v, want nil", got)
-	}
-}
-
-func TestPipeline_StageFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, stageKey, id)
-
-	// run test
-	got := StageFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StageFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("StageFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestPipeline_StageWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
 	want := &Stage{Name: "foo"}
 
 	// setup context
-	ctx = StageWithContext(ctx, want)
+	ctx := StageWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(stageKey)
@@ -191,55 +155,43 @@ func TestPipeline_StageWithContext(t *testing.T) {
 
 func TestPipeline_ContainerFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Container{ID: "1"}
+	c := &Container{Name: "foo"}
 
-	// setup context
-	ctx = context.WithValue(ctx, containerKey, want)
-
-	// run test
-	got := ContainerFromContext(ctx)
-
-	if got != want {
-		t.Errorf("ContainerFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Container
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), containerKey, c),
+			want: c,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), containerKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestPipeline_ContainerFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := ContainerFromContext(test.ctx)
 
-	// run test
-	got := ContainerFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("ContainerFromContext is %v, want nil", got)
-	}
-}
-
-func TestPipeline_ContainerFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, containerKey, id)
-
-	// run test
-	got := ContainerFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("ContainerFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("ContainerFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestPipeline_ContainerWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
 	want := &Container{ID: "1"}
 
 	// setup context
-	ctx = ContainerWithContext(ctx, want)
+	ctx := ContainerWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(containerKey)

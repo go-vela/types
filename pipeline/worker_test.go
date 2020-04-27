@@ -7,27 +7,27 @@ package pipeline
 import "testing"
 
 func TestPipeline_Worker_Empty(t *testing.T) {
-	// setup types
-	w := Worker{}
-
-	// run test
-	got := w.Empty()
-
-	if !got {
-		t.Errorf("Worker IsEmpty is %v, want true", got)
-	}
-}
-
-func TestPipeline_Worker_Empty_False(t *testing.T) {
-	// setup types
-	w := Worker{
-		Flavor: "foo",
+	// setup tests
+	tests := []struct {
+		worker *Worker
+		want   bool
+	}{
+		{
+			worker: &Worker{Flavor: "foo"},
+			want:   false,
+		},
+		{
+			worker: new(Worker),
+			want:   true,
+		},
 	}
 
-	// run test
-	got := w.Empty()
+	// run tests
+	for _, test := range tests {
+		got := test.worker.Empty()
 
-	if got {
-		t.Errorf("Worker IsEmpty is %v, want false", got)
+		if got != test.want {
+			t.Errorf("Empty is %v, want %t", got, test.want)
+		}
 	}
 }

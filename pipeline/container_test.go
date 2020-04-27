@@ -13,216 +13,130 @@ import (
 
 func TestPipeline_ContainerSlice_Purge(t *testing.T) {
 	// setup types
-	s := ContainerSlice{
-		&Container{
-			Commands: []string{"./gradlew downloadDependencies"},
-			Image:    "openjdk:latest",
-			Name:     "install",
-			Number:   1,
-			Pull:     true,
+	containers := testContainers()
+	*containers = (*containers)[:len(*containers)-1]
+
+	// setup tests
+	tests := []struct {
+		containers *ContainerSlice
+		want       *ContainerSlice
+	}{
+		{
+			containers: testContainers(),
+			want:       containers,
 		},
-		&Container{
-			Commands: []string{"./gradlew check"},
-			Image:    "openjdk:latest",
-			Name:     "test",
-			Number:   2,
-			Pull:     true,
+		{
+			containers: new(ContainerSlice),
+			want:       new(ContainerSlice),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		r := &RuleData{
+			Branch: "master",
+			Event:  "pull_request",
+			Path:   []string{},
+			Repo:   "foo/bar",
+			Tag:    "refs/heads/master",
+		}
+
+		got := test.containers.Purge(r)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Purge is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
+	// setup types
+	containers := testContainers()
+	(*containers)[0].ID = "step_github-octocat._1_init"
+	(*containers)[1].ID = "step_github-octocat._1_clone"
+	(*containers)[2].ID = "step_github-octocat._1_echo"
+
+	kubeContainers := testContainers()
+	(*kubeContainers)[0].ID = "step-github-octocat--1-init"
+	(*kubeContainers)[1].ID = "step-github-octocat--1-clone"
+	(*kubeContainers)[2].ID = "step-github-octocat--1-echo"
+
+	// setup tests
+	tests := []struct {
+		driver     string
+		containers *ContainerSlice
+		want       *ContainerSlice
+	}{
+		{
+			driver:     constants.DriverDocker,
+			containers: testContainers(),
+			want:       containers,
+		},
+		{
+			driver:     constants.DriverKubernetes,
+			containers: testContainers(),
+			want:       kubeContainers,
+		},
+		{
+			driver:     constants.DriverDocker,
+			containers: new(ContainerSlice),
+			want:       new(ContainerSlice),
+		},
+		{
+			driver:     constants.DriverKubernetes,
+			containers: new(ContainerSlice),
+			want:       new(ContainerSlice),
+		},
+		{
+			driver:     "foo",
+			containers: new(ContainerSlice),
+			want:       nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.containers.Sanitize(test.driver)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Sanitize is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func testContainers() *ContainerSlice {
+	return &ContainerSlice{
+		{
+			ID:          "step_github octocat._1_init",
+			Directory:   "/home/github/octocat",
+			Environment: map[string]string{"FOO": "bar"},
+			Image:       "#init",
+			Name:        "init",
+			Number:      1,
+			Pull:        true,
+		},
+		{
+			ID:          "step_github octocat._1_clone",
+			Directory:   "/home/github/octocat",
+			Environment: map[string]string{"FOO": "bar"},
+			Image:       "target/vela-git:v0.3.0",
+			Name:        "clone",
+			Number:      2,
+			Pull:        true,
+		},
+		{
+			ID:          "step_github octocat._1_echo",
+			Commands:    []string{"echo hello"},
+			Directory:   "/home/github/octocat",
+			Environment: map[string]string{"FOO": "bar"},
+			Image:       "alpine:latest",
+			Name:        "echo",
+			Number:      3,
+			Pull:        true,
 			Ruleset: Ruleset{
-				If: Rules{
-					Event: []string{"push"},
-				},
+				If:       Rules{Event: []string{"push"}},
 				Operator: "and",
 			},
 		},
-	}
-
-	r := &RuleData{
-		Branch: "master",
-		Event:  "pull_request",
-		Path:   []string{},
-		Repo:   "foo/bar",
-		Status: "success",
-		Tag:    "refs/heads/master",
-	}
-
-	want := &ContainerSlice{
-		&Container{
-			Commands: []string{"./gradlew downloadDependencies"},
-			Image:    "openjdk:latest",
-			Name:     "install",
-			Number:   1,
-			Pull:     true,
-		},
-	}
-
-	// run test
-	got := s.Purge(r)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Purge is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_ContainerSlice_Sanitize_Docker(t *testing.T) {
-	// setup types
-	c := &ContainerSlice{
-		{
-			ID:       "step_foo_bar_1_echo foo",
-			Commands: []string{"echo foo"},
-			Image:    "alpine:latest",
-			Name:     "echo foo",
-			Number:   1,
-			Pull:     true,
-		},
-	}
-
-	want := &ContainerSlice{
-		{
-			ID:       "step_foo_bar_1_echo-foo",
-			Commands: []string{"echo foo"},
-			Image:    "alpine:latest",
-			Name:     "echo foo",
-			Number:   1,
-			Pull:     true,
-		},
-	}
-
-	// run test
-	got := c.Sanitize(constants.DriverDocker)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_ContainerSlice_Sanitize_Kubernetes(t *testing.T) {
-	// setup types
-	c := &ContainerSlice{
-		{
-			ID:       "step_foo_bar_1_echo foo",
-			Commands: []string{"echo foo"},
-			Image:    "alpine:latest",
-			Name:     "echo foo",
-			Number:   1,
-			Pull:     true,
-		},
-		{
-			ID:       "step_foo_bar_1_echo_bar",
-			Commands: []string{"echo bar"},
-			Image:    "alpine:latest",
-			Name:     "echo_bar",
-			Number:   2,
-			Pull:     true,
-		},
-		{
-			ID:       "step_foo_bar_1_echo.baz",
-			Commands: []string{"echo baz"},
-			Image:    "alpine:latest",
-			Name:     "echo.baz",
-			Number:   3,
-			Pull:     true,
-		},
-	}
-
-	want := &ContainerSlice{
-		{
-			ID:       "step-foo-bar-1-echo-foo",
-			Commands: []string{"echo foo"},
-			Image:    "alpine:latest",
-			Name:     "echo foo",
-			Number:   1,
-			Pull:     true,
-		},
-		{
-			ID:       "step-foo-bar-1-echo-bar",
-			Commands: []string{"echo bar"},
-			Image:    "alpine:latest",
-			Name:     "echo_bar",
-			Number:   2,
-			Pull:     true,
-		},
-		{
-			ID:       "step-foo-bar-1-echo-baz",
-			Commands: []string{"echo baz"},
-			Image:    "alpine:latest",
-			Name:     "echo.baz",
-			Number:   3,
-			Pull:     true,
-		},
-	}
-
-	// run test
-	got := c.Sanitize(constants.DriverKubernetes)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_ContainerSlice_Sanitize_NoDriver(t *testing.T) {
-	// setup types
-	c := &ContainerSlice{}
-
-	// run test
-	got := c.Sanitize("")
-
-	if got != nil {
-		t.Errorf("Sanitize is %v, want nil", got)
-	}
-}
-
-func TestPipeline_Container_Sanitize_Stage(t *testing.T) {
-	// setup types
-	got := &Container{
-		ID:       "github_octocat_1_install deps_install",
-		Commands: []string{"./gradlew downloadDependencies"},
-		Image:    "openjdk:latest",
-		Name:     "install",
-		Number:   1,
-		Pull:     true,
-	}
-
-	want := &Container{
-		ID:       "github_octocat_1_install-deps_install",
-		Commands: []string{"./gradlew downloadDependencies"},
-		Image:    "openjdk:latest",
-		Name:     "install",
-		Number:   1,
-		Pull:     true,
-	}
-
-	// run test
-	got.Sanitize()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_Container_Sanitize_Step(t *testing.T) {
-	// setup types
-	got := &Container{
-		ID:       "github_octocat_1_install deps",
-		Commands: []string{"./gradlew downloadDependencies"},
-		Image:    "openjdk:latest",
-		Name:     "install deps",
-		Number:   1,
-		Pull:     true,
-	}
-
-	want := &Container{
-		ID:       "github_octocat_1_install-deps",
-		Commands: []string{"./gradlew downloadDependencies"},
-		Image:    "openjdk:latest",
-		Name:     "install deps",
-		Number:   1,
-		Pull:     true,
-	}
-
-	// run test
-	got.Sanitize()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
 	}
 }

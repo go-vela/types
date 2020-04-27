@@ -13,211 +13,147 @@ import (
 
 func TestPipeline_StageSlice_Purge(t *testing.T) {
 	// setup types
-	done := make(chan error)
+	stages := testStages()
+	*stages = (*stages)[:len(*stages)-1]
 
-	s := StageSlice{
-		&Stage{
-			Done:  done,
-			Name:  "install",
-			Needs: []string{"clone"},
+	// setup tests
+	tests := []struct {
+		stages *StageSlice
+		want   *StageSlice
+	}{
+		{
+			stages: testStages(),
+			want:   stages,
+		},
+		{
+			stages: new(StageSlice),
+			want:   new(StageSlice),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		r := &RuleData{
+			Branch: "master",
+			Event:  "pull_request",
+			Path:   []string{},
+			Repo:   "foo/bar",
+			Tag:    "refs/heads/master",
+		}
+
+		got := test.stages.Purge(r)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Purge is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestPipeline_StageSlice_Sanitize(t *testing.T) {
+	// setup types
+	stages := testStages()
+	(*stages)[0].Steps[0].ID = "github-octocat._1_init_init"
+	(*stages)[1].Steps[0].ID = "github-octocat._1_clone_clone"
+	(*stages)[2].Steps[0].ID = "github-octocat._1_echo_echo"
+
+	kubeStages := testStages()
+	(*kubeStages)[0].Steps[0].ID = "github-octocat--1-init-init"
+	(*kubeStages)[1].Steps[0].ID = "github-octocat--1-clone-clone"
+	(*kubeStages)[2].Steps[0].ID = "github-octocat--1-echo-echo"
+
+	// setup tests
+	tests := []struct {
+		driver string
+		stages *StageSlice
+		want   *StageSlice
+	}{
+		{
+			driver: constants.DriverDocker,
+			stages: testStages(),
+			want:   stages,
+		},
+		{
+			driver: constants.DriverKubernetes,
+			stages: testStages(),
+			want:   kubeStages,
+		},
+		{
+			driver: constants.DriverDocker,
+			stages: new(StageSlice),
+			want:   new(StageSlice),
+		},
+		{
+			driver: constants.DriverKubernetes,
+			stages: new(StageSlice),
+			want:   new(StageSlice),
+		},
+		{
+			driver: "foo",
+			stages: new(StageSlice),
+			want:   nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.stages.Sanitize(test.driver)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Sanitize is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func testStages() *StageSlice {
+	return &StageSlice{
+		{
+			Name: "init",
 			Steps: ContainerSlice{
-				&Container{
-					Commands: []string{"./gradlew downloadDependencies"},
-					Image:    "openjdk:latest",
-					Name:     "install",
-					Number:   1,
-					Pull:     true,
+				{
+					ID:          "github octocat._1_init_init",
+					Directory:   "/home/github/octocat",
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "#init",
+					Name:        "init",
+					Number:      1,
+					Pull:        true,
 				},
 			},
 		},
-		&Stage{
-			Done:  done,
-			Name:  "test",
-			Needs: []string{"install"},
+		{
+			Name:  "clone",
+			Needs: []string{"init"},
 			Steps: ContainerSlice{
-				&Container{
-					Commands: []string{"./gradlew check"},
-					Image:    "openjdk:latest",
-					Name:     "test",
-					Number:   2,
-					Pull:     true,
+				{
+					ID:          "github octocat._1_clone_clone",
+					Directory:   "/home/github/octocat",
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "target/vela-git:v0.3.0",
+					Name:        "clone",
+					Number:      2,
+					Pull:        true,
+				},
+			},
+		},
+		{
+			Name:  "echo",
+			Needs: []string{"clone"},
+			Steps: ContainerSlice{
+				{
+					ID:          "github octocat._1_echo_echo",
+					Commands:    []string{"echo hello"},
+					Directory:   "/home/github/octocat",
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "alpine:latest",
+					Name:        "echo",
+					Number:      3,
+					Pull:        true,
 					Ruleset: Ruleset{
-						If: Rules{
-							Event: []string{"push"},
-						},
+						If:       Rules{Event: []string{"push"}},
 						Operator: "and",
 					},
 				},
 			},
 		},
-	}
-
-	r := &RuleData{
-		Branch: "master",
-		Event:  "pull_request",
-		Path:   []string{},
-		Repo:   "foo/bar",
-		Status: "success",
-		Tag:    "refs/heads/master",
-	}
-
-	want := &StageSlice{
-		&Stage{
-			Done:  done,
-			Name:  "install",
-			Needs: []string{"clone"},
-			Steps: ContainerSlice{
-				&Container{
-					Commands: []string{"./gradlew downloadDependencies"},
-					Image:    "openjdk:latest",
-					Name:     "install",
-					Number:   1,
-					Pull:     true,
-				},
-			},
-		},
-	}
-
-	// run test
-	got := s.Purge(r)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Purge is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_StageSlice_Sanitize_Docker(t *testing.T) {
-	// setup types
-	done := make(chan error)
-
-	s := &StageSlice{
-		{
-			Done: done,
-			Name: "test",
-			Steps: ContainerSlice{
-				{
-					ID:       "foo_bar_1_test_echo foo",
-					Commands: []string{"echo foo"},
-					Image:    "alpine:latest",
-					Name:     "echo foo",
-					Number:   1,
-					Pull:     true,
-				},
-			},
-		},
-	}
-
-	want := &StageSlice{
-		{
-			Done: done,
-			Name: "test",
-			Steps: ContainerSlice{
-				{
-					ID:       "foo_bar_1_test_echo-foo",
-					Commands: []string{"echo foo"},
-					Image:    "alpine:latest",
-					Name:     "echo foo",
-					Number:   1,
-					Pull:     true,
-				},
-			},
-		},
-	}
-
-	// run test
-	got := s.Sanitize(constants.DriverDocker)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_StageSlice_Sanitize_Kubernetes(t *testing.T) {
-	// setup types
-	done := make(chan error)
-
-	s := &StageSlice{
-		{
-			Done: done,
-			Name: "test",
-			Steps: ContainerSlice{
-				{
-					ID:       "foo_bar_1_test_echo foo",
-					Commands: []string{"echo foo"},
-					Image:    "alpine:latest",
-					Name:     "echo foo",
-					Number:   1,
-					Pull:     true,
-				},
-				{
-					ID:       "foo_bar_1_test_echo_bar",
-					Commands: []string{"echo bar"},
-					Image:    "alpine:latest",
-					Name:     "echo_bar",
-					Number:   2,
-					Pull:     true,
-				},
-				{
-					ID:       "foo_bar_1_test_echo.baz",
-					Commands: []string{"echo baz"},
-					Image:    "alpine:latest",
-					Name:     "echo.baz",
-					Number:   3,
-					Pull:     true,
-				},
-			},
-		},
-	}
-
-	want := &StageSlice{
-		{
-			Done: done,
-			Name: "test",
-			Steps: ContainerSlice{
-				{
-					ID:       "foo-bar-1-test-echo-foo",
-					Commands: []string{"echo foo"},
-					Image:    "alpine:latest",
-					Name:     "echo foo",
-					Number:   1,
-					Pull:     true,
-				},
-				{
-					ID:       "foo-bar-1-test-echo-bar",
-					Commands: []string{"echo bar"},
-					Image:    "alpine:latest",
-					Name:     "echo_bar",
-					Number:   2,
-					Pull:     true,
-				},
-				{
-					ID:       "foo-bar-1-test-echo-baz",
-					Commands: []string{"echo baz"},
-					Image:    "alpine:latest",
-					Name:     "echo.baz",
-					Number:   3,
-					Pull:     true,
-				},
-			},
-		},
-	}
-
-	// run test
-	got := s.Sanitize(constants.DriverKubernetes)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_StageSlice_Sanitize_NoDriver(t *testing.T) {
-	// setup types
-	s := &StageSlice{}
-
-	// run test
-	got := s.Sanitize("")
-
-	if got != nil {
-		t.Errorf("Sanitize is %v, want nil", got)
 	}
 }

@@ -109,6 +109,16 @@ func (b *Build) Environment() map[string]string {
 		envs["VELA_PULL_REQUEST"] = number
 	}
 
+	// check if the Build event is deployment
+	if strings.EqualFold(b.GetEvent(), constants.EventDeploy) {
+		// capture the deployment target
+		target := ToString(b.GetDeploy())
+
+		// add the deployment target to the list
+		envs["VELA_BUILD_TARGET"] = target
+		envs["VELA_DEPLOYMENT"] = target
+	}
+
 	// check if the Build event is pull_request
 	if strings.EqualFold(b.GetEvent(), constants.EventPull) {
 		// capture the pull request number

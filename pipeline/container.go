@@ -117,11 +117,3 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 		return nil
 	}
 }
-
-// Sanitize cleans the ID for the container which
-// allows it to be safely executed on a worker.
-func (c *Container) Sanitize() {
-	if strings.Contains(c.ID, " ") {
-		c.ID = strings.ReplaceAll(c.ID, " ", "-")
-	}
-}

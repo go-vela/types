@@ -26,6 +26,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 			Repo:    slice,
 			Status:  slice,
 			Tag:     slice,
+			Target:  slice,
 		},
 		Unless: pipeline.Rules{
 			Branch:  slice,
@@ -35,6 +36,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 			Repo:    slice,
 			Status:  slice,
 			Tag:     slice,
+			Target:  slice,
 		},
 		Operator: str,
 		Continue: false,
@@ -49,6 +51,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 			Repo:    slice,
 			Status:  slice,
 			Tag:     slice,
+			Target:  slice,
 		},
 		Unless: Rules{
 			Branch:  slice,
@@ -58,6 +61,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 			Repo:    slice,
 			Status:  slice,
 			Tag:     slice,
+			Target:  slice,
 		},
 		Operator: str,
 		Continue: false,
@@ -146,6 +150,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 		Repo:    slice,
 		Status:  slice,
 		Tag:     slice,
+		Target:  slice,
 	}
 
 	r := &Rules{
@@ -156,6 +161,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 		Repo:    slice,
 		Status:  slice,
 		Tag:     slice,
+		Target:  slice,
 	}
 
 	// run test

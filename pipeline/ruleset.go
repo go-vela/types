@@ -29,6 +29,7 @@ type (
 		Repo    Ruletype `json:"repo,omitempty"    yaml:"repo,omitempty"`
 		Status  Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag     Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target  Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -45,6 +46,7 @@ type (
 		Repo    string   `json:"repo,omitempty"    yaml:"repo,omitempty"`
 		Status  string   `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag     string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target  string   `json:"target,omitempty"  yaml:"target,omitempty"`
 	}
 )
 
@@ -89,7 +91,8 @@ func (r *Rules) Empty() bool {
 		len(r.Path) == 0 &&
 		len(r.Repo) == 0 &&
 		len(r.Status) == 0 &&
-		len(r.Tag) == 0 {
+		len(r.Tag) == 0 &&
+		len(r.Target) == 0 {
 		return true
 	}
 
@@ -127,7 +130,8 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 					r.Path.MatchOr(p) ||
 					r.Repo.MatchOr(from.Repo) ||
 					status ||
-					r.Tag.MatchOr(from.Tag) {
+					r.Tag.MatchOr(from.Tag) ||
+					r.Target.MatchOr(from.Target) {
 					return true
 				}
 			}
@@ -151,7 +155,8 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 				r.Path.MatchAnd(p) &&
 				r.Repo.MatchAnd(from.Repo) &&
 				status &&
-				r.Tag.MatchAnd(from.Tag) {
+				r.Tag.MatchAnd(from.Tag) &&
+				r.Target.MatchAnd(from.Target) {
 				return true
 			}
 		}
@@ -175,7 +180,8 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 			r.Path.MatchOr("") ||
 			r.Repo.MatchOr(from.Repo) ||
 			status ||
-			r.Tag.MatchOr(from.Tag) {
+			r.Tag.MatchOr(from.Tag) ||
+			r.Target.MatchOr(from.Target) {
 			return true
 		}
 
@@ -195,7 +201,8 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 		r.Path.MatchAnd("") &&
 		r.Repo.MatchAnd(from.Repo) &&
 		status &&
-		r.Tag.MatchAnd(from.Tag) {
+		r.Tag.MatchAnd(from.Tag) &&
+		r.Target.MatchAnd(from.Target) {
 		return true
 	}
 

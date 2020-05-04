@@ -14,23 +14,8 @@ import (
 
 func TestDatabase_Service_Nullify(t *testing.T) {
 	// setup types
-	s := &Service{
-		ID:           sql.NullInt64{Int64: 0, Valid: true},
-		BuildID:      sql.NullInt64{Int64: 0, Valid: true},
-		RepoID:       sql.NullInt64{Int64: 0, Valid: true},
-		Number:       sql.NullInt32{Int32: 0, Valid: true},
-		Name:         sql.NullString{String: "", Valid: true},
-		Image:        sql.NullString{String: "", Valid: true},
-		Status:       sql.NullString{String: "", Valid: true},
-		Error:        sql.NullString{String: "", Valid: true},
-		ExitCode:     sql.NullInt32{Int32: 0, Valid: true},
-		Created:      sql.NullInt64{Int64: 0, Valid: true},
-		Started:      sql.NullInt64{Int64: 0, Valid: true},
-		Finished:     sql.NullInt64{Int64: 0, Valid: true},
-		Host:         sql.NullString{String: "", Valid: true},
-		Runtime:      sql.NullString{String: "", Valid: true},
-		Distribution: sql.NullString{String: "", Valid: true},
-	}
+	var s *Service
+
 	want := &Service{
 		ID:           sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:      sql.NullInt64{Int64: 0, Valid: false},
@@ -49,69 +34,57 @@ func TestDatabase_Service_Nullify(t *testing.T) {
 		Distribution: sql.NullString{String: "", Valid: false},
 	}
 
-	// run test
-	got := s.Nullify()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Nullify is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		service *Service
+		want    *Service
+	}{
+		{
+			service: testService(),
+			want:    testService(),
+		},
+		{
+			service: s,
+			want:    nil,
+		},
+		{
+			service: new(Service),
+			want:    want,
+		},
 	}
-}
 
-func TestDatabase_Service_Nullify_Empty(t *testing.T) {
-	// setup types
-	var s *Service
+	// run tests
+	for _, test := range tests {
+		got := test.service.Nullify()
 
-	// run test
-	got := s.Nullify()
-
-	if got != nil {
-		t.Errorf("Nullify is %v, want nil", got)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Nullify is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_Service_ToLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
-	num64 := int64(num)
-	str := "foo"
-	want := &library.Service{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
-	s := &Service{
-		ID:           sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:      sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
-		Number:       sqlNum,
-		Name:         sql.NullString{String: str, Valid: true},
-		Image:        sql.NullString{String: str, Valid: true},
-		Status:       sql.NullString{String: str, Valid: true},
-		Error:        sql.NullString{String: str, Valid: true},
-		ExitCode:     sqlNum,
-		Created:      sql.NullInt64{Int64: num64, Valid: true},
-		Started:      sql.NullInt64{Int64: num64, Valid: true},
-		Finished:     sql.NullInt64{Int64: num64, Valid: true},
-		Host:         sql.NullString{String: str, Valid: true},
-		Runtime:      sql.NullString{String: str, Valid: true},
-		Distribution: sql.NullString{String: str, Valid: true},
-	}
+	want := new(library.Service)
+
+	want.SetID(1)
+	want.SetBuildID(1)
+	want.SetRepoID(1)
+	want.SetNumber(1)
+	want.SetName("postgres")
+	want.SetImage("postgres:12-alpine")
+	want.SetStatus("running")
+	want.SetError("")
+	want.SetExitCode(0)
+	want.SetCreated(1563474076)
+	want.SetStarted(1563474078)
+	want.SetFinished(1563474079)
+	want.SetHost("example.company.com")
+	want.SetRuntime("docker")
+	want.SetDistribution("linux")
 
 	// run test
-	got := s.ToLibrary()
+	got := testService().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
@@ -119,154 +92,132 @@ func TestDatabase_Service_ToLibrary(t *testing.T) {
 }
 
 func TestDatabase_Service_Validate(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
+	tests := []struct {
+		failure bool
+		service *Service
+	}{
+		{
+			failure: false,
+			service: testService(),
+		},
+		{ // no build_id set for service
+			failure: true,
+			service: &Service{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt32{Int32: 1, Valid: true},
+				Name:   sql.NullString{String: "postgres", Valid: true},
+				Image:  sql.NullString{String: "postgres:12-alpine", Valid: true},
+			},
+		},
+		{ // no repo_id set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "postgres", Valid: true},
+				Image:   sql.NullString{String: "postgres:12-alpine", Valid: true},
+			},
+		},
+		{ // no number set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Name:    sql.NullString{String: "postgres", Valid: true},
+				Image:   sql.NullString{String: "postgres:12-alpine", Valid: true},
+			},
+		},
+		{ // no name set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Image:   sql.NullString{String: "postgres:12-alpine", Valid: true},
+			},
+		},
+		{ // no image set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "postgres", Valid: true},
+			},
+		},
 	}
 
-	// run test
-	err := s.Validate()
+	// run tests
+	for _, test := range tests {
+		err := test.service.Validate()
 
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
 
-func TestDatabase_Service_Validate_NoBuildID(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-		Number: sql.NullInt32{Int32: 1, Valid: true},
-		Name:   sql.NullString{String: "foo", Valid: true},
-		Image:  sql.NullString{String: "foo", Valid: true},
-	}
+			continue
+		}
 
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Service_Validate_NoRepoID(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Service_Validate_NoNumber(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-		Image:   sql.NullString{String: "foo", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Service_Validate_NoName(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Service_Validate_NoImage(t *testing.T) {
-	// setup types
-	s := &Service{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:  sql.NullInt32{Int32: 1, Valid: true},
-		Name:    sql.NullString{String: "foo", Valid: true},
-	}
-	// run test
-	err := s.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
 	}
 }
 
 func TestDatabase_ServiceFromLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	sqlNum := sql.NullInt32{Int32: 1, Valid: true}
-	num64 := int64(num)
-	str := "foo"
-	want := &Service{
-		ID:           sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:      sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:       sql.NullInt64{Int64: num64, Valid: true},
-		Number:       sqlNum,
-		Name:         sql.NullString{String: str, Valid: true},
-		Image:        sql.NullString{String: str, Valid: true},
-		Status:       sql.NullString{String: str, Valid: true},
-		Error:        sql.NullString{String: str, Valid: true},
-		ExitCode:     sqlNum,
-		Created:      sql.NullInt64{Int64: num64, Valid: true},
-		Started:      sql.NullInt64{Int64: num64, Valid: true},
-		Finished:     sql.NullInt64{Int64: num64, Valid: true},
-		Host:         sql.NullString{String: str, Valid: true},
-		Runtime:      sql.NullString{String: str, Valid: true},
-		Distribution: sql.NullString{String: str, Valid: true},
-	}
-	s := &library.Service{
-		ID:           &num64,
-		BuildID:      &num64,
-		RepoID:       &num64,
-		Number:       &num,
-		Name:         &str,
-		Image:        &str,
-		Status:       &str,
-		Error:        &str,
-		ExitCode:     &num,
-		Created:      &num64,
-		Started:      &num64,
-		Finished:     &num64,
-		Host:         &str,
-		Runtime:      &str,
-		Distribution: &str,
-	}
+	s := new(library.Service)
+
+	s.SetID(1)
+	s.SetBuildID(1)
+	s.SetRepoID(1)
+	s.SetNumber(1)
+	s.SetName("postgres")
+	s.SetImage("postgres:12-alpine")
+	s.SetStatus("running")
+	s.SetError("")
+	s.SetExitCode(0)
+	s.SetCreated(1563474076)
+	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
+	s.SetHost("example.company.com")
+	s.SetRuntime("docker")
+	s.SetDistribution("linux")
+
+	want := testService()
 
 	// run test
 	got := ServiceFromLibrary(s)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ServiceFromLibrary is %v, want %v", got, want)
+	}
+}
+
+// testService is a test helper function to create a Service
+// type with all fields set to a fake value.
+func testService() *Service {
+	return &Service{
+		ID:           sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:      sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:       sql.NullInt64{Int64: 1, Valid: true},
+		Number:       sql.NullInt32{Int32: 1, Valid: true},
+		Name:         sql.NullString{String: "postgres", Valid: true},
+		Image:        sql.NullString{String: "postgres:12-alpine", Valid: true},
+		Status:       sql.NullString{String: "running", Valid: true},
+		Error:        sql.NullString{String: "", Valid: false},
+		ExitCode:     sql.NullInt32{Int32: 0, Valid: false},
+		Created:      sql.NullInt64{Int64: 1563474076, Valid: true},
+		Started:      sql.NullInt64{Int64: 1563474078, Valid: true},
+		Finished:     sql.NullInt64{Int64: 1563474079, Valid: true},
+		Host:         sql.NullString{String: "example.company.com", Valid: true},
+		Runtime:      sql.NullString{String: "docker", Valid: true},
+		Distribution: sql.NullString{String: "linux", Valid: true},
 	}
 }

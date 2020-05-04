@@ -6,61 +6,48 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 )
 
 func TestDatabase_BuildFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Build{ID: sql.NullInt64{Int64: 1, Valid: true}}
+	b := testBuild()
 
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, want)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != want {
-		t.Errorf("BuildFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Build
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, b),
+			want: b,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), buildKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestDatabase_BuildFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := BuildFromContext(test.ctx)
 
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_BuildFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, buildKey, id)
-
-	// run test
-	got := BuildFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("BuildFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("BuildFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_BuildWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Build{ID: sql.NullInt64{Int64: 1, Valid: true}}
+	want := testBuild()
 
 	// setup context
-	ctx = BuildWithContext(ctx, want)
+	ctx := BuildWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(buildKey)
@@ -72,59 +59,43 @@ func TestDatabase_BuildWithContext(t *testing.T) {
 
 func TestDatabase_LogFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Log{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
+	l := testLog()
+
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Log
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), logKey, l),
+			want: l,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), logKey, "foo"),
+			want: nil,
+		},
 	}
 
-	// setup context
-	ctx = context.WithValue(ctx, logKey, want)
+	// run tests
+	for _, test := range tests {
+		got := LogFromContext(test.ctx)
 
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != want {
-		t.Errorf("LogFromContext is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_LogFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("LogFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_LogFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, logKey, id)
-
-	// run test
-	got := LogFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("LogFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("LogFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_LogWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Log{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
-	}
+	want := testLog()
 
 	// setup context
-	ctx = LogWithContext(ctx, want)
+	ctx := LogWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(logKey)
@@ -136,59 +107,43 @@ func TestDatabase_LogWithContext(t *testing.T) {
 
 func TestDatabase_RepoFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Repo{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
+	r := testRepo()
+
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Repo
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), repoKey, r),
+			want: r,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), repoKey, "foo"),
+			want: nil,
+		},
 	}
 
-	// setup context
-	ctx = context.WithValue(ctx, repoKey, want)
+	// run tests
+	for _, test := range tests {
+		got := RepoFromContext(test.ctx)
 
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != want {
-		t.Errorf("RepoFromContext is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_RepoFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("RepoFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_RepoFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, repoKey, id)
-
-	// run test
-	got := RepoFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("RepoFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("RepoFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_RepoWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Repo{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
-	}
+	want := testRepo()
 
 	// setup context
-	ctx = RepoWithContext(ctx, want)
+	ctx := RepoWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(repoKey)
@@ -200,55 +155,43 @@ func TestDatabase_RepoWithContext(t *testing.T) {
 
 func TestDatabase_SecretFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Secret{ID: sql.NullInt64{Int64: 1, Valid: true}}
+	s := testSecret()
 
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, want)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != want {
-		t.Errorf("SecretFromContext is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Secret
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), secretKey, "foo"),
+			want: nil,
+		},
 	}
-}
 
-func TestDatabase_SecretFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
+	// run tests
+	for _, test := range tests {
+		got := SecretFromContext(test.ctx)
 
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_SecretFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, secretKey, id)
-
-	// run test
-	got := SecretFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("SecretFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("SecretFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_SecretWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Secret{ID: sql.NullInt64{Int64: 1, Valid: true}}
+	want := testSecret()
 
 	// setup context
-	ctx = SecretWithContext(ctx, want)
+	ctx := SecretWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(secretKey)
@@ -260,59 +203,43 @@ func TestDatabase_SecretWithContext(t *testing.T) {
 
 func TestDatabase_StepFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Step{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
+	s := testStep()
+
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *Step
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), stepKey, s),
+			want: s,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), stepKey, "foo"),
+			want: nil,
+		},
 	}
 
-	// setup context
-	ctx = context.WithValue(ctx, stepKey, want)
+	// run tests
+	for _, test := range tests {
+		got := StepFromContext(test.ctx)
 
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != want {
-		t.Errorf("StepFromContext is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_StepFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StepFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_StepFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, stepKey, id)
-
-	// run test
-	got := StepFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("StepFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("StepFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_StepWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &Step{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
-	}
+	want := testStep()
 
 	// setup context
-	ctx = StepWithContext(ctx, want)
+	ctx := StepWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(stepKey)
@@ -324,59 +251,43 @@ func TestDatabase_StepWithContext(t *testing.T) {
 
 func TestDatabase_UserFromContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &User{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
+	u := testUser()
+
+	// setup tests
+	tests := []struct {
+		ctx  context.Context
+		want *User
+	}{
+		{
+			ctx:  context.WithValue(context.Background(), userKey, u),
+			want: u,
+		},
+		{
+			ctx:  context.Background(),
+			want: nil,
+		},
+		{
+			ctx:  context.WithValue(context.Background(), userKey, "foo"),
+			want: nil,
+		},
 	}
 
-	// setup context
-	ctx = context.WithValue(ctx, userKey, want)
+	// run tests
+	for _, test := range tests {
+		got := UserFromContext(test.ctx)
 
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != want {
-		t.Errorf("UserFromContext is %v, want %v", got, want)
-	}
-}
-
-func TestDatabase_UserFromContext_Empty(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("UserFromContext is %v, want nil", got)
-	}
-}
-
-func TestDatabase_UserFromContext_WrongType(t *testing.T) {
-	// setup types
-	ctx := context.Background()
-	id := int64(1)
-
-	// setup context
-	ctx = context.WithValue(ctx, userKey, id)
-
-	// run test
-	got := UserFromContext(ctx)
-
-	if got != nil {
-		t.Errorf("UserFromContext is %v, want nil", got)
+		if got != test.want {
+			t.Errorf("UserFromContext is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_UserWithContext(t *testing.T) {
 	// setup types
-	ctx := context.Background()
-	want := &User{
-		ID: sql.NullInt64{Int64: 1, Valid: true},
-	}
+	want := testUser()
 
 	// setup context
-	ctx = UserWithContext(ctx, want)
+	ctx := UserWithContext(context.Background(), want)
 
 	// run test
 	got := ctx.Value(userKey)

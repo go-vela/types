@@ -11,47 +11,254 @@ import (
 	"github.com/go-vela/types/constants"
 )
 
-func TestPipeline_Build_Purge_Stages(t *testing.T) {
+func TestPipeline_Build_Purge(t *testing.T) {
 	// setup types
-	p := &Build{
-		Services: ContainerSlice{
-			&Container{
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			}},
-		Worker: Worker{
-			Flavor:   "16cpu8gb",
-			Platform: "gcp",
+	stages := testBuildStages()
+	stages.Stages = stages.Stages[:len(stages.Stages)-1]
+
+	steps := testBuildSteps()
+	steps.Steps = steps.Steps[:len(steps.Steps)-1]
+
+	// setup tests
+	tests := []struct {
+		pipeline *Build
+		want     *Build
+	}{
+		{
+			pipeline: testBuildStages(),
+			want:     stages,
 		},
-		Stages: StageSlice{
-			&Stage{
-				Name:  "install",
-				Needs: []string{"clone"},
+		{
+			pipeline: testBuildSteps(),
+			want:     steps,
+		},
+		{
+			pipeline: new(Build),
+			want:     new(Build),
+		},
+		{
+			pipeline: &Build{
+				Stages: StageSlice{
+					{
+						Name: "init",
+						Steps: ContainerSlice{
+							{
+								ID:          "github octocat._1_init_init",
+								Directory:   "/home/github/octocat",
+								Environment: map[string]string{"FOO": "bar"},
+								Image:       "#init",
+								Name:        "init",
+								Number:      1,
+								Pull:        true,
+							},
+						},
+					},
+				},
 				Steps: ContainerSlice{
-					&Container{
-						Commands: []string{"./gradlew downloadDependencies"},
-						Image:    "openjdk:latest",
-						Name:     "install",
-						Number:   1,
-						Pull:     true,
+					{
+						ID:          "step_github octocat._1_init",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "#init",
+						Name:        "init",
+						Number:      1,
+						Pull:        true,
 					},
 				},
 			},
-			&Stage{
-				Name:  "test",
-				Needs: []string{"install"},
-				Steps: ContainerSlice{
-					&Container{
-						Commands: []string{"./gradlew check"},
-						Image:    "openjdk:latest",
-						Name:     "test",
-						Number:   2,
-						Pull:     true,
-						Ruleset: Ruleset{
-							If: Rules{
-								Event: []string{"push"},
+			want: nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		r := &RuleData{
+			Branch: "master",
+			Event:  "pull_request",
+			Path:   []string{},
+			Repo:   "foo/bar",
+			Tag:    "refs/heads/master",
+		}
+
+		got := test.pipeline.Purge(r)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Purge is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestPipeline_Build_Sanitize(t *testing.T) {
+	// setup types
+	stages := testBuildStages()
+	stages.ID = "github-octocat._1"
+	stages.Services[0].ID = "service_github-octocat._1_postgres"
+	stages.Stages[0].Steps[0].ID = "github-octocat._1_init_init"
+	stages.Stages[1].Steps[0].ID = "github-octocat._1_clone_clone"
+	stages.Stages[2].Steps[0].ID = "github-octocat._1_echo_echo"
+
+	kubeStages := testBuildStages()
+	kubeStages.ID = "github-octocat--1"
+	kubeStages.Services[0].ID = "service-github-octocat--1-postgres"
+	kubeStages.Stages[0].Steps[0].ID = "github-octocat--1-init-init"
+	kubeStages.Stages[1].Steps[0].ID = "github-octocat--1-clone-clone"
+	kubeStages.Stages[2].Steps[0].ID = "github-octocat--1-echo-echo"
+
+	steps := testBuildSteps()
+	steps.ID = "github-octocat._1"
+	steps.Services[0].ID = "service_github-octocat._1_postgres"
+	steps.Steps[0].ID = "step_github-octocat._1_init"
+	steps.Steps[1].ID = "step_github-octocat._1_clone"
+	steps.Steps[2].ID = "step_github-octocat._1_echo"
+
+	kubeSteps := testBuildSteps()
+	kubeSteps.ID = "github-octocat--1"
+	kubeSteps.Services[0].ID = "service-github-octocat--1-postgres"
+	kubeSteps.Steps[0].ID = "step-github-octocat--1-init"
+	kubeSteps.Steps[1].ID = "step-github-octocat--1-clone"
+	kubeSteps.Steps[2].ID = "step-github-octocat--1-echo"
+
+	// setup tests
+	tests := []struct {
+		driver   string
+		pipeline *Build
+		want     *Build
+	}{
+		{
+			driver:   constants.DriverDocker,
+			pipeline: testBuildStages(),
+			want:     stages,
+		},
+		{
+			driver:   constants.DriverKubernetes,
+			pipeline: testBuildStages(),
+			want:     kubeStages,
+		},
+		{
+			driver:   constants.DriverDocker,
+			pipeline: testBuildSteps(),
+			want:     steps,
+		},
+		{
+			driver:   constants.DriverKubernetes,
+			pipeline: testBuildSteps(),
+			want:     kubeSteps,
+		},
+		{
+			driver:   constants.DriverDocker,
+			pipeline: new(Build),
+			want:     new(Build),
+		},
+		{
+			driver:   constants.DriverKubernetes,
+			pipeline: new(Build),
+			want:     new(Build),
+		},
+		{
+			driver: constants.DriverDocker,
+			pipeline: &Build{
+				Stages: StageSlice{
+					{
+						Name: "init",
+						Steps: ContainerSlice{
+							{
+								ID:          "github octocat._1_init_init",
+								Directory:   "/home/github/octocat",
+								Environment: map[string]string{"FOO": "bar"},
+								Image:       "#init",
+								Name:        "init",
+								Number:      1,
+								Pull:        true,
 							},
+						},
+					},
+				},
+				Steps: ContainerSlice{
+					{
+						ID:          "step_github octocat._1_init",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "#init",
+						Name:        "init",
+						Number:      1,
+						Pull:        true,
+					},
+				},
+			},
+			want: nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.pipeline.Sanitize(test.driver)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Sanitize is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func testBuildStages() *Build {
+	return &Build{
+		Version: "1",
+		ID:      "github octocat._1",
+		Services: ContainerSlice{
+			{
+				ID:          "service_github octocat._1_postgres",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "postgres:12-alpine",
+				Name:        "postgres",
+				Number:      1,
+				Ports:       []string{"5432:5432"},
+			},
+		},
+		Stages: StageSlice{
+			{
+				Name: "init",
+				Steps: ContainerSlice{
+					{
+						ID:          "github octocat._1_init_init",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "#init",
+						Name:        "init",
+						Number:      1,
+						Pull:        true,
+					},
+				},
+			},
+			{
+				Name:  "clone",
+				Needs: []string{"init"},
+				Steps: ContainerSlice{
+					{
+						ID:          "github octocat._1_clone_clone",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "target/vela-git:v0.3.0",
+						Name:        "clone",
+						Number:      2,
+						Pull:        true,
+					},
+				},
+			},
+			{
+				Name:  "echo",
+				Needs: []string{"clone"},
+				Steps: ContainerSlice{
+					{
+						ID:          "github octocat._1_echo_echo",
+						Commands:    []string{"echo hello"},
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "alpine:latest",
+						Name:        "echo",
+						Number:      3,
+						Pull:        true,
+						Ruleset: Ruleset{
+							If:       Rules{Event: []string{"push"}},
 							Operator: "and",
 						},
 					},
@@ -59,363 +266,56 @@ func TestPipeline_Build_Purge_Stages(t *testing.T) {
 			},
 		},
 	}
-
-	r := &RuleData{
-		Branch: "master",
-		Event:  "pull_request",
-		Path:   []string{},
-		Repo:   "foo/bar",
-		Status: "success",
-		Tag:    "refs/heads/master",
-	}
-
-	want := &Build{
-		Services: ContainerSlice{
-			&Container{
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			}},
-		Worker: Worker{
-			Flavor:   "16cpu8gb",
-			Platform: "gcp",
-		},
-		Stages: StageSlice{
-			&Stage{
-				Name:  "install",
-				Needs: []string{"clone"},
-				Steps: ContainerSlice{
-					&Container{
-						Commands: []string{"./gradlew downloadDependencies"},
-						Image:    "openjdk:latest",
-						Name:     "install",
-						Number:   1,
-						Pull:     true,
-					},
-				},
-			},
-		},
-	}
-
-	// run test
-	got := p.Purge(r)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Purge is %v, want %v", got, want)
-	}
 }
 
-func TestPipeline_Build_Purge_Steps(t *testing.T) {
-	// setup types
-	p := &Build{
+func testBuildSteps() *Build {
+	return &Build{
+		Version: "1",
+		ID:      "github octocat._1",
 		Services: ContainerSlice{
-			&Container{
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			}},
-		Worker: Worker{
-			Flavor:   "16cpu8gb",
-			Platform: "gcp",
+			{
+				ID:          "service_github octocat._1_postgres",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "postgres:12-alpine",
+				Name:        "postgres",
+				Number:      1,
+				Ports:       []string{"5432:5432"},
+			},
 		},
 		Steps: ContainerSlice{
-			&Container{
-				Commands: []string{"./gradlew downloadDependencies"},
-				Image:    "openjdk:latest",
-				Name:     "install",
-				Number:   1,
-				Pull:     true,
+			{
+				ID:          "step_github octocat._1_init",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "#init",
+				Name:        "init",
+				Number:      1,
+				Pull:        true,
 			},
-			&Container{
-				Commands: []string{"./gradlew check"},
-				Image:    "openjdk:latest",
-				Name:     "test",
-				Number:   2,
-				Pull:     true,
+			{
+				ID:          "step_github octocat._1_clone",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "target/vela-git:v0.3.0",
+				Name:        "clone",
+				Number:      2,
+				Pull:        true,
+			},
+			{
+				ID:          "step_github octocat._1_echo",
+				Commands:    []string{"echo hello"},
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "alpine:latest",
+				Name:        "echo",
+				Number:      3,
+				Pull:        true,
 				Ruleset: Ruleset{
-					If: Rules{
-						Event: []string{"push"},
-					},
+					If:       Rules{Event: []string{"push"}},
 					Operator: "and",
 				},
 			},
 		},
-	}
-
-	r := &RuleData{
-		Branch: "master",
-		Event:  "pull_request",
-		Path:   []string{},
-		Repo:   "foo/bar",
-		Status: "success",
-		Tag:    "refs/heads/master",
-	}
-
-	want := &Build{
-		Services: ContainerSlice{
-			&Container{
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			}},
-		Worker: Worker{
-			Flavor:   "16cpu8gb",
-			Platform: "gcp",
-		},
-		Steps: ContainerSlice{
-			&Container{
-				Commands: []string{"./gradlew downloadDependencies"},
-				Image:    "openjdk:latest",
-				Name:     "install",
-				Number:   1,
-				Pull:     true,
-			},
-		},
-	}
-
-	// run test
-	got := p.Purge(r)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Purge is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_Build_Purge_Invalid(t *testing.T) {
-	// setup types
-	p := &Build{
-		Stages: StageSlice{
-			&Stage{
-				Name:  "install",
-				Needs: []string{"clone"},
-				Steps: ContainerSlice{
-					&Container{
-						Commands: []string{"./gradlew downloadDependencies"},
-						Image:    "openjdk:latest",
-						Name:     "install",
-						Number:   1,
-						Pull:     true,
-					},
-				},
-			},
-		},
-		Steps: ContainerSlice{
-			&Container{
-				Commands: []string{"./gradlew downloadDependencies"},
-				Image:    "openjdk:latest",
-				Name:     "install",
-				Number:   1,
-				Pull:     true,
-			},
-		},
-	}
-
-	r := &RuleData{
-		Branch: "master",
-		Event:  "pull_request",
-		Path:   []string{},
-		Repo:   "foo/bar",
-		Status: "success",
-		Tag:    "refs/heads/master",
-	}
-
-	// run test
-	got := p.Purge(r)
-
-	if got != nil {
-		t.Errorf("Purge is %v, want nil", got)
-	}
-}
-
-func TestPipeline_Build_Sanitize_Stages(t *testing.T) {
-	// setup types
-	p := &Build{
-		ID: "foo bar_1",
-		Stages: StageSlice{
-			{
-				Name: "test",
-				Steps: ContainerSlice{
-					{
-						ID:       "foo_bar_1_test_echo foo",
-						Commands: []string{"echo foo"},
-						Image:    "alpine:latest",
-						Name:     "echo foo",
-						Number:   1,
-						Pull:     true,
-					},
-				},
-			},
-		},
-	}
-
-	want := &Build{
-		ID: "foo-bar_1",
-		Stages: StageSlice{
-			{
-				Name: "test",
-				Steps: ContainerSlice{
-					{
-						ID:       "foo_bar_1_test_echo-foo",
-						Commands: []string{"echo foo"},
-						Image:    "alpine:latest",
-						Name:     "echo foo",
-						Number:   1,
-						Pull:     true,
-					},
-				},
-			},
-		},
-	}
-
-	// run test
-	got := p.Sanitize(constants.DriverDocker)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_Build_Sanitize_Steps(t *testing.T) {
-	// setup types
-	p := &Build{
-		ID: "foo bar_1",
-		Steps: ContainerSlice{
-			{
-				ID:       "step_foo_bar_1_echo foo",
-				Commands: []string{"echo foo"},
-				Image:    "alpine:latest",
-				Name:     "echo foo",
-				Number:   1,
-				Pull:     true,
-			},
-		},
-	}
-
-	want := &Build{
-		ID: "foo-bar_1",
-		Steps: ContainerSlice{
-			{
-				ID:       "step_foo_bar_1_echo-foo",
-				Commands: []string{"echo foo"},
-				Image:    "alpine:latest",
-				Name:     "echo foo",
-				Number:   1,
-				Pull:     true,
-			},
-		},
-	}
-
-	// run test
-	got := p.Sanitize(constants.DriverDocker)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_Build_Sanitize_StagesAndSteps(t *testing.T) {
-	// setup types
-	p := &Build{
-		ID: "foo bar_1",
-		Stages: StageSlice{
-			{
-				Name: "test",
-				Steps: ContainerSlice{
-					{
-						ID:       "foo_bar_1_test_echo foo",
-						Commands: []string{"echo foo"},
-						Image:    "alpine:latest",
-						Name:     "echo foo",
-						Number:   1,
-						Pull:     true,
-					},
-				},
-			},
-		},
-		Steps: ContainerSlice{
-			{
-				ID:       "step_foo_bar_1_echo foo",
-				Commands: []string{"echo foo"},
-				Image:    "alpine:latest",
-				Name:     "echo foo",
-				Number:   1,
-				Pull:     true,
-			},
-		},
-	}
-
-	// run test
-	got := p.Sanitize(constants.DriverDocker)
-
-	if got != nil {
-		t.Errorf("Sanitize is %v, want nil", got)
-	}
-}
-
-func TestPipeline_Build_Sanitize_Docker(t *testing.T) {
-	// setup types
-	p := &Build{
-		ID: "foo bar_1",
-		Services: ContainerSlice{
-			{
-				ID:     "service_foo bar_1_postgres",
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			},
-		},
-	}
-
-	want := &Build{
-		ID: "foo-bar_1",
-		Services: ContainerSlice{
-			{
-				ID:     "service_foo-bar_1_postgres",
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			},
-		},
-	}
-
-	// run test
-	got := p.Sanitize(constants.DriverDocker)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
-	}
-}
-
-func TestPipeline_Build_Sanitize_Kubernetes(t *testing.T) {
-	// setup types
-	p := &Build{
-		ID: "foo bar_1.",
-		Services: ContainerSlice{
-			{
-				ID:     "service_foo bar_1_postgres",
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			},
-		},
-	}
-
-	want := &Build{
-		ID: "foo-bar-1-",
-		Services: ContainerSlice{
-			{
-				ID:     "service-foo-bar-1-postgres",
-				Image:  "postgres:latest",
-				Name:   "postgres",
-				Number: 1,
-			},
-		},
-	}
-
-	// run test
-	got := p.Sanitize(constants.DriverKubernetes)
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Sanitize is %v, want %v", got, want)
 	}
 }

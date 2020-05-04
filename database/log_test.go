@@ -14,67 +14,58 @@ import (
 
 func TestDatabase_Log_Nullify(t *testing.T) {
 	// setup types
-	l := &Log{
-		ID:        sql.NullInt64{Int64: 0, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 0, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 0, Valid: true},
-		ServiceID: sql.NullInt64{Int64: 0, Valid: true},
-		StepID:    sql.NullInt64{Int64: 0, Valid: true},
-		Data:      []byte{},
-	}
+	var l *Log
+
 	want := &Log{
 		ID:        sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:   sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:    sql.NullInt64{Int64: 0, Valid: false},
 		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
 		StepID:    sql.NullInt64{Int64: 0, Valid: false},
-		Data:      []byte{},
 	}
 
-	// run test
-	got := l.Nullify()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Nullify is %v, want %v", got, want)
+	// setup tests
+	tests := []struct {
+		log  *Log
+		want *Log
+	}{
+		{
+			log:  testLog(),
+			want: testLog(),
+		},
+		{
+			log:  l,
+			want: nil,
+		},
+		{
+			log:  new(Log),
+			want: want,
+		},
 	}
-}
 
-func TestDatabase_Log_Nullify_Empty(t *testing.T) {
-	// setup types
-	var l *Log
+	// run tests
+	for _, test := range tests {
+		got := test.log.Nullify()
 
-	// run test
-	got := l.Nullify()
-
-	if got != nil {
-		t.Errorf("Nullify is %v, want nil", got)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Nullify is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestDatabase_Log_ToLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	num64 := int64(num)
-	bytes := []byte("foo")
-	want := &library.Log{
-		ID:        &num64,
-		BuildID:   &num64,
-		RepoID:    &num64,
-		ServiceID: &num64,
-		StepID:    &num64,
-		Data:      &bytes,
-	}
-	l := &Log{
-		ID:        sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:   sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:    sql.NullInt64{Int64: num64, Valid: true},
-		ServiceID: sql.NullInt64{Int64: num64, Valid: true},
-		StepID:    sql.NullInt64{Int64: num64, Valid: true},
-		Data:      bytes,
-	}
+	want := new(library.Log)
+
+	want.SetID(1)
+	want.SetServiceID(1)
+	want.SetStepID(1)
+	want.SetBuildID(1)
+	want.SetRepoID(1)
+	want.SetData([]byte("foo"))
 
 	// run test
-	got := l.ToLibrary()
+	got := testLog().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
@@ -82,98 +73,91 @@ func TestDatabase_Log_ToLibrary(t *testing.T) {
 }
 
 func TestDatabase_Log_Validate(t *testing.T) {
-	// setup types
-	l := &Log{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		ServiceID: sql.NullInt64{Int64: 1, Valid: true},
-		StepID:    sql.NullInt64{Int64: 1, Valid: true},
+	// setup tests
+	tests := []struct {
+		failure bool
+		log     *Log
+	}{
+		{
+			failure: false,
+			log:     testLog(),
+		},
+		{ // no service_id or step_id set for log
+			failure: true,
+			log: &Log{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
+		{ // no build_id set for log
+			failure: true,
+			log: &Log{
+				ID:        sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:    sql.NullInt64{Int64: 1, Valid: true},
+				ServiceID: sql.NullInt64{Int64: 1, Valid: true},
+				StepID:    sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
+		{ // no repo_id set for log
+			failure: true,
+			log: &Log{
+				ID:        sql.NullInt64{Int64: 1, Valid: true},
+				BuildID:   sql.NullInt64{Int64: 1, Valid: true},
+				ServiceID: sql.NullInt64{Int64: 1, Valid: true},
+				StepID:    sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
 	}
 
-	// run test
-	err := l.Validate()
+	// run tests
+	for _, test := range tests {
+		err := test.log.Validate()
 
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
 
-func TestDatabase_Log_Validate_NoStepID(t *testing.T) {
-	// setup types
-	l := &Log{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-	}
+			continue
+		}
 
-	// run test
-	err := l.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Log_Validate_NoBuildID(t *testing.T) {
-	// setup types
-	l := &Log{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-		StepID: sql.NullInt64{Int64: 1, Valid: true},
-	}
-
-	// run test
-	err := l.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Log_Validate_NoRepoID(t *testing.T) {
-	// setup types
-	l := &Log{
-		ID:      sql.NullInt64{Int64: 1, Valid: true},
-		BuildID: sql.NullInt64{Int64: 1, Valid: true},
-		StepID:  sql.NullInt64{Int64: 1, Valid: true},
-	}
-
-	// run test
-	err := l.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
 	}
 }
 
 func TestDatabase_LogFromLibrary(t *testing.T) {
 	// setup types
-	num := 1
-	num64 := int64(num)
-	bytes := []byte("foo")
-	want := &Log{
-		ID:        sql.NullInt64{Int64: num64, Valid: true},
-		BuildID:   sql.NullInt64{Int64: num64, Valid: true},
-		RepoID:    sql.NullInt64{Int64: num64, Valid: true},
-		ServiceID: sql.NullInt64{Int64: num64, Valid: true},
-		StepID:    sql.NullInt64{Int64: num64, Valid: true},
-		Data:      bytes,
-	}
+	l := new(library.Log)
 
-	l := &library.Log{
-		ID:        &num64,
-		BuildID:   &num64,
-		RepoID:    &num64,
-		ServiceID: &num64,
-		StepID:    &num64,
-		Data:      &bytes,
-	}
+	l.SetID(1)
+	l.SetServiceID(1)
+	l.SetStepID(1)
+	l.SetBuildID(1)
+	l.SetRepoID(1)
+	l.SetData([]byte("foo"))
+
+	want := testLog()
 
 	// run test
 	got := LogFromLibrary(l)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("LogFromLibrary is %v, want %v", got, want)
+	}
+}
+
+// testLog is a test helper function to create a Log
+// type with all fields set to a fake value.
+func testLog() *Log {
+	return &Log{
+		ID:        sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
+		ServiceID: sql.NullInt64{Int64: 1, Valid: true},
+		StepID:    sql.NullInt64{Int64: 1, Valid: true},
+		Data:      []byte("foo"),
 	}
 }

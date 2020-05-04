@@ -29,6 +29,7 @@ type (
 		Repo    []string `yaml:"repo,omitempty"`
 		Status  []string `yaml:"status,omitempty"`
 		Tag     []string `yaml:"tag,omitempty"`
+		Target  []string `yaml:"target,omitempty"`
 	}
 )
 
@@ -76,6 +77,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	advanced.If.Repo = append(advanced.If.Repo, simple.Repo...)
 	advanced.If.Status = append(advanced.If.Status, simple.Status...)
 	advanced.If.Tag = append(advanced.If.Tag, simple.Tag...)
+	advanced.If.Target = append(advanced.If.Target, simple.Target...)
 
 	// set ruleset `if` to advanced `if` rules
 	r.If = advanced.If
@@ -99,6 +101,7 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 		Repo:    r.Repo,
 		Status:  r.Status,
 		Tag:     r.Tag,
+		Target:  r.Target,
 	}
 }
 
@@ -113,6 +116,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		Repo    raw.StringSlice
 		Status  raw.StringSlice
 		Tag     raw.StringSlice
+		Target  raw.StringSlice
 	})
 
 	// attempt to unmarshal rules
@@ -125,6 +129,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		r.Repo = []string(rules.Repo)
 		r.Status = []string(rules.Status)
 		r.Tag = []string(rules.Tag)
+		r.Target = []string(rules.Target)
 	}
 
 	return err

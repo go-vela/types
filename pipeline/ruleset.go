@@ -22,13 +22,14 @@ type (
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch  Ruletype `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Branch  Ruletype `json:"branch,omitempty"  yaml:"branch,omitempty"`
 		Comment Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
-		Event   Ruletype `json:"event,omitempty"  yaml:"event,omitempty"`
-		Path    Ruletype `json:"path,omitempty"   yaml:"path,omitempty"`
-		Repo    Ruletype `json:"repo,omitempty"   yaml:"repo,omitempty"`
-		Status  Ruletype `json:"status,omitempty" yaml:"status,omitempty"`
-		Tag     Ruletype `json:"tag,omitempty"    yaml:"tag,omitempty"`
+		Event   Ruletype `json:"event,omitempty"   yaml:"event,omitempty"`
+		Path    Ruletype `json:"path,omitempty"    yaml:"path,omitempty"`
+		Repo    Ruletype `json:"repo,omitempty"    yaml:"repo,omitempty"`
+		Status  Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
+		Tag     Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target  Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -38,13 +39,14 @@ type (
 	// RuleData is the data to check our ruleset
 	// against for a step in a pipeline.
 	RuleData struct {
-		Branch  string   `json:"branch,omitempty" yaml:"branch,omitempty"`
+		Branch  string   `json:"branch,omitempty"  yaml:"branch,omitempty"`
 		Comment string   `json:"comment,omitempty" yaml:"comment,omitempty"`
-		Event   string   `json:"event,omitempty"  yaml:"event,omitempty"`
-		Path    []string `json:"path,omitempty"   yaml:"path,omitempty"`
-		Repo    string   `json:"repo,omitempty"   yaml:"repo,omitempty"`
-		Status  string   `json:"status,omitempty" yaml:"status,omitempty"`
-		Tag     string   `json:"tag,omitempty"    yaml:"tag,omitempty"`
+		Event   string   `json:"event,omitempty"   yaml:"event,omitempty"`
+		Path    []string `json:"path,omitempty"    yaml:"path,omitempty"`
+		Repo    string   `json:"repo,omitempty"    yaml:"repo,omitempty"`
+		Status  string   `json:"status,omitempty"  yaml:"status,omitempty"`
+		Tag     string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target  string   `json:"target,omitempty"  yaml:"target,omitempty"`
 	}
 )
 
@@ -89,7 +91,8 @@ func (r *Rules) Empty() bool {
 		len(r.Path) == 0 &&
 		len(r.Repo) == 0 &&
 		len(r.Status) == 0 &&
-		len(r.Tag) == 0 {
+		len(r.Tag) == 0 &&
+		len(r.Target) == 0 {
 		return true
 	}
 
@@ -104,10 +107,19 @@ func (r *Rules) Empty() bool {
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
 func (r *Rules) Match(from *RuleData, op string) bool {
+	// set defaults
+	status := true
+
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
 		// if the "or" operator is provided in the ruleset
 		if strings.EqualFold(op, "or") {
+
+			// override the default to the "or"
+			if len(from.Status) != 0 {
+				status = r.Status.MatchOr(from.Status)
+			}
+
 			// iterate through each path in the ruletype
 			for _, p := range from.Path {
 
@@ -117,13 +129,20 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 					r.Event.MatchOr(from.Event) ||
 					r.Path.MatchOr(p) ||
 					r.Repo.MatchOr(from.Repo) ||
-					r.Tag.MatchOr(from.Tag) {
+					status ||
+					r.Tag.MatchOr(from.Tag) ||
+					r.Target.MatchOr(from.Target) {
 					return true
 				}
 			}
 
 			// return false if no match is found
 			return false
+		}
+
+		// override the default to the "and"
+		if len(from.Status) != 0 {
+			status = r.Status.MatchAnd(from.Status)
 		}
 
 		// iterate through each path in the ruletype
@@ -135,7 +154,9 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 				r.Event.MatchAnd(from.Event) &&
 				r.Path.MatchAnd(p) &&
 				r.Repo.MatchAnd(from.Repo) &&
-				r.Tag.MatchAnd(from.Tag) {
+				status &&
+				r.Tag.MatchAnd(from.Tag) &&
+				r.Target.MatchAnd(from.Target) {
 				return true
 			}
 		}
@@ -147,18 +168,30 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 	// if the "or" operator is provided in the ruleset
 	if strings.EqualFold(op, "or") {
 
+		// override the default to the "or"
+		if len(from.Status) != 0 {
+			status = r.Status.MatchOr(from.Status)
+		}
+
 		// return true if any ruletype matches the ruledata
 		if r.Branch.MatchOr(from.Branch) ||
 			r.Comment.MatchOr(from.Comment) ||
 			r.Event.MatchOr(from.Event) ||
 			r.Path.MatchOr("") ||
 			r.Repo.MatchOr(from.Repo) ||
-			r.Tag.MatchOr(from.Tag) {
+			status ||
+			r.Tag.MatchOr(from.Tag) ||
+			r.Target.MatchOr(from.Target) {
 			return true
 		}
 
 		// return false if no match is found
 		return false
+	}
+
+	// override the default to the "and"
+	if len(from.Status) != 0 {
+		status = r.Status.MatchAnd(from.Status)
 	}
 
 	// return true if every ruletype matches the ruledata
@@ -167,7 +200,9 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 		r.Event.MatchAnd(from.Event) &&
 		r.Path.MatchAnd("") &&
 		r.Repo.MatchAnd(from.Repo) &&
-		r.Tag.MatchAnd(from.Tag) {
+		status &&
+		r.Tag.MatchAnd(from.Tag) &&
+		r.Target.MatchAnd(from.Target) {
 		return true
 	}
 

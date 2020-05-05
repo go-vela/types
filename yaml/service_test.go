@@ -22,6 +22,7 @@ func TestYaml_ServiceSlice_ToPipeline(t *testing.T) {
 	slice := []string{"8000:8000"}
 	want := &pipeline.ContainerSlice{
 		&pipeline.Container{
+			Detach:      true,
 			Ports:       slice,
 			Entrypoint:  slice,
 			Environment: mapp,

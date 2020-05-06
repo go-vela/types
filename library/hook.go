@@ -8,7 +8,7 @@ import "fmt"
 
 // Hook is the library representation of a webhook for a repo.
 //
-// swagger:model Hook
+// swagger:model Webhook
 type Hook struct {
 	ID       *int64  `json:"id,omitempty"`
 	RepoID   *int64  `json:"repo_id,omitempty"`

@@ -192,6 +192,102 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 	}
 }
 
+func TestPipeline_Ruleset_Execute(t *testing.T) {
+	// setup types
+	tests := []struct {
+		name    string
+		ruleset *Ruleset
+		data    *RuleData
+		want    bool
+	}{
+		// Empty
+		{ruleset: &Ruleset{}, data: &RuleData{Branch: "master"}, want: true},
+		// If with and operator
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Event: []string{"push"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}, Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"dev"}, Event: []string{"push"}, Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Target: ""},
+			want:    false,
+		},
+		// If with or operator
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
+			data:    &RuleData{Branch: "master", Event: "push", Repo: "octocat/hello-world", Status: "failure", Tag: "refs/heads/master", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
+			data:    &RuleData{Branch: "dev", Event: "push", Repo: "octocat/hello-world", Status: "failure", Tag: "refs/heads/master", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}, Event: []string{"push"}}, Operator: "or"},
+			data:    &RuleData{Branch: "master", Event: "pull_request", Repo: "octocat/hello-world", Status: "failure", Tag: "refs/heads/master", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"dev"}, Event: []string{"push"}, Status: []string{"failure"}}, Operator: "or"},
+			data:    &RuleData{Branch: "master", Event: "push", Status: "failure", Target: ""},
+			want:    true,
+		},
+		// Unless with and operator
+		{
+			ruleset: &Ruleset{Unless: Rules{Branch: []string{"dev"}, Event: []string{"push"}, Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Status: "failure", Target: ""},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}, Status: []string{"failure"}}},
+			data:    &RuleData{Branch: "master", Event: "push", Status: "failure", Target: ""},
+			want:    false,
+		},
+		// Unless with or operator
+		{
+			ruleset: &Ruleset{Unless: Rules{Branch: []string{"dev"}, Event: []string{"push"}, Status: []string{"failure"}}, Operator: "or"},
+			data:    &RuleData{Branch: "master", Event: "push", Status: "failure", Target: ""},
+			want:    false,
+		},
+		{
+			ruleset: &Ruleset{Unless: Rules{Branch: []string{"master"}, Event: []string{"push"}, Status: []string{"failure"}}, Operator: "or"},
+			data:    &RuleData{Branch: "master", Event: "push", Status: "failure", Target: ""},
+			want:    false,
+		},
+	}
+
+	// run test
+	for _, test := range tests {
+		got := test.ruleset.Execute(test.data)
+
+		if got != test.want {
+			t.Errorf("Ruleset Execute for %s operator is %v, want %v", test.ruleset.Operator, got, test.want)
+		}
+	}
+}
+
 func TestPipeline_Rules_Empty(t *testing.T) {
 	// setup types
 	r := Rules{}

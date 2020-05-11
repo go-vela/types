@@ -82,6 +82,27 @@ func (r *Ruleset) Match(from *RuleData) bool {
 	return false
 }
 
+// Execute returns true when the provided ruledata matches
+// the if rules and does not match any of the unless rules.
+// This function does not check When the provided if and Unless
+// rules are empty.
+func (r *Ruleset) Execute(from *RuleData) bool {
+	// return false when the unless rules are not empty and match
+	if !r.Unless.Empty() {
+		if r.Unless.Match(from, r.Operator) {
+			return false
+		}
+	}
+
+	// return true when the if rules match
+	if r.If.Match(from, r.Operator) {
+		return true
+	}
+
+	// return false if not match is found
+	return false
+}
+
 // Empty returns true if the provided ruletypes are empty.
 func (r *Rules) Empty() bool {
 	// return true if every ruletype is empty

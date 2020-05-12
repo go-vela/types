@@ -13,48 +13,60 @@ import (
 )
 
 func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {
-	// setup types
-	want := &TemplateSlice{
-		&Template{
-			Name:   "docker_build",
-			Source: "github.com/go-vela/atlas/stable/docker_build",
-			Type:   "github",
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *TemplateSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/template.yml",
+			want: &TemplateSlice{
+				{
+					Name:   "docker_build",
+					Source: "github.com/go-vela/atlas/stable/docker_build",
+					Type:   "github",
+				},
+				{
+					Name:   "docker_publish",
+					Source: "github.com/go-vela/atlas/stable/docker_publish",
+					Type:   "github",
+				},
+			},
 		},
-		&Template{
-			Name:   "docker_publish",
-			Source: "github.com/go-vela/atlas/stable/docker_publish",
-			Type:   "github",
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
 		},
 	}
-	got := new(TemplateSlice)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/template.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(TemplateSlice)
 
-	err = yaml.Unmarshal(b, got)
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestBuild_TemplateSlice_UnmarshalYAML_Invalid(t *testing.T) {
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+			continue
+		}
 
-	err = yaml.Unmarshal(b, new(TemplateSlice))
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if err == nil {
-		t.Errorf("UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

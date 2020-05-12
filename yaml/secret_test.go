@@ -14,198 +14,221 @@ import (
 )
 
 func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
-	// setup types
-	str := "foo"
-	want := &pipeline.SecretSlice{
-		&pipeline.Secret{
-			Name:   str,
-			Key:    str,
-			Engine: str,
-			Type:   str,
+	// setup tests
+	tests := []struct {
+		secrets *SecretSlice
+		want    *pipeline.SecretSlice
+	}{
+		{
+			secrets: &SecretSlice{
+				{
+					Name:   "docker_username",
+					Key:    "github/octocat/docker/username",
+					Engine: "native",
+					Type:   "repo",
+				},
+			},
+			want: &pipeline.SecretSlice{
+				{
+					Name:   "docker_username",
+					Key:    "github/octocat/docker/username",
+					Engine: "native",
+					Type:   "repo",
+				},
+			},
 		},
 	}
 
-	s := &SecretSlice{
-		&Secret{
-			Name:   str,
-			Key:    str,
-			Engine: str,
-			Type:   str,
-		},
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.secrets.ToPipeline()
 
-	// run test
-	got := s.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
-	// setup types
-	want := &SecretSlice{
-		&Secret{
-			Name:   "foo",
-			Key:    "bar",
-			Engine: "native",
-			Type:   "repo",
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *SecretSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/secret.yml",
+			want: &SecretSlice{
+				{
+					Name:   "foo",
+					Key:    "bar",
+					Engine: "native",
+					Type:   "repo",
+				},
+				{
+					Name:   "noKey",
+					Key:    "noKey",
+					Engine: "native",
+					Type:   "repo",
+				},
+				{
+					Name:   "noType",
+					Key:    "bar",
+					Engine: "native",
+					Type:   "repo",
+				},
+				{
+					Name:   "noEngine",
+					Key:    "bar",
+					Engine: "native",
+					Type:   "repo",
+				},
+				{
+					Name:   "noKeyEngineAndType",
+					Key:    "noKeyEngineAndType",
+					Engine: "native",
+					Type:   "repo",
+				},
+			},
 		},
-		&Secret{
-			Name:   "noKey",
-			Key:    "noKey",
-			Engine: "native",
-			Type:   "repo",
-		},
-		&Secret{
-			Name:   "noType",
-			Key:    "bar",
-			Engine: "native",
-			Type:   "repo",
-		},
-		&Secret{
-			Name:   "noEngine",
-			Key:    "bar",
-			Engine: "native",
-			Type:   "repo",
-		},
-		&Secret{
-			Name:   "noKeyEngineAndType",
-			Key:    "noKeyEngineAndType",
-			Engine: "native",
-			Type:   "repo",
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
 		},
 	}
-	got := new(SecretSlice)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/secret.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(SecretSlice)
 
-	err = yaml.Unmarshal(b, got)
+		// run test
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestYaml_SecretSlice_UnmarshalYAML_Invalid(t *testing.T) {
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+			continue
+		}
 
-	err = yaml.Unmarshal(b, new(SecretSlice))
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if err == nil {
-		t.Errorf("UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_StepSecretSlice_ToPipeline(t *testing.T) {
-	// setup types
-	str := "foo"
-	want := &pipeline.StepSecretSlice{
-		&pipeline.StepSecret{
-			Source: str,
-			Target: str,
+	// setup tests
+	tests := []struct {
+		secrets *StepSecretSlice
+		want    *pipeline.StepSecretSlice
+	}{
+		{
+			secrets: &StepSecretSlice{
+				{
+					Source: "docker_username",
+					Target: "plugin_username",
+				},
+			},
+			want: &pipeline.StepSecretSlice{
+				{
+					Source: "docker_username",
+					Target: "plugin_username",
+				},
+			},
 		},
 	}
 
-	s := &StepSecretSlice{
-		&StepSecret{
-			Source: str,
-			Target: str,
-		},
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.secrets.ToPipeline()
 
-	// run test
-	got := s.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
-func TestYaml_StepSecretSlice_UnmarshalYAML_Slice(t *testing.T) {
-	// setup types
-	want := &StepSecretSlice{
-		&StepSecret{
-			Source: "foo",
-			Target: "bar",
+func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StepSecretSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/step_secret_slice.yml",
+			want: &StepSecretSlice{
+				{
+					Source: "foo",
+					Target: "bar",
+				},
+				{
+					Source: "hello",
+					Target: "world",
+				},
+			},
 		},
-		&StepSecret{
-			Source: "hello",
-			Target: "world",
+		{
+			failure: false,
+			file:    "testdata/step_secret_string.yml",
+			want: &StepSecretSlice{
+				{
+					Source: "foo",
+					Target: "foo",
+				},
+				{
+					Source: "hello",
+					Target: "hello",
+				},
+			},
 		},
-	}
-	got := new(StepSecretSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/step_secret_slice.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestYaml_StepSecretSlice_UnmarshalYAML_String(t *testing.T) {
-	// setup types
-	want := &StepSecretSlice{
-		&StepSecret{
-			Source: "foo",
-			Target: "foo",
-		},
-		&StepSecret{
-			Source: "hello",
-			Target: "hello",
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
 		},
 	}
-	got := new(StepSecretSlice)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/step_secret_string.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(StepSecretSlice)
 
-	err = yaml.Unmarshal(b, got)
+		// run test
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestYaml_StepSecretSlice_UnmarshalYAML_Invalid(t *testing.T) {
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+			continue
+		}
 
-	err = yaml.Unmarshal(b, new(StepSecretSlice))
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if err == nil {
-		t.Errorf("UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

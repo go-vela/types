@@ -12,23 +12,29 @@ import (
 )
 
 func TestYaml_Worker_ToPipeline(t *testing.T) {
-	// setup types
-	flavor := "16cpu8gb"
-	platform := "gcp"
-	want := &pipeline.Worker{
-		Flavor:   flavor,
-		Platform: platform,
+	// setup tests
+	tests := []struct {
+		worker *Worker
+		want   *pipeline.Worker
+	}{
+		{
+			worker: &Worker{
+				Flavor:   "8cpu16gb",
+				Platform: "gcp",
+			},
+			want: &pipeline.Worker{
+				Flavor:   "8cpu16gb",
+				Platform: "gcp",
+			},
+		},
 	}
 
-	w := &Worker{
-		Flavor:   flavor,
-		Platform: platform,
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.worker.ToPipeline()
 
-	// run test
-	got := w.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }

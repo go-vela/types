@@ -14,199 +14,237 @@ import (
 )
 
 func TestYaml_Ruleset_ToPipeline(t *testing.T) {
-	// setup types
-	str := "foo"
-	slice := []string{"foo"}
-	want := &pipeline.Ruleset{
-		If: pipeline.Rules{
-			Branch:  slice,
-			Comment: slice,
-			Event:   slice,
-			Path:    slice,
-			Repo:    slice,
-			Status:  slice,
-			Tag:     slice,
-			Target:  slice,
+	// setup tests
+	tests := []struct {
+		ruleset *Ruleset
+		want    *pipeline.Ruleset
+	}{
+		{
+			ruleset: &Ruleset{
+				If: Rules{
+					Branch:  []string{"master"},
+					Comment: []string{"test comment"},
+					Event:   []string{"push"},
+					Path:    []string{"foo.txt"},
+					Repo:    []string{"github/octocat"},
+					Status:  []string{"success"},
+					Tag:     []string{"v0.1.0"},
+					Target:  []string{"production"},
+				},
+				Unless: Rules{
+					Branch:  []string{"master"},
+					Comment: []string{"real comment"},
+					Event:   []string{"pull_request"},
+					Path:    []string{"bar.txt"},
+					Repo:    []string{"github/octocat"},
+					Status:  []string{"failure"},
+					Tag:     []string{"v0.2.0"},
+					Target:  []string{"production"},
+				},
+				Operator: "and",
+				Continue: false,
+			},
+			want: &pipeline.Ruleset{
+				If: pipeline.Rules{
+					Branch:  []string{"master"},
+					Comment: []string{"test comment"},
+					Event:   []string{"push"},
+					Path:    []string{"foo.txt"},
+					Repo:    []string{"github/octocat"},
+					Status:  []string{"success"},
+					Tag:     []string{"v0.1.0"},
+					Target:  []string{"production"},
+				},
+				Unless: pipeline.Rules{
+					Branch:  []string{"master"},
+					Comment: []string{"real comment"},
+					Event:   []string{"pull_request"},
+					Path:    []string{"bar.txt"},
+					Repo:    []string{"github/octocat"},
+					Status:  []string{"failure"},
+					Tag:     []string{"v0.2.0"},
+					Target:  []string{"production"},
+				},
+				Operator: "and",
+				Continue: false,
+			},
 		},
-		Unless: pipeline.Rules{
-			Branch:  slice,
-			Comment: slice,
-			Event:   slice,
-			Path:    slice,
-			Repo:    slice,
-			Status:  slice,
-			Tag:     slice,
-			Target:  slice,
-		},
-		Operator: str,
-		Continue: false,
 	}
 
-	r := &Ruleset{
-		If: Rules{
-			Branch:  slice,
-			Comment: slice,
-			Event:   slice,
-			Path:    slice,
-			Repo:    slice,
-			Status:  slice,
-			Tag:     slice,
-			Target:  slice,
-		},
-		Unless: Rules{
-			Branch:  slice,
-			Comment: slice,
-			Event:   slice,
-			Path:    slice,
-			Repo:    slice,
-			Status:  slice,
-			Tag:     slice,
-			Target:  slice,
-		},
-		Operator: str,
-		Continue: false,
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.ruleset.ToPipeline()
 
-	// run test
-	got := r.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
-func TestYaml_Ruleset_UnmarshalYAML_Simple(t *testing.T) {
-	// setup types
-	want := &Ruleset{
-		If: Rules{
-			Branch:  []string{"master"},
-			Event:   []string{"push"},
-			Path:    []string{"foo.txt", "/foo/bar.txt"},
-			Comment: []string{"ok to test", "rerun"},
+func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		file string
+		want *Ruleset
+	}{
+		{
+			file: "testdata/ruleset_simple.yml",
+			want: &Ruleset{
+				If: Rules{
+					Branch:  []string{"master"},
+					Comment: []string{"test comment"},
+					Event:   []string{"push"},
+					Path:    []string{"foo.txt"},
+					Repo:    []string{"github/octocat"},
+					Status:  []string{"success"},
+					Tag:     []string{"v0.1.0"},
+					Target:  []string{"production"},
+				},
+				Operator: "and",
+				Continue: true,
+			},
 		},
-		Operator: "and",
-		Continue: true,
-	}
-	got := new(Ruleset)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ruleset_simple.yml")
-	if err != nil {
-		t.Errorf("Reading file for Ruleset UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err != nil {
-		t.Errorf("Ruleset UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Ruleset UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestYaml_Ruleset_UnmarshalYAML_Advanced(t *testing.T) {
-	// setup types
-	want := &Ruleset{
-		If: Rules{
-			Branch: []string{"master"},
-			Event:  []string{"push"},
+		{
+			file: "testdata/ruleset_advanced.yml",
+			want: &Ruleset{
+				If: Rules{
+					Branch: []string{"master"},
+					Event:  []string{"push"},
+				},
+				Unless: Rules{
+					Event: []string{"deployment", "pull_request"},
+					Path:  []string{"foo.txt", "/foo/bar.txt"},
+				},
+				Operator: "or",
+				Continue: true,
+			},
 		},
-		Unless: Rules{
-			Event: []string{"deployment", "pull_request"},
-			Path:  []string{"foo.txt", "/foo/bar.txt"},
-		},
-		Operator: "or",
-		Continue: true,
-	}
-	got := new(Ruleset)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ruleset_advanced.yml")
-	if err != nil {
-		t.Errorf("Reading file for Ruleset UnmarshalYAML returned err: %v", err)
 	}
 
-	err = yaml.Unmarshal(b, got)
+	// run tests
+	for _, test := range tests {
+		got := new(Ruleset)
 
-	if err != nil {
-		t.Errorf("Ruleset UnmarshalYAML returned err: %v", err)
-	}
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Ruleset UnmarshalYAML is %v, want %v", got, want)
+		err = yaml.Unmarshal(b, got)
+
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_Rules_ToPipeline(t *testing.T) {
-	// setup types
-	slice := []string{"foo"}
-	want := &pipeline.Rules{
-		Branch:  slice,
-		Comment: slice,
-		Event:   slice,
-		Path:    slice,
-		Repo:    slice,
-		Status:  slice,
-		Tag:     slice,
-		Target:  slice,
+	// setup tests
+	tests := []struct {
+		rules *Rules
+		want  *pipeline.Rules
+	}{
+		{
+			rules: &Rules{
+				Branch:  []string{"master"},
+				Comment: []string{"test comment"},
+				Event:   []string{"push"},
+				Path:    []string{"foo.txt"},
+				Repo:    []string{"github/octocat"},
+				Status:  []string{"success"},
+				Tag:     []string{"v0.1.0"},
+				Target:  []string{"production"},
+			},
+			want: &pipeline.Rules{
+				Branch:  []string{"master"},
+				Comment: []string{"test comment"},
+				Event:   []string{"push"},
+				Path:    []string{"foo.txt"},
+				Repo:    []string{"github/octocat"},
+				Status:  []string{"success"},
+				Tag:     []string{"v0.1.0"},
+				Target:  []string{"production"},
+			},
+		},
 	}
 
-	r := &Rules{
-		Branch:  slice,
-		Comment: slice,
-		Event:   slice,
-		Path:    slice,
-		Repo:    slice,
-		Status:  slice,
-		Tag:     slice,
-		Target:  slice,
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.rules.ToPipeline()
 
-	// run test
-	got := r.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 	// setup types
-	want := &Rules{
-		Branch:  []string{"master"},
-		Event:   []string{"push"},
-		Path:    []string{"foo.txt", "/foo/bar.txt"},
-		Comment: []string{"ok to test", "rerun"},
+	var (
+		b   []byte
+		err error
+	)
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *Rules
+	}{
+		{
+			failure: false,
+			file:    "testdata/ruleset_simple.yml",
+			want: &Rules{
+				Branch:  []string{"master"},
+				Comment: []string{"test comment"},
+				Event:   []string{"push"},
+				Path:    []string{"foo.txt"},
+				Repo:    []string{"github/octocat"},
+				Status:  []string{"success"},
+				Tag:     []string{"v0.1.0"},
+				Target:  []string{"production"},
+			},
+		},
+		{
+			failure: true,
+			file:    "",
+			want:    nil,
+		},
 	}
-	got := new(Rules)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/ruleset_simple.yml")
-	if err != nil {
-		t.Errorf("Reading file for Rules UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(Rules)
 
-	err = yaml.Unmarshal(b, got)
+		if len(test.file) > 0 {
+			b, err = ioutil.ReadFile(test.file)
+			if err != nil {
+				t.Errorf("unable to read file: %v", err)
+			}
+		} else {
+			b = []byte("!@#$%^&*()")
+		}
 
-	if err != nil {
-		t.Errorf("Rules UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Rules UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestYaml_Rules_UnmarshalYAML_Error(t *testing.T) {
-	// setup types
-	r := new(Rules)
+			continue
+		}
 
-	// run test
-	err := yaml.Unmarshal([]byte("!@#$%^&*()"), r)
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if err == nil {
-		t.Errorf("Rules UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

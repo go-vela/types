@@ -14,197 +14,135 @@ import (
 )
 
 func TestYaml_UlimitSlice_ToPipeline(t *testing.T) {
-	// setup types
-	num := int64(1)
-	str := "foo"
-	want := &pipeline.UlimitSlice{
-		&pipeline.Ulimit{
-			Name: str,
-			Soft: num,
-			Hard: num,
+	// setup tests
+	tests := []struct {
+		ulimits *UlimitSlice
+		want    *pipeline.UlimitSlice
+	}{
+		{
+			ulimits: &UlimitSlice{
+				{
+					Name: "foo",
+					Soft: 1024,
+					Hard: 2048,
+				},
+			},
+			want: &pipeline.UlimitSlice{
+				{
+					Name: "foo",
+					Soft: 1024,
+					Hard: 2048,
+				},
+			},
 		},
 	}
 
-	u := &UlimitSlice{
-		&Ulimit{
-			Name: str,
-			Soft: num,
-			Hard: num,
+	// run tests
+	for _, test := range tests {
+		got := test.ulimits.ToPipeline()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestYaml_UlimitSlice_UnmarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *UlimitSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/ulimit_slice.yml",
+			want: &UlimitSlice{
+				{
+					Name: "foo",
+					Soft: 1024,
+					Hard: 1024,
+				},
+				{
+					Name: "bar",
+					Soft: 1024,
+					Hard: 2048,
+				},
+			},
+		},
+		{
+			failure: false,
+			file:    "testdata/ulimit_string.yml",
+			want: &UlimitSlice{
+				{
+					Name: "foo",
+					Soft: 1024,
+					Hard: 1024,
+				},
+				{
+					Name: "bar",
+					Soft: 1024,
+					Hard: 2048,
+				},
+			},
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/ulimit_equal_error.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/ulimit_colon_error.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/ulimit_softlimit_error.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/ulimit_hardlimit1_error.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/ulimit_hardlimit2_error.yml",
+			want:    nil,
 		},
 	}
 
-	// run test
-	got := u.ToPipeline()
+	// run tests
+	for _, test := range tests {
+		got := new(UlimitSlice)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
-	}
-}
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-func TestYaml_UlimitSlice_UnmarshalYAML_Slice(t *testing.T) {
-	// setup types
-	want := &UlimitSlice{
-		&Ulimit{
-			Name: "foo",
-			Soft: 1024,
-			Hard: 1024,
-		},
-		&Ulimit{
-			Name: "bar",
-			Soft: 1024,
-			Hard: 2048,
-		},
-	}
-	got := new(UlimitSlice)
+		err = yaml.Unmarshal(b, got)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_slice.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-	err = yaml.Unmarshal(b, got)
+			continue
+		}
 
-	if err != nil {
-		t.Errorf("UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UlimitSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String(t *testing.T) {
-	// setup types
-	want := &UlimitSlice{
-		&Ulimit{
-			Name: "foo",
-			Soft: 1024,
-			Hard: 1024,
-		},
-		&Ulimit{
-			Name: "bar",
-			Soft: 1024,
-			Hard: 2048,
-		},
-	}
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_string.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err != nil {
-		t.Errorf("UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UlimitSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_Slice_Error(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String_EqualError(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_equal_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String_ColonError(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_colon_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String_SoftLimitError(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_softlimit_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String_HardLimit1Error(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_hardlimit1_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_UlimitSlice_UnmarshalYAML_String_HardLimit2Error(t *testing.T) {
-	// setup types
-	got := new(UlimitSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/ulimit_hardlimit2_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for UlimitSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("UlimitSlice UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

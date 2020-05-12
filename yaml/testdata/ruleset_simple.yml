@@ -1,6 +1,10 @@
 ---
 branch: master
-event: push
+comment: "test comment"
 continue: true
-path: [ foo.txt, /foo/bar.txt ]
-comment: [ "ok to test", "rerun" ]
+event: push
+path: foo.txt
+repo: github/octocat
+status: success
+tag: v0.1.0
+target: production

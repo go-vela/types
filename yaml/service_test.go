@@ -16,88 +16,105 @@ import (
 )
 
 func TestYaml_ServiceSlice_ToPipeline(t *testing.T) {
-	// setup types
-	str := "foo"
-	mapp := map[string]string{"foo": "bar"}
-	slice := []string{"8000:8000"}
-	want := &pipeline.ContainerSlice{
-		&pipeline.Container{
-			Detach:      true,
-			Ports:       slice,
-			Entrypoint:  slice,
-			Environment: mapp,
-			Image:       str,
-			Name:        str,
+	// setup tests
+	tests := []struct {
+		services *ServiceSlice
+		want     *pipeline.ContainerSlice
+	}{
+		{
+			services: &ServiceSlice{
+				{
+					Entrypoint:  []string{"/usr/local/bin/docker-entrypoint.sh"},
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "postgres:12-alpine",
+					Name:        "postgres",
+					Ports:       []string{"5432:5432"},
+				},
+			},
+			want: &pipeline.ContainerSlice{
+				{
+					Detach:      true,
+					Entrypoint:  []string{"/usr/local/bin/docker-entrypoint.sh"},
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "postgres:12-alpine",
+					Name:        "postgres",
+					Ports:       []string{"5432:5432"},
+				},
+			},
 		},
 	}
 
-	s := &ServiceSlice{
-		&Service{
-			Ports:       slice,
-			Entrypoint:  slice,
-			Environment: mapp,
-			Image:       str,
-			Name:        str,
-		},
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.services.ToPipeline()
 
-	// run test
-	got := s.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
-	// setup types
-	want := &ServiceSlice{
-		&Service{
-			Ports: []string{"5432:5432"},
-			Environment: raw.StringSliceMap{
-				"POSTGRES_DB": "foo",
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *ServiceSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/service.yml",
+			want: &ServiceSlice{
+				{
+					Environment: raw.StringSliceMap{
+						"POSTGRES_DB": "foo",
+					},
+					Image: "postgres:latest",
+					Name:  "postgres",
+					Ports: []string{"5432:5432"},
+				},
+				{
+					Environment: raw.StringSliceMap{
+						"MYSQL_DATABASE": "foo",
+					},
+					Image: "mysql:latest",
+					Name:  "mysql",
+					Ports: []string{"3061:3061"},
+				},
 			},
-			Name:  "postgres",
-			Image: "postgres:latest",
 		},
-		&Service{
-			Ports: []string{"3061:3061"},
-			Environment: raw.StringSliceMap{
-				"MYSQL_DATABASE": "foo",
-			},
-			Name:  "mysql",
-			Image: "mysql:latest",
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
 		},
 	}
-	got := new(ServiceSlice)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/service.yml")
-	if err != nil {
-		t.Errorf("Reading file for Ruleset UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(ServiceSlice)
 
-	err = yaml.Unmarshal(b, got)
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("YamlSlice UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("YamlSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestYaml_ServiceSlice_UnmarshalYAML_Invalid(t *testing.T) {
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for YamlSlice UnmarshalYAML returned err: %v", err)
-	}
+			continue
+		}
 
-	err = yaml.Unmarshal(b, new(ServiceSlice))
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if err == nil {
-		t.Errorf("YamlSlice UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

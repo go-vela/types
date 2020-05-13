@@ -14,138 +14,125 @@ import (
 )
 
 func TestYaml_VolumeSlice_ToPipeline(t *testing.T) {
-	// setup types
-	str := "foo"
-	want := &pipeline.VolumeSlice{
-		&pipeline.Volume{
-			Source:      str,
-			Destination: str,
-			AccessMode:  str,
+	// setup tests
+	tests := []struct {
+		volumes *VolumeSlice
+		want    *pipeline.VolumeSlice
+	}{
+		{
+			volumes: &VolumeSlice{
+				{
+					Source:      "/foo",
+					Destination: "/bar",
+					AccessMode:  "ro",
+				},
+			},
+			want: &pipeline.VolumeSlice{
+				{
+					Source:      "/foo",
+					Destination: "/bar",
+					AccessMode:  "ro",
+				},
+			},
 		},
 	}
 
-	v := &VolumeSlice{
-		&Volume{
-			Source:      str,
-			Destination: str,
-			AccessMode:  str,
-		},
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.volumes.ToPipeline()
 
-	// run test
-	got := v.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
-func TestYaml_VolumeSlice_UnmarshalYAML_Slice(t *testing.T) {
-	// setup types
-	want := &VolumeSlice{
-		&Volume{
-			Source:      "/foo",
-			Destination: "/foo",
-			AccessMode:  "ro",
+func TestYaml_VolumeSlice_UnmarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *VolumeSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/volume_slice.yml",
+			want: &VolumeSlice{
+				{
+					Source:      "/foo",
+					Destination: "/foo",
+					AccessMode:  "ro",
+				},
+				{
+					Source:      "/foo",
+					Destination: "/bar",
+					AccessMode:  "ro",
+				},
+				{
+					Source:      "/foo",
+					Destination: "/foobar",
+					AccessMode:  "ro",
+				},
+			},
 		},
-		&Volume{
-			Source:      "/foo",
-			Destination: "/bar",
-			AccessMode:  "ro",
+		{
+			failure: false,
+			file:    "testdata/volume_string.yml",
+			want: &VolumeSlice{
+				{
+					Source:      "/foo",
+					Destination: "/foo",
+					AccessMode:  "ro",
+				},
+				{
+					Source:      "/foo",
+					Destination: "/bar",
+					AccessMode:  "ro",
+				},
+				{
+					Source:      "/foo",
+					Destination: "/foobar",
+					AccessMode:  "ro",
+				},
+			},
 		},
-		&Volume{
-			Source:      "/foo",
-			Destination: "/foobar",
-			AccessMode:  "ro",
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
 		},
-	}
-	got := new(VolumeSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/volume_slice.yml")
-	if err != nil {
-		t.Errorf("Reading file for VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err != nil {
-		t.Errorf("VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("VolumeSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
-
-func TestYaml_VolumeSlice_UnmarshalYAML_String(t *testing.T) {
-	// setup types
-	want := &VolumeSlice{
-		&Volume{
-			Source:      "/foo",
-			Destination: "/foo",
-			AccessMode:  "ro",
-		},
-		&Volume{
-			Source:      "/foo",
-			Destination: "/bar",
-			AccessMode:  "ro",
-		},
-		&Volume{
-			Source:      "/foo",
-			Destination: "/foobar",
-			AccessMode:  "ro",
+		{
+			failure: true,
+			file:    "testdata/volume_error.yml",
+			want:    nil,
 		},
 	}
-	got := new(VolumeSlice)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/volume_string.yml")
-	if err != nil {
-		t.Errorf("Reading file for VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
+	// run tests
+	for _, test := range tests {
+		got := new(VolumeSlice)
 
-	err = yaml.Unmarshal(b, got)
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if err != nil {
-		t.Errorf("VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
+		err = yaml.Unmarshal(b, got)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("VolumeSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-func TestYaml_VolumeSlice_UnmarshalYAML_Slice_Error(t *testing.T) {
-	// setup types
-	got := new(VolumeSlice)
+			continue
+		}
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("VolumeSlice UnmarshalYAML should have returned err")
-	}
-}
-
-func TestYaml_VolumeSlice_UnmarshalYAML_String_Error(t *testing.T) {
-	// setup types
-	got := new(VolumeSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/volume_error.yml")
-	if err != nil {
-		t.Errorf("Reading file for VolumeSlice UnmarshalYAML returned err: %v", err)
-	}
-
-	err = yaml.Unmarshal(b, got)
-
-	if err == nil {
-		t.Errorf("VolumeSlice UnmarshalYAML should have returned err")
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

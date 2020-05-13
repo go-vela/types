@@ -15,44 +15,62 @@ import (
 )
 
 func TestYaml_Metadata_ToPipeline(t *testing.T) {
-	// setup types
-	m := &Metadata{
-		Template: false,
+	// setup tests
+	tests := []struct {
+		metadata *Metadata
+		want     *pipeline.Metadata
+	}{
+		{
+			metadata: &Metadata{
+				Template: false,
+			},
+			want: &pipeline.Metadata{
+				Template: false,
+			},
+		},
 	}
 
-	want := &pipeline.Metadata{
-		Template: false,
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.metadata.ToPipeline()
 
-	// run test
-	got := m.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
-	// setup types
-	want := &Metadata{
-		Template: false,
+	// setup tests
+	tests := []struct {
+		file string
+		want *Metadata
+	}{
+		{
+			file: "testdata/metadata.yml",
+			want: &Metadata{
+				Template: false,
+			},
+		},
 	}
 
-	got := new(Metadata)
+	// run tests
+	for _, test := range tests {
+		got := new(Metadata)
 
-	// run test
-	b, err := ioutil.ReadFile("testdata/metadata.yml")
-	if err != nil {
-		t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
-	}
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
+		}
 
-	err = yaml.Unmarshal(b, got)
+		err = yaml.Unmarshal(b, got)
 
-	if err != nil {
-		t.Errorf("UnmarshalYAML returned err: %v", err)
-	}
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("UnmarshalYAML is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

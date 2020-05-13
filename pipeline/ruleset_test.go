@@ -201,7 +201,7 @@ func TestPipeline_Ruleset_Execute(t *testing.T) {
 		want    bool
 	}{
 		// Empty
-		{ruleset: &Ruleset{}, data: &RuleData{Branch: "master"}, want: true},
+		{ruleset: &Ruleset{}, data: &RuleData{Branch: "master"}, want: false},
 		// If with and operator
 		{
 			ruleset: &Ruleset{If: Rules{Branch: []string{"master"}}},

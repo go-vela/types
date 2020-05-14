@@ -5,7 +5,6 @@
 package pipeline
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -143,9 +142,6 @@ func (c *Container) Execute(r *RuleData) bool {
 
 	r.Status = constants.StatusFailure
 
-	fmt.Println("STATUS: ", strings.EqualFold(status, constants.StatusSuccess))
-	fmt.Println("MATCH: ", c.Ruleset.Match(r))
-	fmt.Println("EMPTY: ", !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()))
 	// check if you need to skip a status failure ruleset
 	if strings.EqualFold(status, constants.StatusSuccess) &&
 		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {

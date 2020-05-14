@@ -121,7 +121,7 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 // Execute returns true when the provided ruledata matches
 // the conditions when we should be running the container on the worker.
 func (c *Container) Execute(r *RuleData) bool {
-	// assume you will excute the container
+	// assume you will execute the container
 	execute := true
 
 	// capture the build status out of the ruleset

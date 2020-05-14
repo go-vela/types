@@ -5,6 +5,7 @@
 package pipeline
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -116,4 +117,42 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 		// log here?
 		return nil
 	}
+}
+
+// Execute returns true when the provided ruledata matches
+// the conditions when we should be running the container on the worker.
+func (c *Container) Execute(r *RuleData) bool {
+	// assume you will excute a container by setting flag
+	execute := true
+
+	// capture the build status out of the ruleset
+	status := r.Status
+
+	// check if the build status is successful
+	if !strings.EqualFold(status, constants.StatusSuccess) {
+		// disregard the need to run the container
+		execute = false
+
+		// check if you need to run a status failure ruleset
+		if !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) &&
+			c.Ruleset.Match(r) {
+			// approve the need to run the container
+			execute = true
+		}
+	}
+
+	r.Status = constants.StatusFailure
+
+	fmt.Println("STATUS: ", strings.EqualFold(status, constants.StatusSuccess))
+	fmt.Println("MATCH: ", c.Ruleset.Match(r))
+	fmt.Println("EMPTY: ", !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()))
+	// check if you need to skip a status failure ruleset
+	if strings.EqualFold(status, constants.StatusSuccess) &&
+		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {
+
+		// disregard the need to run the container
+		execute = false
+	}
+
+	return execute
 }

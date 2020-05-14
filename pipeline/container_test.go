@@ -181,6 +181,44 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
+		{ // status/failure success container with build failure
+			container: &Container{
+				Name:     "status/failure",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Status: []string{constants.StatusSuccess, constants.StatusFailure},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // status/failure success container with build failure
+			container: &Container{
+				Name:     "status/failure",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Status: []string{constants.StatusSuccess, constants.StatusFailure},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "failure",
+			},
+			want: true,
+		},
 		{ // branch/event/status container with build success
 			container: &Container{
 				Name:     "branch/event/status",

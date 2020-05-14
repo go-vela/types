@@ -5,7 +5,6 @@
 package pipeline
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -122,7 +121,7 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 // Execute returns true when the provided ruledata matches
 // the conditions when we should be running the container on the worker.
 func (c *Container) Execute(r *RuleData) bool {
-	// assume you will excute a container by setting flag
+	// assume you will excute the container
 	execute := true
 
 	// capture the build status out of the ruleset
@@ -143,9 +142,6 @@ func (c *Container) Execute(r *RuleData) bool {
 
 	r.Status = constants.StatusFailure
 
-	fmt.Printf("%s STATUS: %v\n", c.Name, strings.EqualFold(status, constants.StatusSuccess))
-	fmt.Printf("%s EMPTY: %v\n", c.Name, !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()))
-	fmt.Printf("%s MATCH: %v\n", c.Name, c.Ruleset.Match(r))
 	// check if you need to skip a status failure ruleset
 	if strings.EqualFold(status, constants.StatusSuccess) &&
 		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {

@@ -117,3 +117,42 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 		return nil
 	}
 }
+
+// Execute returns true when the provided ruledata matches
+// the conditions when we should be running the container on the worker.
+func (c *Container) Execute(r *RuleData) bool {
+	// assume you will execute the container
+	execute := true
+
+	// capture the build status out of the ruleset
+	status := r.Status
+
+	// check if the build status is successful
+	if !strings.EqualFold(status, constants.StatusSuccess) {
+		// disregard the need to run the container
+		execute = false
+
+		// check if you need to run a status failure ruleset
+		if !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) &&
+			c.Ruleset.Match(r) {
+			// approve the need to run the container
+			execute = true
+		}
+	}
+
+	r.Status = constants.StatusFailure
+
+	// check if you need to skip a status failure ruleset
+	if strings.EqualFold(status, constants.StatusSuccess) &&
+		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {
+
+		r.Status = constants.StatusSuccess
+
+		if !c.Ruleset.Match(r) {
+			// disregard the need to run the container
+			execute = false
+		}
+	}
+
+	return execute
+}

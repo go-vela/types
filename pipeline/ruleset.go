@@ -5,7 +5,7 @@
 package pipeline
 
 import (
-	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -223,7 +223,7 @@ func (r *Ruletype) MatchAnd(data string) bool {
 	for _, pattern := range *r {
 
 		// return true if the pattern matches the ruledata
-		if ok, _ := filepath.Match(pattern, data); ok {
+		if regexp.MustCompile(pattern).MatchString(data) {
 			return true
 		}
 	}
@@ -245,7 +245,7 @@ func (r *Ruletype) MatchOr(data string) bool {
 	for _, pattern := range *r {
 
 		// return true if the pattern matches the ruledata
-		if ok, _ := filepath.Match(pattern, data); ok {
+		if regexp.MustCompile(pattern).MatchString(data) {
 			return true
 		}
 	}

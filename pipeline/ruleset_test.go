@@ -336,6 +336,12 @@ func TestPipeline_Rules_Match(t *testing.T) {
 			operator: "and",
 			want:     true,
 		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"path/to/thing/*/*"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "path/to/thing/stage/1.0.2-rc", Target: ""},
+			operator: "and",
+			want:     true,
+		},
 		// or operator
 		{
 			rules:    &Rules{Branch: []string{"master"}, Event: []string{"push"}},

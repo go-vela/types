@@ -435,6 +435,13 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Tag
 		{rule: []string{"release/*"}, pattern: "release/*", want: true},
 		{rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
+		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
+		{rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3-rc", want: false},
+		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3", want: true},
 		// Target
 		{rule: []string{"production"}, pattern: "production", want: true},
 		{rule: []string{"stage"}, pattern: "production", want: false},

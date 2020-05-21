@@ -82,7 +82,7 @@ func (r *Ruleset) Match(from *RuleData) bool {
 	return false
 }
 
-// Empty returns true if the status field is empty
+// NoStatus returns true if the status field is empty
 func (r *Rules) NoStatus() bool {
 	// return true if every ruletype is empty
 	if len(r.Status) == 0 {

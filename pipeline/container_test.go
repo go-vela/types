@@ -219,6 +219,26 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: true,
 		},
+		{ // no status container with build success
+			container: &Container{
+				Name:     "branch/event/status",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "failure",
+			},
+			want: false,
+		},
 		{ // branch/event/status container with build success
 			container: &Container{
 				Name:     "branch/event/status",

@@ -192,6 +192,18 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 	}
 }
 
+func TestPipeline_Rules_NoStatus(t *testing.T) {
+	// setup types
+	r := Rules{}
+
+	// run test
+	got := r.Empty()
+
+	if !got {
+		t.Errorf("Rule NoStatus is %v, want true", got)
+	}
+}
+
 func TestPipeline_Rules_Empty(t *testing.T) {
 	// setup types
 	r := Rules{}

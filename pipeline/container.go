@@ -134,6 +134,7 @@ func (c *Container) Execute(r *RuleData) bool {
 
 		// check if you need to run a status failure ruleset
 		if !(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) &&
+			!(c.Ruleset.If.NoStatus() && c.Ruleset.Unless.NoStatus()) &&
 			c.Ruleset.Match(r) {
 			// approve the need to run the container
 			execute = true
@@ -144,6 +145,7 @@ func (c *Container) Execute(r *RuleData) bool {
 
 	// check if you need to skip a status failure ruleset
 	if strings.EqualFold(status, constants.StatusSuccess) &&
+		!(c.Ruleset.If.NoStatus() && c.Ruleset.Unless.NoStatus()) &&
 		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {
 
 		r.Status = constants.StatusSuccess

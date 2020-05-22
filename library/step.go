@@ -7,6 +7,8 @@ package library
 import "fmt"
 
 // Step is the library representation of a step in a build.
+//
+// swagger:model Step
 type Step struct {
 	ID           *int64  `json:"id,omitempty"`
 	BuildID      *int64  `json:"build_id,omitempty"`

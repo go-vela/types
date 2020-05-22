@@ -16,209 +16,233 @@ import (
 )
 
 func TestYaml_StepSlice_ToPipeline(t *testing.T) {
-	// setup types
-	num := int64(1)
-	str := "foo"
-	slice := []string{"foo"}
-	mapp := map[string]string{"foo": "bar"}
-	want := &pipeline.ContainerSlice{
-		&pipeline.Container{
-			Commands:    slice,
-			Detach:      false,
-			Entrypoint:  slice,
-			Environment: mapp,
-			Image:       str,
-			Name:        str,
-			Privileged:  false,
-			Pull:        false,
-			Ruleset: pipeline.Ruleset{
-				If: pipeline.Rules{
-					Branch: slice,
-					Event:  slice,
-					Path:   slice,
-					Repo:   slice,
-					Status: slice,
-					Tag:    slice,
+	// setup tests
+	tests := []struct {
+		steps *StepSlice
+		want  *pipeline.ContainerSlice
+	}{
+		{
+			steps: &StepSlice{
+				{
+					Commands:    []string{"echo hello"},
+					Detach:      false,
+					Entrypoint:  []string{"/bin/sh"},
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "alpine:latest",
+					Name:        "echo",
+					Privileged:  false,
+					Pull:        false,
+					Ruleset: Ruleset{
+						If: Rules{
+							Branch:  []string{"master"},
+							Comment: []string{"test comment"},
+							Event:   []string{"push"},
+							Path:    []string{"foo.txt"},
+							Repo:    []string{"github/octocat"},
+							Status:  []string{"success"},
+							Tag:     []string{"v0.1.0"},
+							Target:  []string{"production"},
+						},
+						Unless: Rules{
+							Branch:  []string{"master"},
+							Comment: []string{"real comment"},
+							Event:   []string{"pull_request"},
+							Path:    []string{"bar.txt"},
+							Repo:    []string{"github/octocat"},
+							Status:  []string{"failure"},
+							Tag:     []string{"v0.2.0"},
+							Target:  []string{"production"},
+						},
+						Operator: "and",
+						Continue: false,
+					},
+					Secrets: StepSecretSlice{
+						{
+							Source: "docker_username",
+							Target: "plugin_username",
+						},
+					},
+					Ulimits: UlimitSlice{
+						{
+							Name: "foo",
+							Soft: 1024,
+							Hard: 2048,
+						},
+					},
+					Volumes: VolumeSlice{
+						{
+							Source:      "/foo",
+							Destination: "/bar",
+							AccessMode:  "ro",
+						},
+					},
 				},
-				Unless: pipeline.Rules{
-					Branch: slice,
-					Event:  slice,
-					Path:   slice,
-					Repo:   slice,
-					Status: slice,
-					Tag:    slice,
-				},
-				Operator: str,
-				Continue: false,
 			},
-			Secrets: pipeline.StepSecretSlice{
-				&pipeline.StepSecret{
-					Source: str,
-					Target: str,
-				},
-			},
-			Ulimits: pipeline.UlimitSlice{
-				&pipeline.Ulimit{
-					Name: str,
-					Soft: num,
-					Hard: num,
-				},
-			},
-			Volumes: pipeline.VolumeSlice{
-				&pipeline.Volume{
-					Source:      str,
-					Destination: str,
-					AccessMode:  str,
+			want: &pipeline.ContainerSlice{
+				{
+					Commands:    []string{"echo hello"},
+					Detach:      false,
+					Entrypoint:  []string{"/bin/sh"},
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "alpine:latest",
+					Name:        "echo",
+					Privileged:  false,
+					Pull:        false,
+					Ruleset: pipeline.Ruleset{
+						If: pipeline.Rules{
+							Branch:  []string{"master"},
+							Comment: []string{"test comment"},
+							Event:   []string{"push"},
+							Path:    []string{"foo.txt"},
+							Repo:    []string{"github/octocat"},
+							Status:  []string{"success"},
+							Tag:     []string{"v0.1.0"},
+							Target:  []string{"production"},
+						},
+						Unless: pipeline.Rules{
+							Branch:  []string{"master"},
+							Comment: []string{"real comment"},
+							Event:   []string{"pull_request"},
+							Path:    []string{"bar.txt"},
+							Repo:    []string{"github/octocat"},
+							Status:  []string{"failure"},
+							Tag:     []string{"v0.2.0"},
+							Target:  []string{"production"},
+						},
+						Operator: "and",
+						Continue: false,
+					},
+					Secrets: pipeline.StepSecretSlice{
+						{
+							Source: "docker_username",
+							Target: "plugin_username",
+						},
+					},
+					Ulimits: pipeline.UlimitSlice{
+						{
+							Name: "foo",
+							Soft: 1024,
+							Hard: 2048,
+						},
+					},
+					Volumes: pipeline.VolumeSlice{
+						{
+							Source:      "/foo",
+							Destination: "/bar",
+							AccessMode:  "ro",
+						},
+					},
 				},
 			},
 		},
 	}
 
-	s := &StepSlice{
-		&Step{
-			Commands:    slice,
-			Detach:      false,
-			Entrypoint:  slice,
-			Environment: mapp,
-			Image:       str,
-			Name:        str,
-			Privileged:  false,
-			Pull:        false,
-			Ruleset: Ruleset{
-				If: Rules{
-					Branch: slice,
-					Event:  slice,
-					Path:   slice,
-					Repo:   slice,
-					Status: slice,
-					Tag:    slice,
-				},
-				Unless: Rules{
-					Branch: slice,
-					Event:  slice,
-					Path:   slice,
-					Repo:   slice,
-					Status: slice,
-					Tag:    slice,
-				},
-				Operator: str,
-				Continue: false,
-			},
-			Secrets: StepSecretSlice{
-				&StepSecret{
-					Source: str,
-					Target: str,
-				},
-			},
-			Ulimits: UlimitSlice{
-				&Ulimit{
-					Name: str,
-					Soft: num,
-					Hard: num,
-				},
-			},
-			Volumes: VolumeSlice{
-				&Volume{
-					Source:      str,
-					Destination: str,
-					AccessMode:  str,
-				},
-			},
-		},
-	}
+	// run tests
+	for _, test := range tests {
+		got := test.steps.ToPipeline()
 
-	// run test
-	got := s.ToPipeline()
-
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToPipeline is %v, want %v", got, want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
 	}
 }
 
 func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
-	// setup types
-	want := &StepSlice{
-		&Step{
-			Commands: raw.StringSlice{"./gradlew downloadDependencies"},
-			Environment: raw.StringSliceMap{
-				"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
-				"GRADLE_USER_HOME": ".gradle",
-			},
-			Name:  "install",
-			Image: "openjdk:latest",
-			Pull:  true,
-		},
-		&Step{
-			Commands: raw.StringSlice{"./gradlew check"},
-			Environment: raw.StringSliceMap{
-				"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
-				"GRADLE_USER_HOME": ".gradle",
-			},
-			Name:  "test",
-			Image: "openjdk:latest",
-			Pull:  true,
-		},
-		&Step{
-			Commands: raw.StringSlice{"./gradlew build"},
-			Environment: raw.StringSliceMap{
-				"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
-				"GRADLE_USER_HOME": ".gradle",
-			},
-			Name:  "build",
-			Image: "openjdk:latest",
-			Pull:  true,
-		},
-		&Step{
-			Name:  "docker_build",
-			Image: "plugins/docker:18.09",
-			Pull:  true,
-			Parameters: map[string]interface{}{
-				"registry": "index.docker.io",
-				"repo":     "github/octocat",
-				"tags":     []interface{}{"latest", "dev"},
-			},
-		},
-		&Step{
-			Name: "templated_publish",
-			Template: StepTemplate{
-				Name: "docker_publish",
-				Variables: map[string]interface{}{
-					"registry": "index.docker.io",
-					"repo":     "github/octocat",
-					"tags":     []interface{}{"latest", "dev"},
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StepSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/step.yml",
+			want: &StepSlice{
+				{
+					Commands: raw.StringSlice{"./gradlew downloadDependencies"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "install",
+					Image: "openjdk:latest",
+					Pull:  true,
+				},
+				{
+					Commands: raw.StringSlice{"./gradlew check"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "test",
+					Image: "openjdk:latest",
+					Pull:  true,
+				},
+				{
+					Commands: raw.StringSlice{"./gradlew build"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "build",
+					Image: "openjdk:latest",
+					Pull:  true,
+				},
+				{
+					Name:  "docker_build",
+					Image: "plugins/docker:18.09",
+					Pull:  true,
+					Parameters: map[string]interface{}{
+						"registry": "index.docker.io",
+						"repo":     "github/octocat",
+						"tags":     []interface{}{"latest", "dev"},
+					},
+				},
+				{
+					Name: "templated_publish",
+					Template: StepTemplate{
+						Name: "docker_publish",
+						Variables: map[string]interface{}{
+							"registry": "index.docker.io",
+							"repo":     "github/octocat",
+							"tags":     []interface{}{"latest", "dev"},
+						},
+					},
 				},
 			},
 		},
-	}
-	got := new(StepSlice)
-
-	// run test
-	b, err := ioutil.ReadFile("testdata/step.yml")
-	if err != nil {
-		t.Errorf("Reading file for Ruleset UnmarshalYAML returned err: %v", err)
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
 	}
 
-	err = yaml.Unmarshal(b, got)
+	// run tests
+	for _, test := range tests {
+		got := new(StepSlice)
 
-	if err != nil {
-		t.Errorf("YamlSlice UnmarshalYAML returned err: %v", err)
-	}
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("YamlSlice UnmarshalYAML is %v, want %v", got, want)
-	}
-}
+		err = yaml.Unmarshal(b, got)
 
-func TestYaml_StepSlice_UnmarshalYAML_Invalid(t *testing.T) {
-	// run test
-	b, err := ioutil.ReadFile("testdata/invalid.yml")
-	if err != nil {
-		t.Errorf("Reading file for YamlSlice UnmarshalYAML returned err: %v", err)
-	}
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
 
-	err = yaml.Unmarshal(b, new(StepSlice))
+			continue
+		}
 
-	if err == nil {
-		t.Errorf("YamlSlice UnmarshalYAML should have returned err")
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		}
 	}
 }

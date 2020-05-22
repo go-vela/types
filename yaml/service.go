@@ -36,6 +36,7 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 	for _, service := range *s {
 		// append the element to the pipeline container slice
 		*serviceSlice = append(*serviceSlice, &pipeline.Container{
+			Detach:      true,
 			Image:       service.Image,
 			Name:        service.Name,
 			Entrypoint:  service.Entrypoint,

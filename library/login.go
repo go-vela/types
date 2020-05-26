@@ -17,6 +17,8 @@ package library
 import "fmt"
 
 // Login is the library representation of a user login.
+//
+// swagger:model Login
 type Login struct {
 	Username *string `json:"username,omitempty"`
 	Password *string `json:"password,omitempty"`

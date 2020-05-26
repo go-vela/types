@@ -7,6 +7,8 @@ package library
 import "fmt"
 
 // Log is the library representation of a log for a step in a build.
+//
+// swagger:model Log
 type Log struct {
 	ID        *int64  `json:"id,omitempty"`
 	BuildID   *int64  `json:"build_id,omitempty"`

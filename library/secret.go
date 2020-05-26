@@ -13,6 +13,8 @@ import (
 )
 
 // Secret is the library representation of a secret.
+//
+// swagger:model Secret
 type Secret struct {
 	ID           *int64    `json:"id,omitempty"`
 	Org          *string   `json:"org,omitempty"`

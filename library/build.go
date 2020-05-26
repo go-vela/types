@@ -12,6 +12,8 @@ import (
 )
 
 // Build is the library representation of a build for a pipeline.
+//
+// swagger:model Build
 type Build struct {
 	ID           *int64  `json:"id,omitempty"`
 	RepoID       *int64  `json:"repo_id,omitempty"`

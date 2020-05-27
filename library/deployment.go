@@ -7,6 +7,8 @@ package library
 import "fmt"
 
 // Deployment is the library representation of a deployment.
+//
+// swagger:model Deployment
 type Deployment struct {
 	ID          *int64  `json:"id,omitempty"`
 	RepoID      *int64  `json:"repo_id,omitempty"`

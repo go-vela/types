@@ -7,6 +7,8 @@ package library
 import "fmt"
 
 // Service is the library representation of a service in a build.
+//
+// swagger:model Service
 type Service struct {
 	ID           *int64  `json:"id,omitempty"`
 	BuildID      *int64  `json:"build_id,omitempty"`

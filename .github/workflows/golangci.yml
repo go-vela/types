@@ -1,0 +1,20 @@
+# name of the action
+name: golangci-lint
+
+# trigger on pull_request or push events
+on:
+  pull_request:
+  push:
+
+# pipeline to execute
+jobs:
+  golangci-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: clone
+      uses: actions/checkout@v1
+
+    - name: run
+      uses: golangci/golangci-lint-action@v1
+      with:
+        version: v1.27

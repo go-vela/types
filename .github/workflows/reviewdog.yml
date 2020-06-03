@@ -1,0 +1,21 @@
+# name of the action
+name: reviewdog
+
+# trigger on pull_request events
+on:
+  pull_request:
+
+# pipeline to execute
+jobs:
+  reviewdog:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:latest
+    steps:
+    - name: clone
+      uses: actions/checkout@v1
+
+    - name: golangci-lint
+      uses: reviewdog/action-golangci-lint@v1
+      with:
+        github_token: ${{ secrets.github_token }}

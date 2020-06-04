@@ -167,7 +167,33 @@ func TestLibrary_Hook_String(t *testing.T) {
 	// setup types
 	h := testHook()
 
-	want := fmt.Sprintf("%+v", *h)
+	want := fmt.Sprintf(`{
+  Branch: %s,
+  BuildID: %d,
+  Created: %d,
+  Error: %s,
+  Event: %s,
+  Host: %s,
+  ID: %d,
+  Link: %s,
+  Number: %d,
+  RepoID: %d,
+  SourceID: %s,
+  Status: %s,
+}`,
+		h.GetBranch(),
+		h.GetBuildID(),
+		h.GetCreated(),
+		h.GetError(),
+		h.GetEvent(),
+		h.GetHost(),
+		h.GetID(),
+		h.GetLink(),
+		h.GetNumber(),
+		h.GetRepoID(),
+		h.GetSourceID(),
+		h.GetStatus(),
+	)
 
 	// run test
 	got := h.String()

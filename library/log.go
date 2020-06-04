@@ -193,5 +193,19 @@ func (l *Log) SetData(v []byte) {
 
 // String implements the Stringer interface for the Log type.
 func (l *Log) String() string {
-	return fmt.Sprintf("%+v", *l)
+	return fmt.Sprintf(`{
+  BuildID: %d,
+  Data: %s,
+  ID: %d,
+  RepoID: %d,
+  ServiceID: %d,
+  StepID: %d,
+}`,
+		l.GetBuildID(),
+		l.GetData(),
+		l.GetID(),
+		l.GetRepoID(),
+		l.GetServiceID(),
+		l.GetStepID(),
+	)
 }

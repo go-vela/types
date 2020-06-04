@@ -51,6 +51,7 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 
 		// verify ruleset matches
 		if container.Ruleset.Match(r) {
+
 			// overwrite the Container number with the Container counter
 			container.Number = counter
 

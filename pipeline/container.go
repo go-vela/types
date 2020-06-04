@@ -48,7 +48,6 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 
 	// iterate through each Container in the pipeline
 	for _, container := range *c {
-
 		// verify ruleset matches
 		if container.Ruleset.Match(r) {
 			// overwrite the Container number with the Container counter

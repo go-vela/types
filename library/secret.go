@@ -360,7 +360,29 @@ func (s *Secret) SetAllowCommand(v bool) {
 
 // String implements the Stringer interface for the Secret type.
 func (s *Secret) String() string {
-	return fmt.Sprintf("%+v", *s)
+	return fmt.Sprintf(`{
+	AllowCommand: %t,
+	Events: %s,
+	ID: %d,
+	Images: %s,
+	Name: %s,
+	Org: %s,
+	Repo: %s,
+	Team: %s,
+	Type: %s,
+	Value: %s,
+}`,
+		s.GetAllowCommand(),
+		s.GetEvents(),
+		s.GetID(),
+		s.GetImages(),
+		s.GetName(),
+		s.GetOrg(),
+		s.GetRepo(),
+		s.GetTeam(),
+		s.GetType(),
+		s.GetValue(),
+	)
 }
 
 // checkEvent implements a function that iterates through

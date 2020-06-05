@@ -329,7 +329,29 @@ func TestLibrary_Secret_String(t *testing.T) {
 	// setup types
 	s := testSecret()
 
-	want := fmt.Sprintf("%+v", *s)
+	want := fmt.Sprintf(`{
+	AllowCommand: %t,
+	Events: %s,
+	ID: %d,
+	Images: %s,
+	Name: %s,
+	Org: %s,
+	Repo: %s,
+	Team: %s,
+	Type: %s,
+	Value: %s,
+}`,
+		s.GetAllowCommand(),
+		s.GetEvents(),
+		s.GetID(),
+		s.GetImages(),
+		s.GetName(),
+		s.GetOrg(),
+		s.GetRepo(),
+		s.GetTeam(),
+		s.GetType(),
+		s.GetValue(),
+	)
 
 	// run test
 	got := s.String()

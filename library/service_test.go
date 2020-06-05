@@ -217,7 +217,39 @@ func TestService_String(t *testing.T) {
 	// setup types
 	s := testService()
 
-	want := fmt.Sprintf("%+v", *s)
+	want := fmt.Sprintf(`{
+  BuildID: %d,
+  Created: %d,
+  Distribution: %s,
+  Error: %s,
+  ExitCode: %d,
+  Finished: %d,
+  Host: %s,
+  ID: %d,
+  Image: %s,
+  Name: %s,
+  Number: %d,
+  RepoID: %d,
+  Runtime: %s,
+  Started: %d,
+  Status: %s,
+}`,
+		s.GetBuildID(),
+		s.GetCreated(),
+		s.GetDistribution(),
+		s.GetError(),
+		s.GetExitCode(),
+		s.GetFinished(),
+		s.GetHost(),
+		s.GetID(),
+		s.GetImage(),
+		s.GetName(),
+		s.GetNumber(),
+		s.GetRepoID(),
+		s.GetRuntime(),
+		s.GetStarted(),
+		s.GetStatus(),
+	)
 
 	// run test
 	got := s.String()

@@ -139,7 +139,27 @@ func TestLibrary_Deployment_String(t *testing.T) {
 	// setup types
 	d := testDeployment()
 
-	want := fmt.Sprintf("%+v", *d)
+	want := fmt.Sprintf(`{
+  Commit: %s,
+  Description: %s,
+  ID: %d,
+  Ref: %s,
+  RepoID: %d,
+  Target: %s,
+  Task: %s,
+  URL: %s,
+  User: %s,
+}`,
+		d.GetCommit(),
+		d.GetDescription(),
+		d.GetID(),
+		d.GetRef(),
+		d.GetRepoID(),
+		d.GetTarget(),
+		d.GetTask(),
+		d.GetURL(),
+		d.GetUser(),
+	)
 
 	// run test
 	got := d.String()

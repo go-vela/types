@@ -437,5 +437,37 @@ func (s *Service) SetDistribution(v string) {
 
 // String implements the Stringer interface for the Service type.
 func (s *Service) String() string {
-	return fmt.Sprintf("%+v", *s)
+	return fmt.Sprintf(`{
+  BuildID: %d,
+  Created: %d,
+  Distribution: %s,
+  Error: %s,
+  ExitCode: %d,
+  Finished: %d,
+  Host: %s,
+  ID: %d,
+  Image: %s,
+  Name: %s,
+  Number: %d,
+  RepoID: %d,
+  Runtime: %s,
+  Started: %d,
+  Status: %s,
+}`,
+		s.GetBuildID(),
+		s.GetCreated(),
+		s.GetDistribution(),
+		s.GetError(),
+		s.GetExitCode(),
+		s.GetFinished(),
+		s.GetHost(),
+		s.GetID(),
+		s.GetImage(),
+		s.GetName(),
+		s.GetNumber(),
+		s.GetRepoID(),
+		s.GetRuntime(),
+		s.GetStarted(),
+		s.GetStatus(),
+	)
 }

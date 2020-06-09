@@ -7,10 +7,14 @@ package pipeline
 type (
 	// SecretSlice is the pipeline representation
 	// of the secrets block for a pipeline.
+	//
+	// swagger:model PipelineSecretSlice
 	SecretSlice []*Secret
 
 	// Secret is the pipeline representation of a
 	// secret from the secrets block for a pipeline.
+	//
+	// swagger:model PipelineSecret
 	Secret struct {
 		Name   string `json:"name,omitempty"   yaml:"name,omitempty"`
 		Value  string `json:"value,omitempty"  yaml:"value,omitempty"`
@@ -21,10 +25,14 @@ type (
 
 	// StepSecretSlice is the pipeline representation
 	// of the secrets block for a step in a pipeline.
+	//
+	// swagger:model PipelineStepSecretSlice
 	StepSecretSlice []*StepSecret
 
 	// StepSecret is the pipeline representation of a secret
 	// from a secrets block for a step in a pipeline.
+	//
+	// swagger:model PipelineStepSecret
 	StepSecret struct {
 		Source string `json:"source,omitempty" yaml:"source,omitempty"`
 		Target string `json:"target,omitempty" yaml:"target,omitempty"`

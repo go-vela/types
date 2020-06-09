@@ -11,6 +11,8 @@ type (
 
 	// Port is the pipeline representation
 	// of a port for a step in a pipeline.
+	//
+	// swagger:model PipelinePort
 	Port struct {
 		Port     int    `json:"port,omitempty"     yaml:"port,omitempty"`
 		Host     int    `json:"host,omitempty"     yaml:"host,omitempty"`

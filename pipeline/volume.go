@@ -7,6 +7,8 @@ package pipeline
 type (
 	// VolumeSlice is the pipeline representation of
 	// the volumes block for a step in a pipeline.
+	//
+	// swagger:model PipelineVolumeSlice
 	VolumeSlice []*Volume
 
 	// Volume is the pipeline representation of a volume

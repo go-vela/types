@@ -228,6 +228,62 @@ func TestPipeline_Rules_Empty_Invalid(t *testing.T) {
 	}
 }
 
+func TestPipeline_Rules_Version_Regex_Tag(t *testing.T) {
+	// setup types
+	tests := []struct {
+		rules    *Rules
+		data     *RuleData
+		operator string
+		want     bool
+	}{
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"refs/tags/20.*"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/20.4.42.167", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"[0-9][0-9].[0-9].[0-9][0-9].[0-9][0-9][0-9]"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/20.4.42.167", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/20.4.42.167", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"^refs/tags/(\\d+\\.)+\\d+$"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/20.4.42.167", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"^refs/tags/(\\d+\\.)+\\d+"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/2.4.42.165-prod", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"^refs/tags/(\\d+\\.)+\\d+$"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/2.4.42.165-prod", Target: ""},
+			operator: "and",
+			want:     false,
+		},
+	}
+
+	// run test
+	for _, test := range tests {
+		got := test.rules.Match(test.data, test.operator)
+
+		if got != test.want {
+			t.Errorf("Rules Match for %s operator is %v, want %v", test.operator, got, test.want)
+		}
+	}
+}
+
 func TestPipeline_Rules_Match(t *testing.T) {
 	// setup types
 	tests := []struct {
@@ -283,6 +339,18 @@ func TestPipeline_Rules_Match(t *testing.T) {
 		{
 			rules:    &Rules{Status: []string{"success", "failure"}},
 			data:     &RuleData{Branch: "master", Event: "pull_request", Path: []string{"foo.txt", "/foo/bar.txt"}, Repo: "octocat/hello-world", Tag: "refs/heads/master", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"refs/tags/[0-9].*-prod"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/tags/2.4.42.167-prod", Target: ""},
+			operator: "and",
+			want:     true,
+		},
+		{
+			rules:    &Rules{Event: []string{"tag"}, Tag: []string{"path/to/thing/*/*"}},
+			data:     &RuleData{Branch: "master", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "path/to/thing/stage/1.0.2-rc", Target: ""},
 			operator: "and",
 			want:     true,
 		},
@@ -379,6 +447,14 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Tag
 		{rule: []string{"release/*"}, pattern: "release/*", want: true},
 		{rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
+		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
+		{rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{rule: []string{"release/*/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3-rc", want: false},
+		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3", want: true},
 		// Target
 		{rule: []string{"production"}, pattern: "production", want: true},
 		{rule: []string{"stage"}, pattern: "production", want: false},

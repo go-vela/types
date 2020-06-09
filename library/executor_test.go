@@ -7,6 +7,7 @@ package library
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
@@ -123,7 +124,23 @@ func TestLibrary_Executor_String(t *testing.T) {
 	// setup types
 	e := testExecutor()
 
-	want := fmt.Sprintf("%+v", *e)
+	want := fmt.Sprintf(`{
+  Build: %s,
+  Distribution: %s,
+  Host: %s,
+  ID: %d,
+  Repo: %v,
+  Runtime: %s,
+  Pipeline: %v,
+}`,
+		strings.ReplaceAll(e.Build.String(), " ", "  "),
+		e.GetDistribution(),
+		e.GetHost(),
+		e.GetID(),
+		strings.ReplaceAll(e.Repo.String(), " ", "  "),
+		e.GetRuntime(),
+		e.GetPipeline(),
+	)
 
 	// run test
 	got := e.String()

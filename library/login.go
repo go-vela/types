@@ -132,5 +132,15 @@ func (l *Login) SetToken(v string) {
 
 // String implements the Stringer interface for the Login type.
 func (l *Login) String() string {
-	return fmt.Sprintf("%+v", *l)
+	return fmt.Sprintf(`{
+  OTP: %s,
+  Password: %s,
+  Token: %s,
+  Username: %s,
+}`,
+		l.GetOTP(),
+		l.GetPassword(),
+		l.GetToken(),
+		l.GetUsername(),
+	)
 }

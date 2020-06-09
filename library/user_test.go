@@ -147,7 +147,21 @@ func TestLibrary_User_String(t *testing.T) {
 	// setup types
 	u := testUser()
 
-	want := fmt.Sprintf("%+v", *u)
+	want := fmt.Sprintf(`{
+  Active: %t,
+  Admin: %t,
+  Favorites: %s,
+  ID: %d,
+  Name: %s,
+  Token: %s,
+}`,
+		u.GetActive(),
+		u.GetAdmin(),
+		u.GetFavorites(),
+		u.GetID(),
+		u.GetName(),
+		u.GetToken(),
+	)
 
 	// run test
 	got := u.String()

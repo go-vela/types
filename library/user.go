@@ -241,5 +241,19 @@ func (u *User) SetFavorites(v []string) {
 
 // String implements the Stringer interface for the User type.
 func (u *User) String() string {
-	return fmt.Sprintf("%+v", *u)
+	return fmt.Sprintf(`{
+  Active: %t,
+  Admin: %t,
+  Favorites: %s,
+  ID: %d,
+  Name: %s,
+  Token: %s,
+}`,
+		u.GetActive(),
+		u.GetAdmin(),
+		u.GetFavorites(),
+		u.GetID(),
+		u.GetName(),
+		u.GetToken(),
+	)
 }

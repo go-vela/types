@@ -13,6 +13,8 @@ type (
 
 	// Volume is the pipeline representation of a volume
 	// from a volumes block for a step in a pipeline.
+	//
+	// swagger:model PipelineVolume
 	Volume struct {
 		Source      string `json:"source,omitempty"      yaml:"source,omitempty"`
 		Destination string `json:"destination,omitempty" yaml:"destination,omitempty"`

@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
-	"github.com/google/go-cmp/cmp"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -91,9 +90,6 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 		got := test.secrets.ToPipeline()
 
 		if !reflect.DeepEqual(got, test.want) {
-			if diff := cmp.Diff(test.want, got); diff != "" {
-				t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
-			}
 			t.Errorf("ToPipeline is %v, want %v", got, test.want)
 		}
 	}

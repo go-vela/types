@@ -12,11 +12,20 @@ type (
 	// Secret is the pipeline representation of a
 	// secret from the secrets block for a pipeline.
 	Secret struct {
-		Name   string `json:"name,omitempty"   yaml:"name,omitempty"`
-		Value  string `json:"value,omitempty"  yaml:"value,omitempty"`
-		Key    string `json:"key,omitempty"    yaml:"key,omitempty"`
-		Engine string `json:"engine,omitempty" yaml:"engine,omitempty"`
-		Type   string `json:"type,omitempty"   yaml:"type,omitempty"`
+		Name   string  `json:"name,omitempty"   yaml:"name,omitempty"`
+		Value  string  `json:"value,omitempty"  yaml:"value,omitempty"`
+		Key    string  `json:"key,omitempty"    yaml:"key,omitempty"`
+		Engine string  `json:"engine,omitempty" yaml:"engine,omitempty"`
+		Type   string  `json:"type,omitempty"   yaml:"type,omitempty"`
+		Origin *Origin `json:"origin,omitempty" yaml:"origin,omitempty"`
+	}
+
+	// Origin is the pipeline representation of a method
+	// for looking up secrets with a secret plugin.
+	Origin struct {
+		Image      string                 `yaml:"image,omitempty"`
+		Parameters map[string]interface{} `yaml:"parameters,omitempty"`
+		Secrets    StepSecretSlice        `yaml:"secrets,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation

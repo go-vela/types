@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
+	"github.com/google/go-cmp/cmp"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -26,6 +27,29 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Key:    "github/octocat/docker/username",
 					Engine: "native",
 					Type:   "repo",
+					Origin: Origin{},
+				},
+				{
+					Name:   "docker_username",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: Origin{
+						Image: "target/vela-vault:latest",
+						Secrets: StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+					},
 				},
 			},
 			want: &pipeline.SecretSlice{
@@ -34,6 +58,29 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Key:    "github/octocat/docker/username",
 					Engine: "native",
 					Type:   "repo",
+					Origin: &pipeline.Origin{},
+				},
+				{
+					Name:   "docker_username",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: &pipeline.Origin{
+						Image: "target/vela-vault:latest",
+						Secrets: pipeline.StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+					},
 				},
 			},
 		},
@@ -44,6 +91,9 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 		got := test.secrets.ToPipeline()
 
 		if !reflect.DeepEqual(got, test.want) {
+			if diff := cmp.Diff(test.want, got); diff != "" {
+				t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
+			}
 			t.Errorf("ToPipeline is %v, want %v", got, test.want)
 		}
 	}
@@ -89,6 +139,28 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 					Key:    "noKeyEngineAndType",
 					Engine: "native",
 					Type:   "repo",
+				},
+				{
+					Name:   "externalSecret",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: Origin{
+						Image: "target/vela-vault:latest",
+						Secrets: StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+					},
 				},
 			},
 		},

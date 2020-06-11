@@ -24,6 +24,15 @@ type (
 		Key    string `yaml:"key,omitempty"`
 		Engine string `yaml:"engine,omitempty"`
 		Type   string `yaml:"type,omitempty"`
+		Origin Origin `yaml:"origin,omitempty"`
+	}
+
+	// Origin is the yaml representation of a method
+	// for looking up secrets with a secret plugin.
+	Origin struct {
+		Image      string                 `yaml:"image,omitempty"`
+		Parameters map[string]interface{} `yaml:"parameters,omitempty"`
+		Secrets    StepSecretSlice        `yaml:"secrets,omitempty"`
 	}
 )
 
@@ -41,6 +50,7 @@ func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {
 			Key:    secret.Key,
 			Engine: secret.Engine,
 			Type:   secret.Type,
+			Origin: secret.Origin.ToPipeline(),
 		})
 	}
 
@@ -61,17 +71,17 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// iterate through each element in the secret slice
 	for _, secret := range *secretSlice {
 		// implicitly set `key` field if empty
-		if len(secret.Key) == 0 {
+		if secret.Origin.Empty() && len(secret.Key) == 0 {
 			secret.Key = secret.Name
 		}
 
 		// implicitly set `engine` field if empty
-		if len(secret.Engine) == 0 {
+		if secret.Origin.Empty() && len(secret.Engine) == 0 {
 			secret.Engine = constants.DriverNative
 		}
 
 		// implicitly set `type` field if empty
-		if len(secret.Type) == 0 {
+		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
 		}
 	}
@@ -80,6 +90,27 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	*s = *secretSlice
 
 	return nil
+}
+
+// Empty returns true if the provided origin is empty.
+func (o *Origin) Empty() bool {
+	// return true if every ruletype is empty
+	if len(o.Image) == 0 &&
+		o.Parameters == nil &&
+		len(o.Secrets) == 0 {
+		return true
+	}
+
+	return false
+}
+
+// Empty returns true if the provided origin is empty.
+func (o *Origin) ToPipeline() *pipeline.Origin {
+	return &pipeline.Origin{
+		Image:      o.Image,
+		Parameters: o.Parameters,
+		Secrets:    *o.Secrets.ToPipeline(),
+	}
 }
 
 type (

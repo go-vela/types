@@ -23,9 +23,9 @@ type (
 	// Origin is the pipeline representation of a method
 	// for looking up secrets with a secret plugin.
 	Origin struct {
-		Image      string                 `yaml:"image,omitempty"`
-		Parameters map[string]interface{} `yaml:"parameters,omitempty"`
-		Secrets    StepSecretSlice        `yaml:"secrets,omitempty"`
+		Image      string                 `json:"image,omitempty"      yaml:"image,omitempty"`
+		Parameters map[string]interface{} `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+		Secrets    StepSecretSlice        `json:"secrets,omitempty"    yaml:"secrets,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation

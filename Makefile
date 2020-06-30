@@ -2,6 +2,19 @@
 #
 # Use of this source code is governed by the LICENSE file in this repository.
 
+.PHONY: restart
+restart: down up
+
+.PHONY: up
+up: build compose-up
+
+.PHONY: down
+down: compose-down
+
+.PHONY: rebuild
+rebuild: build compose-up
+
+.PHONY: clean
 clean:
 	#################################
 	######      Go clean       ######

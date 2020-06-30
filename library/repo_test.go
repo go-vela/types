@@ -274,7 +274,45 @@ func TestLibrary_Repo_String(t *testing.T) {
 	// setup types
 	r := testRepo()
 
-	want := fmt.Sprintf("%+v", *r)
+	want := fmt.Sprintf(`{
+  Active: %t,
+  AllowComment: %t,
+  AllowDeploy: %t,
+  AllowPull: %t,
+  AllowPush: %t,
+  AllowTag: %t,
+  Branch: %s,
+  Clone: %s,
+  FullName: %s,
+  ID: %d,
+  Link: %s,
+  Name: %s,
+  Org: %s,
+  Private: %t,
+  Timeout: %d,
+  Trusted: %t,
+  UserID: %d
+  Visibility: %s,
+}`,
+		r.GetActive(),
+		r.GetAllowComment(),
+		r.GetAllowDeploy(),
+		r.GetAllowPull(),
+		r.GetAllowPush(),
+		r.GetAllowTag(),
+		r.GetBranch(),
+		r.GetClone(),
+		r.GetFullName(),
+		r.GetID(),
+		r.GetLink(),
+		r.GetName(),
+		r.GetOrg(),
+		r.GetPrivate(),
+		r.GetTimeout(),
+		r.GetTrusted(),
+		r.GetUserID(),
+		r.GetVisibility(),
+	)
 
 	// run test
 	got := r.String()

@@ -1,0 +1,6 @@
+---
+if:
+  branch: master
+  event: tag
+  tag: [ "^refs/tags/(\\d+\\.)+\\d+$" ]
+  operator: and

@@ -337,5 +337,31 @@ func (h *Hook) SetLink(v string) {
 
 // String implements the Stringer interface for the Hook type.
 func (h *Hook) String() string {
-	return fmt.Sprintf("%+v", *h)
+	return fmt.Sprintf(`{
+  Branch: %s,
+  BuildID: %d,
+  Created: %d,
+  Error: %s,
+  Event: %s,
+  Host: %s,
+  ID: %d,
+  Link: %s,
+  Number: %d,
+  RepoID: %d,
+  SourceID: %s,
+  Status: %s,
+}`,
+		h.GetBranch(),
+		h.GetBuildID(),
+		h.GetCreated(),
+		h.GetError(),
+		h.GetEvent(),
+		h.GetHost(),
+		h.GetID(),
+		h.GetLink(),
+		h.GetNumber(),
+		h.GetRepoID(),
+		h.GetSourceID(),
+		h.GetStatus(),
+	)
 }

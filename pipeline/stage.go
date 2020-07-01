@@ -11,10 +11,14 @@ import (
 type (
 	// StageSlice is the pipeline representation
 	// of the stages block for a pipeline.
+	//
+	// swagger:model PipelineStageSlice
 	StageSlice []*Stage
 
 	// Stage is the pipeline representation
 	// of a stage in a pipeline.
+	//
+	// swagger:model PipelineStage
 	Stage struct {
 		Done  chan error     `json:"-"               yaml:"-"`
 		Name  string         `json:"name,omitempty"  yaml:"name,omitempty"`

@@ -13,10 +13,16 @@ import (
 type (
 	// ContainerSlice is the pipeline representation
 	// of the Containers block for a pipeline.
+	//
+	// swagger:model PipelineContainerSlice
+	//
+	// swagger:model PipelineContainerSlice
 	ContainerSlice []*Container
 
 	// Container is the pipeline representation
 	// of a Container in a pipeline.
+	//
+	// swagger:model PipelineContainer
 	Container struct {
 		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
 		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`

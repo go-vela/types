@@ -4,6 +4,8 @@
 
 package pipeline
 
+import "github.com/go-vela/types/raw"
+
 type (
 	// SecretSlice is the pipeline representation
 	// of the secrets block for a pipeline.
@@ -27,9 +29,12 @@ type (
 	// Origin is the pipeline representation of a method
 	// for looking up secrets with a secret plugin.
 	Origin struct {
-		Image      string                 `json:"image,omitempty"      yaml:"image,omitempty"`
-		Parameters map[string]interface{} `json:"parameters,omitempty" yaml:"parameters,omitempty"`
-		Secrets    StepSecretSlice        `json:"secrets,omitempty"    yaml:"secrets,omitempty"`
+		Environment raw.StringSliceMap     `json:"environment,omitempty" yaml:"environment,omitempty"`
+		Image       string                 `json:"image,omitempty"       yaml:"image,omitempty"`
+		Parameters  map[string]interface{} `json:"parameters,omitempty"  yaml:"parameters,omitempty"`
+		Pull        bool                   `json:"pull,omitempty"        yaml:"pull,omitempty"`
+		Ruleset     Ruleset                `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
+		Secrets     StepSecretSlice        `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation

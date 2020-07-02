@@ -30,9 +30,12 @@ type (
 	// Origin is the yaml representation of a method
 	// for looking up secrets with a secret plugin.
 	Origin struct {
-		Image      string                 `yaml:"image,omitempty"`
-		Parameters map[string]interface{} `yaml:"parameters,omitempty"`
-		Secrets    StepSecretSlice        `yaml:"secrets,omitempty"`
+		Environment raw.StringSliceMap     `yaml:"environment,omitempty"`
+		Image       string                 `yaml:"image,omitempty"`
+		Parameters  map[string]interface{} `yaml:"parameters,omitempty"`
+		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"`
+		Pull        bool                   `yaml:"pull,omitempty"`
+		Ruleset     Ruleset                `yaml:"ruleset,omitempty"`
 	}
 )
 
@@ -107,9 +110,12 @@ func (o *Origin) Empty() bool {
 // Empty returns true if the provided origin is empty.
 func (o *Origin) ToPipeline() *pipeline.Origin {
 	return &pipeline.Origin{
-		Image:      o.Image,
-		Parameters: o.Parameters,
-		Secrets:    *o.Secrets.ToPipeline(),
+		Environment: o.Environment,
+		Image:       o.Image,
+		Pull:        o.Pull,
+		Parameters:  o.Parameters,
+		Ruleset:     *o.Ruleset.ToPipeline(),
+		Secrets:     *o.Secrets.ToPipeline(),
 	}
 }
 
@@ -152,7 +158,6 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a string slice type
 	err := unmarshal(stringSlice)
 	if err == nil {
-
 		// iterate through each element in the string slice
 		for _, secret := range *stringSlice {
 			// append the element to the step secret slice

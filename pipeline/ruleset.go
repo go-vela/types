@@ -12,6 +12,8 @@ import (
 type (
 	// Ruleset is the pipeline representation of
 	// a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRuleset
 	Ruleset struct {
 		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
 		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
@@ -21,6 +23,8 @@ type (
 
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRules
 	Rules struct {
 		Branch  Ruletype `json:"branch,omitempty"  yaml:"branch,omitempty"`
 		Comment Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
@@ -34,6 +38,8 @@ type (
 
 	// Ruletype is the pipeline representation of an element
 	// for a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRuletype
 	Ruletype []string
 
 	// RuleData is the data to check our ruleset

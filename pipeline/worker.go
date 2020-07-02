@@ -5,6 +5,8 @@
 package pipeline
 
 // Worker is the yaml representation of the worker block for a pipeline.
+//
+// swagger:model PipelineWorker
 type Worker struct {
 	Flavor   string `json:"flavor,omitempty"   yaml:"flavor,omitempty"`
 	Platform string `json:"platform,omitempty" yaml:"platform,omitempty"`

@@ -66,20 +66,17 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Key:    "github/octocat/docker/username",
 					Engine: "native",
 					Type:   "repo",
-					Origin: &pipeline.Origin{},
+					Origin: &pipeline.Container{},
 				},
 				{
 					Name:   "docker_username",
 					Key:    "",
 					Engine: "",
 					Type:   "",
-					Origin: &pipeline.Origin{
+					Origin: &pipeline.Container{
 						Environment: map[string]string{"FOO": "bar"},
 						Image:       "target/vela-vault:latest",
-						Parameters: map[string]interface{}{
-							"addr": "vault.company.com",
-						},
-						Pull: true,
+						Pull:        true,
 						Ruleset: pipeline.Ruleset{
 							If: pipeline.Rules{
 								Event: []string{"push"},

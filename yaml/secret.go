@@ -32,6 +32,7 @@ type (
 	Origin struct {
 		Environment raw.StringSliceMap     `yaml:"environment,omitempty"`
 		Image       string                 `yaml:"image,omitempty"`
+		Name        string                 `yaml:"name,omitempty"`
 		Parameters  map[string]interface{} `yaml:"parameters,omitempty"`
 		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"`
 		Pull        bool                   `yaml:"pull,omitempty"`
@@ -98,9 +99,12 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 // Empty returns true if the provided origin is empty.
 func (o *Origin) Empty() bool {
 	// return true if every ruletype is empty
-	if len(o.Image) == 0 &&
+	if o.Environment == nil &&
+		len(o.Image) == 0 &&
+		len(o.Name) == 0 &&
 		o.Parameters == nil &&
-		len(o.Secrets) == 0 {
+		len(o.Secrets) == 0 &&
+		o.Pull == false {
 		return true
 	}
 
@@ -108,12 +112,11 @@ func (o *Origin) Empty() bool {
 }
 
 // Empty returns true if the provided origin is empty.
-func (o *Origin) ToPipeline() *pipeline.Origin {
-	return &pipeline.Origin{
+func (o *Origin) ToPipeline() *pipeline.Container {
+	return &pipeline.Container{
 		Environment: o.Environment,
 		Image:       o.Image,
 		Pull:        o.Pull,
-		Parameters:  o.Parameters,
 		Ruleset:     *o.Ruleset.ToPipeline(),
 		Secrets:     *o.Secrets.ToPipeline(),
 	}

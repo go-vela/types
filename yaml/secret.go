@@ -19,11 +19,12 @@ type (
 
 	// Secret is the yaml representation of a secret
 	// from the secrets block for a pipeline.
+	// nolint:lll // jsonschema will cause long lines
 	Secret struct {
-		Name   string `yaml:"name,omitempty"`
-		Key    string `yaml:"key,omitempty"`
-		Engine string `yaml:"engine,omitempty"`
-		Type   string `yaml:"type,omitempty"`
+		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
+		Key    string `yaml:"key,omitempty"    jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"`
+		Engine string `yaml:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/"`
+		Type   string `yaml:"type,omitempty"   jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/"`
 	}
 )
 

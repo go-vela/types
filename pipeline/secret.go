@@ -4,6 +4,12 @@
 
 package pipeline
 
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
+
 type (
 	// SecretSlice is the pipeline representation
 	// of the secrets block for a pipeline.
@@ -39,3 +45,106 @@ type (
 		Target string `json:"target,omitempty" yaml:"target,omitempty"`
 	}
 )
+
+var (
+	// ErrInvalidOrg defines the error type when the
+	// org in key does not equal the name of the organization.
+	ErrInvalidOrg = errors.New("invalid organization in key")
+	// ErrInvalidRepo defines the error type when the
+	// repo in key does not equal the name of the repository.
+	ErrInvalidRepo = errors.New("invalid repository in key")
+	// ErrInvalidShared defines the error type when the
+	// org in key does not equal the name of the team.
+	ErrInvalidShared = errors.New("invalid team in key")
+	// ErrInvalidPath defines the error type when the
+	// path provided for a type (org, repo, shared) is invalid.
+	ErrInvalidPath = errors.New("invalid secret path")
+)
+
+// ValidOrg returns true when the secret is valid for a given
+// organization.
+func (s *Secret) ValidOrg(org string) (bool, error) {
+	path := s.Key
+
+	// check if a path was provided
+	if !strings.Contains(path, "/") {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// split the full path into parts
+	parts := strings.SplitN(path, "/", 2)
+
+	// secret is invalid
+	if len(parts) != 2 {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// check if the org provided matches what we expect
+	if !strings.EqualFold(parts[0], org) {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+	}
+
+	return true, nil
+}
+
+// ValidRepo returns true when the secret is valid for a given
+// organization and repository.
+func (s *Secret) ValidRepo(org, repo string) (bool, error) {
+	path := s.Key
+
+	// check if a path was provided
+	if !strings.Contains(path, "/") {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// split the full path into parts
+	parts := strings.SplitN(path, "/", 3)
+
+	// secret is invalid
+	if len(parts) != 3 {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// check if the org provided matches what we expect
+	if !strings.EqualFold(parts[0], org) {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+	}
+
+	// check if the repo provided matches what we expect
+	if !strings.EqualFold(parts[1], repo) {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
+	}
+
+	return true, nil
+}
+
+// ValidShared returns true when the secret is valid for a given
+// organization and team.
+func (s *Secret) ValidShared(org, team string) (bool, error) {
+	path := s.Key
+
+	// check if a path was provided
+	if !strings.Contains(path, "/") {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// split the full path into parts
+	parts := strings.SplitN(path, "/", 3)
+
+	// secret is invalid
+	if len(parts) != 3 {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+	}
+
+	// check if the org provided is not empty
+	if !strings.EqualFold(parts[0], org) {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+	}
+
+	// check if the team provided is not empty
+	if !strings.EqualFold(parts[1], team) {
+		return false, fmt.Errorf("%s: %s ", ErrInvalidShared, org)
+	}
+
+	return true, nil
+}

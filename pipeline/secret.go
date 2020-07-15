@@ -120,7 +120,7 @@ func (s *Secret) ValidRepo(org, repo string) error {
 
 // ValidShared returns true when the secret is valid for a given
 // organization and team.
-func (s *Secret) ValidShared(org, team string) error {
+func (s *Secret) ValidShared(org string) error {
 	path := s.Key
 
 	// check if a path was provided
@@ -139,11 +139,6 @@ func (s *Secret) ValidShared(org, team string) error {
 	// check if the org provided is not empty
 	if !strings.EqualFold(parts[0], org) {
 		return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
-	}
-
-	// check if the team provided is not empty
-	if !strings.EqualFold(parts[1], team) {
-		return fmt.Errorf("%s: %s ", ErrInvalidShared, org)
 	}
 
 	return nil

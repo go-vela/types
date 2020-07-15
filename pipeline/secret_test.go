@@ -161,7 +161,6 @@ func TestPipeline_Secret_ValidShared_success(t *testing.T) {
 	tests := []struct {
 		secret *Secret
 		org    string
-		team   string
 	}{
 		{ // success with good data
 			secret: &Secret{
@@ -171,15 +170,14 @@ func TestPipeline_Secret_ValidShared_success(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:  "octocat",
-			team: "helloworld",
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidShared(test.org, test.team)
+		err := test.secret.ValidShared(test.org)
 		if err != nil {
 			t.Errorf("ValidShared had an error occur: %+v", err)
 		}
@@ -191,7 +189,6 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 	tests := []struct {
 		secret *Secret
 		org    string
-		team   string
 	}{
 		{ // failure with bad org
 			secret: &Secret{
@@ -201,19 +198,7 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:  "wrongorg",
-			team: "helloworld",
-		},
-		{ // failure with bad repo
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/helloworld/foo",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org:  "octocat",
-			team: "badrepo",
+			org: "wrongorg",
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -223,15 +208,14 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:  "octocat",
-			team: "helloworld",
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidShared(test.org, test.team)
+		err := test.secret.ValidShared(test.org)
 		if err == nil {
 			t.Errorf("ValidOrg should have failed")
 		}

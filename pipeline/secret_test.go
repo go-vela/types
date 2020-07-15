@@ -8,14 +8,11 @@ import (
 	"testing"
 )
 
-func TestPipeline_Secret_ValidOrg(t *testing.T) {
-	// setup types
-
+func TestPipeline_Secret_ValidOrg_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
 		org    string
-		want   bool
 	}{
 		{ // success with good data
 			secret: &Secret{
@@ -25,9 +22,26 @@ func TestPipeline_Secret_ValidOrg(t *testing.T) {
 				Engine: "native",
 				Type:   "org",
 			},
-			org:  "octocat",
-			want: true,
+			org: "octocat",
 		},
+	}
+
+	// run tests
+	for _, test := range tests {
+
+		err := test.secret.ValidOrg(test.org)
+		if err != nil {
+			t.Errorf("ValidOrg had an error occur: %+v", err)
+		}
+	}
+}
+
+func TestPipeline_Secret_ValidOrg_failure(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		secret *Secret
+		org    string
+	}{
 		{ // failure with bad org
 			secret: &Secret{
 				Name:   "foo",
@@ -36,8 +50,7 @@ func TestPipeline_Secret_ValidOrg(t *testing.T) {
 				Engine: "native",
 				Type:   "org",
 			},
-			org:  "wrongorg",
-			want: false,
+			org: "wrongorg",
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -47,31 +60,26 @@ func TestPipeline_Secret_ValidOrg(t *testing.T) {
 				Engine: "native",
 				Type:   "org",
 			},
-			org:  "octocat",
-			want: false,
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 
-		got, _ := test.secret.ValidOrg(test.org)
-
-		if got != test.want {
-			t.Errorf("ValidOrg is %v, want %v", got, test.want)
+		err := test.secret.ValidOrg(test.org)
+		if err == nil {
+			t.Errorf("ValidOrg should have failed")
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidRepo(t *testing.T) {
-	// setup types
-
+func TestPipeline_Secret_ValidRepo_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
 		org    string
 		repo   string
-		want   bool
 	}{
 		{ // success with good data
 			secret: &Secret{
@@ -83,8 +91,27 @@ func TestPipeline_Secret_ValidRepo(t *testing.T) {
 			},
 			org:  "octocat",
 			repo: "helloworld",
-			want: true,
 		},
+	}
+
+	// run tests
+	for _, test := range tests {
+
+		err := test.secret.ValidRepo(test.org, test.repo)
+		if err != nil {
+			t.Errorf("ValidRepo had an error occur: %+v", err)
+		}
+	}
+}
+
+func TestPipeline_Secret_ValidRepo_failure(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		secret *Secret
+		org    string
+		repo   string
+		want   error
+	}{
 		{ // failure with bad org
 			secret: &Secret{
 				Name:   "foo",
@@ -95,7 +122,6 @@ func TestPipeline_Secret_ValidRepo(t *testing.T) {
 			},
 			org:  "wrongorg",
 			repo: "helloworld",
-			want: false,
 		},
 		{ // failure with bad repo
 			secret: &Secret{
@@ -107,7 +133,6 @@ func TestPipeline_Secret_ValidRepo(t *testing.T) {
 			},
 			org:  "octocat",
 			repo: "badrepo",
-			want: false,
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -117,31 +142,26 @@ func TestPipeline_Secret_ValidRepo(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:  "octocat",
-			want: false,
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 
-		got, _ := test.secret.ValidRepo(test.org, test.repo)
-
-		if got != test.want {
-			t.Errorf("ValidRepo is %v, want %v", got, test.want)
+		err := test.secret.ValidRepo(test.org, test.repo)
+		if err == nil {
+			t.Errorf("ValidOrg should have failed")
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidShared(t *testing.T) {
-	// setup types
-
+func TestPipeline_Secret_ValidShared_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
 		org    string
 		team   string
-		want   bool
 	}{
 		{ // success with good data
 			secret: &Secret{
@@ -153,8 +173,26 @@ func TestPipeline_Secret_ValidShared(t *testing.T) {
 			},
 			org:  "octocat",
 			team: "helloworld",
-			want: true,
 		},
+	}
+
+	// run tests
+	for _, test := range tests {
+
+		err := test.secret.ValidShared(test.org, test.team)
+		if err != nil {
+			t.Errorf("ValidShared had an error occur: %+v", err)
+		}
+	}
+}
+
+func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		secret *Secret
+		org    string
+		team   string
+	}{
 		{ // failure with bad org
 			secret: &Secret{
 				Name:   "foo",
@@ -165,7 +203,6 @@ func TestPipeline_Secret_ValidShared(t *testing.T) {
 			},
 			org:  "wrongorg",
 			team: "helloworld",
-			want: false,
 		},
 		{ // failure with bad repo
 			secret: &Secret{
@@ -177,7 +214,6 @@ func TestPipeline_Secret_ValidShared(t *testing.T) {
 			},
 			org:  "octocat",
 			team: "badrepo",
-			want: false,
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -189,17 +225,15 @@ func TestPipeline_Secret_ValidShared(t *testing.T) {
 			},
 			org:  "octocat",
 			team: "helloworld",
-			want: false,
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 
-		got, _ := test.secret.ValidShared(test.org, test.team)
-
-		if got != test.want {
-			t.Errorf("ValidShared is %v, want %v", got, test.want)
+		err := test.secret.ValidShared(test.org, test.team)
+		if err == nil {
+			t.Errorf("ValidOrg should have failed")
 		}
 	}
 }

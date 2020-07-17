@@ -90,7 +90,7 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 		{
 			driver:     "foo",
 			containers: new(ContainerSlice),
-			want:       nil,
+			want:       new(ContainerSlice),
 		},
 	}
 

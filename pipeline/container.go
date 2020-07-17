@@ -82,41 +82,51 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 	containers := new(ContainerSlice)
 
+	// iterate through each Container in the pipeline
+	for _, container := range *c {
+		// sanitize container
+		cont := container.Sanitize(driver)
+
+		// append the Container to the new slice of Containers
+		*containers = append(*containers, cont)
+	}
+
+	return containers
+}
+
+// Sanitize cleans the fields for every step in the pipeline so they
+// can be safely executed on the worker. The fields are sanitized
+// based off of the provided runtime driver which is setup on every
+// worker. Currently, this function supports the following runtimes:
+//
+//   * Docker
+//   * Kubernetes
+func (c *Container) Sanitize(driver string) *Container {
+	container := c
+
 	switch driver {
 	// sanitize container for Docker
 	case constants.DriverDocker:
-		// iterate through each Container in the pipeline
-		for _, container := range *c {
-			if strings.Contains(container.ID, " ") {
-				container.ID = strings.ReplaceAll(container.ID, " ", "-")
-			}
-
-			// append the Container to the new slice of Containers
-			*containers = append(*containers, container)
+		if strings.Contains(c.ID, " ") {
+			c.ID = strings.ReplaceAll(c.ID, " ", "-")
 		}
 
-		return containers
+		return container
 	// sanitize container for Kubernetes
 	case constants.DriverKubernetes:
-		// iterate through each Container in the pipeline
-		for _, container := range *c {
-			if strings.Contains(container.ID, " ") {
-				container.ID = strings.ReplaceAll(container.ID, " ", "-")
-			}
-
-			if strings.Contains(container.ID, "_") {
-				container.ID = strings.ReplaceAll(container.ID, "_", "-")
-			}
-
-			if strings.Contains(container.ID, ".") {
-				container.ID = strings.ReplaceAll(container.ID, ".", "-")
-			}
-
-			// append the Container to the new slice of Containers
-			*containers = append(*containers, container)
+		if strings.Contains(c.ID, " ") {
+			container.ID = strings.ReplaceAll(c.ID, " ", "-")
 		}
 
-		return containers
+		if strings.Contains(c.ID, "_") {
+			container.ID = strings.ReplaceAll(c.ID, "_", "-")
+		}
+
+		if strings.Contains(c.ID, ".") {
+			container.ID = strings.ReplaceAll(c.ID, ".", "-")
+		}
+
+		return container
 	// unrecognized driver
 	default:
 		// log here?

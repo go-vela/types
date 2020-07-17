@@ -35,6 +35,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Engine: "",
 					Type:   "",
 					Origin: Origin{
+						Name:        "vault",
 						Environment: map[string]string{"FOO": "bar"},
 						Image:       "target/vela-vault:latest",
 						Parameters: map[string]interface{}{
@@ -74,6 +75,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Engine: "",
 					Type:   "",
 					Origin: &pipeline.Container{
+						Name:        "vault",
 						Environment: map[string]string{"FOO": "bar"},
 						Image:       "target/vela-vault:latest",
 						Pull:        true,

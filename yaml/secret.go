@@ -116,6 +116,7 @@ func (o *Origin) ToPipeline() *pipeline.Container {
 	return &pipeline.Container{
 		Environment: o.Environment,
 		Image:       o.Image,
+		Name:        o.Name,
 		Pull:        o.Pull,
 		Ruleset:     *o.Ruleset.ToPipeline(),
 		Secrets:     *o.Secrets.ToPipeline(),
@@ -179,7 +180,6 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
-
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
 		return nil

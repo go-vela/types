@@ -93,7 +93,7 @@ func (b *Build) Sanitize(driver string) *Build {
 
 	// sanitize secret plugins pipeline if they are provided
 	for i, secret := range b.Secrets {
-		if secret.Origin == nil {
+		if secret.Origin.Empty() {
 			continue
 		}
 

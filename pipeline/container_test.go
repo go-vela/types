@@ -104,6 +104,18 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 	}
 }
 
+func TestPipeline_Container_Empty(t *testing.T) {
+	// setup types
+	c := Container{}
+
+	// run test
+	got := c.Empty()
+
+	if !got {
+		t.Errorf("Container IsEmpty is %v, want true", got)
+	}
+}
+
 func TestPipeline_Container_Execute(t *testing.T) {
 	// setup types
 	containers := testContainers()

@@ -273,18 +273,21 @@ func testSecrets() *SecretSlice {
 			Key:    "github/octocat/foobar",
 			Name:   "foobar",
 			Type:   "repo",
+			Origin: &Container{},
 		},
 		{
 			Engine: "native",
 			Key:    "github/foobar",
 			Name:   "foobar",
 			Type:   "org",
+			Origin: &Container{},
 		},
 		{
 			Engine: "native",
 			Key:    "github/octokitties/foobar",
 			Name:   "foobar",
 			Type:   "shared",
+			Origin: &Container{},
 		},
 		{
 			Name: "",

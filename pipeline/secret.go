@@ -69,7 +69,7 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 
 	// iterate through each Secret in the pipeline
 	for _, secret := range *s {
-		if secret.Origin == nil {
+		if secret.Origin.Empty() {
 			// append the secret to the new slice of secrets
 			*secrets = append(*secrets, secret)
 

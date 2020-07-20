@@ -5,6 +5,7 @@
 package pipeline
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -132,6 +133,35 @@ func (c *Container) Sanitize(driver string) *Container {
 		// log here?
 		return nil
 	}
+}
+
+// Empty returns true if the provided ruletypes are empty.
+func (c *Container) Empty() bool {
+	// return true if every ruletype is empty
+	if len(c.ID) == 0 &&
+		len(c.Commands) == 0 &&
+		!c.Detach &&
+		len(c.Directory) == 0 &&
+		len(c.Entrypoint) == 0 &&
+		len(c.Environment) == 0 &&
+		c.ExitCode == 0 &&
+		len(c.Image) == 0 &&
+		len(c.Name) == 0 &&
+		len(c.Needs) == 0 &&
+		len(c.Networks) == 0 &&
+		c.Number == 0 &&
+		len(c.Ports) == 0 &&
+		!c.Privileged &&
+		!c.Pull &&
+		reflect.DeepEqual(c.Ruleset, Ruleset{}) &&
+		len(c.Secrets) == 0 &&
+		len(c.Ulimits) == 0 &&
+		len(c.Volumes) == 0 {
+		return true
+	}
+
+	// return false if any of the ruletype is provided
+	return false
 }
 
 // Execute returns true when the provided ruledata matches

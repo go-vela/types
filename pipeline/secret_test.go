@@ -106,6 +106,16 @@ func TestPipeline_Secret_ValidOrg_failure(t *testing.T) {
 			},
 			org: "octocat",
 		},
+		{ // failure with bad engine
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat",
+				Engine: "invalid",
+				Type:   "org",
+			},
+			org: "octocat",
+		},
 	}
 
 	// run tests
@@ -188,6 +198,16 @@ func TestPipeline_Secret_ValidRepo_failure(t *testing.T) {
 			},
 			org: "octocat",
 		},
+		{ // failure with bad engine
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat",
+				Engine: "invalid",
+				Type:   "org",
+			},
+			org: "octocat",
+		},
 	}
 
 	// run tests
@@ -251,6 +271,16 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 				Key:    "octocat",
 				Engine: "native",
 				Type:   "repo",
+			},
+			org: "octocat",
+		},
+		{ // failure with bad engine
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat",
+				Engine: "invalid",
+				Type:   "org",
 			},
 			org: "octocat",
 		},

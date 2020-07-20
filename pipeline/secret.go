@@ -8,6 +8,8 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/go-vela/types/constants"
 )
 
 type (
@@ -47,6 +49,9 @@ type (
 )
 
 var (
+	// ErrInvalidEngine defines the error type when the
+	// SecretEngine provided to the client is unsupported.
+	ErrInvalidEngine = errors.New("invalid secret engine")
 	// ErrInvalidOrg defines the error type when the
 	// org in key does not equal the name of the organization.
 	ErrInvalidOrg = errors.New("invalid organization in key")
@@ -97,6 +102,12 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 func (s *Secret) ValidOrg(org string) error {
 	path := s.Key
 
+	// check if the secret is not a native or vault type
+	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+		!strings.EqualFold(s.Engine, constants.DriverVault) {
+		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+	}
+
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
 		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
@@ -122,6 +133,12 @@ func (s *Secret) ValidOrg(org string) error {
 // organization and repository.
 func (s *Secret) ValidRepo(org, repo string) error {
 	path := s.Key
+
+	// check if the secret is not a native or vault type
+	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+		!strings.EqualFold(s.Engine, constants.DriverVault) {
+		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
@@ -153,6 +170,12 @@ func (s *Secret) ValidRepo(org, repo string) error {
 // organization and team.
 func (s *Secret) ValidShared(org string) error {
 	path := s.Key
+
+	// check if the secret is not a native or vault type
+	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+		!strings.EqualFold(s.Engine, constants.DriverVault) {
+		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {

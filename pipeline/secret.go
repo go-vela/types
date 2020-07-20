@@ -61,6 +61,37 @@ var (
 	ErrInvalidPath = errors.New("invalid secret path")
 )
 
+// Purge removes the secrets that have a ruleset
+// that do not match the provided ruledata.
+func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
+	counter := 1
+	secrets := new(SecretSlice)
+
+	// iterate through each Secret in the pipeline
+	for _, secret := range *s {
+		if secret.Origin == nil {
+			// append the secret to the new slice of secrets
+			*secrets = append(*secrets, secret)
+
+			continue
+		}
+
+		// verify ruleset matches
+		if secret.Origin.Ruleset.Match(r) {
+			// overwrite the Container number with the Container counter
+			secret.Origin.Number = counter
+
+			// increment Container counter
+			counter = counter + 1
+
+			// append the secret to the new slice of secrets
+			*secrets = append(*secrets, secret)
+		}
+	}
+
+	return secrets
+}
+
 // ValidOrg returns true when the secret is valid for a given
 // organization.
 func (s *Secret) ValidOrg(org string) error {

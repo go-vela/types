@@ -5,8 +5,52 @@
 package pipeline
 
 import (
+	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
+
+func TestPipeline_SecretSlice_Purge(t *testing.T) {
+	// setup types
+	secrets := testSecrets()
+	*secrets = (*secrets)[:len(*secrets)-1]
+
+	// setup tests
+	tests := []struct {
+		secrets *SecretSlice
+		want    *SecretSlice
+	}{
+		{
+			secrets: testSecrets(),
+			want:    secrets,
+		},
+		{
+			secrets: new(SecretSlice),
+			want:    new(SecretSlice),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		r := &RuleData{
+			Branch: "master",
+			Event:  "push",
+			Path:   []string{},
+			Repo:   "foo/bar",
+			Tag:    "refs/heads/master",
+		}
+
+		got := test.secrets.Purge(r)
+
+		if !reflect.DeepEqual(got, test.want) {
+			if diff := cmp.Diff(test.want, got); diff != "" {
+				t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
+			}
+			t.Errorf("Purge is %v, want %v", got, test.want)
+		}
+	}
+}
 
 func TestPipeline_Secret_ValidOrg_success(t *testing.T) {
 	// setup tests
@@ -219,5 +263,59 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 		if err == nil {
 			t.Errorf("ValidOrg should have failed")
 		}
+	}
+}
+
+func testSecrets() *SecretSlice {
+	return &SecretSlice{
+		{
+			Engine: "native",
+			Key:    "github/octocat/foobar",
+			Name:   "foobar",
+			Type:   "repo",
+		},
+		{
+			Engine: "native",
+			Key:    "github/foobar",
+			Name:   "foobar",
+			Type:   "org",
+		},
+		{
+			Engine: "native",
+			Key:    "github/octokitties/foobar",
+			Name:   "foobar",
+			Type:   "shared",
+		},
+		{
+			Name: "",
+			Origin: &Container{
+				ID:          "secret_github octocat._1_vault",
+				Directory:   "/vela/src/foo//",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "vault:latest",
+				Name:        "vault",
+				Number:      1,
+				Pull:        true,
+				Ruleset: Ruleset{
+					If:       Rules{Event: []string{"push"}},
+					Operator: "and",
+				},
+			},
+		},
+		{
+			Origin: &Container{
+				ID:          "secret_github octocat._2_vault",
+				Directory:   "/vela/src/foo//",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "vault:latest",
+				Name:        "vault",
+				Number:      2,
+				Pull:        true,
+				Ruleset: Ruleset{
+					If:       Rules{Event: []string{"pull_request"}},
+					Operator: "and",
+				},
+			},
+		},
 	}
 }

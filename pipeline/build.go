@@ -47,9 +47,14 @@ func (b *Build) Purge(r *RuleData) *Build {
 		b.Steps = *b.Steps.Purge(r)
 	}
 
-	// purge services pipeline if services are provided
+	// purge services in pipeline if services are provided
 	if len(b.Services) > 0 {
 		b.Services = *b.Services.Purge(r)
+	}
+
+	// purge secrets in pipeline if secrets are provided
+	if len(b.Secrets) > 0 {
+		b.Secrets = *b.Secrets.Purge(r)
 	}
 
 	// return the purged pipeline

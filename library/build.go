@@ -39,6 +39,7 @@ type Build struct {
 	Branch       *string `json:"branch,omitempty"`
 	Ref          *string `json:"ref,omitempty"`
 	BaseRef      *string `json:"base_ref,omitempty"`
+	HeadRef      *string `json:"head_ref,omitempty"`
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
@@ -130,6 +131,8 @@ func (b *Build) Environment() map[string]string {
 		envs["BUILD_PULL_REQUEST_NUMBER"] = number
 		envs["VELA_BUILD_PULL_REQUEST"] = number
 		envs["VELA_PULL_REQUEST"] = number
+		envs["VELA_PULL_REQUEST_SOURCE"] = b.GetHeadRef()
+		envs["VELA_PULL_REQUEST_TARGET"] = b.GetBaseRef()
 	}
 
 	// check if the Build event is tag
@@ -455,6 +458,19 @@ func (b *Build) GetBaseRef() string {
 	}
 
 	return *b.BaseRef
+}
+
+// GetHeadRef returns the HeadRef field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetHeadRef() string {
+	// return zero value if Build type or HeadRef field is nil
+	if b == nil || b.HeadRef == nil {
+		return ""
+	}
+
+	return *b.HeadRef
 }
 
 // GetHost returns the Host field.
@@ -808,6 +824,19 @@ func (b *Build) SetBaseRef(v string) {
 	b.BaseRef = &v
 }
 
+// SetHeadRef sets the HeadRef field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetHeadRef(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.HeadRef = &v
+}
+
 // SetHost sets the Host field.
 //
 // When the provided Build type is nil, it
@@ -863,6 +892,7 @@ func (b *Build) String() string {
   Error: %s,
   Event: %s,
   Finished: %d,
+  HeadRef: %s,
   Host: %s,
   ID: %d,
   Link: %s,
@@ -891,6 +921,7 @@ func (b *Build) String() string {
 		b.GetError(),
 		b.GetEvent(),
 		b.GetFinished(),
+		b.GetHeadRef(),
 		b.GetHost(),
 		b.GetID(),
 		b.GetLink(),

@@ -9,6 +9,7 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 	"github.com/lib/pq"
 )
@@ -33,6 +34,10 @@ var (
 	// ErrInvalidUserName defines the error type when a
 	// User type has an invalid Name field provided.
 	ErrInvalidUserName = errors.New("invalid user name provided")
+
+	// ErrExceededFavoritesLimit defines the error type when a
+	// User type has Favorites field provided that exceeds the database limit.
+	ErrExceededFavoritesLimit = errors.New("exceeded favorites limit")
 )
 
 // User is the database representation of a user.
@@ -117,6 +122,17 @@ func (u *User) Validate() error {
 	// verify the Name field is valid
 	if !userRegex.MatchString(u.Name.String) {
 		return ErrInvalidUserName
+	}
+
+	// calculate total size of favorites
+	total := 0
+	for _, f := range u.Favorites {
+		total += len(f)
+	}
+
+	// verify the Favorites field is within the database constraints
+	if total > constants.FavoritesMaxSize {
+		return ErrExceededFavoritesLimit
 	}
 
 	return nil

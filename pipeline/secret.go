@@ -140,27 +140,32 @@ func (s *Secret) ValidRepo(org, repo string) error {
 		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
-	// check if a path was provided
-	if !strings.Contains(path, "/") {
+	// check if a path was provided for explicit definition
+	if strings.Contains(path, "/") {
+		// split the full path into parts
+		parts := strings.SplitN(path, "/", 3)
+
+		// secret is invalid
+		if len(parts) != 3 {
+			return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		}
+
+		// check if the org provided matches what we expect
+		if !strings.EqualFold(parts[0], org) {
+			return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+		}
+
+		// check if the repo provided matches what we expect
+		if !strings.EqualFold(parts[1], repo) {
+			return fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
+		}
+
+		return nil
+	}
+
+	// check if name equals key for implicit definition
+	if !strings.EqualFold(s.Name, s.Key) {
 		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
-	}
-
-	// split the full path into parts
-	parts := strings.SplitN(path, "/", 3)
-
-	// secret is invalid
-	if len(parts) != 3 {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
-	}
-
-	// check if the org provided matches what we expect
-	if !strings.EqualFold(parts[0], org) {
-		return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
-	}
-
-	// check if the repo provided matches what we expect
-	if !strings.EqualFold(parts[1], repo) {
-		return fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
 	}
 
 	return nil

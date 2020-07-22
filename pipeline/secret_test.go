@@ -135,11 +135,22 @@ func TestPipeline_Secret_ValidRepo_success(t *testing.T) {
 		org    string
 		repo   string
 	}{
-		{ // success with good data
+		{ // success with implicit
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
 				Key:    "octocat/helloworld/foo",
+				Engine: "native",
+				Type:   "repo",
+			},
+			org:  "octocat",
+			repo: "helloworld",
+		},
+		{ // success with explicit
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "foo",
 				Engine: "native",
 				Type:   "repo",
 			},

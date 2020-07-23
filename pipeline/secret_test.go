@@ -7,8 +7,6 @@ package pipeline
 import (
 	"reflect"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestPipeline_SecretSlice_Purge(t *testing.T) {
@@ -44,9 +42,6 @@ func TestPipeline_SecretSlice_Purge(t *testing.T) {
 		got := test.secrets.Purge(r)
 
 		if !reflect.DeepEqual(got, test.want) {
-			if diff := cmp.Diff(test.want, got); diff != "" {
-				t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
-			}
 			t.Errorf("Purge is %v, want %v", got, test.want)
 		}
 	}

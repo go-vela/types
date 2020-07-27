@@ -12,7 +12,7 @@ import "fmt"
 type User struct {
 	ID           *int64    `json:"id,omitempty"`
 	Name         *string   `json:"name,omitempty"`
-	RefreshToken *string   `json:"refresh_token,omitempty"`
+	RefreshToken *string   `json:"-"`
 	Token        *string   `json:"-"`
 	Hash         *string   `json:"-"`
 	Favorites    *[]string `json:"favorites,omitempty"`
@@ -67,7 +67,7 @@ func (u *User) GetRefreshToken() string {
 		return ""
 	}
 
-	return *u.Token
+	return *u.RefreshToken
 }
 
 // GetToken returns the Token field.

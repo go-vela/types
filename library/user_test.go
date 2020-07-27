@@ -54,7 +54,7 @@ func TestLibrary_User_Getters(t *testing.T) {
 		}
 
 		if test.user.GetRefreshToken() != test.want.GetRefreshToken() {
-			t.Errorf("GetRefreshToken is %v, want %v", test.user.RefreshToken(), test.want.GetRefreshToken())
+			t.Errorf("GetRefreshToken is %v, want %v", test.user.GetRefreshToken(), test.want.GetRefreshToken())
 		}
 
 		if test.user.GetToken() != test.want.GetToken() {

@@ -4,6 +4,8 @@
 
 package types
 
+import "time"
+
 type (
 	// Database is the extra set of database data passed to the compiler.
 	Database struct {
@@ -26,8 +28,10 @@ type (
 
 	// Vela is the extra set of Vela data passed to the compiler.
 	Vela struct {
-		Address    string `json:"address"`
-		WebAddress string `json:"web_address"`
+		Address              string        `json:"address"`
+		WebAddress           string        `json:"web_address"`
+		AccessTokenDuration  time.Duration `json:"access_token_duration"`
+		RefreshTokenDuration time.Duration `json:"refresh_token_duration"`
 	}
 
 	// Metadata is the extra set of data passed to the compiler for

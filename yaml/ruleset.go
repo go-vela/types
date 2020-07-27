@@ -5,6 +5,7 @@
 package yaml
 
 import (
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 )
@@ -15,6 +16,7 @@ type (
 	Ruleset struct {
 		If       Rules  `yaml:"if,omitempty"`
 		Unless   Rules  `yaml:"unless,omitempty"`
+		Matcher  string `yaml:"matcher,omitempty"`
 		Operator string `yaml:"operator,omitempty"`
 		Continue bool   `yaml:"continue,omitempty"`
 	}
@@ -39,6 +41,7 @@ func (r *Ruleset) ToPipeline() *pipeline.Ruleset {
 	return &pipeline.Ruleset{
 		If:       *r.If.ToPipeline(),
 		Unless:   *r.Unless.ToPipeline(),
+		Matcher:  r.Matcher,
 		Operator: r.Operator,
 		Continue: r.Continue,
 	}
@@ -53,6 +56,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	advanced := new(struct {
 		If       Rules
 		Unless   Rules
+		Matcher  string
 		Operator string
 		Continue bool
 	})
@@ -64,6 +68,8 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// set ruleset `unless` to advanced `unless` rules
 	r.Unless = advanced.Unless
+	// set ruleset `matcher` to advanced `matcher`
+	r.Matcher = advanced.Matcher
 	// set ruleset `operator` to advanced `operator`
 	r.Operator = advanced.Operator
 	// set ruleset `continue` to advanced `continue`
@@ -82,9 +88,14 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// set ruleset `if` to advanced `if` rules
 	r.If = advanced.If
 
+	// implicitly set `matcher` field if empty for ruleset
+	if len(r.Matcher) == 0 {
+		r.Matcher = constants.MatcherFilepath
+	}
+
 	// implicitly set `operator` field if empty for ruleset
 	if len(r.Operator) == 0 {
-		r.Operator = "and"
+		r.Operator = constants.OperatorAnd
 	}
 
 	return nil

@@ -27,7 +27,7 @@ var (
 	// User type has an empty Name field provided.
 	ErrEmptyUserName = errors.New("empty user name provided")
 
-	// ErrEmptyRefreshUserToken defines the error type when a
+	// ErrEmptyUserRefreshToken defines the error type when a
 	// User type has an empty RefreshToken field provided.
 	ErrEmptyUserRefreshToken = errors.New("empty user refresh token provided")
 

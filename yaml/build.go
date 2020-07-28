@@ -12,7 +12,7 @@ type Build struct {
 	Worker    Worker        `yaml:"worker,omitempty"    jsonschema:"description=Limit the pipeline to certain types of workers."`
 	Secrets   SecretSlice   `yaml:"secrets,omitempty"   jsonschema:"description=Provide sensitive information.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
 	Services  ServiceSlice  `yaml:"services,omitempty"  jsonschema:"description=Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"`
-	Stages    StageSlice    `yaml:"stages,omitempty"    jsonschema:"description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/,oneof_type=object"`
+	Stages    StageSlice    `yaml:"stages,omitempty"    jsonschema:"description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
 	Steps     StepSlice     `yaml:"steps,omitempty"     jsonschema:"description=Provide sequential execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/"`
 	Templates TemplateSlice `yaml:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
 }

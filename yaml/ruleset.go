@@ -24,14 +24,14 @@ type (
 	// from a ruleset block for a step in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Rules struct {
-		Branch  []string `yaml:"branch,omitempty"  jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Comment []string `yaml:"comment,omitempty" jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Event   []string `yaml:"event,omitempty"   jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Path    []string `yaml:"path,omitempty"    jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Repo    []string `yaml:"repo,omitempty"    jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Status  []string `yaml:"status,omitempty"  jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Tag     []string `yaml:"tag,omitempty"     jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Target  []string `yaml:"target,omitempty"  jsonschema:"oneof_type=string;array,description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Branch  []string `yaml:"branch,omitempty"  jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Comment []string `yaml:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Event   []string `yaml:"event,omitempty"   jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Path    []string `yaml:"path,omitempty"    jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Repo    []string `yaml:"repo,omitempty"    jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Status  []string `yaml:"status,omitempty"  jsonschema:"description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Tag     []string `yaml:"tag,omitempty"     jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Target  []string `yaml:"target,omitempty"  jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
 	}
 )
 

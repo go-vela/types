@@ -33,15 +33,14 @@
       "description": "Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"
     },
     "stages": {
-      "items": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "$ref": "#/definitions/Stage"
-      },
-      "oneOf": [
-        {
-          "type": "object"
+      "patternProperties": {
+        ".*": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/Stage"
         }
-      ],
+      },
+      "additionalProperties": false,
+      "type": "object",
       "description": "Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"
     },
     "steps": {
@@ -60,8 +59,31 @@
       "description": "Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"
     }
   },
-  "additionalProperties": false,
+  "additionalProperties": true,
   "type": "object",
+  "oneOf": [
+    {
+      "required": [
+        "steps"
+      ],
+      "not": {
+        "required": [
+          "stages"
+        ]
+      }
+    },
+    {
+      "allOf": [
+        {
+          "not": {
+            "required": [
+              "steps"
+            ]
+          }
+        }
+      ]
+    }
+  ],
   "definitions": {
     "Metadata": {
       "properties": {
@@ -76,112 +98,130 @@
     "Rules": {
       "properties": {
         "branch": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "comment": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "event": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
-              "type": "string"
+              "enum": [
+                "push",
+                "pull_request",
+                "tag",
+                "deployment",
+                "comment"
+              ]
             },
             {
+              "items": {
+                "enum": [
+                  "push",
+                  "pull_request",
+                  "tag",
+                  "deployment",
+                  "comment"
+                ]
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "path": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "repo": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "status": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
-              "type": "string"
+              "enum": [
+                "failure",
+                "success"
+              ]
             },
             {
+              "items": {
+                "enum": [
+                  "failure",
+                  "success"
+                ]
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "tag": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
           "description": "Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
         },
         "target": {
-          "items": {
-            "type": "string"
-          },
           "oneOf": [
             {
               "type": "string"
             },
             {
+              "items": {
+                "type": "string"
+              },
               "type": "array"
             }
           ],
@@ -192,32 +232,39 @@
       "type": "object"
     },
     "Ruleset": {
-      "properties": {
-        "if": {
-          "$schema": "http://json-schema.org/draft-04/schema#",
-          "$ref": "#/definitions/Rules",
-          "description": "Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Rules"
         },
-        "unless": {
-          "$ref": "#/definitions/Rules",
-          "description": "Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
-        },
-        "operator": {
-          "enum": [
-            "or",
-            "and"
-          ],
-          "type": "string",
-          "description": "Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1",
-          "default": "and"
-        },
-        "continue": {
-          "type": "boolean",
-          "description": "Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+        {
+          "properties": {
+            "if": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "$ref": "#/definitions/Rules",
+              "description": "Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            },
+            "unless": {
+              "$ref": "#/definitions/Rules",
+              "description": "Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            },
+            "operator": {
+              "enum": [
+                "or",
+                "and"
+              ],
+              "type": "string",
+              "description": "Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1",
+              "default": "and"
+            },
+            "continue": {
+              "type": "boolean",
+              "description": "Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
         }
-      },
-      "additionalProperties": false,
-      "type": "object"
+      ]
     },
     "Secret": {
       "required": [
@@ -315,10 +362,17 @@
           "description": "Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"
         },
         "needs": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
           "description": "Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"
         },
         "steps": {

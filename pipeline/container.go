@@ -135,9 +135,9 @@ func (c *Container) Sanitize(driver string) *Container {
 	}
 }
 
-// Empty returns true if the provided ruletypes are empty.
+// Empty returns true if the provided container is empty.
 func (c *Container) Empty() bool {
-	// return true if every ruletype is empty
+	// return true if every container field is empty
 	if len(c.ID) == 0 &&
 		len(c.Commands) == 0 &&
 		!c.Detach &&

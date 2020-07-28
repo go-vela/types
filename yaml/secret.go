@@ -98,7 +98,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 // Empty returns true if the provided origin is empty.
 func (o *Origin) Empty() bool {
-	// return true if every ruletype is empty
+	// return true if every origin field is empty
 	if o.Environment == nil &&
 		len(o.Image) == 0 &&
 		len(o.Name) == 0 &&
@@ -111,7 +111,8 @@ func (o *Origin) Empty() bool {
 	return false
 }
 
-// Empty returns true if the provided origin is empty.
+// ToPipeline converts the Origin type
+// to a pipeline Container type.
 func (o *Origin) ToPipeline() *pipeline.Container {
 	return &pipeline.Container{
 		Environment: o.Environment,

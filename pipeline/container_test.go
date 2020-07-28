@@ -112,7 +112,7 @@ func TestPipeline_Container_Empty(t *testing.T) {
 	got := c.Empty()
 
 	if !got {
-		t.Errorf("Container IsEmpty is %v, want true", got)
+		t.Errorf("Container Empty is %v, want true", got)
 	}
 }
 

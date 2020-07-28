@@ -97,7 +97,7 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 	return secrets
 }
 
-// ValidOrg returns true when the secret is valid for a given
+// ValidOrg returns an error when the secret is valid for a given
 // organization.
 func (s *Secret) ValidOrg(org string) error {
 	path := s.Key
@@ -171,7 +171,7 @@ func (s *Secret) ValidRepo(org, repo string) error {
 	return nil
 }
 
-// ValidShared returns true when the secret is valid for a given
+// ValidShared returns an error when the secret is valid for a given
 // organization and team.
 func (s *Secret) ValidShared(org string) error {
 	path := s.Key

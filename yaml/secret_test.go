@@ -168,6 +168,7 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 								Event: []string{"push"},
 							},
 							Operator: "and",
+							Matcher:  "filepath",
 						},
 						Secrets: StepSecretSlice{
 							{

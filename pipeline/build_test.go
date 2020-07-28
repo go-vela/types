@@ -96,6 +96,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 	stages.Stages[0].Steps[0].ID = "github-octocat._1_init_init"
 	stages.Stages[1].Steps[0].ID = "github-octocat._1_clone_clone"
 	stages.Stages[2].Steps[0].ID = "github-octocat._1_echo_echo"
+	stages.Secrets[0].Origin.ID = "secret_github-octocat._1_vault"
 
 	kubeStages := testBuildStages()
 	kubeStages.ID = "github-octocat--1"
@@ -103,6 +104,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 	kubeStages.Stages[0].Steps[0].ID = "github-octocat--1-init-init"
 	kubeStages.Stages[1].Steps[0].ID = "github-octocat--1-clone-clone"
 	kubeStages.Stages[2].Steps[0].ID = "github-octocat--1-echo-echo"
+	kubeStages.Secrets[0].Origin.ID = "secret-github-octocat--1-vault"
 
 	steps := testBuildSteps()
 	steps.ID = "github-octocat._1"
@@ -110,6 +112,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 	steps.Steps[0].ID = "step_github-octocat._1_init"
 	steps.Steps[1].ID = "step_github-octocat._1_clone"
 	steps.Steps[2].ID = "step_github-octocat._1_echo"
+	steps.Secrets[0].Origin.ID = "secret_github-octocat._1_vault"
 
 	kubeSteps := testBuildSteps()
 	kubeSteps.ID = "github-octocat--1"
@@ -117,6 +120,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 	kubeSteps.Steps[0].ID = "step-github-octocat--1-init"
 	kubeSteps.Steps[1].ID = "step-github-octocat--1-clone"
 	kubeSteps.Steps[2].ID = "step-github-octocat--1-echo"
+	kubeSteps.Secrets[0].Origin.ID = "secret-github-octocat--1-vault"
 
 	// setup tests
 	tests := []struct {
@@ -265,6 +269,19 @@ func testBuildStages() *Build {
 				},
 			},
 		},
+		Secrets: SecretSlice{
+			{
+				Name: "foobar",
+				Origin: &Container{
+					ID:          "secret_github octocat._1_vault",
+					Directory:   "/home/github/octocat",
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "vault:latest",
+					Name:        "vault",
+					Number:      1,
+				},
+			},
+		},
 	}
 }
 
@@ -314,6 +331,19 @@ func testBuildSteps() *Build {
 				Ruleset: Ruleset{
 					If:       Rules{Event: []string{"push"}},
 					Operator: "and",
+				},
+			},
+		},
+		Secrets: SecretSlice{
+			{
+				Name: "foobar",
+				Origin: &Container{
+					ID:          "secret_github octocat._1_vault",
+					Directory:   "/home/github/octocat",
+					Environment: map[string]string{"FOO": "bar"},
+					Image:       "vault:latest",
+					Name:        "vault",
+					Number:      1,
 				},
 			},
 		},

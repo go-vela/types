@@ -90,7 +90,7 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 		{
 			driver:     "foo",
 			containers: new(ContainerSlice),
-			want:       nil,
+			want:       new(ContainerSlice),
 		},
 	}
 
@@ -101,6 +101,18 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Sanitize is %v, want %v", got, test.want)
 		}
+	}
+}
+
+func TestPipeline_Container_Empty(t *testing.T) {
+	// setup types
+	c := Container{}
+
+	// run test
+	got := c.Empty()
+
+	if !got {
+		t.Errorf("Container Empty is %v, want true", got)
 	}
 }
 

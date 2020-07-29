@@ -95,6 +95,61 @@
       "additionalProperties": false,
       "type": "object"
     },
+    "Origin": {
+      "required": [
+        "image",
+        "name"
+      ],
+      "properties": {
+        "environment": {
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "description": "Variables to inject into the container environment.\nReference: coming soon"
+        },
+        "image": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Docker image to use to create the ephemeral container.\nReference: "
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique name for the secret origin."
+        },
+        "parameters": {
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true
+            }
+          },
+          "type": "object",
+          "description": "Extra configuration variables for the secret plugin.\nReference: coming soon"
+        },
+        "secrets": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/StepSecret"
+          },
+          "type": "array",
+          "description": "Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"
+        },
+        "pull": {
+          "type": "boolean",
+          "description": "Automatically upgrade to the latest version of the image.\nReference: coming soon"
+        },
+        "ruleset": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/Ruleset",
+          "description": "Conditions to limit the execution of the container.\nReference: coming soon"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
     "Rules": {
       "properties": {
         "branch": {
@@ -247,6 +302,15 @@
               "$ref": "#/definitions/Rules",
               "description": "Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
             },
+            "matcher": {
+              "enum": [
+                "filepath",
+                "regexp"
+              ],
+              "type": "string",
+              "description": "Use the defined matching method.\nReference: coming soon",
+              "default": "filepath"
+            },
             "operator": {
               "enum": [
                 "or",
@@ -299,6 +363,11 @@
           "type": "string",
           "description": "Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/",
           "default": "repo"
+        },
+        "origin": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/Origin",
+          "description": "Define the origin of the secret.\nReference: coming soon"
         }
       },
       "additionalProperties": false,
@@ -448,13 +517,11 @@
           "description": "Automatically upgrade to the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/pull/"
         },
         "ruleset": {
-          "$schema": "http://json-schema.org/draft-04/schema#",
           "$ref": "#/definitions/Ruleset",
           "description": "Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/"
         },
         "secrets": {
           "items": {
-            "$schema": "http://json-schema.org/draft-04/schema#",
             "$ref": "#/definitions/StepSecret"
           },
           "type": "array",

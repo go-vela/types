@@ -9,9 +9,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"github.com/alecthomas/jsonschema"
 
+	"github.com/go-vela/types/raw"
 	"github.com/go-vela/types/yaml"
 )
 
@@ -41,6 +43,45 @@ func main() {
 	r := jsonschema.Reflector{
 		ExpandedStruct:             true,
 		RequiredFromJSONSchemaTags: true,
+		TypeMapper: func(i reflect.Type) *jsonschema.Type {
+			// array of strings or a map of strings
+			if i == reflect.TypeOf(raw.StringSliceMap{}) {
+				return &jsonschema.Type{
+					OneOf: []*jsonschema.Type{
+						{
+							Type: "object",
+							PatternProperties: map[string]*jsonschema.Type{
+								".*": {Type: "string"},
+							},
+							AdditionalProperties: []byte("false"),
+						},
+						{
+							Type: "array",
+							Items: &jsonschema.Type{
+								Type: "string",
+							},
+						},
+					},
+				}
+			}
+			// string or slice of strings
+			if i == reflect.TypeOf(raw.StringSlice{}) {
+				return &jsonschema.Type{
+					OneOf: []*jsonschema.Type{
+						{
+							Type: "string",
+						},
+						{
+							Type: "array",
+							Items: &jsonschema.Type{
+								Type: "string",
+							},
+						},
+					},
+				}
+			}
+			return nil
+		},
 	}
 	s := r.Reflect(&yaml.Build{})
 
@@ -48,7 +89,7 @@ func main() {
 	// TODO: do we need this?
 	s.AdditionalProperties = []byte("true")
 
-	// fix string or string slice
+	// attach enums to Rules props (they're not raw.StringSlice)
 	rulesetMap := EnumMap{
 		"branch":  []string{},
 		"comment": []string{},
@@ -68,15 +109,6 @@ func main() {
 
 			s.Definitions["Rules"].Properties.Set(k, p)
 		}
-	}
-
-	// fix "needs"
-	if needs, ok := s.Definitions["Stage"].Properties.Get("needs"); ok {
-		needs.(*jsonschema.Type).Type = ""
-		needs.(*jsonschema.Type).Items = nil
-		needs.(*jsonschema.Type).OneOf = oneOfWithEnum([]string{})
-
-		s.Definitions["Stage"].Properties.Set("needs", needs)
 	}
 
 	// stages fix
@@ -125,6 +157,50 @@ func main() {
 		{
 			Properties:           currRulesetProperties,
 			Type:                 "object",
+			AdditionalProperties: []byte("false"),
+		},
+	}
+
+	// fix ulimit on Step since it accepts an object
+	// or specially formatted string
+	ulimit := s.Definitions["Ulimit"].Properties
+	ulimitReq := s.Definitions["Ulimit"].Required
+	s.Definitions["Ulimit"].Type = ""
+	s.Definitions["Ulimit"].Properties = nil
+	s.Definitions["Ulimit"].AdditionalProperties = []byte("")
+	s.Definitions["Ulimit"].Required = []string{}
+	s.Definitions["Ulimit"].OneOf = []*jsonschema.Type{
+		{
+			Type:                 "string",
+			Pattern:              "[a-z]+=[0-9]+:[0-9]+",
+			AdditionalProperties: []byte("false"),
+		},
+		{
+			Type:                 "object",
+			Properties:           ulimit,
+			Required:             ulimitReq,
+			AdditionalProperties: []byte("false"),
+		},
+	}
+
+	// fix volume on Step since it accepts an object
+	// or a specially formatted string
+	vol := s.Definitions["Volume"].Properties
+	volReq := s.Definitions["Volume"].Required
+	s.Definitions["Volume"].Type = ""
+	s.Definitions["Volume"].Properties = nil
+	s.Definitions["Volume"].AdditionalProperties = []byte("")
+	s.Definitions["Volume"].Required = []string{}
+	s.Definitions["Volume"].OneOf = []*jsonschema.Type{
+		{
+			Type:                 "string",
+			Pattern:              "[a-z\\/]+:[a-z\\/]+:[row]+",
+			AdditionalProperties: []byte("false"),
+		},
+		{
+			Type:                 "object",
+			Properties:           vol,
+			Required:             volReq,
 			AdditionalProperties: []byte("false"),
 		},
 	}

@@ -102,12 +102,23 @@
       ],
       "properties": {
         "environment": {
-          "patternProperties": {
-            ".*": {
-              "type": "string"
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             }
-          },
-          "type": "object",
+          ],
           "description": "Variables to inject into the container environment.\nReference: coming soon"
         },
         "image": {
@@ -390,26 +401,51 @@
           "description": "Unique identifier for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"
         },
         "entrypoint": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
           "description": "Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"
         },
         "environment": {
-          "patternProperties": {
-            ".*": {
-              "type": "string"
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             }
-          },
-          "type": "object",
+          ],
           "description": "Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"
         },
         "ports": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
           "description": "List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"
         },
         "pull": {
@@ -463,10 +499,17 @@
       ],
       "properties": {
         "commands": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
           "description": "Execution instructions to run inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/commands/"
         },
         "detach": {
@@ -474,19 +517,37 @@
           "description": "Run the container in a detached (headless) state.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/detach/"
         },
         "entrypoint": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
           "description": "Command to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/entrypoint/"
         },
         "environment": {
-          "patternProperties": {
-            ".*": {
-              "type": "string"
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             }
-          },
-          "type": "object",
+          ],
           "description": "Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/environment/"
         },
         "image": {
@@ -616,50 +677,69 @@
       "type": "object"
     },
     "Ulimit": {
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "minLength": 1,
-          "type": "string",
-          "description": "Unique name of the user limit.\nReference: coming soon"
+      "oneOf": [
+        {
+          "pattern": "[a-z]+=[0-9]+:[0-9]+",
+          "additionalProperties": false,
+          "type": "string"
         },
-        "soft": {
-          "type": "integer",
-          "description": "Set the soft limit.\nReference: coming soon"
-        },
-        "hard": {
-          "type": "integer",
-          "description": "Set the hard limit.\nReference: coming soon"
+        {
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Unique name of the user limit.\nReference: coming soon"
+            },
+            "soft": {
+              "type": "integer",
+              "description": "Set the soft limit.\nReference: coming soon"
+            },
+            "hard": {
+              "type": "integer",
+              "description": "Set the hard limit.\nReference: coming soon"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
         }
-      },
-      "additionalProperties": false,
-      "type": "object"
+      ]
     },
     "Volume": {
-      "required": [
-        "source",
-        "destination"
-      ],
-      "properties": {
-        "source": {
-          "minLength": 1,
-          "type": "string",
-          "description": "Set the source directory to be mounted.\nReference: coming soon"
+      "oneOf": [
+        {
+          "pattern": "[a-z\\/]+:[a-z\\/]+:[row]+",
+          "additionalProperties": false,
+          "type": "string"
         },
-        "destination": {
-          "minLength": 1,
-          "type": "string",
-          "description": "Set the destination directory for the mount in the container.\nReference: coming soon"
-        },
-        "access_mode": {
-          "type": "string",
-          "description": "Set the access mode for the mounted volume.\nReference: coming soon"
+        {
+          "required": [
+            "source",
+            "destination"
+          ],
+          "properties": {
+            "source": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Set the source directory to be mounted.\nReference: coming soon"
+            },
+            "destination": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Set the destination directory for the mount in the container.\nReference: coming soon"
+            },
+            "access_mode": {
+              "type": "string",
+              "description": "Set the access mode for the mounted volume.\nReference: coming soon",
+              "default": "ro"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
         }
-      },
-      "additionalProperties": false,
-      "type": "object"
+      ]
     },
     "Worker": {
       "properties": {

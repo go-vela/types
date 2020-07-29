@@ -23,7 +23,7 @@ type (
 	Volume struct {
 		Source      string `yaml:"source,omitempty"      jsonschema:"required,minLength=1,description=Set the source directory to be mounted.\nReference: coming soon"`
 		Destination string `yaml:"destination,omitempty" jsonschema:"required,minLength=1,description=Set the destination directory for the mount in the container.\nReference: coming soon"`
-		AccessMode  string `yaml:"access_mode,omitempty" jsonschema:"description=Set the access mode for the mounted volume.\nReference: coming soon"`
+		AccessMode  string `yaml:"access_mode,omitempty" jsonschema:"default=ro,description=Set the access mode for the mounted volume.\nReference: coming soon"`
 	}
 )
 

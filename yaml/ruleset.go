@@ -10,10 +10,10 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Ruleset struct {
 		If       Rules  `yaml:"if,omitempty"       jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
 		Unless   Rules  `yaml:"unless,omitempty"   jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
@@ -24,7 +24,6 @@ type (
 
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Rules struct {
 		Branch  []string `yaml:"branch,omitempty"  jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
 		Comment []string `yaml:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`

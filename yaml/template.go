@@ -4,6 +4,7 @@
 
 package yaml
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// TemplateSlice is the yaml representation
 	// of the templates block for a pipeline.
@@ -11,7 +12,6 @@ type (
 
 	// Template is the yaml representation of a template
 	// from the templates block for a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Template struct {
 		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
 		Source string `yaml:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
@@ -20,7 +20,6 @@ type (
 
 	// StepTemplate is the yaml representation of the
 	// template block for a step in a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	StepTemplate struct {
 		Name      string                 `yaml:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`
 		Variables map[string]interface{} `yaml:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`

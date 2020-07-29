@@ -9,7 +9,7 @@ package yaml
 type Build struct {
 	Version   string        `yaml:"version,omitempty"   jsonschema:"minLength=1,description=Provide syntax version used to evaluate the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/version/"`
 	Metadata  Metadata      `yaml:"metadata,omitempty"  jsonschema:"description=Pass extra information.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
-	Worker    Worker        `yaml:"worker,omitempty"    jsonschema:"description=Limit the pipeline to certain types of workers."`
+	Worker    Worker        `yaml:"worker,omitempty"    jsonschema:"description=Limit the pipeline to certain types of workers.\nReference: coming soon"`
 	Secrets   SecretSlice   `yaml:"secrets,omitempty"   jsonschema:"description=Provide sensitive information.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
 	Services  ServiceSlice  `yaml:"services,omitempty"  jsonschema:"description=Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"`
 	Stages    StageSlice    `yaml:"stages,omitempty"    jsonschema:"description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`

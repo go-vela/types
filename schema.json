@@ -14,7 +14,7 @@
     "worker": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "$ref": "#/definitions/Worker",
-      "description": "Limit the pipeline to certain types of workers."
+      "description": "Limit the pipeline to certain types of workers.\nReference: coming soon"
     },
     "secrets": {
       "items": {
@@ -531,6 +531,22 @@
           "$schema": "http://json-schema.org/draft-04/schema#",
           "$ref": "#/definitions/StepTemplate",
           "description": "Name of template to expand in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"
+        },
+        "ulimits": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/Ulimit"
+          },
+          "type": "array",
+          "description": "Set the user limits for the container.\nReference: coming soon"
+        },
+        "volumes": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/Volume"
+          },
+          "type": "array",
+          "description": "Mount volumes for the container.\nReference: coming soon"
         }
       },
       "additionalProperties": false,
@@ -594,6 +610,52 @@
           "examples": [
             "github"
           ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Ulimit": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique name of the user limit.\nReference: coming soon"
+        },
+        "soft": {
+          "type": "integer",
+          "description": "Set the soft limit.\nReference: coming soon"
+        },
+        "hard": {
+          "type": "integer",
+          "description": "Set the hard limit.\nReference: coming soon"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Volume": {
+      "required": [
+        "source",
+        "destination"
+      ],
+      "properties": {
+        "source": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Set the source directory to be mounted.\nReference: coming soon"
+        },
+        "destination": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Set the destination directory for the mount in the container.\nReference: coming soon"
+        },
+        "access_mode": {
+          "type": "string",
+          "description": "Set the access mode for the mounted volume.\nReference: coming soon"
         }
       },
       "additionalProperties": false,

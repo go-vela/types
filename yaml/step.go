@@ -30,8 +30,8 @@ type (
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     jsonschema:"description=Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/"`
 		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     jsonschema:"description=Sensitive variables injected into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/secrets/"`
 		Template    StepTemplate           `yaml:"template,omitempty"    jsonschema:"description=Name of template to expand in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`
-		Ulimits     UlimitSlice            `yaml:"ulimits,omitempty"     jsonschema:"-"`
-		Volumes     VolumeSlice            `yaml:"volumes,omitempty"     jsonschema:"-"`
+		Ulimits     UlimitSlice            `yaml:"ulimits,omitempty"     jsonschema:"description=Set the user limits for the container.\nReference: coming soon"`
+		Volumes     VolumeSlice            `yaml:"volumes,omitempty"     jsonschema:"description=Mount volumes for the container.\nReference: coming soon"`
 	}
 )
 

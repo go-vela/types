@@ -56,6 +56,7 @@ func main() {
 					},
 				}
 			}
+
 			// handle string or slice of strings
 			if i == reflect.TypeOf(raw.StringSlice{}) {
 				return &jsonschema.Type{
@@ -237,7 +238,7 @@ func main() {
 // stringSliceOneOf is a helper to create an slice of
 // schema types that represent a string or a slice of
 // string. optionally provide an enum list to set on
-// the
+// the both types.
 func stringSliceOneOf(enum []string) []*jsonschema.Type {
 	s := []*jsonschema.Type{}
 

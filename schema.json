@@ -35,7 +35,6 @@
     "stages": {
       "patternProperties": {
         ".*": {
-          "$schema": "http://json-schema.org/draft-04/schema#",
           "$ref": "#/definitions/Stage"
         }
       },
@@ -59,7 +58,6 @@
       "description": "Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"
     }
   },
-  "additionalProperties": true,
   "type": "object",
   "oneOf": [
     {
@@ -84,6 +82,7 @@
       ]
     }
   ],
+  "title": "Vela Pipeline Configuration",
   "definitions": {
     "Metadata": {
       "properties": {
@@ -116,6 +115,7 @@
               "items": {
                 "type": "string"
               },
+              "additionalProperties": false,
               "type": "array"
             }
           ],
@@ -200,7 +200,8 @@
                 "tag",
                 "deployment",
                 "comment"
-              ]
+              ],
+              "type": "string"
             },
             {
               "items": {
@@ -210,7 +211,8 @@
                   "tag",
                   "deployment",
                   "comment"
-                ]
+                ],
+                "type": "string"
               },
               "type": "array"
             }
@@ -251,14 +253,16 @@
               "enum": [
                 "failure",
                 "success"
-              ]
+              ],
+              "type": "string"
             },
             {
               "items": {
                 "enum": [
                   "failure",
                   "success"
-                ]
+                ],
+                "type": "string"
               },
               "type": "array"
             }
@@ -429,6 +433,7 @@
               "items": {
                 "type": "string"
               },
+              "additionalProperties": false,
               "type": "array"
             }
           ],
@@ -545,6 +550,7 @@
               "items": {
                 "type": "string"
               },
+              "additionalProperties": false,
               "type": "array"
             }
           ],

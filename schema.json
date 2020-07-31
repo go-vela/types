@@ -1,0 +1,773 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "version": {
+      "minLength": 1,
+      "type": "string",
+      "description": "Provide syntax version used to evaluate the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/version/"
+    },
+    "metadata": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "$ref": "#/definitions/Metadata",
+      "description": "Pass extra information.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"
+    },
+    "worker": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "$ref": "#/definitions/Worker",
+      "description": "Limit the pipeline to certain types of workers.\nReference: coming soon"
+    },
+    "secrets": {
+      "items": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "$ref": "#/definitions/Secret"
+      },
+      "type": "array",
+      "description": "Provide sensitive information.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"
+    },
+    "services": {
+      "items": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "$ref": "#/definitions/Service"
+      },
+      "type": "array",
+      "description": "Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"
+    },
+    "stages": {
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/Stage"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/definitions/Step"
+      },
+      "type": "array",
+      "description": "Provide sequential execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/"
+    },
+    "templates": {
+      "items": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "$ref": "#/definitions/Template"
+      },
+      "type": "array",
+      "description": "Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"
+    }
+  },
+  "type": "object",
+  "oneOf": [
+    {
+      "required": [
+        "steps"
+      ],
+      "not": {
+        "required": [
+          "stages"
+        ]
+      }
+    },
+    {
+      "allOf": [
+        {
+          "not": {
+            "required": [
+              "steps"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "title": "Vela Pipeline Configuration",
+  "definitions": {
+    "Metadata": {
+      "properties": {
+        "template": {
+          "type": "boolean",
+          "description": "Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Origin": {
+      "required": [
+        "image",
+        "name"
+      ],
+      "properties": {
+        "environment": {
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "additionalProperties": false,
+              "type": "array"
+            }
+          ],
+          "description": "Variables to inject into the container environment.\nReference: coming soon"
+        },
+        "image": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Docker image to use to create the ephemeral container.\nReference: "
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique name for the secret origin."
+        },
+        "parameters": {
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true
+            }
+          },
+          "type": "object",
+          "description": "Extra configuration variables for the secret plugin.\nReference: coming soon"
+        },
+        "secrets": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/StepSecret"
+          },
+          "type": "array",
+          "description": "Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"
+        },
+        "pull": {
+          "type": "boolean",
+          "description": "Automatically upgrade to the latest version of the image.\nReference: coming soon"
+        },
+        "ruleset": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/Ruleset",
+          "description": "Conditions to limit the execution of the container.\nReference: coming soon"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Rules": {
+      "properties": {
+        "branch": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "comment": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "event": {
+          "oneOf": [
+            {
+              "enum": [
+                "push",
+                "pull_request",
+                "tag",
+                "deployment",
+                "comment"
+              ],
+              "type": "string"
+            },
+            {
+              "items": {
+                "enum": [
+                  "push",
+                  "pull_request",
+                  "tag",
+                  "deployment",
+                  "comment"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "path": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "repo": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "status": {
+          "oneOf": [
+            {
+              "enum": [
+                "failure",
+                "success"
+              ],
+              "type": "string"
+            },
+            {
+              "items": {
+                "enum": [
+                  "failure",
+                  "success"
+                ],
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "tag": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Ruleset": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Rules"
+        },
+        {
+          "properties": {
+            "if": {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "$ref": "#/definitions/Rules",
+              "description": "Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            },
+            "unless": {
+              "$ref": "#/definitions/Rules",
+              "description": "Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            },
+            "matcher": {
+              "enum": [
+                "filepath",
+                "regexp"
+              ],
+              "type": "string",
+              "description": "Use the defined matching method.\nReference: coming soon",
+              "default": "filepath"
+            },
+            "operator": {
+              "enum": [
+                "or",
+                "and"
+              ],
+              "type": "string",
+              "description": "Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1",
+              "default": "and"
+            },
+            "continue": {
+              "type": "boolean",
+              "description": "Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        }
+      ]
+    },
+    "Secret": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"
+        },
+        "key": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"
+        },
+        "engine": {
+          "enum": [
+            "native",
+            "vault"
+          ],
+          "type": "string",
+          "description": "Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/",
+          "default": "native"
+        },
+        "type": {
+          "enum": [
+            "repo",
+            "org",
+            "shared"
+          ],
+          "type": "string",
+          "description": "Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/",
+          "default": "repo"
+        },
+        "origin": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/Origin",
+          "description": "Define the origin of the secret.\nReference: coming soon"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Service": {
+      "required": [
+        "image",
+        "name"
+      ],
+      "properties": {
+        "image": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Docker image used to create ephemeral container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/image/"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique identifier for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"
+        },
+        "entrypoint": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"
+        },
+        "environment": {
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "additionalProperties": false,
+              "type": "array"
+            }
+          ],
+          "description": "Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"
+        },
+        "ports": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"
+        },
+        "pull": {
+          "type": "boolean",
+          "description": "Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Stage": {
+      "required": [
+        "steps"
+      ],
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"
+        },
+        "needs": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"
+        },
+        "steps": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/Step"
+          },
+          "type": "array",
+          "description": "Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/steps/"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Step": {
+      "required": [
+        "image",
+        "name"
+      ],
+      "properties": {
+        "commands": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Execution instructions to run inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/commands/"
+        },
+        "detach": {
+          "type": "boolean",
+          "description": "Run the container in a detached (headless) state.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/detach/"
+        },
+        "entrypoint": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Command to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/entrypoint/"
+        },
+        "environment": {
+          "oneOf": [
+            {
+              "patternProperties": {
+                ".*": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "additionalProperties": false,
+              "type": "array"
+            }
+          ],
+          "description": "Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/environment/"
+        },
+        "image": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Docker image to use to create the ephemeral container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/image/"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique name for the step."
+        },
+        "parameters": {
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true
+            }
+          },
+          "type": "object",
+          "description": "Extra configuration variables for a plugin.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/parameters/"
+        },
+        "privileged": {
+          "type": "boolean",
+          "description": "Run the container with extra privileges.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/privileged/"
+        },
+        "pull": {
+          "type": "boolean",
+          "description": "Automatically upgrade to the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/pull/"
+        },
+        "ruleset": {
+          "$ref": "#/definitions/Ruleset",
+          "description": "Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/"
+        },
+        "secrets": {
+          "items": {
+            "$ref": "#/definitions/StepSecret"
+          },
+          "type": "array",
+          "description": "Sensitive variables injected into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/secrets/"
+        },
+        "template": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "$ref": "#/definitions/StepTemplate",
+          "description": "Name of template to expand in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"
+        },
+        "ulimits": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/Ulimit"
+          },
+          "type": "array",
+          "description": "Set the user limits for the container.\nReference: coming soon"
+        },
+        "volumes": {
+          "items": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "$ref": "#/definitions/Volume"
+          },
+          "type": "array",
+          "description": "Mount volumes for the container.\nReference: coming soon"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "StepSecret": {
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "StepTemplate": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"
+        },
+        "vars": {
+          "patternProperties": {
+            ".*": {
+              "additionalProperties": true
+            }
+          },
+          "type": "object",
+          "description": "Variables injected into the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Template": {
+      "required": [
+        "name",
+        "source"
+      ],
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Path to template in remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"
+        },
+        "type": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/",
+          "examples": [
+            "github"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Ulimit": {
+      "oneOf": [
+        {
+          "pattern": "[a-z]+=[0-9]+:[0-9]+",
+          "additionalProperties": false,
+          "type": "string"
+        },
+        {
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Unique name of the user limit.\nReference: coming soon"
+            },
+            "soft": {
+              "type": "integer",
+              "description": "Set the soft limit.\nReference: coming soon"
+            },
+            "hard": {
+              "type": "integer",
+              "description": "Set the hard limit.\nReference: coming soon"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        }
+      ]
+    },
+    "Volume": {
+      "oneOf": [
+        {
+          "pattern": "[a-z\\/]+:[a-z\\/]+:[row]+",
+          "additionalProperties": false,
+          "type": "string"
+        },
+        {
+          "required": [
+            "source",
+            "destination"
+          ],
+          "properties": {
+            "source": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Set the source directory to be mounted.\nReference: coming soon"
+            },
+            "destination": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Set the destination directory for the mount in the container.\nReference: coming soon"
+            },
+            "access_mode": {
+              "type": "string",
+              "description": "Set the access mode for the mounted volume.\nReference: coming soon",
+              "default": "ro"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        }
+      ]
+    },
+    "Worker": {
+      "properties": {
+        "flavor": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Flavor identifier for worker.",
+          "examples": [
+            "large"
+          ]
+        },
+        "platform": {
+          "minLength": 1,
+          "type": "string",
+          "description": "Platform identifier for the worker.",
+          "examples": [
+            "kubernetes"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  }
+}

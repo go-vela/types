@@ -137,6 +137,11 @@ func (c *Container) Sanitize(driver string) *Container {
 
 // Empty returns true if the provided container is empty.
 func (c *Container) Empty() bool {
+	// return true of the container is nil
+	if c == nil {
+		return true
+	}
+
 	// return true if every container field is empty
 	if len(c.ID) == 0 &&
 		len(c.Commands) == 0 &&

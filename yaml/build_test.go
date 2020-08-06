@@ -53,6 +53,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Ulimits: UlimitSlice{
@@ -81,6 +82,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Volumes: VolumeSlice{
@@ -109,6 +111,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Volumes: VolumeSlice{
@@ -138,6 +141,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 					},
@@ -152,6 +156,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Branch: []string{"master"}, Event: []string{"push"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Secrets: StepSecretSlice{
@@ -236,6 +241,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Pull:  true,
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
+									Matcher:  "filepath",
 									Operator: "and",
 								},
 								Volumes: VolumeSlice{
@@ -270,6 +276,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Pull:  true,
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
+									Matcher:  "filepath",
 									Operator: "and",
 								},
 								Volumes: VolumeSlice{
@@ -304,6 +311,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Pull:  true,
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
+									Matcher:  "filepath",
 									Operator: "and",
 								},
 								Volumes: VolumeSlice{
@@ -345,6 +353,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Volumes: VolumeSlice{
@@ -373,6 +382,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Volumes: VolumeSlice{
@@ -401,6 +411,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Pull:  true,
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
 							Operator: "and",
 						},
 						Volumes: VolumeSlice{

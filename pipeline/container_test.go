@@ -90,7 +90,7 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 		{
 			driver:     "foo",
 			containers: new(ContainerSlice),
-			want:       nil,
+			want:       new(ContainerSlice),
 		},
 	}
 
@@ -100,6 +100,36 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Sanitize is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestPipeline_Container_Empty(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		container *Container
+		want      bool
+	}{
+		{
+			container: &Container{},
+			want:      true,
+		},
+		{
+			container: nil,
+			want:      true,
+		},
+		{
+			container: &Container{ID: "foo"},
+			want:      false,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.container.Empty()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Empty is %v, want %v", got, test.want)
 		}
 	}
 }

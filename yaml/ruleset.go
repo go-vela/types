@@ -5,31 +5,34 @@
 package yaml
 
 import (
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 )
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.
 	Ruleset struct {
-		If       Rules  `yaml:"if,omitempty"`
-		Unless   Rules  `yaml:"unless,omitempty"`
-		Operator string `yaml:"operator,omitempty"`
-		Continue bool   `yaml:"continue,omitempty"`
+		If       Rules  `yaml:"if,omitempty"       jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Unless   Rules  `yaml:"unless,omitempty"   jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Matcher  string `yaml:"matcher,omitempty"  jsonschema:"enum=filepath,enum=regexp,default=filepath,description=Use the defined matching method.\nReference: coming soon"`
+		Operator string `yaml:"operator,omitempty" jsonschema:"enum=or,enum=and,default=and,description=Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Continue bool   `yaml:"continue,omitempty" jsonschema:"default=false,description=Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
 	}
 
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch  []string `yaml:"branch,omitempty"`
-		Comment []string `yaml:"comment,omitempty"`
-		Event   []string `yaml:"event,omitempty"`
-		Path    []string `yaml:"path,omitempty"`
-		Repo    []string `yaml:"repo,omitempty"`
-		Status  []string `yaml:"status,omitempty"`
-		Tag     []string `yaml:"tag,omitempty"`
-		Target  []string `yaml:"target,omitempty"`
+		Branch  []string `yaml:"branch,omitempty"  jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Comment []string `yaml:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Event   []string `yaml:"event,omitempty"   jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Path    []string `yaml:"path,omitempty"    jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Repo    []string `yaml:"repo,omitempty"    jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Status  []string `yaml:"status,omitempty"  jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Tag     []string `yaml:"tag,omitempty"     jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Target  []string `yaml:"target,omitempty"  jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
 	}
 )
 
@@ -39,6 +42,7 @@ func (r *Ruleset) ToPipeline() *pipeline.Ruleset {
 	return &pipeline.Ruleset{
 		If:       *r.If.ToPipeline(),
 		Unless:   *r.Unless.ToPipeline(),
+		Matcher:  r.Matcher,
 		Operator: r.Operator,
 		Continue: r.Continue,
 	}
@@ -53,6 +57,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	advanced := new(struct {
 		If       Rules
 		Unless   Rules
+		Matcher  string
 		Operator string
 		Continue bool
 	})
@@ -64,6 +69,8 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// set ruleset `unless` to advanced `unless` rules
 	r.Unless = advanced.Unless
+	// set ruleset `matcher` to advanced `matcher`
+	r.Matcher = advanced.Matcher
 	// set ruleset `operator` to advanced `operator`
 	r.Operator = advanced.Operator
 	// set ruleset `continue` to advanced `continue`
@@ -82,9 +89,14 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// set ruleset `if` to advanced `if` rules
 	r.If = advanced.If
 
+	// implicitly set `matcher` field if empty for ruleset
+	if len(r.Matcher) == 0 {
+		r.Matcher = constants.MatcherFilepath
+	}
+
 	// implicitly set `operator` field if empty for ruleset
 	if len(r.Operator) == 0 {
-		r.Operator = "and"
+		r.Operator = constants.OperatorAnd
 	}
 
 	return nil

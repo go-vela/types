@@ -26,6 +26,38 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Key:    "github/octocat/docker/username",
 					Engine: "native",
 					Type:   "repo",
+					Origin: Origin{},
+				},
+				{
+					Name:   "docker_username",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: Origin{
+						Name:        "vault",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "target/vela-vault:latest",
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+						Pull: true,
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Operator: "and",
+						},
+						Secrets: StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+					},
 				},
 			},
 			want: &pipeline.SecretSlice{
@@ -34,6 +66,35 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Key:    "github/octocat/docker/username",
 					Engine: "native",
 					Type:   "repo",
+					Origin: &pipeline.Container{},
+				},
+				{
+					Name:   "docker_username",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: &pipeline.Container{
+						Name:        "vault",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "target/vela-vault:latest",
+						Pull:        true,
+						Ruleset: pipeline.Ruleset{
+							If: pipeline.Rules{
+								Event: []string{"push"},
+							},
+							Operator: "and",
+						},
+						Secrets: pipeline.StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+					},
 				},
 			},
 		},
@@ -89,6 +150,37 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 					Key:    "noKeyEngineAndType",
 					Engine: "native",
 					Type:   "repo",
+				},
+				{
+					Name:   "externalSecret",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: Origin{
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "target/vela-vault:latest",
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+						Pull: true,
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Operator: "and",
+							Matcher:  "filepath",
+						},
+						Secrets: StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+					},
 				},
 			},
 		},

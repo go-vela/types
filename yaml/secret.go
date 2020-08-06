@@ -12,6 +12,7 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// SecretSlice is the yaml representation
 	// of the secrets block for a pipeline.
@@ -20,10 +21,23 @@ type (
 	// Secret is the yaml representation of a secret
 	// from the secrets block for a pipeline.
 	Secret struct {
-		Name   string `yaml:"name,omitempty"`
-		Key    string `yaml:"key,omitempty"`
-		Engine string `yaml:"engine,omitempty"`
-		Type   string `yaml:"type,omitempty"`
+		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
+		Key    string `yaml:"key,omitempty"    jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"`
+		Engine string `yaml:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/"`
+		Type   string `yaml:"type,omitempty"   jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/"`
+		Origin Origin `yaml:"origin,omitempty" jsonschema:"description=Define the origin of the secret.\nReference: coming soon"`
+	}
+
+	// Origin is the yaml representation of a method
+	// for looking up secrets with a secret plugin.
+	Origin struct {
+		Environment raw.StringSliceMap     `yaml:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: coming soon"`
+		Image       string                 `yaml:"image,omitempty"       jsonschema:"required,minLength=1,description=Docker image to use to create the ephemeral container.\nReference: "`
+		Name        string                 `yaml:"name,omitempty"        jsonschema:"required,minLength=1,description=Unique name for the secret origin."`
+		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  jsonschema:"description=Extra configuration variables for the secret plugin.\nReference: coming soon"`
+		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     jsonschema:"description=Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"`
+		Pull        bool                   `yaml:"pull,omitempty"        jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: coming soon"`
+		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
 	}
 )
 
@@ -41,6 +55,7 @@ func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {
 			Key:    secret.Key,
 			Engine: secret.Engine,
 			Type:   secret.Type,
+			Origin: secret.Origin.ToPipeline(),
 		})
 	}
 
@@ -61,17 +76,17 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// iterate through each element in the secret slice
 	for _, secret := range *secretSlice {
 		// implicitly set `key` field if empty
-		if len(secret.Key) == 0 {
+		if secret.Origin.Empty() && len(secret.Key) == 0 {
 			secret.Key = secret.Name
 		}
 
 		// implicitly set `engine` field if empty
-		if len(secret.Engine) == 0 {
+		if secret.Origin.Empty() && len(secret.Engine) == 0 {
 			secret.Engine = constants.DriverNative
 		}
 
 		// implicitly set `type` field if empty
-		if len(secret.Type) == 0 {
+		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
 		}
 	}
@@ -80,6 +95,34 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	*s = *secretSlice
 
 	return nil
+}
+
+// Empty returns true if the provided origin is empty.
+func (o *Origin) Empty() bool {
+	// return true if every origin field is empty
+	if o.Environment == nil &&
+		len(o.Image) == 0 &&
+		len(o.Name) == 0 &&
+		o.Parameters == nil &&
+		len(o.Secrets) == 0 &&
+		o.Pull == false {
+		return true
+	}
+
+	return false
+}
+
+// ToPipeline converts the Origin type
+// to a pipeline Container type.
+func (o *Origin) ToPipeline() *pipeline.Container {
+	return &pipeline.Container{
+		Environment: o.Environment,
+		Image:       o.Image,
+		Name:        o.Name,
+		Pull:        o.Pull,
+		Ruleset:     *o.Ruleset.ToPipeline(),
+		Secrets:     *o.Secrets.ToPipeline(),
+	}
 }
 
 type (
@@ -121,7 +164,6 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a string slice type
 	err := unmarshal(stringSlice)
 	if err == nil {
-
 		// iterate through each element in the string slice
 		for _, secret := range *stringSlice {
 			// append the element to the step secret slice
@@ -140,7 +182,6 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
-
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
 		return nil

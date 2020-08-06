@@ -254,7 +254,7 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 	}
 }
 
-func TestPipeline_Secret_ValidShared_success(t *testing.T) {
+func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret

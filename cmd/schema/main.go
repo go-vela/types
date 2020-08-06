@@ -181,6 +181,27 @@ func main() {
 		}
 	}
 
+	// fix StepSecret
+	// without changes it would only allow an array
+	// of objects per the struct, but we also allow
+	// an array of strings
+	if _, ok := s.Definitions["StepSecret"]; ok {
+		stepSecret := s.Definitions["StepSecret"].Properties
+		s.Definitions["StepSecret"].Type = ""
+		s.Definitions["StepSecret"].AdditionalProperties = []byte("")
+		s.Definitions["StepSecret"].OneOf = []*jsonschema.Type{
+			{
+				Type:                 "string",
+				AdditionalProperties: []byte("false"),
+			},
+			{
+				Type:                 "object",
+				Properties:           stepSecret,
+				AdditionalProperties: []byte("false"),
+			},
+		}
+	}
+
 	// fix volume
 	// without changes it would only allow an object
 	// per the struct, but we do some special handling

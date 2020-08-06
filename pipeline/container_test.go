@@ -105,14 +105,32 @@ func TestPipeline_ContainerSlice_Sanitize(t *testing.T) {
 }
 
 func TestPipeline_Container_Empty(t *testing.T) {
-	// setup types
-	c := Container{}
+	// setup tests
+	tests := []struct {
+		container *Container
+		want      bool
+	}{
+		{
+			container: &Container{},
+			want:      true,
+		},
+		{
+			container: nil,
+			want:      true,
+		},
+		{
+			container: &Container{ID: "foo"},
+			want:      false,
+		},
+	}
 
-	// run test
-	got := c.Empty()
+	// run tests
+	for _, test := range tests {
+		got := test.container.Empty()
 
-	if !got {
-		t.Errorf("Container Empty is %v, want true", got)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("Empty is %v, want %v", got, test.want)
+		}
 	}
 }
 

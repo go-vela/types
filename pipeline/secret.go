@@ -97,20 +97,20 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 	return secrets
 }
 
-// ValidOrg returns an error when the secret is valid for a given
-// organization.
-func (s *Secret) ValidOrg(org string) error {
+// ParseOrg returns the parts (org, key) of the secret path
+// when the secret is valid for a given organization.
+func (s *Secret) ParseOrg(org string) (string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+		return "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// split the full path into parts
@@ -118,26 +118,26 @@ func (s *Secret) ValidOrg(org string) error {
 
 	// secret is invalid
 	if len(parts) != 2 {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// check if the org provided matches what we expect
 	if !strings.EqualFold(parts[0], org) {
-		return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
 	}
 
-	return nil
+	return parts[0], parts[1], nil
 }
 
-// ValidRepo returns an error when the secret is valid for a given
-// organization and repository.
-func (s *Secret) ValidRepo(org, repo string) error {
+// ParseRepo returns the parts (org, repo, key) of the secret path
+// when the secret is valid for a given organization and repository.
+func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+		return "", "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
 	// check if a path was provided for explicit definition
@@ -147,44 +147,44 @@ func (s *Secret) ValidRepo(org, repo string) error {
 
 		// secret is invalid
 		if len(parts) != 3 {
-			return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 		}
 
 		// check if the org provided matches what we expect
 		if !strings.EqualFold(parts[0], org) {
-			return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
 		}
 
 		// check if the repo provided matches what we expect
 		if !strings.EqualFold(parts[1], repo) {
-			return fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
 		}
 
-		return nil
+		return parts[0], parts[1], parts[2], nil
 	}
 
 	// check if name equals key for implicit definition
 	if !strings.EqualFold(s.Name, s.Key) {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
-	return nil
+	return org, repo, s.Name, nil
 }
 
-// ValidShared returns an error when the secret is valid for a given
-// organization and team.
-func (s *Secret) ValidShared(org string) error {
+// ParseShared returns the parts (org, team, key) of the secret path
+// when the secret is valid for a given organization and team.
+func (s *Secret) ParseShared(org string) (string, string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
+		return "", "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// split the full path into parts
@@ -192,13 +192,13 @@ func (s *Secret) ValidShared(org string) error {
 
 	// secret is invalid
 	if len(parts) != 3 {
-		return fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// check if the org provided is not empty
 	if !strings.EqualFold(parts[0], org) {
-		return fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
 	}
 
-	return nil
+	return parts[0], parts[1], parts[2], nil
 }

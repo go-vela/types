@@ -6,6 +6,7 @@ package pipeline
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -47,7 +48,7 @@ func TestPipeline_SecretSlice_Purge(t *testing.T) {
 	}
 }
 
-func TestPipeline_Secret_ValidOrg_success(t *testing.T) {
+func TestPipeline_Secret_ParseOrg_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
@@ -68,14 +69,24 @@ func TestPipeline_Secret_ValidOrg_success(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidOrg(test.org)
+		org, key, err := test.secret.ParseOrg(test.org)
 		if err != nil {
-			t.Errorf("ValidOrg had an error occur: %+v", err)
+			t.Errorf("ParseOrg had an error occur: %+v", err)
+		}
+
+		p := strings.SplitN(test.secret.Key, "/", 2)
+
+		if !strings.EqualFold(org, p[0]) {
+			t.Errorf("org is %s want %s", org, p[0])
+		}
+
+		if !strings.EqualFold(key, p[1]) {
+			t.Errorf("key is %s want %s", key, p[1])
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidOrg_failure(t *testing.T) {
+func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
@@ -116,21 +127,21 @@ func TestPipeline_Secret_ValidOrg_failure(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidOrg(test.org)
+		_, _, err := test.secret.ParseOrg(test.org)
 		if err == nil {
-			t.Errorf("ValidOrg should have failed")
+			t.Errorf("ParseOrg should have failed")
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidRepo_success(t *testing.T) {
+func TestPipeline_Secret_ParseRepo_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
 		org    string
 		repo   string
 	}{
-		{ // success with implicit
+		{ // success with explicit
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
@@ -141,7 +152,7 @@ func TestPipeline_Secret_ValidRepo_success(t *testing.T) {
 			org:  "octocat",
 			repo: "helloworld",
 		},
-		{ // success with explicit
+		{ // success with implicit
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
@@ -157,14 +168,31 @@ func TestPipeline_Secret_ValidRepo_success(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidRepo(test.org, test.repo)
+		org, repo, key, err := test.secret.ParseRepo(test.org, test.repo)
 		if err != nil {
-			t.Errorf("ValidRepo had an error occur: %+v", err)
+			t.Errorf("ParseRepo had an error occur: %+v", err)
+		}
+
+		// checks for explicit only
+		if strings.Contains(test.secret.Key, "/") {
+			p := strings.SplitN(test.secret.Key, "/", 3)
+
+			if !strings.EqualFold(org, p[0]) {
+				t.Errorf("org is %s want %s", org, p[0])
+			}
+
+			if !strings.EqualFold(repo, p[1]) {
+				t.Errorf("repo is %s want %s", key, p[1])
+			}
+
+			if !strings.EqualFold(key, p[2]) {
+				t.Errorf("key is %s want %s", key, p[2])
+			}
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidRepo_failure(t *testing.T) {
+func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
@@ -219,14 +247,14 @@ func TestPipeline_Secret_ValidRepo_failure(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidRepo(test.org, test.repo)
+		_, _, _, err := test.secret.ParseRepo(test.org, test.repo)
 		if err == nil {
-			t.Errorf("ValidOrg should have failed")
+			t.Errorf("ParseRepo should have failed")
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidShared_success(t *testing.T) {
+func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
@@ -247,14 +275,28 @@ func TestPipeline_Secret_ValidShared_success(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidShared(test.org)
+		org, team, key, err := test.secret.ParseShared(test.org)
 		if err != nil {
-			t.Errorf("ValidShared had an error occur: %+v", err)
+			t.Errorf("ParseShared had an error occur: %+v", err)
+		}
+
+		p := strings.SplitN(test.secret.Key, "/", 3)
+
+		if !strings.EqualFold(org, p[0]) {
+			t.Errorf("org is %s want %s", org, p[0])
+		}
+
+		if !strings.EqualFold(team, p[1]) {
+			t.Errorf("repo is %s want %s", key, p[1])
+		}
+
+		if !strings.EqualFold(key, p[2]) {
+			t.Errorf("key is %s want %s", key, p[2])
 		}
 	}
 }
 
-func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
+func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
@@ -295,7 +337,7 @@ func TestPipeline_Secret_ValidShared_failure(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		err := test.secret.ValidShared(test.org)
+		_, _, _, err := test.secret.ParseShared(test.org)
 		if err == nil {
 			t.Errorf("ValidOrg should have failed")
 		}

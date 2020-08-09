@@ -12,6 +12,7 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// SecretSlice is the yaml representation
 	// of the secrets block for a pipeline.
@@ -20,23 +21,23 @@ type (
 	// Secret is the yaml representation of a secret
 	// from the secrets block for a pipeline.
 	Secret struct {
-		Name   string `yaml:"name,omitempty"`
-		Key    string `yaml:"key,omitempty"`
-		Engine string `yaml:"engine,omitempty"`
-		Type   string `yaml:"type,omitempty"`
-		Origin Origin `yaml:"origin,omitempty"`
+		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
+		Key    string `yaml:"key,omitempty"    jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"`
+		Engine string `yaml:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/"`
+		Type   string `yaml:"type,omitempty"   jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/"`
+		Origin Origin `yaml:"origin,omitempty" jsonschema:"description=Define the origin of the secret.\nReference: coming soon"`
 	}
 
 	// Origin is the yaml representation of a method
 	// for looking up secrets with a secret plugin.
 	Origin struct {
-		Environment raw.StringSliceMap     `yaml:"environment,omitempty"`
-		Image       string                 `yaml:"image,omitempty"`
-		Name        string                 `yaml:"name,omitempty"`
-		Parameters  map[string]interface{} `yaml:"parameters,omitempty"`
-		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"`
-		Pull        bool                   `yaml:"pull,omitempty"`
-		Ruleset     Ruleset                `yaml:"ruleset,omitempty"`
+		Environment raw.StringSliceMap     `yaml:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: coming soon"`
+		Image       string                 `yaml:"image,omitempty"       jsonschema:"required,minLength=1,description=Docker image to use to create the ephemeral container.\nReference: "`
+		Name        string                 `yaml:"name,omitempty"        jsonschema:"required,minLength=1,description=Unique name for the secret origin."`
+		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  jsonschema:"description=Extra configuration variables for the secret plugin.\nReference: coming soon"`
+		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     jsonschema:"description=Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"`
+		Pull        bool                   `yaml:"pull,omitempty"        jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: coming soon"`
+		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
 	}
 )
 

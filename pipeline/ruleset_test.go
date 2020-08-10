@@ -228,7 +228,7 @@ func TestPipeline_Rules_Empty_Invalid(t *testing.T) {
 	}
 }
 
-func TestPipeline_Rules_Version_Regex_Tag(t *testing.T) {
+func TestPipeline_Rules_Match_Regex_Tag(t *testing.T) {
 	// setup types
 	tests := []struct {
 		rules    *Rules
@@ -276,7 +276,7 @@ func TestPipeline_Rules_Version_Regex_Tag(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rules.Match(test.data, test.operator)
+		got := test.rules.Match(test.data, "regexp", test.operator)
 
 		if got != test.want {
 			t.Errorf("Rules Match for %s operator is %v, want %v", test.operator, got, test.want)
@@ -408,7 +408,7 @@ func TestPipeline_Rules_Match(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rules.Match(test.data, test.operator)
+		got := test.rules.Match(test.data, "filepath", test.operator)
 
 		if got != test.want {
 			t.Errorf("Rules Match for %s operator is %v, want %v", test.operator, got, test.want)
@@ -419,53 +419,89 @@ func TestPipeline_Rules_Match(t *testing.T) {
 func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 	// setup types
 	tests := []struct {
+		matcher string
 		rule    Ruletype
 		pattern string
 		want    bool
 	}{
-		// Empty
-		{rule: []string{}, pattern: "master", want: true},
-		{rule: []string{}, pattern: "push", want: true},
-		{rule: []string{}, pattern: "foo/bar", want: true},
-		{rule: []string{}, pattern: "success", want: true},
-		{rule: []string{}, pattern: "release/*", want: true},
-		// Branch
-		{rule: []string{"master"}, pattern: "master", want: true},
-		{rule: []string{"master"}, pattern: "dev", want: false},
-		// Comment
-		{rule: []string{"ok to test"}, pattern: "ok to test", want: true},
-		{rule: []string{"ok to test"}, pattern: "rerun", want: false},
-		// Event
-		{rule: []string{"push"}, pattern: "push", want: true},
-		{rule: []string{"push"}, pattern: "pull_request", want: false},
-		// Repo
-		{rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
-		{rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
-		// Status
-		{rule: []string{"success"}, pattern: "success", want: true},
-		{rule: []string{"success"}, pattern: "failure", want: false},
-		// Tag
-		{rule: []string{"release/*"}, pattern: "release/*", want: true},
-		{rule: []string{"release/*"}, pattern: "stage/*", want: false},
-		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
-		{rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
-		{rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: true},
-		{rule: []string{"release/*/*"}, pattern: "release/stage/1.2.3-rc", want: true},
-		{rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
-		{rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
-		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3-rc", want: false},
-		{rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3", want: true},
-		// Target
-		{rule: []string{"production"}, pattern: "production", want: true},
-		{rule: []string{"stage"}, pattern: "production", want: false},
+		// Empty with filepath matcher
+		{matcher: "filepath", rule: []string{}, pattern: "master", want: true},
+		{matcher: "filepath", rule: []string{}, pattern: "push", want: true},
+		{matcher: "filepath", rule: []string{}, pattern: "foo/bar", want: true},
+		{matcher: "filepath", rule: []string{}, pattern: "success", want: true},
+		{matcher: "filepath", rule: []string{}, pattern: "release/*", want: true},
+		// Branch with filepath matcher
+		{matcher: "filepath", rule: []string{"master"}, pattern: "master", want: true},
+		{matcher: "filepath", rule: []string{"master"}, pattern: "dev", want: false},
+		// Comment with filepath matcher
+		{matcher: "filepath", rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{matcher: "filepath", rule: []string{"ok to test"}, pattern: "rerun", want: false},
+		// Event with filepath matcher
+		{matcher: "filepath", rule: []string{"push"}, pattern: "push", want: true},
+		{matcher: "filepath", rule: []string{"push"}, pattern: "pull_request", want: false},
+		// Repo with filepath matcher
+		{matcher: "filepath", rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
+		{matcher: "filepath", rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
+		// Status with filepath matcher
+		{matcher: "filepath", rule: []string{"success"}, pattern: "success", want: true},
+		{matcher: "filepath", rule: []string{"success"}, pattern: "failure", want: false},
+		// Tag with filepath matcher
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/*", want: true},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/111.2.3-rc", want: true},
+		{matcher: "filepath", rule: []string{"release/**"}, pattern: "release/1.2.3-rc-hold", want: true},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{matcher: "filepath", rule: []string{"release/*/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "filepath", rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "filepath", rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/1.2.3-rc", want: true},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/1.2.3", want: true},
+		// Target with filepath matcher
+		{matcher: "filepath", rule: []string{"production"}, pattern: "production", want: true},
+		{matcher: "filepath", rule: []string{"stage"}, pattern: "production", want: false},
+		// Empty with regex matcher
+		{matcher: "regexp", rule: []string{}, pattern: "master", want: true},
+		{matcher: "regexp", rule: []string{}, pattern: "push", want: true},
+		{matcher: "regexp", rule: []string{}, pattern: "foo/bar", want: true},
+		{matcher: "regexp", rule: []string{}, pattern: "success", want: true},
+		{matcher: "regexp", rule: []string{}, pattern: "release/*", want: true},
+		// Branch with regex matcher
+		{matcher: "regexp", rule: []string{"master"}, pattern: "master", want: true},
+		{matcher: "regexp", rule: []string{"master"}, pattern: "dev", want: false},
+		// Comment with regex matcher
+		{matcher: "regexp", rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{matcher: "regexp", rule: []string{"ok to test"}, pattern: "rerun", want: false},
+		// Event with regex matcher
+		{matcher: "regexp", rule: []string{"push"}, pattern: "push", want: true},
+		{matcher: "regexp", rule: []string{"push"}, pattern: "pull_request", want: false},
+		// Repo with regex matcher
+		{matcher: "regexp", rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
+		{matcher: "regexp", rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
+		// Status with regex matcher
+		{matcher: "regexp", rule: []string{"success"}, pattern: "success", want: true},
+		{matcher: "regexp", rule: []string{"success"}, pattern: "failure", want: false},
+		// Tag with regex matcher
+		{matcher: "regexp", rule: []string{"release/*"}, pattern: "release/*", want: true},
+		{matcher: "regexp", rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		{matcher: "regexp", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
+		{matcher: "regexp", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
+		{matcher: "regexp", rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "regexp", rule: []string{"release/*/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "regexp", rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "regexp", rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{matcher: "regexp", rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3-rc", want: false},
+		{matcher: "regexp", rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3", want: true},
+		// Target with regex matcher
+		{matcher: "regexp", rule: []string{"production"}, pattern: "production", want: true},
+		{matcher: "regexp", rule: []string{"stage"}, pattern: "production", want: false},
 	}
 
 	// run test
 	for _, test := range tests {
-		got := test.rule.MatchAnd(test.pattern)
+		got := test.rule.MatchAnd(test.pattern, test.matcher)
 
 		if got != test.want {
-			t.Errorf("Ruletype MatchAnd is %v, want %v", got, test.want)
+			t.Errorf("MatchAnd for %s matcher is %v, want %v", test.matcher, got, test.want)
 		}
 	}
 }
@@ -473,45 +509,73 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 	// setup types
 	tests := []struct {
+		matcher string
 		rule    Ruletype
 		pattern string
 		want    bool
 	}{
-		// Empty
-		{rule: []string{}, pattern: "master", want: false},
-		{rule: []string{}, pattern: "push", want: false},
-		{rule: []string{}, pattern: "foo/bar", want: false},
-		{rule: []string{}, pattern: "success", want: false},
-		{rule: []string{}, pattern: "release/*", want: false},
-		// Branch
-		{rule: []string{"master"}, pattern: "master", want: true},
-		{rule: []string{"master"}, pattern: "dev", want: false},
-		// Comment
-		{rule: []string{"ok to test"}, pattern: "ok to test", want: true},
-		{rule: []string{"ok to test"}, pattern: "rerun", want: false},
-		// Event
-		{rule: []string{"push"}, pattern: "push", want: true},
-		{rule: []string{"push"}, pattern: "pull_request", want: false},
-		// Repo
-		{rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
-		{rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
-		// Status
-		{rule: []string{"success"}, pattern: "success", want: true},
-		{rule: []string{"success"}, pattern: "failure", want: false},
-		// Tag
-		{rule: []string{"release/*"}, pattern: "release/*", want: true},
-		{rule: []string{"release/*"}, pattern: "stage/*", want: false},
-		// Target
-		{rule: []string{"production"}, pattern: "production", want: true},
-		{rule: []string{"stage"}, pattern: "production", want: false},
+		// Empty with filepath matcher
+		{matcher: "filepath", rule: []string{}, pattern: "master", want: false},
+		{matcher: "filepath", rule: []string{}, pattern: "push", want: false},
+		{matcher: "filepath", rule: []string{}, pattern: "foo/bar", want: false},
+		{matcher: "filepath", rule: []string{}, pattern: "success", want: false},
+		{matcher: "filepath", rule: []string{}, pattern: "release/*", want: false},
+		// Branch with filepath matcher
+		{matcher: "filepath", rule: []string{"master"}, pattern: "master", want: true},
+		{matcher: "filepath", rule: []string{"master"}, pattern: "dev", want: false},
+		// Comment with filepath matcher
+		{matcher: "filepath", rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{matcher: "filepath", rule: []string{"ok to test"}, pattern: "rerun", want: false},
+		// Event with filepath matcher
+		{matcher: "filepath", rule: []string{"push"}, pattern: "push", want: true},
+		{matcher: "filepath", rule: []string{"push"}, pattern: "pull_request", want: false},
+		// Repo with filepath matcher
+		{matcher: "filepath", rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
+		{matcher: "filepath", rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
+		// Status with filepath matcher
+		{matcher: "filepath", rule: []string{"success"}, pattern: "success", want: true},
+		{matcher: "filepath", rule: []string{"success"}, pattern: "failure", want: false},
+		// Tag with filepath matcher
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "release/*", want: true},
+		{matcher: "filepath", rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		// Target with filepath matcher
+		{matcher: "filepath", rule: []string{"production"}, pattern: "production", want: true},
+		{matcher: "filepath", rule: []string{"stage"}, pattern: "production", want: false},
+		// Empty with regexp matcher
+		{matcher: "regexp", rule: []string{}, pattern: "master", want: false},
+		{matcher: "regexp", rule: []string{}, pattern: "push", want: false},
+		{matcher: "regexp", rule: []string{}, pattern: "foo/bar", want: false},
+		{matcher: "regexp", rule: []string{}, pattern: "success", want: false},
+		{matcher: "regexp", rule: []string{}, pattern: "release/*", want: false},
+		// Branch with regexp matcher
+		{matcher: "regexp", rule: []string{"master"}, pattern: "master", want: true},
+		{matcher: "regexp", rule: []string{"master"}, pattern: "dev", want: false},
+		// Comment with regexp matcher
+		{matcher: "regexp", rule: []string{"ok to test"}, pattern: "ok to test", want: true},
+		{matcher: "regexp", rule: []string{"ok to test"}, pattern: "rerun", want: false},
+		// Event with regexp matcher
+		{matcher: "regexp", rule: []string{"push"}, pattern: "push", want: true},
+		{matcher: "regexp", rule: []string{"push"}, pattern: "pull_request", want: false},
+		// Repo with regexp matcher
+		{matcher: "regexp", rule: []string{"foo/bar"}, pattern: "foo/bar", want: true},
+		{matcher: "regexp", rule: []string{"foo/bar"}, pattern: "test/foobar", want: false},
+		// Status with regexp matcher
+		{matcher: "regexp", rule: []string{"success"}, pattern: "success", want: true},
+		{matcher: "regexp", rule: []string{"success"}, pattern: "failure", want: false},
+		// Tag with regexp matcher
+		{matcher: "regexp", rule: []string{"release/*"}, pattern: "release/*", want: true},
+		{matcher: "regexp", rule: []string{"release/*"}, pattern: "stage/*", want: false},
+		// Target with regexp matcher
+		{matcher: "regexp", rule: []string{"production"}, pattern: "production", want: true},
+		{matcher: "regexp", rule: []string{"stage"}, pattern: "production", want: false},
 	}
 
 	// run test
 	for _, test := range tests {
-		got := test.rule.MatchOr(test.pattern)
+		got := test.rule.MatchOr(test.pattern, test.matcher)
 
 		if got != test.want {
-			t.Errorf("Ruletype MatchOr is %v, want %v", got, test.want)
+			t.Errorf("MatchOr for %s matcher is %v, want %v", test.matcher, got, test.want)
 		}
 	}
 }

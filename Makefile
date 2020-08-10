@@ -132,3 +132,13 @@ bump-deps-full: check
 	@echo
 	@echo "### Upgrading all dependencies"
 	@go get -t -u ./...
+
+# The `schema` target is intended to create
+# a schema for a Vela pipeline.
+#
+# Usage: `make schema`
+.PHONY: schema
+schema:
+	@echo
+	@echo "### Creating schema"
+	@go run cmd/schema/main.go > schema.json

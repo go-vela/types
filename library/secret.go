@@ -53,7 +53,6 @@ func (s *Secret) Sanitize() *Secret {
 // the conditions to inject a secret into a pipeline container
 // resource
 func (s *Secret) Match(from *pipeline.Container) bool {
-
 	eACL, iACL := false, false
 	events, images, commands := s.GetEvents(), s.GetImages(), s.GetAllowCommand()
 

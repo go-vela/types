@@ -227,6 +227,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":          "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":      "TODO",
 				"VELA_PULL_REQUEST":         "1",
+				"VELA_PULL_REQUEST_SOURCE":  "changes",
+				"VELA_PULL_REQUEST_TARGET":  "",
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
 				"BUILD_BASE_REF":            "",
@@ -434,6 +436,10 @@ func TestLibrary_Build_Getters(t *testing.T) {
 			t.Errorf("GetBaseRef is %v, want %v", test.build.GetBaseRef(), test.want.GetBaseRef())
 		}
 
+		if test.build.GetHeadRef() != test.want.GetHeadRef() {
+			t.Errorf("GetHeadRef is %v, want %v", test.build.GetHeadRef(), test.want.GetHeadRef())
+		}
+
 		if test.build.GetHost() != test.want.GetHost() {
 			t.Errorf("GetHost is %v, want %v", test.build.GetHost(), test.want.GetHost())
 		}
@@ -493,6 +499,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetBranch(test.want.GetBranch())
 		test.build.SetRef(test.want.GetRef())
 		test.build.SetBaseRef(test.want.GetBaseRef())
+		test.build.SetHeadRef(test.want.GetHeadRef())
 		test.build.SetHost(test.want.GetHost())
 		test.build.SetRuntime(test.want.GetRuntime())
 		test.build.SetDistribution(test.want.GetDistribution())
@@ -593,6 +600,10 @@ func TestLibrary_Build_Setters(t *testing.T) {
 			t.Errorf("SetBaseRef is %v, want %v", test.build.GetBaseRef(), test.want.GetBaseRef())
 		}
 
+		if test.build.GetHeadRef() != test.want.GetHeadRef() {
+			t.Errorf("SetHeadRef is %v, want %v", test.build.GetHeadRef(), test.want.GetHeadRef())
+		}
+
 		if test.build.GetHost() != test.want.GetHost() {
 			t.Errorf("SetHost is %v, want %v", test.build.GetHost(), test.want.GetHost())
 		}
@@ -625,6 +636,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Error: %s,
   Event: %s,
   Finished: %d,
+  HeadRef: %s,
   Host: %s,
   ID: %d,
   Link: %s,
@@ -653,6 +665,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetError(),
 		b.GetEvent(),
 		b.GetFinished(),
+		b.GetHeadRef(),
 		b.GetHost(),
 		b.GetID(),
 		b.GetLink(),
@@ -706,6 +719,7 @@ func testBuild() *Build {
 	b.SetBranch("master")
 	b.SetRef("refs/heads/master")
 	b.SetBaseRef("")
+	b.SetHeadRef("changes")
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")

@@ -63,6 +63,7 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 		Branch:       sql.NullString{String: "", Valid: false},
 		Ref:          sql.NullString{String: "", Valid: false},
 		BaseRef:      sql.NullString{String: "", Valid: false},
+		HeadRef:      sql.NullString{String: "", Valid: false},
 		Host:         sql.NullString{String: "", Valid: false},
 		Runtime:      sql.NullString{String: "", Valid: false},
 		Distribution: sql.NullString{String: "", Valid: false},
@@ -125,6 +126,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetBranch("master")
 	want.SetRef("refs/heads/master")
 	want.SetBaseRef("")
+	want.SetHeadRef("")
 	want.SetHost("example.company.com")
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
@@ -209,6 +211,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetBranch("master")
 	b.SetRef("refs/heads/master")
 	b.SetBaseRef("")
+	b.SetHeadRef("")
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
@@ -262,6 +265,7 @@ func testBuild() *Build {
 		Branch:       sql.NullString{String: "master", Valid: true},
 		Ref:          sql.NullString{String: "refs/heads/master", Valid: true},
 		BaseRef:      sql.NullString{String: "", Valid: false},
+		HeadRef:      sql.NullString{String: "", Valid: false},
 		Host:         sql.NullString{String: "example.company.com", Valid: true},
 		Runtime:      sql.NullString{String: "docker", Valid: true},
 		Distribution: sql.NullString{String: "linux", Valid: true},

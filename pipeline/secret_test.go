@@ -275,7 +275,7 @@ func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		org, team, key, err := test.secret.ParseShared(test.org)
+		org, team, key, err := test.secret.ParseShared()
 		if err != nil {
 			t.Errorf("ParseShared had an error occur: %+v", err)
 		}
@@ -302,16 +302,6 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 		secret *Secret
 		org    string
 	}{
-		{ // failure with bad org
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/helloworld/foo",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org: "wrongorg",
-		},
 		{ // failure with bad key
 			secret: &Secret{
 				Name:   "foo",
@@ -337,9 +327,9 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 
-		_, _, _, err := test.secret.ParseShared(test.org)
+		_, _, _, err := test.secret.ParseShared()
 		if err == nil {
-			t.Errorf("ValidOrg should have failed")
+			t.Errorf("ParseShared should have failed")
 		}
 	}
 }

@@ -47,7 +47,7 @@ type Build struct {
 
 // Environment returns a list of environment variables
 // provided from the fields of the Build type.
-func (b *Build) Environment() map[string]string {
+func (b *Build) Environment(workspace string) map[string]string {
 	envs := map[string]string{
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
 		"VELA_BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
@@ -73,7 +73,7 @@ func (b *Build) Environment() map[string]string {
 		"VELA_BUILD_SOURCE":       ToString(b.GetSource()),
 		"VELA_BUILD_STATUS":       ToString(b.GetStatus()),
 		"VELA_BUILD_TITLE":        ToString(b.GetTitle()),
-		"VELA_BUILD_WORKSPACE":    ToString("TODO"),
+		"VELA_BUILD_WORKSPACE":    ToString(workspace),
 
 		// deprecated environment variables
 		"BUILD_AUTHOR":       ToString(b.GetAuthor()),
@@ -98,7 +98,7 @@ func (b *Build) Environment() map[string]string {
 		"BUILD_SOURCE":       ToString(b.GetSource()),
 		"BUILD_STATUS":       ToString(b.GetStatus()),
 		"BUILD_TITLE":        ToString(b.GetTitle()),
-		"BUILD_WORKSPACE":    ToString("TODO"),
+		"BUILD_WORKSPACE":    ToString(workspace),
 	}
 
 	// check if the Build event is comment
@@ -120,6 +120,7 @@ func (b *Build) Environment() map[string]string {
 		// add the deployment target to the list
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
+		envs["BUILD_TARGET"] = target
 	}
 
 	// check if the Build event is pull_request
@@ -138,7 +139,7 @@ func (b *Build) Environment() map[string]string {
 	// check if the Build event is tag
 	if strings.EqualFold(b.GetEvent(), constants.EventTag) {
 		// capture the tag reference
-		tag := ToString(strings.TrimPrefix(b.GetRef(), "refs/tags/"))
+		tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
 
 		// add the tag reference to the list
 		envs["BUILD_TAG"] = tag

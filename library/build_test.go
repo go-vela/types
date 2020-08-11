@@ -172,7 +172,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":        "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":    "TODO",
 				"VELA_DEPLOYMENT":         "production",
-				"BUILD_TARGET": 		   "production",
+				"BUILD_TARGET":            "production",
 				"BUILD_AUTHOR":            "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
 				"BUILD_BASE_REF":          "",

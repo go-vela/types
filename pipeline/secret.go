@@ -173,7 +173,7 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 
 // ParseShared returns the parts (org, team, key) of the secret path
 // when the secret is valid for a given organization and team.
-func (s *Secret) ParseShared(org string) (string, string, string, error) {
+func (s *Secret) ParseShared() (string, string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
@@ -193,11 +193,6 @@ func (s *Secret) ParseShared(org string) (string, string, string, error) {
 	// secret is invalid
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
-	}
-
-	// check if the org provided is not empty
-	if !strings.EqualFold(parts[0], org) {
-		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
 	}
 
 	return parts[0], parts[1], parts[2], nil

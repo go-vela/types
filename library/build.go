@@ -47,13 +47,13 @@ type Build struct {
 
 // Environment returns a list of environment variables
 // provided from the fields of the Build type.
-func (b *Build) Environment(workspace string) map[string]string {
+func (b *Build) Environment(workspace, channel string) map[string]string {
 	envs := map[string]string{
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
 		"VELA_BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
 		"VELA_BUILD_BASE_REF":     ToString(b.GetBaseRef()),
 		"VELA_BUILD_BRANCH":       ToString(b.GetBranch()),
-		"VELA_BUILD_CHANNEL":      ToString("TODO"),
+		"VELA_BUILD_CHANNEL":      ToString(channel),
 		"VELA_BUILD_CLONE":        ToString(b.GetClone()),
 		"VELA_BUILD_COMMIT":       ToString(b.GetCommit()),
 		"VELA_BUILD_CREATED":      ToString(b.GetCreated()),
@@ -80,7 +80,7 @@ func (b *Build) Environment(workspace string) map[string]string {
 		"BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
 		"BUILD_BASE_REF":     ToString(b.GetBaseRef()),
 		"BUILD_BRANCH":       ToString(b.GetBranch()),
-		"BUILD_CHANNEL":      ToString("TODO"),
+		"BUILD_CHANNEL":      ToString(channel),
 		"BUILD_CLONE":        ToString(b.GetClone()),
 		"BUILD_COMMIT":       ToString(b.GetCommit()),
 		"BUILD_CREATED":      ToString(b.GetCreated()),

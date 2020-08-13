@@ -315,7 +315,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.build.Environment("TODO")
+		got := test.build.Environment("TODO", "TODO")
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Environment is %v, want %v", got, test.want)

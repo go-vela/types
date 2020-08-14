@@ -11,6 +11,8 @@ import (
 )
 
 // Build is the pipeline representation of a build for a pipeline.
+//
+// swagger:model PipelineBuild
 type Build struct {
 	ID       string         `json:"id,omitempty"       yaml:"id,omitempty"`
 	Version  string         `json:"version,omitempty"  yaml:"version,omitempty"`
@@ -45,9 +47,14 @@ func (b *Build) Purge(r *RuleData) *Build {
 		b.Steps = *b.Steps.Purge(r)
 	}
 
-	// purge services pipeline if services are provided
+	// purge services in pipeline if services are provided
 	if len(b.Services) > 0 {
 		b.Services = *b.Services.Purge(r)
+	}
+
+	// purge secrets in pipeline if secrets are provided
+	if len(b.Secrets) > 0 {
+		b.Secrets = *b.Secrets.Purge(r)
 	}
 
 	// return the purged pipeline
@@ -69,19 +76,28 @@ func (b *Build) Sanitize(driver string) *Build {
 		return nil
 	}
 
-	// sanitize stages pipeline if stages are provided
+	// sanitize stages pipeline if they are provided
 	if len(b.Stages) > 0 {
 		b.Stages = *b.Stages.Sanitize(driver)
 	}
 
-	// sanitize steps pipeline if steps are provided
+	// sanitize steps pipeline if they are provided
 	if len(b.Steps) > 0 {
 		b.Steps = *b.Steps.Sanitize(driver)
 	}
 
-	// sanitize services pipeline if services are provided
+	// sanitize services pipeline if they are provided
 	if len(b.Services) > 0 {
 		b.Services = *b.Services.Sanitize(driver)
+	}
+
+	// sanitize secret plugins pipeline if they are provided
+	for i, secret := range b.Secrets {
+		if secret.Origin.Empty() {
+			continue
+		}
+
+		b.Secrets[i].Origin = secret.Origin.Sanitize(driver)
 	}
 
 	switch driver {

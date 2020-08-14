@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/go-vela/types/library"
@@ -117,6 +118,16 @@ func TestDatabase_User_Validate(t *testing.T) {
 				Hash:  sql.NullString{String: "superSecretHash", Valid: true},
 			},
 		},
+		{ // invalid favorites set for user
+			failure: true,
+			user: &User{
+				ID:        sql.NullInt64{Int64: 1, Valid: true},
+				Name:      sql.NullString{String: "octocat", Valid: true},
+				Token:     sql.NullString{String: "superSecretToken", Valid: true},
+				Hash:      sql.NullString{String: "superSecretHash", Valid: true},
+				Favorites: exceededFavorites(),
+			},
+		},
 	}
 
 	// run tests
@@ -171,4 +182,22 @@ func testUser() *User {
 		Active:    sql.NullBool{Bool: true, Valid: true},
 		Admin:     sql.NullBool{Bool: false, Valid: true},
 	}
+}
+
+// exceededFavorites returns a list of valid favorites that exceed the maximum size
+func exceededFavorites() []string {
+
+	// initialize empty favorites
+	favorites := []string{}
+
+	// add enough favorites to exceed the character limit
+	for i := 0; i < 500; i++ {
+		// construct favorite
+		// use i to adhere to unique favorites
+		favorite := "github/octocat-" + strconv.Itoa(i)
+
+		favorites = append(favorites, favorite)
+	}
+
+	return favorites
 }

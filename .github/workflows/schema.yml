@@ -1,0 +1,29 @@
+# name of the action
+name: schema
+
+# trigger on release events
+on:
+  release:
+    types: [ created ]
+
+# pipeline to execute
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:latest
+    steps:
+    - name: clone
+      uses: actions/checkout@v2
+
+    - name: build
+      run: |
+        make schema
+    
+    - name: upload
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: 'schema.json'
+      

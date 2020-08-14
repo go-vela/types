@@ -5,6 +5,7 @@
 package pipeline
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -13,10 +14,16 @@ import (
 type (
 	// ContainerSlice is the pipeline representation
 	// of the Containers block for a pipeline.
+	//
+	// swagger:model PipelineContainerSlice
+	//
+	// swagger:model PipelineContainerSlice
 	ContainerSlice []*Container
 
 	// Container is the pipeline representation
 	// of a Container in a pipeline.
+	//
+	// swagger:model PipelineContainer
 	Container struct {
 		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
 		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
@@ -76,46 +83,90 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 	containers := new(ContainerSlice)
 
+	// iterate through each Container in the pipeline
+	for _, container := range *c {
+		// sanitize container
+		cont := container.Sanitize(driver)
+
+		// append the Container to the new slice of Containers
+		*containers = append(*containers, cont)
+	}
+
+	return containers
+}
+
+// Sanitize cleans the fields for every step in the pipeline so they
+// can be safely executed on the worker. The fields are sanitized
+// based off of the provided runtime driver which is setup on every
+// worker. Currently, this function supports the following runtimes:
+//
+//   * Docker
+//   * Kubernetes
+func (c *Container) Sanitize(driver string) *Container {
+	container := c
+
 	switch driver {
 	// sanitize container for Docker
 	case constants.DriverDocker:
-		// iterate through each Container in the pipeline
-		for _, container := range *c {
-			if strings.Contains(container.ID, " ") {
-				container.ID = strings.ReplaceAll(container.ID, " ", "-")
-			}
-
-			// append the Container to the new slice of Containers
-			*containers = append(*containers, container)
+		if strings.Contains(c.ID, " ") {
+			c.ID = strings.ReplaceAll(c.ID, " ", "-")
 		}
 
-		return containers
+		return container
 	// sanitize container for Kubernetes
 	case constants.DriverKubernetes:
-		// iterate through each Container in the pipeline
-		for _, container := range *c {
-			if strings.Contains(container.ID, " ") {
-				container.ID = strings.ReplaceAll(container.ID, " ", "-")
-			}
-
-			if strings.Contains(container.ID, "_") {
-				container.ID = strings.ReplaceAll(container.ID, "_", "-")
-			}
-
-			if strings.Contains(container.ID, ".") {
-				container.ID = strings.ReplaceAll(container.ID, ".", "-")
-			}
-
-			// append the Container to the new slice of Containers
-			*containers = append(*containers, container)
+		if strings.Contains(c.ID, " ") {
+			container.ID = strings.ReplaceAll(c.ID, " ", "-")
 		}
 
-		return containers
+		if strings.Contains(c.ID, "_") {
+			container.ID = strings.ReplaceAll(c.ID, "_", "-")
+		}
+
+		if strings.Contains(c.ID, ".") {
+			container.ID = strings.ReplaceAll(c.ID, ".", "-")
+		}
+
+		return container
 	// unrecognized driver
 	default:
 		// log here?
 		return nil
 	}
+}
+
+// Empty returns true if the provided container is empty.
+func (c *Container) Empty() bool {
+	// return true of the container is nil
+	if c == nil {
+		return true
+	}
+
+	// return true if every container field is empty
+	if len(c.ID) == 0 &&
+		len(c.Commands) == 0 &&
+		!c.Detach &&
+		len(c.Directory) == 0 &&
+		len(c.Entrypoint) == 0 &&
+		len(c.Environment) == 0 &&
+		c.ExitCode == 0 &&
+		len(c.Image) == 0 &&
+		len(c.Name) == 0 &&
+		len(c.Needs) == 0 &&
+		len(c.Networks) == 0 &&
+		c.Number == 0 &&
+		len(c.Ports) == 0 &&
+		!c.Privileged &&
+		!c.Pull &&
+		reflect.DeepEqual(c.Ruleset, Ruleset{}) &&
+		len(c.Secrets) == 0 &&
+		len(c.Ulimits) == 0 &&
+		len(c.Volumes) == 0 {
+		return true
+	}
+
+	// return false if any of the ruletype is provided
+	return false
 }
 
 // Execute returns true when the provided ruledata matches

@@ -20,10 +20,11 @@ type (
 
 	// Ulimit is the yaml representation of a ulimit
 	// from the ulimits block for a step in a pipeline.
+	// nolint:lll // jsonschema will cause long lines
 	Ulimit struct {
-		Name string `yaml:"name,omitempty"`
-		Soft int64  `yaml:"soft,omitempty"`
-		Hard int64  `yaml:"hard,omitempty"`
+		Name string `yaml:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name of the user limit.\nReference: coming soon"`
+		Soft int64  `yaml:"soft,omitempty" jsonschema:"description=Set the soft limit.\nReference: coming soon"`
+		Hard int64  `yaml:"hard,omitempty" jsonschema:"description=Set the hard limit.\nReference: coming soon"`
 	}
 )
 

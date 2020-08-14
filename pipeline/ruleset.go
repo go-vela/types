@@ -5,22 +5,30 @@
 package pipeline
 
 import (
+	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/go-vela/types/constants"
 )
 
 type (
 	// Ruleset is the pipeline representation of
 	// a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRuleset
 	Ruleset struct {
 		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
 		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
+		Matcher  string `json:"matcher,omitempty"  yaml:"matcher,omitempty"`
 		Operator string `json:"operator,omitempty" yaml:"operator,omitempty"`
 		Continue bool   `json:"continue,omitempty" yaml:"continue,omitempty"`
 	}
 
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRules
 	Rules struct {
 		Branch  Ruletype `json:"branch,omitempty"  yaml:"branch,omitempty"`
 		Comment Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
@@ -34,6 +42,8 @@ type (
 
 	// Ruletype is the pipeline representation of an element
 	// for a ruleset block for a step in a pipeline.
+	//
+	// swagger:model PipelineRuletype
 	Ruletype []string
 
 	// RuleData is the data to check our ruleset
@@ -63,7 +73,7 @@ func (r *Ruleset) Match(from *RuleData) bool {
 
 	// return false when the unless rules are not empty and match
 	if !r.Unless.Empty() {
-		if r.Unless.Match(from, r.Operator) {
+		if r.Unless.Match(from, r.Matcher, r.Operator) {
 			return false
 		}
 	}
@@ -74,7 +84,7 @@ func (r *Ruleset) Match(from *RuleData) bool {
 	}
 
 	// return true when the if rules match
-	if r.If.Match(from, r.Operator) {
+	if r.If.Match(from, r.Matcher, r.Operator) {
 		return true
 	}
 
@@ -117,32 +127,30 @@ func (r *Rules) Empty() bool {
 // ruletypes from the rules match the provided ruledata. For
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
-func (r *Rules) Match(from *RuleData, op string) bool {
+func (r *Rules) Match(from *RuleData, matcher, op string) bool {
 	// set defaults
 	status := true
 
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
 		// if the "or" operator is provided in the ruleset
-		if strings.EqualFold(op, "or") {
-
+		if strings.EqualFold(op, constants.OperatorOr) {
 			// override the default to the "or"
 			if len(from.Status) != 0 {
-				status = r.Status.MatchOr(from.Status)
+				status = r.Status.MatchOr(from.Status, matcher)
 			}
 
 			// iterate through each path in the ruletype
 			for _, p := range from.Path {
-
 				// return true if any ruletype matches the ruledata
-				if r.Branch.MatchOr(from.Branch) ||
-					r.Comment.MatchOr(from.Comment) ||
-					r.Event.MatchOr(from.Event) ||
-					r.Path.MatchOr(p) ||
-					r.Repo.MatchOr(from.Repo) ||
+				if r.Branch.MatchOr(from.Branch, matcher) ||
+					r.Comment.MatchOr(from.Comment, matcher) ||
+					r.Event.MatchOr(from.Event, matcher) ||
+					r.Path.MatchOr(p, matcher) ||
+					r.Repo.MatchOr(from.Repo, matcher) ||
 					status ||
-					r.Tag.MatchOr(from.Tag) ||
-					r.Target.MatchOr(from.Target) {
+					r.Tag.MatchOr(from.Tag, matcher) ||
+					r.Target.MatchOr(from.Target, matcher) {
 					return true
 				}
 			}
@@ -153,21 +161,20 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 		// override the default to the "and"
 		if len(from.Status) != 0 {
-			status = r.Status.MatchAnd(from.Status)
+			status = r.Status.MatchAnd(from.Status, matcher)
 		}
 
 		// iterate through each path in the ruletype
 		for _, p := range from.Path {
-
 			// return true if every ruletype matches the ruledata
-			if r.Branch.MatchAnd(from.Branch) &&
-				r.Comment.MatchAnd(from.Comment) &&
-				r.Event.MatchAnd(from.Event) &&
-				r.Path.MatchAnd(p) &&
-				r.Repo.MatchAnd(from.Repo) &&
+			if r.Branch.MatchAnd(from.Branch, matcher) &&
+				r.Comment.MatchAnd(from.Comment, matcher) &&
+				r.Event.MatchAnd(from.Event, matcher) &&
+				r.Path.MatchAnd(p, matcher) &&
+				r.Repo.MatchAnd(from.Repo, matcher) &&
 				status &&
-				r.Tag.MatchAnd(from.Tag) &&
-				r.Target.MatchAnd(from.Target) {
+				r.Tag.MatchAnd(from.Tag, matcher) &&
+				r.Target.MatchAnd(from.Target, matcher) {
 				return true
 			}
 		}
@@ -177,22 +184,21 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 	}
 
 	// if the "or" operator is provided in the ruleset
-	if strings.EqualFold(op, "or") {
-
+	if strings.EqualFold(op, constants.OperatorOr) {
 		// override the default to the "or"
 		if len(from.Status) != 0 {
-			status = r.Status.MatchOr(from.Status)
+			status = r.Status.MatchOr(from.Status, matcher)
 		}
 
 		// return true if any ruletype matches the ruledata
-		if r.Branch.MatchOr(from.Branch) ||
-			r.Comment.MatchOr(from.Comment) ||
-			r.Event.MatchOr(from.Event) ||
-			r.Path.MatchOr("") ||
-			r.Repo.MatchOr(from.Repo) ||
+		if r.Branch.MatchOr(from.Branch, matcher) ||
+			r.Comment.MatchOr(from.Comment, matcher) ||
+			r.Event.MatchOr(from.Event, matcher) ||
+			r.Path.MatchOr("", matcher) ||
+			r.Repo.MatchOr(from.Repo, matcher) ||
 			status ||
-			r.Tag.MatchOr(from.Tag) ||
-			r.Target.MatchOr(from.Target) {
+			r.Tag.MatchOr(from.Tag, matcher) ||
+			r.Target.MatchOr(from.Target, matcher) {
 			return true
 		}
 
@@ -202,18 +208,18 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 
 	// override the default to the "and"
 	if len(from.Status) != 0 {
-		status = r.Status.MatchAnd(from.Status)
+		status = r.Status.MatchAnd(from.Status, matcher)
 	}
 
 	// return true if every ruletype matches the ruledata
-	if r.Branch.MatchAnd(from.Branch) &&
-		r.Comment.MatchAnd(from.Comment) &&
-		r.Event.MatchAnd(from.Event) &&
-		r.Path.MatchAnd("") &&
-		r.Repo.MatchAnd(from.Repo) &&
+	if r.Branch.MatchAnd(from.Branch, matcher) &&
+		r.Comment.MatchAnd(from.Comment, matcher) &&
+		r.Event.MatchAnd(from.Event, matcher) &&
+		r.Path.MatchAnd("", matcher) &&
+		r.Repo.MatchAnd(from.Repo, matcher) &&
 		status &&
-		r.Tag.MatchAnd(from.Tag) &&
-		r.Target.MatchAnd(from.Target) {
+		r.Tag.MatchAnd(from.Tag, matcher) &&
+		r.Target.MatchAnd(from.Target, matcher) {
 		return true
 	}
 
@@ -224,7 +230,7 @@ func (r *Rules) Match(from *RuleData, op string) bool {
 // MatchAnd returns true when the provided ruletype
 // matches the provided ruledata. When the provided
 // ruletype is empty, the function returns true.
-func (r *Ruletype) MatchAnd(data string) bool {
+func (r *Ruletype) MatchAnd(data, matcher string) bool {
 	// return true if an empty ruletype is provided
 	if len(*r) == 0 {
 		return true
@@ -232,10 +238,21 @@ func (r *Ruletype) MatchAnd(data string) bool {
 
 	// iterate through each pattern in the ruletype
 	for _, pattern := range *r {
-
-		// return true if the pattern matches the ruledata
-		if regexp.MustCompile(pattern).MatchString(data) {
-			return true
+		// handle the pattern based off the matcher provided
+		switch matcher {
+		case constants.MatcherRegex, "regex":
+			// return true if the regexp pattern matches the ruledata
+			if regexp.MustCompile(pattern).MatchString(data) {
+				return true
+			}
+		case constants.MatcherFilepath:
+			fallthrough
+		default:
+			// return true if the pattern matches the ruledata
+			ok, _ := filepath.Match(pattern, data)
+			if ok {
+				return true
+			}
 		}
 	}
 
@@ -246,7 +263,7 @@ func (r *Ruletype) MatchAnd(data string) bool {
 // MatchOr returns true when the provided ruletype
 // matches the provided ruledata. When the provided
 // ruletype is empty, the function returns false.
-func (r *Ruletype) MatchOr(data string) bool {
+func (r *Ruletype) MatchOr(data, matcher string) bool {
 	// return false if an empty ruletype is provided
 	if len(*r) == 0 {
 		return false
@@ -254,10 +271,21 @@ func (r *Ruletype) MatchOr(data string) bool {
 
 	// iterate through each pattern in the ruletype
 	for _, pattern := range *r {
-
-		// return true if the pattern matches the ruledata
-		if regexp.MustCompile(pattern).MatchString(data) {
-			return true
+		// handle the pattern based off the matcher provided
+		switch matcher {
+		case constants.MatcherRegex, "regex":
+			// return true if the regexp pattern matches the ruledata
+			if regexp.MustCompile(pattern).MatchString(data) {
+				return true
+			}
+		case constants.MatcherFilepath:
+			fallthrough
+		default:
+			// return true if the pattern matches the ruledata
+			ok, _ := filepath.Match(pattern, data)
+			if ok {
+				return true
+			}
 		}
 	}
 

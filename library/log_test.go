@@ -144,7 +144,21 @@ func TestLibrary_Log_String(t *testing.T) {
 	// setup types
 	l := testLog()
 
-	want := fmt.Sprintf("%+v", *l)
+	want := fmt.Sprintf(`{
+  BuildID: %d,
+  Data: %s,
+  ID: %d,
+  RepoID: %d,
+  ServiceID: %d,
+  StepID: %d,
+}`,
+		l.GetBuildID(),
+		l.GetData(),
+		l.GetID(),
+		l.GetRepoID(),
+		l.GetServiceID(),
+		l.GetStepID(),
+	)
 
 	// run test
 	got := l.String()

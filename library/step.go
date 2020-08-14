@@ -464,5 +464,39 @@ func (s *Step) SetDistribution(v string) {
 
 // String implements the Stringer interface for the Step type.
 func (s *Step) String() string {
-	return fmt.Sprintf("%+v", *s)
+	return fmt.Sprintf(`{
+  BuildID: %d,
+  Created: %d,
+  Distribution: %s,
+  Error: %s,
+  ExitCode: %d,
+  Finished: %d,
+  Host: %s,
+  ID: %d,
+  Image: %s,
+  Name: %s,
+  Number: %d,
+  RepoID: %d,
+  Runtime: %s,
+  Stage: %s,
+  Started: %d,
+  Status: %s,
+}`,
+		s.GetBuildID(),
+		s.GetCreated(),
+		s.GetDistribution(),
+		s.GetError(),
+		s.GetExitCode(),
+		s.GetFinished(),
+		s.GetHost(),
+		s.GetID(),
+		s.GetImage(),
+		s.GetName(),
+		s.GetNumber(),
+		s.GetRepoID(),
+		s.GetRuntime(),
+		s.GetStage(),
+		s.GetStarted(),
+		s.GetStatus(),
+	)
 }

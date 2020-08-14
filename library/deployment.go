@@ -257,5 +257,25 @@ func (d *Deployment) SetDescription(v string) {
 
 // String implements the Stringer interface for the Deployment type.
 func (d *Deployment) String() string {
-	return fmt.Sprintf("%+v", *d)
+	return fmt.Sprintf(`{
+  Commit: %s,
+  Description: %s,
+  ID: %d,
+  Ref: %s,
+  RepoID: %d,
+  Target: %s,
+  Task: %s,
+  URL: %s,
+  User: %s,
+}`,
+		d.GetCommit(),
+		d.GetDescription(),
+		d.GetID(),
+		d.GetRef(),
+		d.GetRepoID(),
+		d.GetTarget(),
+		d.GetTask(),
+		d.GetURL(),
+		d.GetUser(),
+	)
 }

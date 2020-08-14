@@ -6,11 +6,14 @@ package library
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/go-vela/types/pipeline"
 )
 
 // Executor is the library representation of an executor for a worker.
+//
+// swagger:model Executor
 type Executor struct {
 	ID           *int64          `json:"id,omitempty"`
 	Host         *string         `json:"host,omitempty"`
@@ -205,5 +208,21 @@ func (e *Executor) SetPipeline(v pipeline.Build) {
 
 // String implements the Stringer interface for the Executor type.
 func (e *Executor) String() string {
-	return fmt.Sprintf("%+v", *e)
+	return fmt.Sprintf(`{
+  Build: %s,
+  Distribution: %s,
+  Host: %s,
+  ID: %d,
+  Repo: %v,
+  Runtime: %s,
+  Pipeline: %v,
+}`,
+		strings.ReplaceAll(e.Build.String(), " ", "  "),
+		e.GetDistribution(),
+		e.GetHost(),
+		e.GetID(),
+		strings.ReplaceAll(e.Repo.String(), " ", "  "),
+		e.GetRuntime(),
+		e.GetPipeline(),
+	)
 }

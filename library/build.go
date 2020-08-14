@@ -39,6 +39,7 @@ type Build struct {
 	Branch       *string `json:"branch,omitempty"`
 	Ref          *string `json:"ref,omitempty"`
 	BaseRef      *string `json:"base_ref,omitempty"`
+	HeadRef      *string `json:"head_ref,omitempty"`
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
@@ -46,13 +47,13 @@ type Build struct {
 
 // Environment returns a list of environment variables
 // provided from the fields of the Build type.
-func (b *Build) Environment() map[string]string {
+func (b *Build) Environment(workspace, channel string) map[string]string {
 	envs := map[string]string{
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
 		"VELA_BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
 		"VELA_BUILD_BASE_REF":     ToString(b.GetBaseRef()),
 		"VELA_BUILD_BRANCH":       ToString(b.GetBranch()),
-		"VELA_BUILD_CHANNEL":      ToString("TODO"),
+		"VELA_BUILD_CHANNEL":      ToString(channel),
 		"VELA_BUILD_CLONE":        ToString(b.GetClone()),
 		"VELA_BUILD_COMMIT":       ToString(b.GetCommit()),
 		"VELA_BUILD_CREATED":      ToString(b.GetCreated()),
@@ -72,14 +73,14 @@ func (b *Build) Environment() map[string]string {
 		"VELA_BUILD_SOURCE":       ToString(b.GetSource()),
 		"VELA_BUILD_STATUS":       ToString(b.GetStatus()),
 		"VELA_BUILD_TITLE":        ToString(b.GetTitle()),
-		"VELA_BUILD_WORKSPACE":    ToString("TODO"),
+		"VELA_BUILD_WORKSPACE":    ToString(workspace),
 
 		// deprecated environment variables
 		"BUILD_AUTHOR":       ToString(b.GetAuthor()),
 		"BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
 		"BUILD_BASE_REF":     ToString(b.GetBaseRef()),
 		"BUILD_BRANCH":       ToString(b.GetBranch()),
-		"BUILD_CHANNEL":      ToString("TODO"),
+		"BUILD_CHANNEL":      ToString(channel),
 		"BUILD_CLONE":        ToString(b.GetClone()),
 		"BUILD_COMMIT":       ToString(b.GetCommit()),
 		"BUILD_CREATED":      ToString(b.GetCreated()),
@@ -97,7 +98,7 @@ func (b *Build) Environment() map[string]string {
 		"BUILD_SOURCE":       ToString(b.GetSource()),
 		"BUILD_STATUS":       ToString(b.GetStatus()),
 		"BUILD_TITLE":        ToString(b.GetTitle()),
-		"BUILD_WORKSPACE":    ToString("TODO"),
+		"BUILD_WORKSPACE":    ToString(workspace),
 	}
 
 	// check if the Build event is comment
@@ -119,6 +120,7 @@ func (b *Build) Environment() map[string]string {
 		// add the deployment target to the list
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
+		envs["BUILD_TARGET"] = target
 	}
 
 	// check if the Build event is pull_request
@@ -130,12 +132,14 @@ func (b *Build) Environment() map[string]string {
 		envs["BUILD_PULL_REQUEST_NUMBER"] = number
 		envs["VELA_BUILD_PULL_REQUEST"] = number
 		envs["VELA_PULL_REQUEST"] = number
+		envs["VELA_PULL_REQUEST_SOURCE"] = b.GetHeadRef()
+		envs["VELA_PULL_REQUEST_TARGET"] = b.GetBaseRef()
 	}
 
 	// check if the Build event is tag
 	if strings.EqualFold(b.GetEvent(), constants.EventTag) {
 		// capture the tag reference
-		tag := ToString(strings.TrimPrefix(b.GetRef(), "refs/tags/"))
+		tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
 
 		// add the tag reference to the list
 		envs["BUILD_TAG"] = tag
@@ -455,6 +459,19 @@ func (b *Build) GetBaseRef() string {
 	}
 
 	return *b.BaseRef
+}
+
+// GetHeadRef returns the HeadRef field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetHeadRef() string {
+	// return zero value if Build type or HeadRef field is nil
+	if b == nil || b.HeadRef == nil {
+		return ""
+	}
+
+	return *b.HeadRef
 }
 
 // GetHost returns the Host field.
@@ -808,6 +825,19 @@ func (b *Build) SetBaseRef(v string) {
 	b.BaseRef = &v
 }
 
+// SetHeadRef sets the HeadRef field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetHeadRef(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.HeadRef = &v
+}
+
 // SetHost sets the Host field.
 //
 // When the provided Build type is nil, it
@@ -849,5 +879,63 @@ func (b *Build) SetDistribution(v string) {
 
 // String implements the Stringer interface for the Build type.
 func (b *Build) String() string {
-	return fmt.Sprintf("%+v", *b)
+	return fmt.Sprintf(`{
+  Author: %s,
+  BaseRef: %s,
+  Branch: %s,
+  Clone: %s,
+  Commit: %s,
+  Created: %d,
+  Deploy: %s,
+  Distribution: %s,
+  Email: %s,
+  Enqueued: %d,
+  Error: %s,
+  Event: %s,
+  Finished: %d,
+  HeadRef: %s,
+  Host: %s,
+  ID: %d,
+  Link: %s,
+  Message: %s,
+  Number: %d,
+  Parent: %d,
+  Ref: %s,
+  RepoID: %d,
+  Runtime: %s,
+  Sender: %s,
+  Source: %s,
+  Started: %d,
+  Status: %s,
+  Title: %s,
+}`,
+		b.GetAuthor(),
+		b.GetBaseRef(),
+		b.GetBranch(),
+		b.GetClone(),
+		b.GetCommit(),
+		b.GetCreated(),
+		b.GetDeploy(),
+		b.GetDistribution(),
+		b.GetEmail(),
+		b.GetEnqueued(),
+		b.GetError(),
+		b.GetEvent(),
+		b.GetFinished(),
+		b.GetHeadRef(),
+		b.GetHost(),
+		b.GetID(),
+		b.GetLink(),
+		b.GetMessage(),
+		b.GetNumber(),
+		b.GetParent(),
+		b.GetRef(),
+		b.GetRepoID(),
+		b.GetRuntime(),
+		b.GetSender(),
+		b.GetSource(),
+		b.GetStarted(),
+		b.GetStatus(),
+		b.GetTitle(),
+	)
 }

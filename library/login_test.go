@@ -101,7 +101,17 @@ func TestLogin_String(t *testing.T) {
 	// setup types
 	l := testLogin()
 
-	want := fmt.Sprintf("%+v", *l)
+	want := fmt.Sprintf(`{
+  OTP: %s,
+  Password: %s,
+  Token: %s,
+  Username: %s,
+}`,
+		l.GetOTP(),
+		l.GetPassword(),
+		l.GetToken(),
+		l.GetUsername(),
+	)
 
 	// run test
 	got := l.String()

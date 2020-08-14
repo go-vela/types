@@ -50,7 +50,7 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StageSlice type.
 func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// map slice we try unmarshaling to
+	// map slice we try unmarshalling to
 	mapSlice := new(yaml.MapSlice)
 
 	// attempt to unmarshal as a map slice type
@@ -61,7 +61,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// iterate through each element in the map slice
 	for _, v := range *mapSlice {
-		// stage we try unmarshaling to
+		// stage we try unmarshalling to
 		stage := new(Stage)
 
 		// marshal interface value from ordered map

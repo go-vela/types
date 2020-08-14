@@ -49,7 +49,7 @@ func (u *UlimitSlice) ToPipeline() *pipeline.UlimitSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the UlimitSlice type.
 func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -112,7 +112,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	// ulimit slice we try unmarshaling to
+	// ulimit slice we try unmarshalling to
 	ulimits := new([]*Ulimit)
 
 	// attempt to unmarshal as a ulimit slice type

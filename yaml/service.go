@@ -52,7 +52,7 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the ServiceSlice type.
 func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// service slice we try unmarshaling to
+	// service slice we try unmarshalling to
 	serviceSlice := new([]*Service)
 
 	// attempt to unmarshal as a service slice type

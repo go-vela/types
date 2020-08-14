@@ -193,7 +193,7 @@ func (r *Repo) Validate() error {
 	return nil
 }
 
-// RepoFromLibrary converts the libray Repo type
+// RepoFromLibrary converts the library Repo type
 // to a database repo type.
 func RepoFromLibrary(r *library.Repo) *Repo {
 	repo := &Repo{

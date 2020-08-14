@@ -65,7 +65,7 @@ func (s *StepSlice) ToPipeline() *pipeline.ContainerSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StepSlice type.
 func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// step slice we try unmarshaling to
+	// step slice we try unmarshalling to
 	stepSlice := new([]*Step)
 
 	// attempt to unmarshal as a step slice type

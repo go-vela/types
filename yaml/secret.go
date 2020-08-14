@@ -64,7 +64,7 @@ func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the SecretSlice type.
 func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// secret slice we try unmarshaling to
+	// secret slice we try unmarshalling to
 	secretSlice := new([]*Secret)
 
 	// attempt to unmarshal as a secret slice type
@@ -158,7 +158,7 @@ func (s *StepSecretSlice) ToPipeline() *pipeline.StepSecretSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StepSecretSlice type.
 func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -176,7 +176,7 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 		return nil
 	}
 
-	// step secret slice we try unmarshaling to
+	// step secret slice we try unmarshalling to
 	secrets := new([]*StepSecret)
 
 	// attempt to unmarshal as a step secret slice type

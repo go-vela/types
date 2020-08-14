@@ -134,14 +134,14 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// attempt to unmarshal rules
 	err := unmarshal(rules)
 	if err == nil {
-		r.Branch = []string(rules.Branch)
-		r.Comment = []string(rules.Comment)
-		r.Event = []string(rules.Event)
-		r.Path = []string(rules.Path)
-		r.Repo = []string(rules.Repo)
-		r.Status = []string(rules.Status)
-		r.Tag = []string(rules.Tag)
-		r.Target = []string(rules.Target)
+		r.Branch = rules.Branch
+		r.Comment = rules.Comment
+		r.Event = rules.Event
+		r.Path = rules.Path
+		r.Repo = rules.Repo
+		r.Status = rules.Status
+		r.Tag = rules.Tag
+		r.Target = rules.Target
 	}
 
 	return err

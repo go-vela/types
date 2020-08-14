@@ -133,6 +133,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
 				Operator: "and",
+				Matcher:  "regex",
 			},
 		},
 	}

@@ -10,7 +10,7 @@ import "github.com/go-vela/types/pipeline"
 // the metadata block for a pipeline.
 // nolint:lll // jsonschema will cause long lines
 type Metadata struct {
-	Template bool `yaml:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
+	Template bool `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
 }
 
 // ToPipeline converts the Metadata type

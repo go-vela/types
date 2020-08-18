@@ -48,7 +48,7 @@ func (v *VolumeSlice) ToPipeline() *pipeline.VolumeSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the VolumeSlice type.
 func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -95,7 +95,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	// volume slice we try unmarshaling to
+	// volume slice we try unmarshalling to
 	volumes := new([]*Volume)
 
 	// attempt to unmarshal as a volume slice type

@@ -28,7 +28,7 @@ type (
 
 // UnmarshalYAML implements the Unmarshaler interface for the TemplateSlice type.
 func (t *TemplateSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// template slice we try unmarshaling to
+	// template slice we try unmarshalling to
 	templateSlice := new([]*Template)
 
 	// attempt to unmarshal as a template slice type

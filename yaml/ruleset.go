@@ -50,10 +50,10 @@ func (r *Ruleset) ToPipeline() *pipeline.Ruleset {
 
 // UnmarshalYAML implements the Unmarshaler interface for the Ruleset type.
 func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// simple struct we try unmarshaling to
+	// simple struct we try unmarshalling to
 	simple := new(Rules)
 
-	// advanced struct we try unmarshaling to
+	// advanced struct we try unmarshalling to
 	advanced := new(struct {
 		If       Rules
 		Unless   Rules
@@ -119,7 +119,7 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 
 // UnmarshalYAML implements the Unmarshaler interface for the Rules type.
 func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// rules struct we try unmarshaling to
+	// rules struct we try unmarshalling to
 	rules := new(struct {
 		Branch  raw.StringSlice
 		Comment raw.StringSlice
@@ -134,14 +134,14 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// attempt to unmarshal rules
 	err := unmarshal(rules)
 	if err == nil {
-		r.Branch = []string(rules.Branch)
-		r.Comment = []string(rules.Comment)
-		r.Event = []string(rules.Event)
-		r.Path = []string(rules.Path)
-		r.Repo = []string(rules.Repo)
-		r.Status = []string(rules.Status)
-		r.Tag = []string(rules.Tag)
-		r.Target = []string(rules.Target)
+		r.Branch = rules.Branch
+		r.Comment = rules.Comment
+		r.Event = rules.Event
+		r.Path = rules.Path
+		r.Repo = rules.Repo
+		r.Status = rules.Status
+		r.Tag = rules.Tag
+		r.Target = rules.Target
 	}
 
 	return err

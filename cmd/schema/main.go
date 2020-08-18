@@ -136,8 +136,8 @@ func main() {
 	// nested within 'if' (default) or 'unless'.
 	// without changes the struct would only allow
 	// the nested version.
-	if _, ok := s.Definitions["Ruleset"]; ok {
-		currRulesetProperties := s.Definitions["Ruleset"].Properties
+	if rd, ok := s.Definitions["Ruleset"]; ok {
+		rulesetProps := rd.Properties
 		s.Definitions["Ruleset"].Type = ""
 		s.Definitions["Ruleset"].Properties = nil
 		s.Definitions["Ruleset"].AdditionalProperties = []byte("")
@@ -148,7 +148,7 @@ func main() {
 				Ref: "#/definitions/Rules",
 			},
 			{
-				Properties:           currRulesetProperties,
+				Properties:           rulesetProps,
 				Type:                 "object",
 				AdditionalProperties: []byte("false"),
 			},
@@ -159,9 +159,9 @@ func main() {
 	// without changes it would only allow an object
 	// per the struct, but we do some special handling
 	// to allow specially formatted strings
-	if _, ok := s.Definitions["Ulimit"]; ok {
-		ulimit := s.Definitions["Ulimit"].Properties
-		ulimitReq := s.Definitions["Ulimit"].Required
+	if ud, ok := s.Definitions["Ulimit"]; ok {
+		ulimitProps := ud.Properties
+		ulimitReq := ud.Required
 		s.Definitions["Ulimit"].Type = ""
 		s.Definitions["Ulimit"].Properties = nil
 		s.Definitions["Ulimit"].AdditionalProperties = []byte("")
@@ -174,7 +174,7 @@ func main() {
 			},
 			{
 				Type:                 "object",
-				Properties:           ulimit,
+				Properties:           ulimitProps,
 				Required:             ulimitReq,
 				AdditionalProperties: []byte("false"),
 			},
@@ -185,9 +185,10 @@ func main() {
 	// without changes it would only allow an array
 	// of objects per the struct, but we also allow
 	// an array of strings
-	if _, ok := s.Definitions["StepSecret"]; ok {
-		stepSecret := s.Definitions["StepSecret"].Properties
+	if ssd, ok := s.Definitions["StepSecret"]; ok {
+		stepSecretProps := ssd.Properties
 		s.Definitions["StepSecret"].Type = ""
+		s.Definitions["StepSecret"].Properties = nil
 		s.Definitions["StepSecret"].AdditionalProperties = []byte("")
 		s.Definitions["StepSecret"].OneOf = []*jsonschema.Type{
 			{
@@ -196,7 +197,7 @@ func main() {
 			},
 			{
 				Type:                 "object",
-				Properties:           stepSecret,
+				Properties:           stepSecretProps,
 				AdditionalProperties: []byte("false"),
 			},
 		}
@@ -206,45 +207,33 @@ func main() {
 	// without changes it would only allow an object
 	// per the struct, but we do some special handling
 	// to allow specially formatted strings
-	vol := s.Definitions["Volume"].Properties
-	volReq := s.Definitions["Volume"].Required
-	s.Definitions["Volume"].Type = ""
-	s.Definitions["Volume"].Properties = nil
-	s.Definitions["Volume"].AdditionalProperties = []byte("")
-	s.Definitions["Volume"].Required = []string{}
-	s.Definitions["Volume"].OneOf = []*jsonschema.Type{
-		{
-			Type:                 "string",
-			Pattern:              "[a-z\\/]+:[a-z\\/]+:[row]+",
-			AdditionalProperties: []byte("false"),
-		},
-		{
-			Type:                 "object",
-			Properties:           vol,
-			Required:             volReq,
-			AdditionalProperties: []byte("false"),
-		},
+	if vd, ok := s.Definitions["Volume"]; ok {
+		volProps := vd.Properties
+		volReq := vd.Required
+		s.Definitions["Volume"].Type = ""
+		s.Definitions["Volume"].Properties = nil
+		s.Definitions["Volume"].AdditionalProperties = []byte("")
+		s.Definitions["Volume"].Required = []string{}
+		s.Definitions["Volume"].OneOf = []*jsonschema.Type{
+			{
+				Type:                 "string",
+				Pattern:              "[a-z\\/]+:[a-z\\/]+:[row]+",
+				AdditionalProperties: []byte("false"),
+			},
+			{
+				Type:                 "object",
+				Properties:           volProps,
+				Required:             volReq,
+				AdditionalProperties: []byte("false"),
+			},
+		}
 	}
 
-	// stages, steps mutual exclusiveness
-	// https://stackoverflow.com/questions/28162509/mutually-exclusive-property-groups
-	s.OneOf = []*jsonschema.Type{
-		{
-			Required: []string{"steps"},
-			Not: &jsonschema.Type{
-				Required: []string{"stages"},
-			},
-		},
-		{
-			AllOf: []*jsonschema.Type{
-				{
-					Not: &jsonschema.Type{
-						Required: []string{"steps"},
-					},
-				},
-			},
-		},
-	}
+	// TODO: handle more granular step requirement, ie
+	// https://github.com/go-vela/compiler/blob/ac17e426a4a62bac3ef8dd2dc587bafa374957c7/compiler/native/validate.go#L107-L111
+
+	// TODO: better secret validation with regards to
+	// expected 'key' formats depending on which 'type' is in use
 
 	// transform to json and format
 	j, err := json.MarshalIndent(s, "", "  ")

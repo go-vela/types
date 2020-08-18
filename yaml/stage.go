@@ -22,7 +22,7 @@ type (
 	// of a stage in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Stage struct {
-		Name  string          `yaml:"name,omitempty"  jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
+		Name  string          `yaml:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
 		Needs raw.StringSlice `yaml:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"`
 		Steps StepSlice       `yaml:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/steps/"`
 	}

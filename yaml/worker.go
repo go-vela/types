@@ -10,8 +10,8 @@ import "github.com/go-vela/types/pipeline"
 // from a worker block in a pipeline.
 // nolint:lll // jsonschema will cause long lines
 type Worker struct {
-	Flavor   string `yaml:"flavor,omitempty"   jsonschema:"minLength=1,description=Flavor identifier for worker.\nReference: coming soon,example=large"`
-	Platform string `yaml:"platform,omitempty" jsonschema:"minLength=1,description=Platform identifier for the worker.\nReference: coming soon,example=kubernetes"`
+	Flavor   string `yaml:"flavor,omitempty"   json:"flavor,omitempty" jsonschema:"minLength=1,description=Flavor identifier for worker.\nReference: coming soon,example=large"`
+	Platform string `yaml:"platform,omitempty" json:"platform,omitempty" jsonschema:"minLength=1,description=Platform identifier for the worker.\nReference: coming soon,example=kubernetes"`
 }
 
 // ToPipeline converts the Worker type

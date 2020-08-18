@@ -124,6 +124,18 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 				Continue: true,
 			},
 		},
+		{
+			file: "testdata/ruleset_regex.yml",
+			want: &Ruleset{
+				If: Rules{
+					Branch: []string{"master"},
+					Event:  []string{"tag"},
+					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
+				},
+				Operator: "and",
+				Matcher:  "regex",
+			},
+		},
 	}
 
 	// run tests

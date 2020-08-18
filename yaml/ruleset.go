@@ -15,24 +15,24 @@ type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.
 	Ruleset struct {
-		If       Rules  `yaml:"if,omitempty"       jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
-		Unless   Rules  `yaml:"unless,omitempty"   jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
-		Matcher  string `yaml:"matcher,omitempty"  jsonschema:"enum=filepath,enum=regexp,default=filepath,description=Use the defined matching method.\nReference: coming soon"`
-		Operator string `yaml:"operator,omitempty" jsonschema:"enum=or,enum=and,default=and,description=Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
-		Continue bool   `yaml:"continue,omitempty" jsonschema:"default=false,description=Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		If       Rules  `yaml:"if,omitempty"       json:"if,omitempty" jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Unless   Rules  `yaml:"unless,omitempty"   json:"unless,omitempty" jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Matcher  string `yaml:"matcher,omitempty"  json:"matcher,omitempty" jsonschema:"enum=filepath,enum=regexp,default=filepath,description=Use the defined matching method.\nReference: coming soon"`
+		Operator string `yaml:"operator,omitempty" json:"operator,omitempty" jsonschema:"enum=or,enum=and,default=and,description=Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
+		Continue bool   `yaml:"continue,omitempty" json:"continue,omitempty" jsonschema:"default=false,description=Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields-1"`
 	}
 
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch  []string `yaml:"branch,omitempty"  jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Comment []string `yaml:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Event   []string `yaml:"event,omitempty"   jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Path    []string `yaml:"path,omitempty"    jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Repo    []string `yaml:"repo,omitempty"    jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Status  []string `yaml:"status,omitempty"  jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Tag     []string `yaml:"tag,omitempty"     jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Target  []string `yaml:"target,omitempty"  jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Branch  []string `yaml:"branch,omitempty"  json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#branch"`
+		Comment []string `yaml:"comment,omitempty" json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#comment"`
+		Event   []string `yaml:"event,omitempty"   json:"event,omitempty" jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#event"`
+		Path    []string `yaml:"path,omitempty"    json:"path,omitempty" jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#path"`
+		Repo    []string `yaml:"repo,omitempty"    json:"repo,omitempty" jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Status  []string `yaml:"status,omitempty"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#status"`
+		Tag     []string `yaml:"tag,omitempty"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#tag"`
+		Target  []string `yaml:"target,omitempty"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#target"`
 	}
 )
 
@@ -50,10 +50,10 @@ func (r *Ruleset) ToPipeline() *pipeline.Ruleset {
 
 // UnmarshalYAML implements the Unmarshaler interface for the Ruleset type.
 func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// simple struct we try unmarshaling to
+	// simple struct we try unmarshalling to
 	simple := new(Rules)
 
-	// advanced struct we try unmarshaling to
+	// advanced struct we try unmarshalling to
 	advanced := new(struct {
 		If       Rules
 		Unless   Rules
@@ -119,7 +119,7 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 
 // UnmarshalYAML implements the Unmarshaler interface for the Rules type.
 func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// rules struct we try unmarshaling to
+	// rules struct we try unmarshalling to
 	rules := new(struct {
 		Branch  raw.StringSlice
 		Comment raw.StringSlice
@@ -134,14 +134,14 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// attempt to unmarshal rules
 	err := unmarshal(rules)
 	if err == nil {
-		r.Branch = []string(rules.Branch)
-		r.Comment = []string(rules.Comment)
-		r.Event = []string(rules.Event)
-		r.Path = []string(rules.Path)
-		r.Repo = []string(rules.Repo)
-		r.Status = []string(rules.Status)
-		r.Tag = []string(rules.Tag)
-		r.Target = []string(rules.Target)
+		r.Branch = rules.Branch
+		r.Comment = rules.Comment
+		r.Event = rules.Event
+		r.Path = rules.Path
+		r.Repo = rules.Repo
+		r.Status = rules.Status
+		r.Tag = rules.Tag
+		r.Target = rules.Target
 	}
 
 	return err

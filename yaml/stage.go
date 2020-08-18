@@ -22,9 +22,9 @@ type (
 	// of a stage in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Stage struct {
-		Name  string          `yaml:"name,omitempty"  jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
-		Needs raw.StringSlice `yaml:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"`
-		Steps StepSlice       `yaml:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/steps/"`
+		Name  string          `yaml:"name,omitempty"  json:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
+		Needs raw.StringSlice `yaml:"needs,omitempty" json:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"`
+		Steps StepSlice       `yaml:"steps,omitempty" json:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/steps/"`
 	}
 )
 
@@ -50,7 +50,7 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StageSlice type.
 func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// map slice we try unmarshaling to
+	// map slice we try unmarshalling to
 	mapSlice := new(yaml.MapSlice)
 
 	// attempt to unmarshal as a map slice type
@@ -61,7 +61,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// iterate through each element in the map slice
 	for _, v := range *mapSlice {
-		// stage we try unmarshaling to
+		// stage we try unmarshalling to
 		stage := new(Stage)
 
 		// marshal interface value from ordered map

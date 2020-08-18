@@ -19,7 +19,7 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
-	// json string we try unmarshaling to
+	// json string we try unmarshalling to
 	jsonString := ""
 
 	// attempt to unmarshal as a string type
@@ -31,7 +31,7 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
-	// json slice we try unmarshaling to
+	// json slice we try unmarshalling to
 	jsonSlice := []string{}
 
 	// attempt to unmarshal as a string slice type
@@ -48,7 +48,7 @@ func (s *StringSlice) UnmarshalJSON(b []byte) error {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StringSlice type.
 func (s *StringSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// yaml string we try unmarshaling to
+	// yaml string we try unmarshalling to
 	yamlString := ""
 
 	// attempt to unmarshal as a string type

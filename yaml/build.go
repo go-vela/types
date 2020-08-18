@@ -14,5 +14,5 @@ type Build struct {
 	Services  ServiceSlice  `yaml:"services,omitempty"  json:"services,omitempty" jsonschema:"description=Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"`
 	Stages    StageSlice    `yaml:"stages,omitempty"    json:"stages,omitempty" jsonschema:"oneof_required=stages,description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
 	Steps     StepSlice     `yaml:"steps,omitempty"     json:"steps,omitempty" jsonschema:"oneof_required=steps,description=Provide sequential execution instructions.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/"`
-	Templates TemplateSlice `yaml:"templates,omitempty" json:"templates,omitempty"jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
+	Templates TemplateSlice `yaml:"templates,omitempty" json:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
 }

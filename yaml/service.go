@@ -18,12 +18,12 @@ type (
 	// of a Service in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Service struct {
-		Image       string             `yaml:"image,omitempty"       jsonschema:"required,minLength=1,description=Docker image used to create ephemeral container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/image/"`
-		Name        string             `yaml:"name,omitempty"        jsonschema:"required,minLength=1,description=Unique identifier for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"`
-		Entrypoint  raw.StringSlice    `yaml:"entrypoint,omitempty"  jsonschema:"description=Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"`
-		Environment raw.StringSliceMap `yaml:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"`
-		Ports       raw.StringSlice    `yaml:"ports,omitempty"       jsonschema:"description=List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"`
-		Pull        bool               `yaml:"pull,omitempty"        jsonschema:"default=false,description=Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
+		Image       string             `yaml:"image,omitempty"       json:"image,omitempty" jsonschema:"required,minLength=1,description=Docker image used to create ephemeral container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/image/"`
+		Name        string             `yaml:"name,omitempty"        json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/"`
+		Entrypoint  raw.StringSlice    `yaml:"entrypoint,omitempty"  json:"entrypoint,omitempty" jsonschema:"description=Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"`
+		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"`
+		Ports       raw.StringSlice    `yaml:"ports,omitempty"       json:"ports,omitempty" jsonschema:"description=List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"`
+		Pull        bool               `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"default=false,description=Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
 	}
 )
 

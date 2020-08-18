@@ -14,15 +14,15 @@ type (
 	// from the templates block for a pipeline.
 	Template struct {
 		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
-		Source string `yaml:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
-		Type   string `yaml:"type,omitempty"   jsonschema:"minLength=1,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/,example=github"`
+		Source string `yaml:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/source/"`
+		Type   string `yaml:"type,omitempty"   jsonschema:"minLength=1,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/type/,example=github"`
 	}
 
 	// StepTemplate is the yaml representation of the
 	// template block for a step in a pipeline.
 	StepTemplate struct {
-		Name      string                 `yaml:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`
-		Variables map[string]interface{} `yaml:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`
+		Name      string                 `yaml:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/#fields"`
+		Variables map[string]interface{} `yaml:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/#fields"`
 	}
 )
 

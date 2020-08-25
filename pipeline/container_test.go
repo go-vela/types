@@ -145,9 +145,28 @@ func TestPipeline_Container_Execute(t *testing.T) {
 		ruleData  *RuleData
 		want      bool
 	}{
-		{ // empty container with build success
+		{ // empty/nil container
+			container: nil,
+			ruleData:  nil,
+			want:      false,
+		},
+		{ // empty container ruleset with build running
 			container: &Container{
-				Name:     "empty",
+				Name:     "empty-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
+		{ // empty container ruleset with build success
+			container: &Container{
+				Name:     "empty-success",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 			},
@@ -159,9 +178,9 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: true,
 		},
-		{ // empty container with build failure
+		{ // empty container ruleset with build failure
 			container: &Container{
-				Name:     "empty",
+				Name:     "empty-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 			},
@@ -173,9 +192,28 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
+		{ // status success container with build running
+			container: &Container{
+				Name:     "status-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Status: []string{constants.StatusSuccess},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
 		{ // status success container with build success
 			container: &Container{
-				Name:     "status success",
+				Name:     "status-success",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -194,7 +232,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 		},
 		{ // status success container with build failure
 			container: &Container{
-				Name:     "status success",
+				Name:     "status-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -211,9 +249,28 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
-		{ // status/failure success container with build failure
+		{ // status/failure success container with build running
 			container: &Container{
-				Name:     "status/failure",
+				Name:     "status/failure-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Status: []string{constants.StatusSuccess, constants.StatusFailure},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
+		{ // status/failure success container with build success
+			container: &Container{
+				Name:     "status/failure-success",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -232,7 +289,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 		},
 		{ // status/failure success container with build failure
 			container: &Container{
-				Name:     "status/failure",
+				Name:     "status/failure-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -249,9 +306,29 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: true,
 		},
-		{ // no status container with build success
+		{ // no status container with build running
 			container: &Container{
-				Name:     "branch/event/status",
+				Name:     "branch/event/no-status-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
+		{ // no status container with build failure
+			container: &Container{
+				Name:     "branch/event/no-status-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -268,10 +345,94 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Status: "failure",
 			},
 			want: false,
+		},
+		{ // branch/event/path container with build running
+			container: &Container{
+				Name:     "branch/event/path-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+						Path:   []string{"README.md"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
+		{ // branch/event/path container with build success
+			container: &Container{
+				Name:     "branch/event/path-success",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+						Path:   []string{"README.md"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // branch/event/path container with build failure
+			container: &Container{
+				Name:     "branch/event/path-failure",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+						Path:   []string{"README.md"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "failure",
+			},
+			want: false,
+		},
+		{ // branch/event/status container with build running
+			container: &Container{
+				Name:     "branch/event/status-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"master"},
+						Event:  []string{constants.EventPush},
+						Status: []string{constants.StatusSuccess},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
 		},
 		{ // branch/event/status container with build success
 			container: &Container{
-				Name:     "branch/event/status",
+				Name:     "branch/event/status-success",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -292,7 +453,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 		},
 		{ // branch/event/status container with build failure
 			container: &Container{
-				Name:     "branch/event/status",
+				Name:     "branch/event/status-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -311,9 +472,9 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
-		{ // branch/event/status container with build failure
+		{ // branch/event/status container with or operator with build failure
 			container: &Container{
-				Name:     "branch/event/status",
+				Name:     "branch/event/status-failure-or",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -333,14 +494,36 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: true,
 		},
-		{ // tag/event/status container with build success
+		{ // tag/event/status container with build running
 			container: &Container{
-				Name:     "tag/event/status",
+				Name:     "tag/event/status-running",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Tag:    []string{"v0.1.0"},
+						Tag:    []string{"v*"},
+						Event:  []string{constants.EventTag},
+						Status: []string{constants.StatusSuccess},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "tag",
+				Repo:   "foo/bar",
+				Status: "running",
+				Tag:    "v0.1.0",
+			},
+			want: true,
+		},
+		{ // tag/event/status container with build success
+			container: &Container{
+				Name:     "tag/event/status-success",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Tag:    []string{"v*"},
 						Event:  []string{constants.EventTag},
 						Status: []string{constants.StatusSuccess},
 					},
@@ -351,13 +534,54 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Event:  "tag",
 				Repo:   "foo/bar",
 				Status: "success",
-				Tag:    "v*",
+				Tag:    "v0.1.0",
 			},
 			want: true,
 		},
+		{ // tag/event/status container with build failure
+			container: &Container{
+				Name:     "tag/event/status-failure",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Tag:    []string{"v*"},
+						Event:  []string{constants.EventTag},
+						Status: []string{constants.StatusSuccess},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "tag",
+				Repo:   "foo/bar",
+				Status: "failure",
+				Tag:    "v0.1.0",
+			},
+			want: false,
+		},
+		{ // status unless success container with build running
+			container: &Container{
+				Name:     "unless/status-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					Unless: Rules{
+						Status: []string{constants.StatusSuccess},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "master",
+				Event:  "push",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: false,
+		},
 		{ // status unless success container with build success
 			container: &Container{
-				Name:     "status unless",
+				Name:     "unless/status-success",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -374,9 +598,9 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
-		{ // status unless success container with build success
+		{ // status unless success container with build failure
 			container: &Container{
-				Name:     "status unless",
+				Name:     "unless/status-failure",
 				Image:    "alpine:latest",
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
@@ -414,7 +638,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
-		{ // status unless success container with build success
+		{ // status unless success container with build failure
 			container: &Container{
 				Name:     "status unless",
 				Image:    "alpine:latest",

@@ -483,12 +483,12 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Tag with regex matcher
 		{matcher: "regexp", rule: []string{"release/*"}, pattern: "release/*", want: true},
 		{matcher: "regexp", rule: []string{"release/*"}, pattern: "stage/*", want: false},
-		{matcher: "regexp", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
-		{matcher: "regexp", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
+		{matcher: "regex", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/111.2.3-rc", want: true},
+		{matcher: "regex", rule: []string{"release/[0-9]+.*-rc$"}, pattern: "release/1.2.3-rc-hold", want: false},
 		{matcher: "regexp", rule: []string{"release/*"}, pattern: "release/stage/1.2.3-rc", want: true},
 		{matcher: "regexp", rule: []string{"release/*/*"}, pattern: "release/stage/1.2.3-rc", want: true},
-		{matcher: "regexp", rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
-		{matcher: "regexp", rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
+		{matcher: "regex", rule: []string{"release/stage/*"}, pattern: "release/stage/1.2.3-rc", want: true},
+		{matcher: "regex", rule: []string{"release/prod/*"}, pattern: "release/stage/1.2.3-rc", want: false},
 		{matcher: "regexp", rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3-rc", want: false},
 		{matcher: "regexp", rule: []string{"release/[0-9]+.[0-9]+.[0-9]+$"}, pattern: "release/1.2.3", want: true},
 		// Target with regex matcher

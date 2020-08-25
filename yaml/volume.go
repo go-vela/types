@@ -21,9 +21,9 @@ type (
 	// from a volumes block for a step in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Volume struct {
-		Source      string `yaml:"source,omitempty"      jsonschema:"required,minLength=1,description=Set the source directory to be mounted.\nReference: coming soon"`
-		Destination string `yaml:"destination,omitempty" jsonschema:"required,minLength=1,description=Set the destination directory for the mount in the container.\nReference: coming soon"`
-		AccessMode  string `yaml:"access_mode,omitempty" jsonschema:"default=ro,description=Set the access mode for the mounted volume.\nReference: coming soon"`
+		Source      string `yaml:"source,omitempty"      json:"source,omitempty" jsonschema:"required,minLength=1,description=Set the source directory to be mounted.\nReference: coming soon"`
+		Destination string `yaml:"destination,omitempty" json:"destination,omitempty" jsonschema:"required,minLength=1,description=Set the destination directory for the mount in the container.\nReference: coming soon"`
+		AccessMode  string `yaml:"access_mode,omitempty" json:"access_mode,omitempty" jsonschema:"default=ro,description=Set the access mode for the mounted volume.\nReference: coming soon"`
 	}
 )
 
@@ -48,7 +48,7 @@ func (v *VolumeSlice) ToPipeline() *pipeline.VolumeSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the VolumeSlice type.
 func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -95,7 +95,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	// volume slice we try unmarshaling to
+	// volume slice we try unmarshalling to
 	volumes := new([]*Volume)
 
 	// attempt to unmarshal as a volume slice type

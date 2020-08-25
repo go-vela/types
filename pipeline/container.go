@@ -130,14 +130,14 @@ func (c *Container) Sanitize(driver string) *Container {
 		return container
 	// unrecognized driver
 	default:
-		// log here?
+		// TODO: add a log message indicating how we got here
 		return nil
 	}
 }
 
 // Empty returns true if the provided container is empty.
 func (c *Container) Empty() bool {
-	// return true of the container is nil
+	// return true if the container is nil
 	if c == nil {
 		return true
 	}
@@ -172,6 +172,33 @@ func (c *Container) Empty() bool {
 // Execute returns true when the provided ruledata matches
 // the conditions when we should be running the container on the worker.
 func (c *Container) Execute(r *RuleData) bool {
+	// return false if the container is nil
+	if c == nil {
+		return false
+	}
+
+	// check if the build is in a running state
+	if strings.EqualFold(r.Status, constants.StatusRunning) {
+		// treat the ruleset status as success
+		r.Status = constants.StatusSuccess
+
+		// skip evaluating path in ruleset
+		//
+		// the compiler is the component responsible for
+		// choosing whether a container will run based
+		// off the files changed for a build
+		//
+		// the worker doesn't have any record of
+		// what files changed for a build so we
+		// should "skip" evaluating what the
+		// user provided for the path element
+		c.Ruleset.If.Path = []string{}
+		c.Ruleset.Unless.Path = []string{}
+
+		// return if the container ruleset matches the conditions
+		return c.Ruleset.Match(r)
+	}
+
 	// assume you will execute the container
 	execute := true
 

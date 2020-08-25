@@ -47,6 +47,7 @@ type Build struct {
 	Branch       sql.NullString `sql:"branch"`
 	Ref          sql.NullString `sql:"ref"`
 	BaseRef      sql.NullString `sql:"base_ref"`
+	HeadRef      sql.NullString `sql:"head_ref"`
 	Host         sql.NullString `sql:"host"`
 	Runtime      sql.NullString `sql:"runtime"`
 	Distribution sql.NullString `sql:"distribution"`
@@ -199,6 +200,11 @@ func (b *Build) Nullify() *Build {
 		b.BaseRef.Valid = false
 	}
 
+	// check if the HeadRef field should be false
+	if len(b.HeadRef.String) == 0 {
+		b.HeadRef.Valid = false
+	}
+
 	// check if the Host field should be false
 	if len(b.Host.String) == 0 {
 		b.Host.Valid = false
@@ -246,6 +252,7 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetBranch(b.Branch.String)
 	build.SetRef(b.Ref.String)
 	build.SetBaseRef(b.BaseRef.String)
+	build.SetHeadRef(b.HeadRef.String)
 	build.SetHost(b.Host.String)
 	build.SetRuntime(b.Runtime.String)
 	build.SetDistribution(b.Distribution.String)
@@ -269,7 +276,7 @@ func (b *Build) Validate() error {
 	return nil
 }
 
-// BuildFromLibrary converts the libray Build type
+// BuildFromLibrary converts the library Build type
 // to a database build type.
 func BuildFromLibrary(b *library.Build) *Build {
 	build := &Build{
@@ -297,6 +304,7 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Branch:       sql.NullString{String: b.GetBranch(), Valid: true},
 		Ref:          sql.NullString{String: b.GetRef(), Valid: true},
 		BaseRef:      sql.NullString{String: b.GetBaseRef(), Valid: true},
+		HeadRef:      sql.NullString{String: b.GetHeadRef(), Valid: true},
 		Host:         sql.NullString{String: b.GetHost(), Valid: true},
 		Runtime:      sql.NullString{String: b.GetRuntime(), Valid: true},
 		Distribution: sql.NullString{String: b.GetDistribution(), Valid: true},

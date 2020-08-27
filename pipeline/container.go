@@ -182,6 +182,19 @@ func (c *Container) Execute(r *RuleData) bool {
 		// treat the ruleset status as success
 		r.Status = constants.StatusSuccess
 
+		// skip evaluating path in ruleset
+		//
+		// the compiler is the component responsible for
+		// choosing whether a container will run based
+		// off the files changed for a build
+		//
+		// the worker doesn't have any record of
+		// what files changed for a build so we
+		// should "skip" evaluating what the
+		// user provided for the path element
+		c.Ruleset.If.Path = []string{}
+		c.Ruleset.Unless.Path = []string{}
+
 		// return if the container ruleset matches the conditions
 		return c.Ruleset.Match(r)
 	}

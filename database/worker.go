@@ -55,7 +55,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 
 	worker.SetID(w.ID.Int64)
 	worker.SetHostname(w.Hostname.String)
-	worker.SetURL(w.Path.String)
+	worker.SetPath(w.Path.String)
 	worker.SetOnline(w.Online.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Time)
 	return worker
@@ -67,7 +67,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 	worker := &Worker{
 		ID:            sql.NullInt64{Int64: w.GetID(), Valid: true},
 		Hostname:      sql.NullString{String: w.GetHostname(), Valid: true},
-		Path:          sql.NullString{String: w.GetURL(), Valid: true},
+		Path:          sql.NullString{String: w.GetPath(), Valid: true},
 		Online:        sql.NullBool{Bool: w.GetOnline(), Valid: true},
 		LastCheckedIn: sql.NullTime{Time: w.GetLastCheckedIn(), Valid: true},
 	}

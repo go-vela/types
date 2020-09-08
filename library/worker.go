@@ -46,12 +46,12 @@ func (w *Worker) GetHostname() string {
 	return *w.Hostname
 }
 
-// GetURL returns the URL field.
+// GetPath returns the Path field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (w *Worker) GetURL() string {
-	// return zero value if Worker type or URL field is nil
+func (w *Worker) GetPath() string {
+	// return zero value if Worker type or Path field is nil
 	if w == nil || w.Path == nil {
 		return ""
 	}
@@ -111,11 +111,11 @@ func (w *Worker) SetHostname(v string) {
 	w.Hostname = &v
 }
 
-// SetURL sets the URL field.
+// SetPath sets the Path field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (w *Worker) SetURL(v string) {
+func (w *Worker) SetPath(v string) {
 	// return if Worker type is nil
 	if w == nil {
 		return
@@ -155,13 +155,13 @@ func (w *Worker) String() string {
 	return fmt.Sprintf(`{
   ID: %d,
   Hostname: %s,
-  URL: %s,
+  Path: %s,
   Online: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
-		w.GetURL(),
+		w.GetPath(),
 		w.GetOnline(),
 		w.GetLastCheckedIn(),
 	)

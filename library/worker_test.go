@@ -41,8 +41,8 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 			t.Errorf("GetURL is %v, want %v", test.worker.GetAddress(), test.want.GetAddress())
 		}
 
-		if test.worker.GetOnline() != test.want.GetOnline() {
-			t.Errorf("GetOnline is %v, want %v", test.worker.GetOnline(), test.want.GetOnline())
+		if test.worker.GetActive() != test.want.GetActive() {
+			t.Errorf("GetActive is %v, want %v", test.worker.GetActive(), test.want.GetActive())
 		}
 
 		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
@@ -75,7 +75,7 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		test.repo.SetID(test.want.GetID())
 		test.repo.SetHostname(test.want.GetHostname())
 		test.repo.SetAddress(test.want.GetAddress())
-		test.repo.SetOnline(test.want.GetOnline())
+		test.repo.SetActive(test.want.GetActive())
 		test.repo.SetLastCheckedIn(test.want.GetLastCheckedIn())
 
 		if test.repo.GetID() != test.want.GetID() {
@@ -90,8 +90,8 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 			t.Errorf("SetAddress is %v, want %v", test.repo.GetAddress(), test.want.GetAddress())
 		}
 
-		if test.repo.GetOnline() != test.want.GetOnline() {
-			t.Errorf("SetOnline is %v, want %v", test.repo.GetOnline(), test.want.GetOnline())
+		if test.repo.GetActive() != test.want.GetActive() {
+			t.Errorf("SetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
 		}
 
 		if test.repo.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
@@ -108,13 +108,13 @@ func TestLibrary_Worker_String(t *testing.T) {
   ID: %d,
   Hostname: %s,
   Address: %s,
-  Online: %t,
+  Active: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
 		w.GetAddress(),
-		w.GetOnline(),
+		w.GetActive(),
 		w.GetLastCheckedIn(),
 	)
 
@@ -134,7 +134,7 @@ func testWorker() *Worker {
 	w.SetID(1)
 	w.SetHostname("worker_0")
 	w.SetAddress("http://localhost:8080")
-	w.SetOnline(true)
+	w.SetActive(true)
 	w.SetLastCheckedIn(time.Time{})
 
 	return w

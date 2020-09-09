@@ -16,7 +16,7 @@ type Worker struct {
 	ID            *int64     `json:"id,omitempty"`
 	Hostname      *string    `json:"hostname,omitempty"`
 	Address       *string    `json:"address,omitempty"`
-	Online        *bool      `json:"online,omitempty"`
+	Active        *bool      `json:"active,omitempty"`
 	LastCheckedIn *time.Time `json:"last_checked_in,omitempty"`
 }
 
@@ -59,20 +59,20 @@ func (w *Worker) GetAddress() string {
 	return *w.Address
 }
 
-// GetOnline returns the Online field.
+// GetActive returns the Active field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (w *Worker) GetOnline() bool {
-	// return zero value if Worker type or Online field is nil
-	if w == nil || w.Online == nil {
+func (w *Worker) GetActive() bool {
+	// return zero value if Worker type or Active field is nil
+	if w == nil || w.Active == nil {
 		return false
 	}
 
-	return *w.Online
+	return *w.Active
 }
 
-// GetLastCheckedIn returns the Online field.
+// GetLastCheckedIn returns the Active field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -124,17 +124,17 @@ func (w *Worker) SetAddress(v string) {
 	w.Address = &v
 }
 
-// SetOnline sets the Online field.
+// SetActive sets the Active field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (w *Worker) SetOnline(v bool) {
+func (w *Worker) SetActive(v bool) {
 	// return if Worker type is nil
 	if w == nil {
 		return
 	}
 
-	w.Online = &v
+	w.Active = &v
 }
 
 // SetLastCheckedIn sets the LastCheckedIn field.
@@ -156,13 +156,13 @@ func (w *Worker) String() string {
   ID: %d,
   Hostname: %s,
   Address: %s,
-  Online: %t,
+  Active: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
 		w.GetAddress(),
-		w.GetOnline(),
+		w.GetActive(),
 		w.GetLastCheckedIn(),
 	)
 }

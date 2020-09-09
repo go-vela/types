@@ -14,7 +14,7 @@ import (
 type Worker struct {
 	ID            sql.NullInt64  `sql:"id"`
 	Hostname      sql.NullString `sql:"hostname"`
-	Path          sql.NullString `sql:"path"`
+	Address       sql.NullString `sql:"address"`
 	Online        sql.NullBool   `sql:"online"`
 	LastCheckedIn sql.NullTime   `sql:"last_checked_in"`
 }
@@ -41,7 +41,7 @@ func (w *Worker) Nullify() *Worker {
 	}
 
 	// check if the URL field should be false
-	if len(w.Path.String) == 0 {
+	if len(w.Address.String) == 0 {
 		w.Hostname.Valid = false
 	}
 
@@ -55,7 +55,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 
 	worker.SetID(w.ID.Int64)
 	worker.SetHostname(w.Hostname.String)
-	worker.SetPath(w.Path.String)
+	worker.SetAddress(w.Address.String)
 	worker.SetOnline(w.Online.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Time)
 	return worker
@@ -67,7 +67,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 	worker := &Worker{
 		ID:            sql.NullInt64{Int64: w.GetID(), Valid: true},
 		Hostname:      sql.NullString{String: w.GetHostname(), Valid: true},
-		Path:          sql.NullString{String: w.GetPath(), Valid: true},
+		Address:       sql.NullString{String: w.GetAddress(), Valid: true},
 		Online:        sql.NullBool{Bool: w.GetOnline(), Valid: true},
 		LastCheckedIn: sql.NullTime{Time: w.GetLastCheckedIn(), Valid: true},
 	}

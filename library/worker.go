@@ -15,7 +15,7 @@ import (
 type Worker struct {
 	ID            *int64     `json:"id,omitempty"`
 	Hostname      *string    `json:"hostname,omitempty"`
-	Path          *string    `json:"path,omitempty"`
+	Address       *string    `json:"address,omitempty"`
 	Online        *bool      `json:"online,omitempty"`
 	LastCheckedIn *time.Time `json:"last_checked_in,omitempty"`
 }
@@ -46,17 +46,17 @@ func (w *Worker) GetHostname() string {
 	return *w.Hostname
 }
 
-// GetPath returns the Path field.
+// GetAddress returns the Address field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (w *Worker) GetPath() string {
-	// return zero value if Worker type or Path field is nil
-	if w == nil || w.Path == nil {
+func (w *Worker) GetAddress() string {
+	// return zero value if Worker type or Address field is nil
+	if w == nil || w.Address == nil {
 		return ""
 	}
 
-	return *w.Path
+	return *w.Address
 }
 
 // GetOnline returns the Online field.
@@ -111,17 +111,17 @@ func (w *Worker) SetHostname(v string) {
 	w.Hostname = &v
 }
 
-// SetPath sets the Path field.
+// SetAddress sets the Address field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (w *Worker) SetPath(v string) {
+func (w *Worker) SetAddress(v string) {
 	// return if Worker type is nil
 	if w == nil {
 		return
 	}
 
-	w.Path = &v
+	w.Address = &v
 }
 
 // SetOnline sets the Online field.
@@ -155,13 +155,13 @@ func (w *Worker) String() string {
 	return fmt.Sprintf(`{
   ID: %d,
   Hostname: %s,
-  Path: %s,
+  Address: %s,
   Online: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
-		w.GetPath(),
+		w.GetAddress(),
 		w.GetOnline(),
 		w.GetLastCheckedIn(),
 	)

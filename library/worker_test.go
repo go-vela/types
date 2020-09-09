@@ -37,8 +37,8 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 			t.Errorf("GetHostname is %v, want %v", test.worker.GetHostname(), test.want.GetHostname())
 		}
 
-		if test.worker.GetPath() != test.want.GetPath() {
-			t.Errorf("GetURL is %v, want %v", test.worker.GetPath(), test.want.GetPath())
+		if test.worker.GetAddress() != test.want.GetAddress() {
+			t.Errorf("GetURL is %v, want %v", test.worker.GetAddress(), test.want.GetAddress())
 		}
 
 		if test.worker.GetOnline() != test.want.GetOnline() {
@@ -74,7 +74,7 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 	for _, test := range tests {
 		test.repo.SetID(test.want.GetID())
 		test.repo.SetHostname(test.want.GetHostname())
-		test.repo.SetPath(test.want.GetPath())
+		test.repo.SetAddress(test.want.GetAddress())
 		test.repo.SetOnline(test.want.GetOnline())
 		test.repo.SetLastCheckedIn(test.want.GetLastCheckedIn())
 
@@ -86,8 +86,8 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 			t.Errorf("SetHostname is %v, want %v", test.repo.GetHostname(), test.want.GetHostname())
 		}
 
-		if test.repo.GetPath() != test.want.GetPath() {
-			t.Errorf("SetPath is %v, want %v", test.repo.GetPath(), test.want.GetPath())
+		if test.repo.GetAddress() != test.want.GetAddress() {
+			t.Errorf("SetAddress is %v, want %v", test.repo.GetAddress(), test.want.GetAddress())
 		}
 
 		if test.repo.GetOnline() != test.want.GetOnline() {
@@ -107,13 +107,13 @@ func TestLibrary_Worker_String(t *testing.T) {
 	want := fmt.Sprintf(`{
   ID: %d,
   Hostname: %s,
-  Path: %s,
+  Address: %s,
   Online: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
-		w.GetPath(),
+		w.GetAddress(),
 		w.GetOnline(),
 		w.GetLastCheckedIn(),
 	)
@@ -133,7 +133,7 @@ func testWorker() *Worker {
 
 	w.SetID(1)
 	w.SetHostname("worker_0")
-	w.SetPath("http://localhost:8080")
+	w.SetAddress("http://localhost:8080")
 	w.SetOnline(true)
 	w.SetLastCheckedIn(time.Time{})
 

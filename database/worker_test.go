@@ -20,7 +20,7 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 	want := &Worker{
 		ID:            sql.NullInt64{Int64: 0, Valid: false},
 		Hostname:      sql.NullString{String: "", Valid: false},
-		Path:          sql.NullString{String: "", Valid: false},
+		Address:       sql.NullString{String: "", Valid: false},
 		Online:        sql.NullBool{Bool: false, Valid: false},
 		LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: false},
 	}
@@ -60,7 +60,7 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 
 	want.SetID(1)
 	want.SetHostname("worker_0")
-	want.SetPath("http://localhost:8080")
+	want.SetAddress("http://localhost:8080")
 	want.SetOnline(true)
 	want.SetLastCheckedIn(time.Time{})
 
@@ -78,7 +78,7 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 
 	w.SetID(1)
 	w.SetHostname("worker_0")
-	w.SetPath("http://localhost:8080")
+	w.SetAddress("http://localhost:8080")
 	w.SetOnline(true)
 	w.SetLastCheckedIn(time.Time{})
 
@@ -98,7 +98,7 @@ func testWorker() *Worker {
 	return &Worker{
 		ID:            sql.NullInt64{Int64: 1, Valid: true},
 		Hostname:      sql.NullString{String: "worker_0", Valid: true},
-		Path:          sql.NullString{String: "http://localhost:8080", Valid: true},
+		Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
 		Online:        sql.NullBool{Bool: true, Valid: true},
 		LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
 	}

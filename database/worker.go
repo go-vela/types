@@ -64,6 +64,22 @@ func (w *Worker) ToLibrary() *library.Worker {
 	return worker
 }
 
+// Validate verifies the necessary fields for
+// the Repo type are populated correctly.
+func (w *Worker) Validate() error {
+	// verify the Host field is populated
+	if len(w.Hostname.String) == 0 {
+		return ErrEmptyRepoHash
+	}
+
+	// verify the Address field is populated
+	if len(w.Address.String) == 0 {
+		return ErrEmptyRepoOrg
+	}
+
+	return nil
+}
+
 // WorkerFromLibrary converts the library worker type
 // to a database worker type.
 func WorkerFromLibrary(w *library.Worker) *Worker {

@@ -73,6 +73,54 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	}
 }
 
+func TestDatabase_Worker_Validate(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		worker  *Worker
+	}{
+		{
+			failure: false,
+			worker:  testWorker(),
+		},
+		{ // no Hostname set for worker
+			failure: true,
+			worker: &Worker{
+				ID:            sql.NullInt64{Int64: 1, Valid: true},
+				Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
+				Active:        sql.NullBool{Bool: true, Valid: true},
+				LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
+			},
+		},
+		{ // no Address set for worker
+			failure: true,
+			worker: &Worker{
+				ID:            sql.NullInt64{Int64: 1, Valid: true},
+				Hostname:      sql.NullString{String: "worker_0", Valid: true},
+				Active:        sql.NullBool{Bool: true, Valid: true},
+				LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
+			},
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.worker.Validate()
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
+	}
+}
+
 func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	// setup types
 	w := new(library.Worker)

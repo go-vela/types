@@ -16,6 +16,7 @@ type Worker struct {
 	ID            *int64     `json:"id,omitempty"`
 	Hostname      *string    `json:"hostname,omitempty"`
 	Address       *string    `json:"address,omitempty"`
+	Routes        *[]string  `json:"routes,omitempty"`
 	Active        *bool      `json:"active,omitempty"`
 	LastCheckedIn *time.Time `json:"last_checked_in,omitempty"`
 }
@@ -57,6 +58,19 @@ func (w *Worker) GetAddress() string {
 	}
 
 	return *w.Address
+}
+
+// GetRoutes returns the Routes field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetRoutes() []string {
+	// return zero value if Worker type or Routes field is nil
+	if w == nil || w.Routes == nil {
+		return []string{}
+	}
+
+	return *w.Routes
 }
 
 // GetActive returns the Active field.
@@ -124,6 +138,19 @@ func (w *Worker) SetAddress(v string) {
 	w.Address = &v
 }
 
+// SetRoutes sets the Routes field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetRoutes(v []string) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.Routes = &v
+}
+
 // SetActive sets the Active field.
 //
 // When the provided Worker type is nil, it
@@ -156,12 +183,14 @@ func (w *Worker) String() string {
   ID: %d,
   Hostname: %s,
   Address: %s,
+  Routes: %s,
   Active: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
 		w.GetAddress(),
+		w.GetRoutes(),
 		w.GetActive(),
 		w.GetLastCheckedIn(),
 	)

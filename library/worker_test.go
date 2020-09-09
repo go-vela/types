@@ -38,7 +38,11 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 		}
 
 		if test.worker.GetAddress() != test.want.GetAddress() {
-			t.Errorf("GetURL is %v, want %v", test.worker.GetAddress(), test.want.GetAddress())
+			t.Errorf("Getaddress is %v, want %v", test.worker.GetAddress(), test.want.GetAddress())
+		}
+
+		if !reflect.DeepEqual(test.worker.GetRoutes(), test.want.GetRoutes()) {
+			t.Errorf("GetRoutes is %v, want %v", test.worker.GetRoutes(), test.want.GetRoutes())
 		}
 
 		if test.worker.GetActive() != test.want.GetActive() {
@@ -57,45 +61,49 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		repo *Worker
-		want *Worker
+		worker *Worker
+		want   *Worker
 	}{
 		{
-			repo: testWorker(),
-			want: testWorker(),
+			worker: testWorker(),
+			want:   testWorker(),
 		},
 		{
-			repo: w,
-			want: new(Worker),
+			worker: w,
+			want:   new(Worker),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		test.repo.SetID(test.want.GetID())
-		test.repo.SetHostname(test.want.GetHostname())
-		test.repo.SetAddress(test.want.GetAddress())
-		test.repo.SetActive(test.want.GetActive())
-		test.repo.SetLastCheckedIn(test.want.GetLastCheckedIn())
+		test.worker.SetID(test.want.GetID())
+		test.worker.SetHostname(test.want.GetHostname())
+		test.worker.SetAddress(test.want.GetAddress())
+		test.worker.SetActive(test.want.GetActive())
+		test.worker.SetLastCheckedIn(test.want.GetLastCheckedIn())
 
-		if test.repo.GetID() != test.want.GetID() {
-			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
+		if test.worker.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.worker.GetID(), test.want.GetID())
 		}
 
-		if test.repo.GetHostname() != test.want.GetHostname() {
-			t.Errorf("SetHostname is %v, want %v", test.repo.GetHostname(), test.want.GetHostname())
+		if test.worker.GetHostname() != test.want.GetHostname() {
+			t.Errorf("SetHostname is %v, want %v", test.worker.GetHostname(), test.want.GetHostname())
 		}
 
-		if test.repo.GetAddress() != test.want.GetAddress() {
-			t.Errorf("SetAddress is %v, want %v", test.repo.GetAddress(), test.want.GetAddress())
+		if test.worker.GetAddress() != test.want.GetAddress() {
+			t.Errorf("SetAddress is %v, want %v", test.worker.GetAddress(), test.want.GetAddress())
 		}
 
-		if test.repo.GetActive() != test.want.GetActive() {
-			t.Errorf("SetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
+		if !reflect.DeepEqual(test.worker.GetRoutes(), test.want.GetRoutes()) {
+			t.Errorf("SetImages is %v, want %v", test.worker.GetRoutes(), test.want.GetRoutes())
 		}
 
-		if test.repo.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
-			t.Errorf("SetLastCheckedIn is %v, want %v", test.repo.GetLastCheckedIn(), test.want.GetLastCheckedIn())
+		if test.worker.GetActive() != test.want.GetActive() {
+			t.Errorf("SetActive is %v, want %v", test.worker.GetActive(), test.want.GetActive())
+		}
+
+		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
+			t.Errorf("SetLastCheckedIn is %v, want %v", test.worker.GetLastCheckedIn(), test.want.GetLastCheckedIn())
 		}
 	}
 }
@@ -108,12 +116,14 @@ func TestLibrary_Worker_String(t *testing.T) {
   ID: %d,
   Hostname: %s,
   Address: %s,
+  Routes: %s,
   Active: %t,
   LastCheckedIn: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
 		w.GetAddress(),
+		w.GetRoutes(),
 		w.GetActive(),
 		w.GetLastCheckedIn(),
 	)
@@ -134,6 +144,7 @@ func testWorker() *Worker {
 	w.SetID(1)
 	w.SetHostname("worker_0")
 	w.SetAddress("http://localhost:8080")
+	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
 	w.SetLastCheckedIn(time.Time{})
 

@@ -61,6 +61,7 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetID(1)
 	want.SetHostname("worker_0")
 	want.SetAddress("http://localhost:8080")
+	want.SetRoutes([]string{"vela"})
 	want.SetActive(true)
 	want.SetLastCheckedIn(time.Time{})
 
@@ -79,6 +80,7 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetID(1)
 	w.SetHostname("worker_0")
 	w.SetAddress("http://localhost:8080")
+	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
 	w.SetLastCheckedIn(time.Time{})
 
@@ -99,6 +101,7 @@ func testWorker() *Worker {
 		ID:            sql.NullInt64{Int64: 1, Valid: true},
 		Hostname:      sql.NullString{String: "worker_0", Valid: true},
 		Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
+		Routes:        []string{"vela"},
 		Active:        sql.NullBool{Bool: true, Valid: true},
 		LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
 	}

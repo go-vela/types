@@ -8,6 +8,7 @@ import (
 	"database/sql"
 
 	"github.com/go-vela/types/library"
+	"github.com/lib/pq"
 )
 
 // Worker is the database representation of a worker.
@@ -15,6 +16,7 @@ type Worker struct {
 	ID            sql.NullInt64  `sql:"id"`
 	Hostname      sql.NullString `sql:"hostname"`
 	Address       sql.NullString `sql:"address"`
+	Routes        pq.StringArray `sql:"routes"`
 	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullTime   `sql:"last_checked_in"`
 }
@@ -40,7 +42,7 @@ func (w *Worker) Nullify() *Worker {
 		w.Hostname.Valid = false
 	}
 
-	// check if the URL field should be false
+	// check if the Address field should be false
 	if len(w.Address.String) == 0 {
 		w.Hostname.Valid = false
 	}
@@ -56,6 +58,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetID(w.ID.Int64)
 	worker.SetHostname(w.Hostname.String)
 	worker.SetAddress(w.Address.String)
+	worker.SetRoutes(w.Routes)
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Time)
 	return worker
@@ -68,6 +71,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		ID:            sql.NullInt64{Int64: w.GetID(), Valid: true},
 		Hostname:      sql.NullString{String: w.GetHostname(), Valid: true},
 		Address:       sql.NullString{String: w.GetAddress(), Valid: true},
+		Routes:        w.GetRoutes(),
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
 		LastCheckedIn: sql.NullTime{Time: w.GetLastCheckedIn(), Valid: true},
 	}

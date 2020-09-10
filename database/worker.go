@@ -6,9 +6,20 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/go-vela/types/library"
 	"github.com/lib/pq"
+)
+
+var (
+	// ErrEmptyWorkerHost defines the error type when a
+	// Worker type has an empty Host field provided.
+	ErrEmptyWorkerHost = errors.New("empty worker address provided")
+
+	// ErrEmptyWorkerAddress defines the error type when a
+	// Worker type has an empty Address field provided.
+	ErrEmptyWorkerAddress = errors.New("empty worker address provided")
 )
 
 // Worker is the database representation of a worker.
@@ -65,16 +76,16 @@ func (w *Worker) ToLibrary() *library.Worker {
 }
 
 // Validate verifies the necessary fields for
-// the Repo type are populated correctly.
+// the Worker type are populated correctly.
 func (w *Worker) Validate() error {
 	// verify the Host field is populated
 	if len(w.Hostname.String) == 0 {
-		return ErrEmptyRepoHash
+		return ErrEmptyWorkerHost
 	}
 
 	// verify the Address field is populated
 	if len(w.Address.String) == 0 {
-		return ErrEmptyRepoOrg
+		return ErrEmptyWorkerAddress
 	}
 
 	return nil

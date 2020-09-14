@@ -39,7 +39,7 @@ type (
 		Number      int               `json:"number,omitempty"      yaml:"number,omitempty"`
 		Ports       []string          `json:"ports,omitempty"       yaml:"ports,omitempty"`
 		Privileged  bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
-		Pull        bool              `json:"pull,omitempty"        yaml:"pull,omitempty"`
+		Pull        string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
 		Ruleset     Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
 		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
@@ -157,7 +157,7 @@ func (c *Container) Empty() bool {
 		c.Number == 0 &&
 		len(c.Ports) == 0 &&
 		!c.Privileged &&
-		!c.Pull &&
+		len(c.Pull) == 0 &&
 		reflect.DeepEqual(c.Ruleset, Ruleset{}) &&
 		len(c.Secrets) == 0 &&
 		len(c.Ulimits) == 0 &&

@@ -5,6 +5,9 @@
 package yaml
 
 import (
+	"strings"
+
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 )
@@ -23,7 +26,7 @@ type (
 		Entrypoint  raw.StringSlice    `yaml:"entrypoint,omitempty"  json:"entrypoint,omitempty" jsonschema:"description=Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"`
 		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"`
 		Ports       raw.StringSlice    `yaml:"ports,omitempty"       json:"ports,omitempty" jsonschema:"description=List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"`
-		Pull        bool               `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"default=false,description=Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
+		Pull        string             `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"default=false,description=Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
 	}
 )
 
@@ -59,6 +62,32 @@ func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	err := unmarshal(serviceSlice)
 	if err != nil {
 		return err
+	}
+
+	// iterate through each element in the service slice
+	for _, service := range *serviceSlice {
+		// implicitly set `pull` field if empty
+		if len(service.Pull) == 0 {
+			service.Pull = constants.PullNotPresent
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle true deprecated pull policy
+		//
+		// a `true` pull policy equates to `always`
+		if strings.EqualFold(service.Pull, "true") {
+			service.Pull = constants.PullAlways
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle false deprecated pull policy
+		//
+		// a `false` pull policy equates to `not_present`
+		if strings.EqualFold(service.Pull, "false") {
+			service.Pull = constants.PullNotPresent
+		}
 	}
 
 	// overwrite existing ServiceSlice

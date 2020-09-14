@@ -5,6 +5,9 @@
 package yaml
 
 import (
+	"strings"
+
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 )
@@ -26,7 +29,7 @@ type (
 		Name        string                 `yaml:"name,omitempty"        json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name for the step."`
 		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  json:"parameters,omitempty" jsonschema:"description=Extra configuration variables for a plugin.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/parameters/"`
 		Privileged  bool                   `yaml:"privileged,omitempty"  json:"privileged,omitempty" jsonschema:"description=Run the container with extra privileges.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/privileged/"`
-		Pull        bool                   `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/pull/"`
+		Pull        string                 `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/pull/"`
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/"`
 		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     json:"secrets,omitempty" jsonschema:"description=Sensitive variables injected into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/secrets/"`
 		Template    StepTemplate           `yaml:"template,omitempty"    json:"template,omitempty" jsonschema:"oneof_required=template,description=Name of template to expand in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/"`
@@ -72,6 +75,32 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	err := unmarshal(stepSlice)
 	if err != nil {
 		return err
+	}
+
+	// iterate through each element in the step slice
+	for _, step := range *stepSlice {
+		// implicitly set `pull` field if empty
+		if len(step.Pull) == 0 {
+			step.Pull = constants.PullNotPresent
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle true deprecated pull policy
+		//
+		// a `true` pull policy equates to `always`
+		if strings.EqualFold(step.Pull, "true") {
+			step.Pull = constants.PullAlways
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle false deprecated pull policy
+		//
+		// a `false` pull policy equates to `not_present`
+		if strings.EqualFold(step.Pull, "false") {
+			step.Pull = constants.PullNotPresent
+		}
 	}
 
 	// overwrite existing StepSlice

@@ -6,6 +6,7 @@ package yaml
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -88,6 +89,29 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// implicitly set `type` field if empty
 		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
+		}
+
+		// implicitly set `pull` field if empty
+		if len(secret.Origin.Pull) == 0 {
+			secret.Origin.Pull = constants.PullNotPresent
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle true deprecated pull policy
+		//
+		// a `true` pull policy equates to `always`
+		if strings.EqualFold(secret.Origin.Pull, "true") {
+			secret.Origin.Pull = constants.PullAlways
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle false deprecated pull policy
+		//
+		// a `false` pull policy equates to `not_present`
+		if strings.EqualFold(secret.Origin.Pull, "false") {
+			secret.Origin.Pull = constants.PullNotPresent
 		}
 	}
 

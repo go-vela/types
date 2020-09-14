@@ -29,6 +29,7 @@ func TestYaml_ServiceSlice_ToPipeline(t *testing.T) {
 					Image:       "postgres:12-alpine",
 					Name:        "postgres",
 					Ports:       []string{"5432:5432"},
+					Pull:        "not_present",
 				},
 			},
 			want: &pipeline.ContainerSlice{
@@ -39,6 +40,7 @@ func TestYaml_ServiceSlice_ToPipeline(t *testing.T) {
 					Image:       "postgres:12-alpine",
 					Name:        "postgres",
 					Ports:       []string{"5432:5432"},
+					Pull:        "not_present",
 				},
 			},
 		},
@@ -72,6 +74,7 @@ func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
 					Image: "postgres:latest",
 					Name:  "postgres",
 					Ports: []string{"5432:5432"},
+					Pull:  "not_present",
 				},
 				{
 					Environment: raw.StringSliceMap{
@@ -80,6 +83,7 @@ func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
 					Image: "mysql:latest",
 					Name:  "mysql",
 					Ports: []string{"3061:3061"},
+					Pull:  "not_present",
 				},
 			},
 		},

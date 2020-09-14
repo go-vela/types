@@ -34,7 +34,7 @@ func TestYaml_StageSlice_ToPipeline(t *testing.T) {
 							Image:       "alpine:latest",
 							Name:        "echo",
 							Privileged:  false,
-							Pull:        false,
+							Pull:        "not_present",
 							Ruleset: Ruleset{
 								If: Rules{
 									Branch:  []string{"master"},
@@ -96,7 +96,7 @@ func TestYaml_StageSlice_ToPipeline(t *testing.T) {
 							Image:       "alpine:latest",
 							Name:        "echo",
 							Privileged:  false,
-							Pull:        false,
+							Pull:        "not_present",
 							Ruleset: pipeline.Ruleset{
 								If: pipeline.Rules{
 									Branch:  []string{"master"},
@@ -199,7 +199,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 							},
 							Image: "openjdk:latest",
 							Name:  "install",
-							Pull:  true,
+							Pull:  "always",
 						},
 					},
 				},
@@ -215,7 +215,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 							},
 							Name:  "test",
 							Image: "openjdk:latest",
-							Pull:  true,
+							Pull:  "always",
 						},
 					},
 				},
@@ -231,7 +231,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 							},
 							Name:  "build",
 							Image: "openjdk:latest",
-							Pull:  true,
+							Pull:  "always",
 						},
 					},
 				},

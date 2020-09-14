@@ -92,7 +92,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 
 		// implicitly set `pull` field if empty
-		if len(secret.Origin.Pull) == 0 {
+		if !secret.Origin.Empty() && len(secret.Origin.Pull) == 0 {
 			secret.Origin.Pull = constants.PullNotPresent
 		}
 
@@ -101,7 +101,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// handle true deprecated pull policy
 		//
 		// a `true` pull policy equates to `always`
-		if strings.EqualFold(secret.Origin.Pull, "true") {
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "true") {
 			secret.Origin.Pull = constants.PullAlways
 		}
 
@@ -110,7 +110,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// handle false deprecated pull policy
 		//
 		// a `false` pull policy equates to `not_present`
-		if strings.EqualFold(secret.Origin.Pull, "false") {
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "false") {
 			secret.Origin.Pull = constants.PullNotPresent
 		}
 	}

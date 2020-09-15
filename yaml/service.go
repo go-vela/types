@@ -26,7 +26,7 @@ type (
 		Entrypoint  raw.StringSlice    `yaml:"entrypoint,omitempty"  json:"entrypoint,omitempty" jsonschema:"description=Commands to execute inside the container.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/entrypoint/"`
 		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/environment/"`
 		Ports       raw.StringSlice    `yaml:"ports,omitempty"       json:"ports,omitempty" jsonschema:"description=List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/ports/"`
-		Pull        string             `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"default=false,description=Enable pulling the latest version of the image.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
+		Pull        string             `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"enum=always,enum=not_present,enum=on_start,enum=never,enum=true,enum=false,default=not_present,description=Declaration to configure if and when the Docker image is pulled.\nReference: https://go-vela.github.io/docs/concepts/pipeline/services/pull/"`
 	}
 )
 

@@ -29,4 +29,7 @@ const (
 
 	// TableUser defines the table type for the database users table.
 	TableUser = "users"
+
+	// TableWorker defines the table type for the database workers table.
+	TableWorker = "workers"
 )

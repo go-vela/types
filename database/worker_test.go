@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/go-vela/types/library"
 )
@@ -22,7 +21,7 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 		Hostname:      sql.NullString{String: "", Valid: false},
 		Address:       sql.NullString{String: "", Valid: false},
 		Active:        sql.NullBool{Bool: false, Valid: false},
-		LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: false},
+		LastCheckedIn: sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -63,7 +62,7 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetAddress("http://localhost:8080")
 	want.SetRoutes([]string{"vela"})
 	want.SetActive(true)
-	want.SetLastCheckedIn(time.Time{})
+	want.SetLastCheckedIn(1563474077)
 
 	// run test
 	got := testWorker().ToLibrary()
@@ -89,7 +88,7 @@ func TestDatabase_Worker_Validate(t *testing.T) {
 				ID:            sql.NullInt64{Int64: 1, Valid: true},
 				Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
 				Active:        sql.NullBool{Bool: true, Valid: true},
-				LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
+				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 			},
 		},
 		{ // no Address set for worker
@@ -98,7 +97,7 @@ func TestDatabase_Worker_Validate(t *testing.T) {
 				ID:            sql.NullInt64{Int64: 1, Valid: true},
 				Hostname:      sql.NullString{String: "worker_0", Valid: true},
 				Active:        sql.NullBool{Bool: true, Valid: true},
-				LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
+				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 			},
 		},
 	}
@@ -130,7 +129,7 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetAddress("http://localhost:8080")
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
-	w.SetLastCheckedIn(time.Time{})
+	w.SetLastCheckedIn(1563474077)
 
 	want := testWorker()
 
@@ -151,6 +150,6 @@ func testWorker() *Worker {
 		Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
 		Routes:        []string{"vela"},
 		Active:        sql.NullBool{Bool: true, Valid: true},
-		LastCheckedIn: sql.NullTime{Time: time.Time{}, Valid: true},
+		LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 	}
 }

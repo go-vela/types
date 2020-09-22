@@ -29,7 +29,7 @@ type Worker struct {
 	Address       sql.NullString `sql:"address"`
 	Routes        pq.StringArray `sql:"routes"`
 	Active        sql.NullBool   `sql:"active"`
-	LastCheckedIn sql.NullTime   `sql:"last_checked_in"`
+	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 }
 
 // Nullify ensures the valid flag for
@@ -58,6 +58,11 @@ func (w *Worker) Nullify() *Worker {
 		w.Hostname.Valid = false
 	}
 
+	// check if the LastCheckedIn field should be false
+	if w.LastCheckedIn.Int64 == 0 {
+		w.LastCheckedIn.Valid = false
+	}
+
 	return w
 }
 
@@ -71,7 +76,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetAddress(w.Address.String)
 	worker.SetRoutes(w.Routes)
 	worker.SetActive(w.Active.Bool)
-	worker.SetLastCheckedIn(w.LastCheckedIn.Time)
+	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	return worker
 }
 
@@ -100,7 +105,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		Address:       sql.NullString{String: w.GetAddress(), Valid: true},
 		Routes:        w.GetRoutes(),
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
-		LastCheckedIn: sql.NullTime{Time: w.GetLastCheckedIn(), Valid: true},
+		LastCheckedIn: sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
 	}
 
 	return worker.Nullify()

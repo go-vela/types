@@ -146,7 +146,7 @@ func testWorker() *Worker {
 	w.SetAddress("http://localhost:8080")
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
-	w.SetLastCheckedIn(time.Time{})
+	w.SetLastCheckedIn(time.Time{}.UTC().Unix())
 
 	return w
 }

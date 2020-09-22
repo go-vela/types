@@ -6,19 +6,18 @@ package library
 
 import (
 	"fmt"
-	"time"
 )
 
 // Worker is the library representation of a worker.
 //
 // swagger:model Worker
 type Worker struct {
-	ID            *int64     `json:"id,omitempty"`
-	Hostname      *string    `json:"hostname,omitempty"`
-	Address       *string    `json:"address,omitempty"`
-	Routes        *[]string  `json:"routes,omitempty"`
-	Active        *bool      `json:"active,omitempty"`
-	LastCheckedIn *time.Time `json:"last_checked_in,omitempty"`
+	ID            *int64    `json:"id,omitempty"`
+	Hostname      *string   `json:"hostname,omitempty"`
+	Address       *string   `json:"address,omitempty"`
+	Routes        *[]string `json:"routes,omitempty"`
+	Active        *bool     `json:"active,omitempty"`
+	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -90,10 +89,10 @@ func (w *Worker) GetActive() bool {
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (w *Worker) GetLastCheckedIn() time.Time {
+func (w *Worker) GetLastCheckedIn() int64 {
 	// return zero value if Worker type or LastCheckedIn field is nil
 	if w == nil || w.LastCheckedIn == nil {
-		return time.Time{} // 0001-01-01 00:00:00 +0000 UTC
+		return 0
 	}
 
 	return *w.LastCheckedIn
@@ -168,7 +167,7 @@ func (w *Worker) SetActive(v bool) {
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (w *Worker) SetLastCheckedIn(v time.Time) {
+func (w *Worker) SetLastCheckedIn(v int64) {
 	// return if Worker type is nil
 	if w == nil {
 		return

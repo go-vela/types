@@ -210,7 +210,7 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 
 		// check for secret source and target
 		for _, secret := range *secrets {
-			if len(secret.Source) == 0 || len(secret.Target) == 0{
+			if len(secret.Source) == 0 || len(secret.Target) == 0 {
 				return fmt.Errorf("no secret source or target found")
 			}
 		}

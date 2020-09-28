@@ -207,7 +207,6 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
-
 		// check for secret source and target
 		for _, secret := range *secrets {
 			if len(secret.Source) == 0 || len(secret.Target) == 0 {

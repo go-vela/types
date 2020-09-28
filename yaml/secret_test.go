@@ -290,6 +290,16 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 		},
 		{
 			failure: true,
+			file:    "testdata/step_secret_slice_invalid_no_source.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/step_secret_slice_invalid_no_target.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
 			file:    "testdata/invalid.yml",
 			want:    nil,
 		},

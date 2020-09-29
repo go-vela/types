@@ -6,6 +6,7 @@ package yaml
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -206,6 +207,13 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
+		// check for secret source and target
+		for _, secret := range *secrets {
+			if len(secret.Source) == 0 || len(secret.Target) == 0 {
+				return fmt.Errorf("no secret source or target found")
+			}
+		}
+
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
 		return nil

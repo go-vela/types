@@ -1,6 +1,6 @@
 module github.com/go-vela/types
 
-go 1.13
+go 1.15
 
 require (
 	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3

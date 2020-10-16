@@ -9,7 +9,7 @@ import (
 )
 
 const versionFormat = `{
-  Full: %s,
+  Canonical: %s,
   Major: %d,
   Minor: %d,
   Patch: %d,
@@ -28,18 +28,18 @@ const versionFormat = `{
 // follows semantic version guidelines from
 // https://semver.org/.
 type Version struct {
+	// Canonical represents a canonical semantic version for the application.
+	Canonical string `json:"canonical"`
 	// Major represents incompatible API changes.
-	Major int64 `json:"major,omitempty"`
+	Major int64 `json:"major"`
 	// Minor represents added functionality in a backwards compatible manner.
-	Minor int64 `json:"minor,omitempty"`
+	Minor int64 `json:"minor"`
 	// Patch represents backwards compatible bug fixes.
-	Patch int64 `json:"patch,omitempty"`
+	Patch int64 `json:"patch"`
 	// PreRelease represents unstable changes that might not be compatible.
 	PreRelease string `json:"pre_release,omitempty"`
-	// Full represents a fully functional semantic version for the application.
-	Full string `json:"full,omitempty"`
 	// Metadata represents extra information surrounding the application version.
-	Metadata Metadata
+	Metadata Metadata `json:"metadata,omitempty"`
 }
 
 // Meta implements a formatted string containing only metadata for the Version type.
@@ -49,14 +49,14 @@ func (v *Version) Meta() string {
 
 // Semantic implements a formatted string containing a formal semantic version for the Version type.
 func (v *Version) Semantic() string {
-	return v.Full
+	return v.Canonical
 }
 
 // String implements the Stringer interface for the Version type.
 func (v *Version) String() string {
 	return fmt.Sprintf(
 		versionFormat,
-		v.Full,
+		v.Canonical,
 		v.Major,
 		v.Minor,
 		v.Patch,

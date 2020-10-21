@@ -26,7 +26,6 @@ func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {
 				{
 					Name:   "docker_build",
 					Source: "github.com/go-vela/atlas/stable/docker_create",
-					Format: "go",
 					Type:   "github",
 				},
 				{

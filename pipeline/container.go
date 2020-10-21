@@ -39,7 +39,7 @@ type (
 		Number      int               `json:"number,omitempty"      yaml:"number,omitempty"`
 		Ports       []string          `json:"ports,omitempty"       yaml:"ports,omitempty"`
 		Privileged  bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
-		Pull        bool              `json:"pull,omitempty"        yaml:"pull,omitempty"`
+		Pull        string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
 		Ruleset     Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
 		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
@@ -130,14 +130,14 @@ func (c *Container) Sanitize(driver string) *Container {
 		return container
 	// unrecognized driver
 	default:
-		// log here?
+		// TODO: add a log message indicating how we got here
 		return nil
 	}
 }
 
 // Empty returns true if the provided container is empty.
 func (c *Container) Empty() bool {
-	// return true of the container is nil
+	// return true if the container is nil
 	if c == nil {
 		return true
 	}
@@ -157,7 +157,7 @@ func (c *Container) Empty() bool {
 		c.Number == 0 &&
 		len(c.Ports) == 0 &&
 		!c.Privileged &&
-		!c.Pull &&
+		len(c.Pull) == 0 &&
 		reflect.DeepEqual(c.Ruleset, Ruleset{}) &&
 		len(c.Secrets) == 0 &&
 		len(c.Ulimits) == 0 &&
@@ -172,6 +172,33 @@ func (c *Container) Empty() bool {
 // Execute returns true when the provided ruledata matches
 // the conditions when we should be running the container on the worker.
 func (c *Container) Execute(r *RuleData) bool {
+	// return false if the container is nil
+	if c == nil {
+		return false
+	}
+
+	// check if the build is in a running state
+	if strings.EqualFold(r.Status, constants.StatusRunning) {
+		// treat the ruleset status as success
+		r.Status = constants.StatusSuccess
+
+		// skip evaluating path in ruleset
+		//
+		// the compiler is the component responsible for
+		// choosing whether a container will run based
+		// off the files changed for a build
+		//
+		// the worker doesn't have any record of
+		// what files changed for a build so we
+		// should "skip" evaluating what the
+		// user provided for the path element
+		c.Ruleset.If.Path = []string{}
+		c.Ruleset.Unless.Path = []string{}
+
+		// return if the container ruleset matches the conditions
+		return c.Ruleset.Match(r)
+	}
+
 	// assume you will execute the container
 	execute := true
 

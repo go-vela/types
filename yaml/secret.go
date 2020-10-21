@@ -6,6 +6,8 @@ package yaml
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -21,23 +23,23 @@ type (
 	// Secret is the yaml representation of a secret
 	// from the secrets block for a pipeline.
 	Secret struct {
-		Name   string `yaml:"name,omitempty"   jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
-		Key    string `yaml:"key,omitempty"    jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"`
-		Engine string `yaml:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/"`
-		Type   string `yaml:"type,omitempty"   jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/"`
-		Origin Origin `yaml:"origin,omitempty" jsonschema:"description=Declaration to pull secrets from non-internal secret providers.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/origin/"`
+		Name   string `yaml:"name,omitempty"   json:"name,omitempty" jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/"`
+		Key    string `yaml:"key,omitempty"    json:"key,omitempty" jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/key/"`
+		Engine string `yaml:"engine,omitempty" json:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/engine/"`
+		Type   string `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/type/"`
+		Origin Origin `yaml:"origin,omitempty" json:"origin,omitempty" jsonschema:"description=Declaration to pull secrets from non-internal secret providers.\nReference: https://go-vela.github.io/docs/concepts/pipeline/secrets/origin/"`
 	}
 
 	// Origin is the yaml representation of a method
 	// for looking up secrets with a secret plugin.
 	Origin struct {
-		Environment raw.StringSliceMap     `yaml:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: coming soon"`
-		Image       string                 `yaml:"image,omitempty"       jsonschema:"required,minLength=1,description=Docker image to use to create the ephemeral container.\nReference: "`
-		Name        string                 `yaml:"name,omitempty"        jsonschema:"required,minLength=1,description=Unique name for the secret origin."`
-		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  jsonschema:"description=Extra configuration variables for the secret plugin.\nReference: coming soon"`
-		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     jsonschema:"description=Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"`
-		Pull        bool                   `yaml:"pull,omitempty"        jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: coming soon"`
-		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
+		Environment raw.StringSliceMap     `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: coming soon"`
+		Image       string                 `yaml:"image,omitempty"       json:"image,omitempty" jsonschema:"required,minLength=1,description=Docker image to use to create the ephemeral container.\nReference: "`
+		Name        string                 `yaml:"name,omitempty"        json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name for the secret origin."`
+		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  json:"parameters,omitempty" jsonschema:"description=Extra configuration variables for the secret plugin.\nReference: coming soon"`
+		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     json:"secrets,omitempty" jsonschema:"description=Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"`
+		Pull        string                 `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"enum=always,enum=not_present,enum=on_start,enum=never,default=not_present,description=Declaration to configure if and when the Docker image is pulled.\nReference: coming soon"`
+		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
 	}
 )
 
@@ -64,7 +66,7 @@ func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the SecretSlice type.
 func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// secret slice we try unmarshaling to
+	// secret slice we try unmarshalling to
 	secretSlice := new([]*Secret)
 
 	// attempt to unmarshal as a secret slice type
@@ -89,6 +91,29 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
 		}
+
+		// implicitly set `pull` field if empty
+		if !secret.Origin.Empty() && len(secret.Origin.Pull) == 0 {
+			secret.Origin.Pull = constants.PullNotPresent
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle true deprecated pull policy
+		//
+		// a `true` pull policy equates to `always`
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "true") {
+			secret.Origin.Pull = constants.PullAlways
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle false deprecated pull policy
+		//
+		// a `false` pull policy equates to `not_present`
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "false") {
+			secret.Origin.Pull = constants.PullNotPresent
+		}
 	}
 
 	// overwrite existing SecretSlice
@@ -105,7 +130,7 @@ func (o *Origin) Empty() bool {
 		len(o.Name) == 0 &&
 		o.Parameters == nil &&
 		len(o.Secrets) == 0 &&
-		o.Pull == false {
+		len(o.Pull) == 0 {
 		return true
 	}
 
@@ -158,7 +183,7 @@ func (s *StepSecretSlice) ToPipeline() *pipeline.StepSecretSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StepSecretSlice type.
 func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -176,12 +201,19 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 		return nil
 	}
 
-	// step secret slice we try unmarshaling to
+	// step secret slice we try unmarshalling to
 	secrets := new([]*StepSecret)
 
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
+		// check for secret source and target
+		for _, secret := range *secrets {
+			if len(secret.Source) == 0 || len(secret.Target) == 0 {
+				return fmt.Errorf("no secret source or target found")
+			}
+		}
+
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
 		return nil

@@ -23,7 +23,7 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 	// target map we want to return
 	targetMap := map[string]string{}
 
-	// json slice we try unmarshaling to
+	// json slice we try unmarshalling to
 	jsonSlice := StringSlice{}
 
 	// attempt to unmarshal as a string slice type
@@ -44,7 +44,7 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 
-	// json map we try unmarshaling to
+	// json map we try unmarshalling to
 	jsonMap := map[string]string{}
 
 	// attempt to unmarshal as map of strings
@@ -70,7 +70,7 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	// target map we want to return
 	targetMap := map[string]string{}
 
-	// yaml slice we try unmarshaling to
+	// yaml slice we try unmarshalling to
 	yamlSlice := StringSlice{}
 
 	// attempt to unmarshal as a string slice type
@@ -91,7 +91,7 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 		return nil
 	}
 
-	// yaml map we try unmarshaling to
+	// yaml map we try unmarshalling to
 	yamlMap := map[string]string{}
 
 	// attempt to unmarshal as map of strings

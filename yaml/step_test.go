@@ -31,7 +31,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Image:       "alpine:latest",
 					Name:        "echo",
 					Privileged:  false,
-					Pull:        false,
+					Pull:        "not_present",
 					Ruleset: Ruleset{
 						If: Rules{
 							Branch:  []string{"master"},
@@ -87,7 +87,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Image:       "alpine:latest",
 					Name:        "echo",
 					Privileged:  false,
-					Pull:        false,
+					Pull:        "not_present",
 					Ruleset: pipeline.Ruleset{
 						If: pipeline.Rules{
 							Branch:  []string{"master"},
@@ -166,7 +166,7 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 					},
 					Name:  "install",
 					Image: "openjdk:latest",
-					Pull:  true,
+					Pull:  "always",
 				},
 				{
 					Commands: raw.StringSlice{"./gradlew check"},
@@ -176,7 +176,7 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 					},
 					Name:  "test",
 					Image: "openjdk:latest",
-					Pull:  true,
+					Pull:  "always",
 				},
 				{
 					Commands: raw.StringSlice{"./gradlew build"},
@@ -186,12 +186,12 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 					},
 					Name:  "build",
 					Image: "openjdk:latest",
-					Pull:  true,
+					Pull:  "always",
 				},
 				{
 					Name:  "docker_build",
 					Image: "plugins/docker:18.09",
-					Pull:  true,
+					Pull:  "always",
 					Parameters: map[string]interface{}{
 						"registry": "index.docker.io",
 						"repo":     "github/octocat",
@@ -200,6 +200,7 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 				},
 				{
 					Name: "templated_publish",
+					Pull: "not_present",
 					Template: StepTemplate{
 						Name: "docker_publish",
 						Variables: map[string]interface{}{

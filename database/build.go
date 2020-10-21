@@ -276,7 +276,7 @@ func (b *Build) Validate() error {
 	return nil
 }
 
-// BuildFromLibrary converts the libray Build type
+// BuildFromLibrary converts the library Build type
 // to a database build type.
 func BuildFromLibrary(b *library.Build) *Build {
 	build := &Build{

@@ -22,9 +22,9 @@ type (
 	// from the ulimits block for a step in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Ulimit struct {
-		Name string `yaml:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name of the user limit.\nReference: coming soon"`
-		Soft int64  `yaml:"soft,omitempty" jsonschema:"description=Set the soft limit.\nReference: coming soon"`
-		Hard int64  `yaml:"hard,omitempty" jsonschema:"description=Set the hard limit.\nReference: coming soon"`
+		Name string `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name of the user limit.\nReference: coming soon"`
+		Soft int64  `yaml:"soft,omitempty" json:"soft,omitempty" jsonschema:"description=Set the soft limit.\nReference: coming soon"`
+		Hard int64  `yaml:"hard,omitempty" json:"hard,omitempty" jsonschema:"description=Set the hard limit.\nReference: coming soon"`
 	}
 )
 
@@ -49,7 +49,7 @@ func (u *UlimitSlice) ToPipeline() *pipeline.UlimitSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the UlimitSlice type.
 func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// string slice we try unmarshaling to
+	// string slice we try unmarshalling to
 	stringSlice := new(raw.StringSlice)
 
 	// attempt to unmarshal as a string slice type
@@ -112,7 +112,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	// ulimit slice we try unmarshaling to
+	// ulimit slice we try unmarshalling to
 	ulimits := new([]*Ulimit)
 
 	// attempt to unmarshal as a ulimit slice type

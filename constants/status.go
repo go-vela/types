@@ -15,6 +15,9 @@ const (
 	// StatusKilled defines the status type for build and step killed statuses.
 	StatusKilled = "killed"
 
+	// StatusCanceled defines the status type for build and step canceled statuses.
+	StatusCanceled = "canceled"
+
 	// StatusPending defines the status type for build and step pending statuses.
 	StatusPending = "pending"
 

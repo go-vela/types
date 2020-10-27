@@ -366,7 +366,7 @@ func testSecrets() *SecretSlice {
 				Image:       "vault:latest",
 				Name:        "vault",
 				Number:      1,
-				Pull:        true,
+				Pull:        "always",
 				Ruleset: Ruleset{
 					If:       Rules{Event: []string{"push"}},
 					Operator: "and",
@@ -381,7 +381,7 @@ func testSecrets() *SecretSlice {
 				Image:       "vault:latest",
 				Name:        "vault",
 				Number:      2,
-				Pull:        true,
+				Pull:        "always",
 				Ruleset: Ruleset{
 					If:       Rules{Event: []string{"pull_request"}},
 					Operator: "and",

@@ -40,7 +40,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 						Parameters: map[string]interface{}{
 							"addr": "vault.company.com",
 						},
-						Pull: true,
+						Pull: "always",
 						Ruleset: Ruleset{
 							If: Rules{
 								Event: []string{"push"},
@@ -77,7 +77,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 						Name:        "vault",
 						Environment: map[string]string{"FOO": "bar"},
 						Image:       "target/vela-vault:latest",
-						Pull:        true,
+						Pull:        "always",
 						Ruleset: pipeline.Ruleset{
 							If: pipeline.Rules{
 								Event: []string{"push"},
@@ -162,7 +162,7 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 						Parameters: map[string]interface{}{
 							"addr": "vault.company.com",
 						},
-						Pull: true,
+						Pull: "always",
 						Ruleset: Ruleset{
 							If: Rules{
 								Event: []string{"push"},
@@ -287,6 +287,16 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 					Target: "hello",
 				},
 			},
+		},
+		{
+			failure: true,
+			file:    "testdata/step_secret_slice_invalid_no_source.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/step_secret_slice_invalid_no_target.yml",
+			want:    nil,
 		},
 		{
 			failure: true,

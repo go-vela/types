@@ -39,6 +39,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Name:  "postgres",
 						Image: "postgres:latest",
+						Pull:  "not_present",
 					},
 				},
 				Steps: StepSlice{
@@ -50,7 +51,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Image: "openjdk:latest",
 						Name:  "install",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -79,7 +80,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Name:  "test",
 						Image: "openjdk:latest",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -108,7 +109,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Name:  "build",
 						Image: "openjdk:latest",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -138,7 +139,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 							"tags":     []interface{}{"latest", "dev"},
 						},
 						Image: "plugins/docker:18.09",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -153,7 +154,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 							"tags":     []interface{}{"latest", "dev"},
 						},
 						Image: "plugins/docker:18.09",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Branch: []string{"master"}, Event: []string{"push"}},
 							Matcher:  "filepath",
@@ -238,7 +239,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								},
 								Image: "openjdk:latest",
 								Name:  "install",
-								Pull:  true,
+								Pull:  "always",
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
 									Matcher:  "filepath",
@@ -273,7 +274,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								},
 								Name:  "test",
 								Image: "openjdk:latest",
-								Pull:  true,
+								Pull:  "always",
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
 									Matcher:  "filepath",
@@ -308,7 +309,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								},
 								Name:  "build",
 								Image: "openjdk:latest",
-								Pull:  true,
+								Pull:  "always",
 								Ruleset: Ruleset{
 									If:       Rules{Event: []string{"push", "pull_request"}},
 									Matcher:  "filepath",
@@ -350,7 +351,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Image: "openjdk:latest",
 						Name:  "install",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -379,7 +380,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Name:  "test",
 						Image: "openjdk:latest",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",
@@ -408,7 +409,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						},
 						Name:  "build",
 						Image: "openjdk:latest",
-						Pull:  true,
+						Pull:  "always",
 						Ruleset: Ruleset{
 							If:       Rules{Event: []string{"push", "pull_request"}},
 							Matcher:  "filepath",

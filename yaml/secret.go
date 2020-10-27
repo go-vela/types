@@ -6,6 +6,8 @@ package yaml
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -36,7 +38,7 @@ type (
 		Name        string                 `yaml:"name,omitempty"        json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name for the secret origin."`
 		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  json:"parameters,omitempty" jsonschema:"description=Extra configuration variables for the secret plugin.\nReference: coming soon"`
 		Secrets     StepSecretSlice        `yaml:"secrets,omitempty"     json:"secrets,omitempty" jsonschema:"description=Secrets to inject that are necessary to retrieve the secrets.\nReference: coming soon"`
-		Pull        bool                   `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"description=Automatically upgrade to the latest version of the image.\nReference: coming soon"`
+		Pull        string                 `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"enum=always,enum=not_present,enum=on_start,enum=never,default=not_present,description=Declaration to configure if and when the Docker image is pulled.\nReference: coming soon"`
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
 	}
 )
@@ -89,6 +91,29 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
 		}
+
+		// implicitly set `pull` field if empty
+		if !secret.Origin.Empty() && len(secret.Origin.Pull) == 0 {
+			secret.Origin.Pull = constants.PullNotPresent
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle true deprecated pull policy
+		//
+		// a `true` pull policy equates to `always`
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "true") {
+			secret.Origin.Pull = constants.PullAlways
+		}
+
+		// TODO: remove this in a future release
+		//
+		// handle false deprecated pull policy
+		//
+		// a `false` pull policy equates to `not_present`
+		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "false") {
+			secret.Origin.Pull = constants.PullNotPresent
+		}
 	}
 
 	// overwrite existing SecretSlice
@@ -105,7 +130,7 @@ func (o *Origin) Empty() bool {
 		len(o.Name) == 0 &&
 		o.Parameters == nil &&
 		len(o.Secrets) == 0 &&
-		o.Pull == false {
+		len(o.Pull) == 0 {
 		return true
 	}
 
@@ -182,6 +207,13 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	// attempt to unmarshal as a step secret slice type
 	err = unmarshal(secrets)
 	if err == nil {
+		// check for secret source and target
+		for _, secret := range *secrets {
+			if len(secret.Source) == 0 || len(secret.Target) == 0 {
+				return fmt.Errorf("no secret source or target found")
+			}
+		}
+
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
 		return nil

@@ -680,7 +680,7 @@ func testContainers() *ContainerSlice {
 			Image:       "#init",
 			Name:        "init",
 			Number:      1,
-			Pull:        true,
+			Pull:        "always",
 		},
 		{
 			ID:          "step_github octocat._1_clone",
@@ -689,7 +689,7 @@ func testContainers() *ContainerSlice {
 			Image:       "target/vela-git:v0.3.0",
 			Name:        "clone",
 			Number:      2,
-			Pull:        true,
+			Pull:        "always",
 		},
 		{
 			ID:          "step_github octocat._1_echo",
@@ -699,7 +699,7 @@ func testContainers() *ContainerSlice {
 			Image:       "alpine:latest",
 			Name:        "echo",
 			Number:      3,
-			Pull:        true,
+			Pull:        "always",
 			Ruleset: Ruleset{
 				If:       Rules{Event: []string{"push"}},
 				Operator: "and",

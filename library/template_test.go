@@ -28,8 +28,8 @@ func TestLibrary_Template_Getters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		if test.template.GetHTMLURL() != test.want.GetHTMLURL() {
-			t.Errorf("GetHTMLURL is %v, want %v", test.template.GetHTMLURL(), test.want.GetHTMLURL())
+		if test.template.GetURL() != test.want.GetURL() {
+			t.Errorf("GetURL is %v, want %v", test.template.GetURL(), test.want.GetURL())
 		}
 
 		if test.template.GetName() != test.want.GetName() {
@@ -67,13 +67,13 @@ func TestLibrary_Template_Setters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		test.template.SetHTMLURL(test.want.GetHTMLURL())
+		test.template.SetURL(test.want.GetURL())
 		test.template.SetName(test.want.GetName())
 		test.template.SetSource(test.want.GetSource())
 		test.template.SetType(test.want.GetType())
 
-		if test.template.GetHTMLURL() != test.want.GetHTMLURL() {
-			t.Errorf("SetHTMLURL is %v, want %v", test.template.GetHTMLURL(), test.want.GetHTMLURL())
+		if test.template.GetURL() != test.want.GetURL() {
+			t.Errorf("SetURL is %v, want %v", test.template.GetURL(), test.want.GetURL())
 		}
 
 		if test.template.GetName() != test.want.GetName() {
@@ -100,7 +100,7 @@ func TestLibrary_Template_String(t *testing.T) {
   Source: %s,
   Type: %s,
 }`,
-		tmpl.GetHTMLURL(),
+		tmpl.GetURL(),
 		tmpl.GetName(),
 		tmpl.GetSource(),
 		tmpl.GetType(),
@@ -119,7 +119,7 @@ func TestLibrary_Template_String(t *testing.T) {
 func testTemplate() *Template {
 	t := new(Template)
 
-	t.SetHTMLURL("https://github.com/github/octocat/blob/branch/template.yml")
+	t.SetURL("https://github.com/github/octocat/blob/branch/template.yml")
 	t.SetName("template")
 	t.SetSource("github.com/github/octocat/template.yml@branch")
 	t.SetType("github")

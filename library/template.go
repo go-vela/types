@@ -12,23 +12,23 @@ import (
 //
 // swagger:model Template
 type Template struct {
-	HTMLURL *string `json:"html_url,omitempty"`
-	Name    *string `json:"name,omitempty"`
-	Source  *string `json:"source,omitempty"`
-	Type    *string `json:"type,omitempty"`
+	URL    *string `json:"url,omitempty"`
+	Name   *string `json:"name,omitempty"`
+	Source *string `json:"source,omitempty"`
+	Type   *string `json:"type,omitempty"`
 }
 
-// GetHTMLURL returns the HTMLURL field.
+// GetURL returns the URL field.
 //
 // When the provided Template type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (t *Template) GetHTMLURL() string {
-	// return zero value if Template type or HTMLURL field is nil
-	if t == nil || t.HTMLURL == nil {
+func (t *Template) GetURL() string {
+	// return zero value if Template type or URL field is nil
+	if t == nil || t.URL == nil {
 		return ""
 	}
 
-	return *t.HTMLURL
+	return *t.URL
 }
 
 // GetName returns the Name field.
@@ -70,17 +70,17 @@ func (t *Template) GetType() string {
 	return *t.Type
 }
 
-// SetHTMLURL sets the HTMLURL field.
+// SetURL sets the URL field.
 //
 // When the provided Template type is nil, it
 // will set nothing and immediately return.
-func (t *Template) SetHTMLURL(v string) {
+func (t *Template) SetURL(v string) {
 	// return if Template type is nil
 	if t == nil {
 		return
 	}
 
-	t.HTMLURL = &v
+	t.URL = &v
 }
 
 // SetName sets the Name field.
@@ -130,7 +130,7 @@ func (t *Template) String() string {
   Source: %s,
   Type: %s,
 }`,
-		t.GetHTMLURL(),
+		t.GetURL(),
 		t.GetName(),
 		t.GetSource(),
 		t.GetType(),

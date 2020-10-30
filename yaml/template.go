@@ -4,6 +4,10 @@
 
 package yaml
 
+import (
+	"github.com/go-vela/types/library"
+)
+
 // nolint:lll // jsonschema will cause long lines
 type (
 	// TemplateSlice is the yaml representation
@@ -41,6 +45,30 @@ func (t *TemplateSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	*t = TemplateSlice(*templateSlice)
 
 	return nil
+}
+
+// ToLibrary converts the Template type
+// to a library Template type.
+func (t *Template) ToLibrary() *library.Template {
+	template := new(library.Template)
+
+	template.SetName(t.Name)
+	template.SetSource(t.Source)
+	template.SetType(t.Type)
+
+	return template
+}
+
+// TemplateFromLibrary converts the library Template type
+// to a yaml Template type.
+func TemplateFromLibrary(t *library.Template) *Template {
+	template := &Template{
+		Name:   t.GetName(),
+		Source: t.GetSource(),
+		Type:   t.GetType(),
+	}
+
+	return template
 }
 
 // Map helper function that creates a map of templates from a slice of templates.

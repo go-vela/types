@@ -12,7 +12,7 @@ import (
 //
 // swagger:model Template
 type Template struct {
-	HTMLURL *string `json:"id,omitempty"`
+	HTMLURL *string `json:"html_url,omitempty"`
 	Name    *string `json:"name,omitempty"`
 	Source  *string `json:"source,omitempty"`
 	Type    *string `json:"type,omitempty"`

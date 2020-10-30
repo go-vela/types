@@ -12,23 +12,23 @@ import (
 //
 // swagger:model Template
 type Template struct {
-	URL    *string `json:"url,omitempty"`
+	Link   *string `json:"link,omitempty"`
 	Name   *string `json:"name,omitempty"`
 	Source *string `json:"source,omitempty"`
 	Type   *string `json:"type,omitempty"`
 }
 
-// GetURL returns the URL field.
+// GetLink returns the Link field.
 //
 // When the provided Template type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (t *Template) GetURL() string {
-	// return zero value if Template type or URL field is nil
-	if t == nil || t.URL == nil {
+func (t *Template) GetLink() string {
+	// return zero value if Template type or Link field is nil
+	if t == nil || t.Link == nil {
 		return ""
 	}
 
-	return *t.URL
+	return *t.Link
 }
 
 // GetName returns the Name field.
@@ -70,17 +70,17 @@ func (t *Template) GetType() string {
 	return *t.Type
 }
 
-// SetURL sets the URL field.
+// SetLink sets the Link field.
 //
 // When the provided Template type is nil, it
 // will set nothing and immediately return.
-func (t *Template) SetURL(v string) {
+func (t *Template) SetLink(v string) {
 	// return if Template type is nil
 	if t == nil {
 		return
 	}
 
-	t.URL = &v
+	t.Link = &v
 }
 
 // SetName sets the Name field.
@@ -130,7 +130,7 @@ func (t *Template) String() string {
   Source: %s,
   Type: %s,
 }`,
-		t.GetURL(),
+		t.GetLink(),
 		t.GetName(),
 		t.GetSource(),
 		t.GetType(),

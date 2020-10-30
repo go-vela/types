@@ -105,6 +105,7 @@ func TestYAML_TemplateFromLibrary(t *testing.T) {
 	tmpl.SetName("docker_build")
 	tmpl.SetSource("github.com/go-vela/atlas/stable/docker_build")
 	tmpl.SetType("github")
+
 	// run test
 	got := TemplateFromLibrary(tmpl)
 

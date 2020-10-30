@@ -117,12 +117,12 @@ func TestLibrary_Template_String(t *testing.T) {
 // testTemplate is a test helper function to create a Template
 // type with all fields set to a fake value.
 func testTemplate() *Template {
-	u := new(Template)
+	t := new(Template)
 
-	u.SetHTMLURL("https://github.com/github/octocat/blob/branch/template.yml")
-	u.SetName("template")
-	u.SetSource("github.com/github/octocat/template.yml@branch")
-	u.SetType("github")
+	t.SetHTMLURL("https://github.com/github/octocat/blob/branch/template.yml")
+	t.SetName("template")
+	t.SetSource("github.com/github/octocat/template.yml@branch")
+	t.SetType("github")
 
-	return u
+	return t
 }

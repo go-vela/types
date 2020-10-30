@@ -21,6 +21,13 @@ var (
 	ErrEmptyBuildRepoID = errors.New("empty build repo_id provided")
 )
 
+const (
+	// Maximum title field length.
+	maxTitleLength = 1000
+	// Maximum message field length.
+	maxMessageLength = 2000
+)
+
 // Build is the database representation of a build for a pipeline.
 type Build struct {
 	ID           sql.NullInt64  `sql:"id"`
@@ -57,13 +64,13 @@ type Build struct {
 // trimming values that may exceed the database column limit.
 func (b *Build) Crop() *Build {
 	// trim the Title field to 1000 characters
-	if len(b.Title.String) > 1000 {
-		b.Title = sql.NullString{String: b.Title.String[:1000], Valid: true}
+	if len(b.Title.String) > maxTitleLength {
+		b.Title = sql.NullString{String: b.Title.String[:maxTitleLength], Valid: true}
 	}
 
 	// trim the Message field to 2000 characters
-	if len(b.Message.String) > 2000 {
-		b.Message = sql.NullString{String: b.Message.String[:2000], Valid: true}
+	if len(b.Message.String) > maxMessageLength {
+		b.Message = sql.NullString{String: b.Message.String[:maxMessageLength], Valid: true}
 	}
 
 	return b
@@ -75,6 +82,7 @@ func (b *Build) Crop() *Build {
 // When a field within the Build type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
+// nolint:funlen // long function due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil

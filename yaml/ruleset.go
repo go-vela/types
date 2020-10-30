@@ -63,8 +63,10 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	})
 
 	// attempt to unmarshal simple ruleset
+	// nolint:errcheck // intentionally not handling error
 	unmarshal(simple)
 	// attempt to unmarshal advanced ruleset
+	// nolint:errcheck // intentionally not handling error
 	unmarshal(advanced)
 
 	// set ruleset `unless` to advanced `unless` rules

@@ -4,7 +4,7 @@
 
 package constants
 
-// pipeline types
+// Pipeline types.
 const (
 	// PipelineStages defines the type for a pipeline with stages.
 	PipelineStage = "stages"

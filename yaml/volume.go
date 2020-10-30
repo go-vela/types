@@ -69,7 +69,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				})
 
 				continue
-			case len(parts) == 2:
+			case len(parts) == 2: // nolint:gomnd // accepting magic number
 				// append the element to the volume slice
 				*v = append(*v, &Volume{
 					Source:      parts[0],
@@ -78,7 +78,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				})
 
 				continue
-			case len(parts) == 3:
+			case len(parts) == 3: // nolint:gomnd // accepting magic number
 				// append the element to the volume slice
 				*v = append(*v, &Volume{
 					Source:      parts[0],
@@ -88,7 +88,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 				continue
 			default:
-				return fmt.Errorf("Volume %s must contain at least 1 but no more than 2 `:`(colons)", volume)
+				return fmt.Errorf("volume %s must contain at least 1 but no more than 2 `:`(colons)", volume)
 			}
 		}
 

@@ -4,7 +4,7 @@
 
 package constants
 
-// database tables
+// Database tables.
 const (
 	// TableBuild defines the table type for the database builds table.
 	TableBuild = "builds"

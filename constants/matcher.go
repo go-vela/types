@@ -4,7 +4,7 @@
 
 package constants
 
-// ruleset matchers
+// Ruleset matchers.
 const (
 	// MatcherFilepath defines the ruleset type for the filepath matcher.
 	MatcherFilepath = "filepath"

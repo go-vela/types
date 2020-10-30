@@ -72,10 +72,14 @@ func TemplateFromLibrary(t *library.Template) *Template {
 }
 
 // Map helper function that creates a map of templates from a slice of templates.
-func (t *TemplateSlice) Map(templates TemplateSlice) map[string]*Template {
+func (t *TemplateSlice) Map() map[string]*Template {
 	m := make(map[string]*Template)
 
-	for _, tmpl := range templates {
+	if t == nil {
+		return m
+	}
+
+	for _, tmpl := range *t {
 		m[tmpl.Name] = tmpl
 	}
 

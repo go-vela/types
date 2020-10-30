@@ -42,3 +42,14 @@ func (t *TemplateSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	return nil
 }
+
+// Map helper function that creates a map of templates from a slice of templates.
+func (t *TemplateSlice) Map(templates TemplateSlice) map[string]*Template {
+	m := make(map[string]*Template)
+
+	for _, tmpl := range templates {
+		m[tmpl.Name] = tmpl
+	}
+
+	return m
+}

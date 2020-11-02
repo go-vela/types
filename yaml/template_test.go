@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/library"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -68,5 +69,47 @@ func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
 		}
+	}
+}
+
+func TestYAML_Template_ToLibrary(t *testing.T) {
+	// setup types
+	want := new(library.Template)
+	want.SetName("docker_build")
+	want.SetSource("github.com/go-vela/atlas/stable/docker_build")
+	want.SetType("github")
+
+	tmpl := &Template{
+		Name:   "docker_build",
+		Source: "github.com/go-vela/atlas/stable/docker_build",
+		Type:   "github",
+	}
+
+	// run test
+	got := tmpl.ToLibrary()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("ToLibrary is %v, want %v", got, want)
+	}
+}
+
+func TestYAML_TemplateFromLibrary(t *testing.T) {
+	// setup types
+	want := &Template{
+		Name:   "docker_build",
+		Source: "github.com/go-vela/atlas/stable/docker_build",
+		Type:   "github",
+	}
+
+	tmpl := new(library.Template)
+	tmpl.SetName("docker_build")
+	tmpl.SetSource("github.com/go-vela/atlas/stable/docker_build")
+	tmpl.SetType("github")
+
+	// run test
+	got := TemplateFromLibrary(tmpl)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("TemplateFromLibrary is %v, want %v", got, want)
 	}
 }

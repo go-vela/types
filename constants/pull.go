@@ -4,7 +4,7 @@
 
 package constants
 
-// service and step pull policies
+// Service and step pull policies.
 const (
 	// PullAlways defines the pull policy type for
 	// a service or step to always pull an image.

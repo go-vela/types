@@ -4,7 +4,7 @@
 
 package constants
 
-// build and repo events
+// Build and repo events.
 const (
 	// EventPush defines the event type for build and repo push events.
 	EventPush = "push"

@@ -51,7 +51,7 @@ func (s *Secret) Sanitize() *Secret {
 
 // Match returns true when the provided container matches
 // the conditions to inject a secret into a pipeline container
-// resource
+// resource.
 func (s *Secret) Match(from *pipeline.Container) bool {
 	eACL, iACL := false, false
 	events, images, commands := s.GetEvents(), s.GetImages(), s.GetAllowCommand()
@@ -385,7 +385,7 @@ func (s *Secret) String() string {
 }
 
 // checkEvent implements a function that iterates through
-// a list to check the event is a member of the list
+// a list to check the event is a member of the list.
 func checkEvent(events []string, event string) bool {
 	for _, e := range events {
 		if e == event {

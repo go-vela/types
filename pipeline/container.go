@@ -24,6 +24,7 @@ type (
 	// of a Container in a pipeline.
 	//
 	// swagger:model PipelineContainer
+	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	Container struct {
 		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
 		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
@@ -55,7 +56,6 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 
 	// iterate through each Container in the pipeline
 	for _, container := range *c {
-
 		// verify ruleset matches
 		if container.Ruleset.Match(r) {
 			// overwrite the Container number with the Container counter
@@ -225,7 +225,6 @@ func (c *Container) Execute(r *RuleData) bool {
 	if strings.EqualFold(status, constants.StatusSuccess) &&
 		!(c.Ruleset.If.NoStatus() && c.Ruleset.Unless.NoStatus()) &&
 		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {
-
 		r.Status = constants.StatusSuccess
 
 		if !c.Ruleset.Match(r) {

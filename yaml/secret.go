@@ -219,5 +219,5 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 		return nil
 	}
 
-	return errors.New("Failed to unmarshal StepSecretSlice")
+	return errors.New("failed to unmarshal StepSecretSlice")
 }

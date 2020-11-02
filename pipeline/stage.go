@@ -41,7 +41,6 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 
 		// iterate through each step for the stage in the pipeline
 		for _, step := range stage.Steps {
-
 			// verify ruleset matches
 			if step.Ruleset.Match(r) {
 				// overwrite the step number with the step counter

@@ -4,7 +4,7 @@
 
 package constants
 
-// ruleset operators
+// Ruleset operators.
 const (
 	// OperatorAnd defines the ruleset type for the and operator.
 	OperatorAnd = "and"

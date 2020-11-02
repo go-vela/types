@@ -4,7 +4,7 @@
 
 package constants
 
-// build and step statuses
+// Build and step statuses.
 const (
 	// StatusError defines the status type for build and step error statuses.
 	StatusError = "error"

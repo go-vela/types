@@ -135,79 +135,79 @@ func TestLibrary_Service_Setters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		test.service.SetID(test.service.GetID())
-		test.service.SetBuildID(test.service.GetBuildID())
-		test.service.SetRepoID(test.service.GetRepoID())
-		test.service.SetNumber(test.service.GetNumber())
-		test.service.SetName(test.service.GetName())
-		test.service.SetImage(test.service.GetImage())
-		test.service.SetStatus(test.service.GetStatus())
-		test.service.SetError(test.service.GetError())
-		test.service.SetExitCode(test.service.GetExitCode())
-		test.service.SetCreated(test.service.GetCreated())
-		test.service.SetStarted(test.service.GetStarted())
-		test.service.SetFinished(test.service.GetFinished())
-		test.service.SetHost(test.service.GetHost())
-		test.service.SetRuntime(test.service.GetRuntime())
-		test.service.SetDistribution(test.service.GetDistribution())
+		test.want.SetID(test.service.GetID())
+		test.want.SetBuildID(test.service.GetBuildID())
+		test.want.SetRepoID(test.service.GetRepoID())
+		test.want.SetNumber(test.service.GetNumber())
+		test.want.SetName(test.service.GetName())
+		test.want.SetImage(test.service.GetImage())
+		test.want.SetStatus(test.service.GetStatus())
+		test.want.SetError(test.service.GetError())
+		test.want.SetExitCode(test.service.GetExitCode())
+		test.want.SetCreated(test.service.GetCreated())
+		test.want.SetStarted(test.service.GetStarted())
+		test.want.SetFinished(test.service.GetFinished())
+		test.want.SetHost(test.service.GetHost())
+		test.want.SetRuntime(test.service.GetRuntime())
+		test.want.SetDistribution(test.service.GetDistribution())
 
-		if test.service.GetID() != test.service.GetID() {
+		if test.want.GetID() != test.service.GetID() {
 			t.Errorf("SetID is %v, want %v", test.service.GetID(), test.service.GetID())
 		}
 
-		if test.service.GetBuildID() != test.service.GetBuildID() {
+		if test.want.GetBuildID() != test.service.GetBuildID() {
 			t.Errorf("SetBuildID is %v, want %v", test.service.GetBuildID(), test.service.GetBuildID())
 		}
 
-		if test.service.GetRepoID() != test.service.GetRepoID() {
+		if test.want.GetRepoID() != test.service.GetRepoID() {
 			t.Errorf("SetRepoID is %v, want %v", test.service.GetRepoID(), test.service.GetRepoID())
 		}
 
-		if test.service.GetNumber() != test.service.GetNumber() {
+		if test.want.GetNumber() != test.service.GetNumber() {
 			t.Errorf("SetNumber is %v, want %v", test.service.GetNumber(), test.service.GetNumber())
 		}
 
-		if test.service.GetName() != test.service.GetName() {
+		if test.want.GetName() != test.service.GetName() {
 			t.Errorf("SetName is %v, want %v", test.service.GetName(), test.service.GetName())
 		}
 
-		if test.service.GetImage() != test.service.GetImage() {
+		if test.want.GetImage() != test.service.GetImage() {
 			t.Errorf("SetImage is %v, want %v", test.service.GetImage(), test.service.GetImage())
 		}
 
-		if test.service.GetStatus() != test.service.GetStatus() {
+		if test.want.GetStatus() != test.service.GetStatus() {
 			t.Errorf("SetStatus is %v, want %v", test.service.GetStatus(), test.service.GetStatus())
 		}
 
-		if test.service.GetError() != test.service.GetError() {
+		if test.want.GetError() != test.service.GetError() {
 			t.Errorf("SetError is %v, want %v", test.service.GetError(), test.service.GetError())
 		}
 
-		if test.service.GetExitCode() != test.service.GetExitCode() {
+		if test.want.GetExitCode() != test.service.GetExitCode() {
 			t.Errorf("SetExitCode is %v, want %v", test.service.GetExitCode(), test.service.GetExitCode())
 		}
 
-		if test.service.GetCreated() != test.service.GetCreated() {
+		if test.want.GetCreated() != test.service.GetCreated() {
 			t.Errorf("SetCreated is %v, want %v", test.service.GetCreated(), test.service.GetCreated())
 		}
 
-		if test.service.GetStarted() != test.service.GetStarted() {
+		if test.want.GetStarted() != test.service.GetStarted() {
 			t.Errorf("SetStarted is %v, want %v", test.service.GetStarted(), test.service.GetStarted())
 		}
 
-		if test.service.GetFinished() != test.service.GetFinished() {
+		if test.want.GetFinished() != test.service.GetFinished() {
 			t.Errorf("SetFinished is %v, want %v", test.service.GetFinished(), test.service.GetFinished())
 		}
 
-		if test.service.GetHost() != test.service.GetHost() {
+		if test.want.GetHost() != test.service.GetHost() {
 			t.Errorf("SetHost is %v, want %v", test.service.GetHost(), test.service.GetHost())
 		}
 
-		if test.service.GetRuntime() != test.service.GetRuntime() {
+		if test.want.GetRuntime() != test.service.GetRuntime() {
 			t.Errorf("SetRuntime is %v, want %v", test.service.GetRuntime(), test.service.GetRuntime())
 		}
 
-		if test.service.GetDistribution() != test.service.GetDistribution() {
+		if test.want.GetDistribution() != test.service.GetDistribution() {
 			t.Errorf("SetDistribution is %v, want %v", test.service.GetDistribution(), test.service.GetDistribution())
 		}
 	}

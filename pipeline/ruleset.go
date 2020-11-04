@@ -92,15 +92,10 @@ func (r *Ruleset) Match(from *RuleData) bool {
 	return false
 }
 
-// NoStatus returns true if the status field is empty
+// NoStatus returns true if the status field is empty.
 func (r *Rules) NoStatus() bool {
 	// return true if every ruletype is empty
-	if len(r.Status) == 0 {
-		return true
-	}
-
-	// return false if any of the ruletype is provided
-	return false
+	return len(r.Status) == 0
 }
 
 // Empty returns true if the provided ruletypes are empty.
@@ -127,6 +122,7 @@ func (r *Rules) Empty() bool {
 // ruletypes from the rules match the provided ruledata. For
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
+// nolint:gocyclo // accepting complexity in this case
 func (r *Rules) Match(from *RuleData, matcher, op string) bool {
 	// set defaults
 	status := true

@@ -184,9 +184,8 @@ func testUser() *User {
 	}
 }
 
-// exceededFavorites returns a list of valid favorites that exceed the maximum size
+// exceededFavorites returns a list of valid favorites that exceed the maximum size.
 func exceededFavorites() []string {
-
 	// initialize empty favorites
 	favorites := []string{}
 

@@ -4,7 +4,7 @@
 
 package constants
 
-// queue types
+// Queue types.
 const (
 	// DefaultRoute defines the default route all workers listen on.
 	DefaultRoute = "vela"

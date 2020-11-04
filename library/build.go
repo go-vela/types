@@ -878,6 +878,7 @@ func (b *Build) SetDistribution(v string) {
 }
 
 // String implements the Stringer interface for the Build type.
+// nolint:dupl // this is duplicated in the test
 func (b *Build) String() string {
 	return fmt.Sprintf(`{
   Author: %s,

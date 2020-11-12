@@ -4,7 +4,7 @@
 
 package constants
 
-// secret types
+// Secret types.
 const (
 	// SecretOrg defines the secret type for a secret scoped to a specific org.
 	SecretOrg = "org"

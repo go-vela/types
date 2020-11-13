@@ -19,6 +19,7 @@ type (
 	Template struct {
 		Name   string `yaml:"name,omitempty"   json:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/"`
 		Source string `yaml:"source,omitempty" json:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/source/"`
+		Format string `yaml:"format,omitempty"   json:"format,omitempty" jsonschema:"enum=starlark,enum=golang,default=go,minLength=1,description=language used within the template file \nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/format/"`
 		Type   string `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"minLength=1,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/concepts/pipeline/templates/type/,example=github"`
 	}
 

@@ -10,12 +10,13 @@ import "fmt"
 //
 // swagger:model Log
 type Log struct {
-	ID        *int64  `json:"id,omitempty"`
-	BuildID   *int64  `json:"build_id,omitempty"`
-	RepoID    *int64  `json:"repo_id,omitempty"`
-	ServiceID *int64  `json:"service_id,omitempty"`
-	StepID    *int64  `json:"step_id,omitempty"`
-	Data      *[]byte `json:"data,omitempty"`
+	ID        *int64 `json:"id,omitempty"`
+	BuildID   *int64 `json:"build_id,omitempty"`
+	RepoID    *int64 `json:"repo_id,omitempty"`
+	ServiceID *int64 `json:"service_id,omitempty"`
+	StepID    *int64 `json:"step_id,omitempty"`
+	// swagger:strfmt base64
+	Data *[]byte `json:"data,omitempty"`
 }
 
 // AppendData adds the provided data to the end of

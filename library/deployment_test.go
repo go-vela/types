@@ -63,6 +63,10 @@ func TestLibrary_Deployment_Getters(t *testing.T) {
 		if test.deployment.GetDescription() != test.want.GetDescription() {
 			t.Errorf("GetDescription is %v, want %v", test.deployment.GetDescription(), test.want.GetDescription())
 		}
+
+		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
+			t.Errorf("GetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
+		}
 	}
 }
 
@@ -96,6 +100,7 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		test.deployment.SetTask(test.want.GetTask())
 		test.deployment.SetTarget(test.want.GetTarget())
 		test.deployment.SetDescription(test.want.GetDescription())
+		test.deployment.SetPayload(test.want.GetPayload())
 
 		if test.deployment.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.deployment.GetID(), test.want.GetID())
@@ -132,6 +137,10 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		if test.deployment.GetDescription() != test.want.GetDescription() {
 			t.Errorf("SetDescription is %v, want %v", test.deployment.GetDescription(), test.want.GetDescription())
 		}
+
+		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
+			t.Errorf("SetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
+		}
 	}
 }
 
@@ -149,6 +158,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
   Task: %s,
   URL: %s,
   User: %s,
+  Payload: %s,
 }`,
 		d.GetCommit(),
 		d.GetDescription(),
@@ -159,6 +169,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
 		d.GetTask(),
 		d.GetURL(),
 		d.GetUser(),
+		d.GetPayload(),
 	)
 
 	// run test
@@ -183,6 +194,9 @@ func testDeployment() *Deployment {
 	d.SetTask("vela-deploy")
 	d.SetTarget("production")
 	d.SetDescription("Deployment request from Vela")
+	d.SetPayload(map[string]string{
+		"foo": "test1",
+	})
 
 	return d
 }

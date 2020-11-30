@@ -122,10 +122,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
 		envs["BUILD_TARGET"] = target
-	}
 
-	// check if deployment contained payload data
-	if len(b.GetDeployPayload()) != 0 {
+		// add payload data to the list
 		for key, value := range b.GetDeployPayload() {
 			envs[strings.ToUpper(key)] = value
 		}
@@ -688,6 +686,19 @@ func (b *Build) SetDeploy(v string) {
 	}
 
 	b.Deploy = &v
+}
+
+// SetDeploy sets the DeployPayload field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetDeployPayload(v map[string]string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.DeployPayload = &v
 }
 
 // SetClone sets the Clone field.

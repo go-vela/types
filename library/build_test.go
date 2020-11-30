@@ -19,6 +19,10 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_deploy := testBuild()
 	_deploy.SetEvent("deployment")
 	_deploy.SetDeploy("production")
+	_deploy.SetDeployPayload(map[string]string{
+		"foo": "test1",
+		"bar": "test2",
+	})
 
 	_pull := testBuild()
 	_pull.SetEvent("pull_request")
@@ -196,6 +200,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_STATUS":            "running",
 				"BUILD_TITLE":             "push received from https://github.com/github/octocat",
 				"BUILD_WORKSPACE":         "TODO",
+				"FOO":                     "test1",
+				"BAR":                     "test2",
 			},
 		},
 		{

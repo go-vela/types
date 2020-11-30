@@ -30,34 +30,35 @@ const (
 
 // Build is the database representation of a build for a pipeline.
 type Build struct {
-	ID           sql.NullInt64  `sql:"id"`
-	RepoID       sql.NullInt64  `sql:"repo_id"`
-	Number       sql.NullInt32  `sql:"number"`
-	Parent       sql.NullInt32  `sql:"parent"`
-	Event        sql.NullString `sql:"event"`
-	Status       sql.NullString `sql:"status"`
-	Error        sql.NullString `sql:"error"`
-	Enqueued     sql.NullInt64  `sql:"enqueued"`
-	Created      sql.NullInt64  `sql:"created"`
-	Started      sql.NullInt64  `sql:"started"`
-	Finished     sql.NullInt64  `sql:"finished"`
-	Deploy       sql.NullString `sql:"deploy"`
-	Clone        sql.NullString `sql:"clone"`
-	Source       sql.NullString `sql:"source"`
-	Title        sql.NullString `sql:"title"`
-	Message      sql.NullString `sql:"message"`
-	Commit       sql.NullString `sql:"commit"`
-	Sender       sql.NullString `sql:"sender"`
-	Author       sql.NullString `sql:"author"`
-	Email        sql.NullString `sql:"email"`
-	Link         sql.NullString `sql:"link"`
-	Branch       sql.NullString `sql:"branch"`
-	Ref          sql.NullString `sql:"ref"`
-	BaseRef      sql.NullString `sql:"base_ref"`
-	HeadRef      sql.NullString `sql:"head_ref"`
-	Host         sql.NullString `sql:"host"`
-	Runtime      sql.NullString `sql:"runtime"`
-	Distribution sql.NullString `sql:"distribution"`
+	ID            sql.NullInt64  `sql:"id"`
+	RepoID        sql.NullInt64  `sql:"repo_id"`
+	Number        sql.NullInt32  `sql:"number"`
+	Parent        sql.NullInt32  `sql:"parent"`
+	Event         sql.NullString `sql:"event"`
+	Status        sql.NullString `sql:"status"`
+	Error         sql.NullString `sql:"error"`
+	Enqueued      sql.NullInt64  `sql:"enqueued"`
+	Created       sql.NullInt64  `sql:"created"`
+	Started       sql.NullInt64  `sql:"started"`
+	Finished      sql.NullInt64  `sql:"finished"`
+	Deploy        sql.NullString `sql:"deploy"`
+	DeployPayload sql.NullString `sql:"deploy_payload"`
+	Clone         sql.NullString `sql:"clone"`
+	Source        sql.NullString `sql:"source"`
+	Title         sql.NullString `sql:"title"`
+	Message       sql.NullString `sql:"message"`
+	Commit        sql.NullString `sql:"commit"`
+	Sender        sql.NullString `sql:"sender"`
+	Author        sql.NullString `sql:"author"`
+	Email         sql.NullString `sql:"email"`
+	Link          sql.NullString `sql:"link"`
+	Branch        sql.NullString `sql:"branch"`
+	Ref           sql.NullString `sql:"ref"`
+	BaseRef       sql.NullString `sql:"base_ref"`
+	HeadRef       sql.NullString `sql:"head_ref"`
+	Host          sql.NullString `sql:"host"`
+	Runtime       sql.NullString `sql:"runtime"`
+	Distribution  sql.NullString `sql:"distribution"`
 }
 
 // Crop prepares the Build type for inserting into the database by
@@ -248,6 +249,7 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetStarted(b.Started.Int64)
 	build.SetFinished(b.Finished.Int64)
 	build.SetDeploy(b.Deploy.String)
+	build.SetDeployPayload()
 	build.SetClone(b.Clone.String)
 	build.SetSource(b.Source.String)
 	build.SetTitle(b.Title.String)

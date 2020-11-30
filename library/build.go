@@ -15,34 +15,35 @@ import (
 //
 // swagger:model Build
 type Build struct {
-	ID           *int64  `json:"id,omitempty"`
-	RepoID       *int64  `json:"repo_id,omitempty"`
-	Number       *int    `json:"number,omitempty"`
-	Parent       *int    `json:"parent,omitempty"`
-	Event        *string `json:"event,omitempty"`
-	Status       *string `json:"status,omitempty"`
-	Error        *string `json:"error,omitempty"`
-	Enqueued     *int64  `json:"enqueued,omitempty"`
-	Created      *int64  `json:"created,omitempty"`
-	Started      *int64  `json:"started,omitempty"`
-	Finished     *int64  `json:"finished,omitempty"`
-	Deploy       *string `json:"deploy,omitempty"`
-	Clone        *string `json:"clone,omitempty"`
-	Source       *string `json:"source,omitempty"`
-	Title        *string `json:"title,omitempty"`
-	Message      *string `json:"message,omitempty"`
-	Commit       *string `json:"commit,omitempty"`
-	Sender       *string `json:"sender,omitempty"`
-	Author       *string `json:"author,omitempty"`
-	Email        *string `json:"email,omitempty"`
-	Link         *string `json:"link,omitempty"`
-	Branch       *string `json:"branch,omitempty"`
-	Ref          *string `json:"ref,omitempty"`
-	BaseRef      *string `json:"base_ref,omitempty"`
-	HeadRef      *string `json:"head_ref,omitempty"`
-	Host         *string `json:"host,omitempty"`
-	Runtime      *string `json:"runtime,omitempty"`
-	Distribution *string `json:"distribution,omitempty"`
+	ID            *int64             `json:"id,omitempty"`
+	RepoID        *int64             `json:"repo_id,omitempty"`
+	Number        *int               `json:"number,omitempty"`
+	Parent        *int               `json:"parent,omitempty"`
+	Event         *string            `json:"event,omitempty"`
+	Status        *string            `json:"status,omitempty"`
+	Error         *string            `json:"error,omitempty"`
+	Enqueued      *int64             `json:"enqueued,omitempty"`
+	Created       *int64             `json:"created,omitempty"`
+	Started       *int64             `json:"started,omitempty"`
+	Finished      *int64             `json:"finished,omitempty"`
+	Deploy        *string            `json:"deploy,omitempty"`
+	DeployPayload *map[string]string `json:"deploy_payload,omitempty"`
+	Clone         *string            `json:"clone,omitempty"`
+	Source        *string            `json:"source,omitempty"`
+	Title         *string            `json:"title,omitempty"`
+	Message       *string            `json:"message,omitempty"`
+	Commit        *string            `json:"commit,omitempty"`
+	Sender        *string            `json:"sender,omitempty"`
+	Author        *string            `json:"author,omitempty"`
+	Email         *string            `json:"email,omitempty"`
+	Link          *string            `json:"link,omitempty"`
+	Branch        *string            `json:"branch,omitempty"`
+	Ref           *string            `json:"ref,omitempty"`
+	BaseRef       *string            `json:"base_ref,omitempty"`
+	HeadRef       *string            `json:"head_ref,omitempty"`
+	Host          *string            `json:"host,omitempty"`
+	Runtime       *string            `json:"runtime,omitempty"`
+	Distribution  *string            `json:"distribution,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -121,6 +122,13 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
 		envs["BUILD_TARGET"] = target
+	}
+
+	// check if deployment contained payload data
+	if len(b.GetDeployPayload()) != 0 {
+		for key, value := range b.GetDeployPayload() {
+			envs[strings.ToUpper(key)] = value
+		}
 	}
 
 	// check if the Build event is pull_request
@@ -303,6 +311,19 @@ func (b *Build) GetDeploy() string {
 	}
 
 	return *b.Deploy
+}
+
+// GetDeployPayload returns the DeployPayload field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetDeployPayload() map[string]string {
+	// return zero value if Build type or Deploy field is nil
+	if b == nil || b.DeployPayload == nil {
+		return map[string]string{}
+	}
+
+	return *b.DeployPayload
 }
 
 // GetClone returns the Clone field.

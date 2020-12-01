@@ -4,22 +4,26 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-vela/types/raw"
+)
 
 // Deployment is the library representation of a deployment.
 //
 // swagger:model Deployment
 type Deployment struct {
-	ID          *int64             `json:"id,omitempty"`
-	RepoID      *int64             `json:"repo_id,omitempty"`
-	URL         *string            `json:"url,omitempty"`
-	User        *string            `json:"user,omitempty"`
-	Commit      *string            `json:"commit,omitempty"`
-	Ref         *string            `json:"ref,omitempty"`
-	Task        *string            `json:"task,omitempty"`
-	Target      *string            `json:"target,omitempty"`
-	Description *string            `json:"description,omitempty"`
-	Payload     *map[string]string `json:"payload,omitempty"`
+	ID          *int64              `json:"id,omitempty"`
+	RepoID      *int64              `json:"repo_id,omitempty"`
+	URL         *string             `json:"url,omitempty"`
+	User        *string             `json:"user,omitempty"`
+	Commit      *string             `json:"commit,omitempty"`
+	Ref         *string             `json:"ref,omitempty"`
+	Task        *string             `json:"task,omitempty"`
+	Target      *string             `json:"target,omitempty"`
+	Description *string             `json:"description,omitempty"`
+	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -273,7 +277,7 @@ func (d *Deployment) SetDescription(v string) {
 //
 // When the provided Deployment type is nil, it
 // will set nothing and immediately return.
-func (d *Deployment) SetPayload(v map[string]string) {
+func (d *Deployment) SetPayload(v raw.StringSliceMap) {
 	// return if Deployment type is nil
 	if d == nil {
 		return

@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/raw"
 )
 
 func TestDatabase_Build_Crop(t *testing.T) {
@@ -132,6 +133,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetHost("example.company.com")
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
+	want.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
 
 	// run test
 	got := testBuild().ToLibrary()
@@ -218,6 +220,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
+	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
 
 	want := testBuild()
 
@@ -257,7 +260,7 @@ func testBuild() *Build {
 		Started:       sql.NullInt64{Int64: 1563474078, Valid: true},
 		Finished:      sql.NullInt64{Int64: 1563474079, Valid: true},
 		Deploy:        sql.NullString{String: "", Valid: false},
-		DeployPayload: nil,
+		DeployPayload: raw.StringSliceMap{"foo": "test1", "bar": "test2"},
 		Clone:         sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Source:        sql.NullString{String: "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
 		Title:         sql.NullString{String: "push received from https://github.com/github/octocat", Valid: true},

@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/raw"
 )
 
 func TestLibrary_Build_Environment(t *testing.T) {
@@ -395,6 +397,10 @@ func TestLibrary_Build_Getters(t *testing.T) {
 			t.Errorf("GetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
 		}
 
+		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
+			t.Errorf("GetDeployPayload is %v, want %v", test.build.GetDeployPayload(), test.want.GetDeployPayload())
+		}
+
 		if test.build.GetClone() != test.want.GetClone() {
 			t.Errorf("GetClone is %v, want %v", test.build.GetClone(), test.want.GetClone())
 		}
@@ -494,6 +500,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetStarted(test.want.GetStarted())
 		test.build.SetFinished(test.want.GetFinished())
 		test.build.SetDeploy(test.want.GetDeploy())
+		test.build.SetDeployPayload(test.want.GetDeployPayload())
 		test.build.SetClone(test.want.GetClone())
 		test.build.SetSource(test.want.GetSource())
 		test.build.SetTitle(test.want.GetTitle())
@@ -557,6 +564,10 @@ func TestLibrary_Build_Setters(t *testing.T) {
 
 		if test.build.GetDeploy() != test.want.GetDeploy() {
 			t.Errorf("SetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
+		}
+
+		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
+			t.Errorf("GetDeployPayload is %v, want %v", test.build.GetDeployPayload(), test.want.GetDeployPayload())
 		}
 
 		if test.build.GetClone() != test.want.GetClone() {
@@ -637,6 +648,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Commit: %s,
   Created: %d,
   Deploy: %s,
+  DeployPayload: %s,
   Distribution: %s,
   Email: %s,
   Enqueued: %d,
@@ -666,6 +678,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetCommit(),
 		b.GetCreated(),
 		b.GetDeploy(),
+		b.GetDeployPayload(),
 		b.GetDistribution(),
 		b.GetEmail(),
 		b.GetEnqueued(),
@@ -714,6 +727,7 @@ func testBuild() *Build {
 	b.SetStarted(1563474078)
 	b.SetFinished(1563474079)
 	b.SetDeploy("")
+	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1"})
 	b.SetClone("https://github.com/github/octocat.git")
 	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
 	b.SetTitle("push received from https://github.com/github/octocat")

@@ -10,7 +10,7 @@ import (
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 
-	"github.com/buildkite/yaml"
+	"github.com/goccy/go-yaml"
 )
 
 type (
@@ -52,6 +52,8 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// map slice we try unmarshalling to
 	mapSlice := new(yaml.MapSlice)
+
+	fmt.Println("HEY NEAL")
 
 	// attempt to unmarshal as a map slice type
 	err := unmarshal(mapSlice)

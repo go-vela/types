@@ -5,13 +5,13 @@
 package yaml
 
 import (
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"testing"
 
 	"github.com/go-vela/types/raw"
-
-	"github.com/buildkite/yaml"
+	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_Build_UnmarshalYAML(t *testing.T) {
@@ -438,6 +438,8 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		got := new(Build)
+
+		fmt.Println("file: ", test.file)
 
 		b, err := ioutil.ReadFile(test.file)
 		if err != nil {

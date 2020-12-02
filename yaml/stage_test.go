@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-vela/types/pipeline"
 
-	"github.com/buildkite/yaml"
+	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_StageSlice_ToPipeline(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
-	yaml "gopkg.in/yaml.v2"
+	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_UlimitSlice_ToPipeline(t *testing.T) {

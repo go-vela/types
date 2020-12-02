@@ -126,7 +126,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 
 		// add payload data to the list
 		for key, value := range b.GetDeployPayload() {
-			envs[strings.ToUpper(key)] = value
+			envs[fmt.Sprintf("DEPLOYMENT_PARAMETER_%s", strings.ToUpper(key))] = value
 		}
 	}
 

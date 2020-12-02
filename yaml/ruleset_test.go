@@ -226,6 +226,11 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 				Target:  []string{"production"},
 			},
 		},
+		{
+			failure: true,
+			file:    "",
+			want:    nil,
+		},
 	}
 
 	// run tests
@@ -237,6 +242,8 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 			if err != nil {
 				t.Errorf("unable to read file: %v", err)
 			}
+		} else {
+			b = []byte("``")
 		}
 
 		err = yaml.Unmarshal(b, got)

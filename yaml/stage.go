@@ -53,8 +53,6 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// map slice we try unmarshalling to
 	mapSlice := new(yaml.MapSlice)
 
-	fmt.Println("HEY NEAL")
-
 	// attempt to unmarshal as a map slice type
 	err := unmarshal(mapSlice)
 	if err != nil {

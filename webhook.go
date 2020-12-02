@@ -29,7 +29,7 @@ type Webhook struct {
 
 // ShouldSkip uses the build information
 // associated with the given hook to determine
-// whether the hook should be skipped
+// whether the hook should be skipped.
 func (w *Webhook) ShouldSkip() (bool, string) {
 	// push event
 	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) {
@@ -53,7 +53,7 @@ func (w *Webhook) ShouldSkip() (bool, string) {
 // hasSkipDirective is a small helper function
 // to check a string for a number of patterns
 // that signal to vela that the hook should
-// be skipped from processing
+// be skipped from processing.
 func hasSkipDirective(s string) bool {
 	sl := strings.ToLower(s)
 

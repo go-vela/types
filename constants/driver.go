@@ -4,7 +4,7 @@
 
 package constants
 
-// server database drivers
+// Server database drivers.
 const (
 	// DriverPostgres defines the driver type when integrating with a PostgreSQL database.
 	DriverPostgres = "postgres"
@@ -13,7 +13,7 @@ const (
 	DriverSqlite = "sqlite3"
 )
 
-// agent executor drivers
+// Agent executor drivers.
 const (
 	// DriverLinux defines the driver type when integrating with a linux distribution.
 	DriverLinux = "linux"
@@ -25,7 +25,7 @@ const (
 	DriverDarwin = "darwin"
 )
 
-// server and agent queue drivers
+// Server and agent queue drivers.
 const (
 
 	// DriverKafka defines the driver type when integrating with a Kafka queue.
@@ -35,7 +35,7 @@ const (
 	DriverRedis = "redis"
 )
 
-// agent runtime drivers
+// Agent runtime drivers.
 const (
 	// DriverDocker defines the driver type when integrating with a Docker runtime.
 	DriverDocker = "docker"
@@ -44,7 +44,7 @@ const (
 	DriverKubernetes = "kubernetes"
 )
 
-// server and agent secret drivers
+// Server and agent secret drivers.
 const (
 	// DriverNative defines the driver type when integrating with a Vela secret service.
 	DriverNative = "native"
@@ -53,7 +53,7 @@ const (
 	DriverVault = "vault"
 )
 
-// server source drivers
+// Server source drivers.
 const (
 	// DriverGitHub defines the driver type when integrating with a Github source code system.
 	DriverGithub = "github"

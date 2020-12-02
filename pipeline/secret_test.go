@@ -68,7 +68,6 @@ func TestPipeline_Secret_ParseOrg_success(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		org, key, err := test.secret.ParseOrg(test.org)
 		if err != nil {
 			t.Errorf("ParseOrg had an error occur: %+v", err)
@@ -126,7 +125,6 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		_, _, err := test.secret.ParseOrg(test.org)
 		if err == nil {
 			t.Errorf("ParseOrg should have failed")
@@ -167,7 +165,6 @@ func TestPipeline_Secret_ParseRepo_success(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		org, repo, key, err := test.secret.ParseRepo(test.org, test.repo)
 		if err != nil {
 			t.Errorf("ParseRepo had an error occur: %+v", err)
@@ -246,7 +243,6 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		_, _, _, err := test.secret.ParseRepo(test.org, test.repo)
 		if err == nil {
 			t.Errorf("ParseRepo should have failed")
@@ -274,7 +270,6 @@ func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		org, team, key, err := test.secret.ParseShared()
 		if err != nil {
 			t.Errorf("ParseShared had an error occur: %+v", err)
@@ -326,7 +321,6 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		_, _, _, err := test.secret.ParseShared()
 		if err == nil {
 			t.Errorf("ParseShared should have failed")

@@ -14,7 +14,7 @@ import (
 // StringSliceMap represents an array of strings or a map of strings.
 type StringSliceMap map[string]string
 
-// Value returns the map in JSON format
+// Value returns the map in JSON format.
 func (s StringSliceMap) Value() (driver.Value, error) {
 	value, err := json.Marshal(s)
 	if err != nil {
@@ -23,7 +23,7 @@ func (s StringSliceMap) Value() (driver.Value, error) {
 	return string(value), nil
 }
 
-// Scan decodes the JSON string into map[string]string
+// Scan decodes the JSON string into map[string]string.
 func (s *StringSliceMap) Scan(value interface{}) error {
 	b, ok := value.(string)
 	if !ok {

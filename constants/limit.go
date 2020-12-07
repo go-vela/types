@@ -12,7 +12,7 @@ const (
 	// BuildTimeoutMax defines the maximum value in minutes for repo build timeout.
 	BuildTimeoutMax = 90
 
-	// BuildTimeoutMax defines the maximum value in minutes for repo build timeout.
+	// BuildTimeoutDefault defines the default value in minutes for repo build timeout.
 	BuildTimeoutDefault = 30
 
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.

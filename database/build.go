@@ -9,6 +9,7 @@ import (
 	"errors"
 
 	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/raw"
 )
 
 var (
@@ -30,34 +31,35 @@ const (
 
 // Build is the database representation of a build for a pipeline.
 type Build struct {
-	ID           sql.NullInt64  `sql:"id"`
-	RepoID       sql.NullInt64  `sql:"repo_id"`
-	Number       sql.NullInt32  `sql:"number"`
-	Parent       sql.NullInt32  `sql:"parent"`
-	Event        sql.NullString `sql:"event"`
-	Status       sql.NullString `sql:"status"`
-	Error        sql.NullString `sql:"error"`
-	Enqueued     sql.NullInt64  `sql:"enqueued"`
-	Created      sql.NullInt64  `sql:"created"`
-	Started      sql.NullInt64  `sql:"started"`
-	Finished     sql.NullInt64  `sql:"finished"`
-	Deploy       sql.NullString `sql:"deploy"`
-	Clone        sql.NullString `sql:"clone"`
-	Source       sql.NullString `sql:"source"`
-	Title        sql.NullString `sql:"title"`
-	Message      sql.NullString `sql:"message"`
-	Commit       sql.NullString `sql:"commit"`
-	Sender       sql.NullString `sql:"sender"`
-	Author       sql.NullString `sql:"author"`
-	Email        sql.NullString `sql:"email"`
-	Link         sql.NullString `sql:"link"`
-	Branch       sql.NullString `sql:"branch"`
-	Ref          sql.NullString `sql:"ref"`
-	BaseRef      sql.NullString `sql:"base_ref"`
-	HeadRef      sql.NullString `sql:"head_ref"`
-	Host         sql.NullString `sql:"host"`
-	Runtime      sql.NullString `sql:"runtime"`
-	Distribution sql.NullString `sql:"distribution"`
+	ID            sql.NullInt64      `sql:"id"`
+	RepoID        sql.NullInt64      `sql:"repo_id"`
+	Number        sql.NullInt32      `sql:"number"`
+	Parent        sql.NullInt32      `sql:"parent"`
+	Event         sql.NullString     `sql:"event"`
+	Status        sql.NullString     `sql:"status"`
+	Error         sql.NullString     `sql:"error"`
+	Enqueued      sql.NullInt64      `sql:"enqueued"`
+	Created       sql.NullInt64      `sql:"created"`
+	Started       sql.NullInt64      `sql:"started"`
+	Finished      sql.NullInt64      `sql:"finished"`
+	Deploy        sql.NullString     `sql:"deploy"`
+	DeployPayload raw.StringSliceMap `sql:"deploy_payload"`
+	Clone         sql.NullString     `sql:"clone"`
+	Source        sql.NullString     `sql:"source"`
+	Title         sql.NullString     `sql:"title"`
+	Message       sql.NullString     `sql:"message"`
+	Commit        sql.NullString     `sql:"commit"`
+	Sender        sql.NullString     `sql:"sender"`
+	Author        sql.NullString     `sql:"author"`
+	Email         sql.NullString     `sql:"email"`
+	Link          sql.NullString     `sql:"link"`
+	Branch        sql.NullString     `sql:"branch"`
+	Ref           sql.NullString     `sql:"ref"`
+	BaseRef       sql.NullString     `sql:"base_ref"`
+	HeadRef       sql.NullString     `sql:"head_ref"`
+	Host          sql.NullString     `sql:"host"`
+	Runtime       sql.NullString     `sql:"runtime"`
+	Distribution  sql.NullString     `sql:"distribution"`
 }
 
 // Crop prepares the Build type for inserting into the database by
@@ -248,6 +250,7 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetStarted(b.Started.Int64)
 	build.SetFinished(b.Finished.Int64)
 	build.SetDeploy(b.Deploy.String)
+	build.SetDeployPayload(b.DeployPayload)
 	build.SetClone(b.Clone.String)
 	build.SetSource(b.Source.String)
 	build.SetTitle(b.Title.String)
@@ -288,34 +291,35 @@ func (b *Build) Validate() error {
 // to a database build type.
 func BuildFromLibrary(b *library.Build) *Build {
 	build := &Build{
-		ID:           sql.NullInt64{Int64: b.GetID(), Valid: true},
-		RepoID:       sql.NullInt64{Int64: b.GetRepoID(), Valid: true},
-		Number:       sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
-		Parent:       sql.NullInt32{Int32: int32(b.GetParent()), Valid: true},
-		Event:        sql.NullString{String: b.GetEvent(), Valid: true},
-		Status:       sql.NullString{String: b.GetStatus(), Valid: true},
-		Error:        sql.NullString{String: b.GetError(), Valid: true},
-		Enqueued:     sql.NullInt64{Int64: b.GetEnqueued(), Valid: true},
-		Created:      sql.NullInt64{Int64: b.GetCreated(), Valid: true},
-		Started:      sql.NullInt64{Int64: b.GetStarted(), Valid: true},
-		Finished:     sql.NullInt64{Int64: b.GetFinished(), Valid: true},
-		Deploy:       sql.NullString{String: b.GetDeploy(), Valid: true},
-		Clone:        sql.NullString{String: b.GetClone(), Valid: true},
-		Source:       sql.NullString{String: b.GetSource(), Valid: true},
-		Title:        sql.NullString{String: b.GetTitle(), Valid: true},
-		Message:      sql.NullString{String: b.GetMessage(), Valid: true},
-		Commit:       sql.NullString{String: b.GetCommit(), Valid: true},
-		Sender:       sql.NullString{String: b.GetSender(), Valid: true},
-		Author:       sql.NullString{String: b.GetAuthor(), Valid: true},
-		Email:        sql.NullString{String: b.GetEmail(), Valid: true},
-		Link:         sql.NullString{String: b.GetLink(), Valid: true},
-		Branch:       sql.NullString{String: b.GetBranch(), Valid: true},
-		Ref:          sql.NullString{String: b.GetRef(), Valid: true},
-		BaseRef:      sql.NullString{String: b.GetBaseRef(), Valid: true},
-		HeadRef:      sql.NullString{String: b.GetHeadRef(), Valid: true},
-		Host:         sql.NullString{String: b.GetHost(), Valid: true},
-		Runtime:      sql.NullString{String: b.GetRuntime(), Valid: true},
-		Distribution: sql.NullString{String: b.GetDistribution(), Valid: true},
+		ID:            sql.NullInt64{Int64: b.GetID(), Valid: true},
+		RepoID:        sql.NullInt64{Int64: b.GetRepoID(), Valid: true},
+		Number:        sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
+		Parent:        sql.NullInt32{Int32: int32(b.GetParent()), Valid: true},
+		Event:         sql.NullString{String: b.GetEvent(), Valid: true},
+		Status:        sql.NullString{String: b.GetStatus(), Valid: true},
+		Error:         sql.NullString{String: b.GetError(), Valid: true},
+		Enqueued:      sql.NullInt64{Int64: b.GetEnqueued(), Valid: true},
+		Created:       sql.NullInt64{Int64: b.GetCreated(), Valid: true},
+		Started:       sql.NullInt64{Int64: b.GetStarted(), Valid: true},
+		Finished:      sql.NullInt64{Int64: b.GetFinished(), Valid: true},
+		Deploy:        sql.NullString{String: b.GetDeploy(), Valid: true},
+		DeployPayload: b.GetDeployPayload(),
+		Clone:         sql.NullString{String: b.GetClone(), Valid: true},
+		Source:        sql.NullString{String: b.GetSource(), Valid: true},
+		Title:         sql.NullString{String: b.GetTitle(), Valid: true},
+		Message:       sql.NullString{String: b.GetMessage(), Valid: true},
+		Commit:        sql.NullString{String: b.GetCommit(), Valid: true},
+		Sender:        sql.NullString{String: b.GetSender(), Valid: true},
+		Author:        sql.NullString{String: b.GetAuthor(), Valid: true},
+		Email:         sql.NullString{String: b.GetEmail(), Valid: true},
+		Link:          sql.NullString{String: b.GetLink(), Valid: true},
+		Branch:        sql.NullString{String: b.GetBranch(), Valid: true},
+		Ref:           sql.NullString{String: b.GetRef(), Valid: true},
+		BaseRef:       sql.NullString{String: b.GetBaseRef(), Valid: true},
+		HeadRef:       sql.NullString{String: b.GetHeadRef(), Valid: true},
+		Host:          sql.NullString{String: b.GetHost(), Valid: true},
+		Runtime:       sql.NullString{String: b.GetRuntime(), Valid: true},
+		Distribution:  sql.NullString{String: b.GetDistribution(), Valid: true},
 	}
 
 	return build.Nullify()

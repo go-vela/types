@@ -4,21 +4,26 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-vela/types/raw"
+)
 
 // Deployment is the library representation of a deployment.
 //
 // swagger:model Deployment
 type Deployment struct {
-	ID          *int64  `json:"id,omitempty"`
-	RepoID      *int64  `json:"repo_id,omitempty"`
-	URL         *string `json:"url,omitempty"`
-	User        *string `json:"user,omitempty"`
-	Commit      *string `json:"commit,omitempty"`
-	Ref         *string `json:"ref,omitempty"`
-	Task        *string `json:"task,omitempty"`
-	Target      *string `json:"target,omitempty"`
-	Description *string `json:"description,omitempty"`
+	ID          *int64              `json:"id,omitempty"`
+	RepoID      *int64              `json:"repo_id,omitempty"`
+	URL         *string             `json:"url,omitempty"`
+	User        *string             `json:"user,omitempty"`
+	Commit      *string             `json:"commit,omitempty"`
+	Ref         *string             `json:"ref,omitempty"`
+	Task        *string             `json:"task,omitempty"`
+	Target      *string             `json:"target,omitempty"`
+	Description *string             `json:"description,omitempty"`
+	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -138,6 +143,19 @@ func (d *Deployment) GetDescription() string {
 	return *d.Description
 }
 
+// GetPayload returns the Payload field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetPayload() map[string]string {
+	// return zero value if Deployment type or Description field is nil
+	if d == nil || d.Payload == nil {
+		return map[string]string{}
+	}
+
+	return *d.Payload
+}
+
 // SetID sets the ID field.
 //
 // When the provided Deployment type is nil, it
@@ -255,6 +273,19 @@ func (d *Deployment) SetDescription(v string) {
 	d.Description = &v
 }
 
+// SetPayload sets the Payload field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetPayload(v raw.StringSliceMap) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.Payload = &v
+}
+
 // String implements the Stringer interface for the Deployment type.
 func (d *Deployment) String() string {
 	return fmt.Sprintf(`{
@@ -267,6 +298,7 @@ func (d *Deployment) String() string {
   Task: %s,
   URL: %s,
   User: %s,
+  Payload: %s,
 }`,
 		d.GetCommit(),
 		d.GetDescription(),
@@ -277,5 +309,6 @@ func (d *Deployment) String() string {
 		d.GetTask(),
 		d.GetURL(),
 		d.GetUser(),
+		d.GetPayload(),
 	)
 }

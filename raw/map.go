@@ -5,6 +5,7 @@
 package raw
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"errors"
 	"strings"
@@ -12,6 +13,25 @@ import (
 
 // StringSliceMap represents an array of strings or a map of strings.
 type StringSliceMap map[string]string
+
+// Value returns the map in JSON format.
+func (s StringSliceMap) Value() (driver.Value, error) {
+	value, err := json.Marshal(s)
+	if err != nil {
+		return nil, err
+	}
+	return string(value), nil
+}
+
+// Scan decodes the JSON string into map[string]string.
+func (s *StringSliceMap) Scan(value interface{}) error {
+	b, ok := value.(string)
+	if !ok {
+		return errors.New("type assertion to string failed")
+	}
+
+	return json.Unmarshal([]byte(b), &s)
+}
 
 // UnmarshalJSON implements the Unmarshaler interface for the StringSlice type.
 func (s *StringSliceMap) UnmarshalJSON(b []byte) error {

@@ -22,6 +22,7 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 		Address:       sql.NullString{String: "", Valid: false},
 		Active:        sql.NullBool{Bool: false, Valid: false},
 		LastCheckedIn: sql.NullInt64{Int64: 0, Valid: false},
+		BuildLimit:    sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -63,6 +64,7 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetRoutes([]string{"vela"})
 	want.SetActive(true)
 	want.SetLastCheckedIn(1563474077)
+	want.SetBuildLimit(2)
 
 	// run test
 	got := testWorker().ToLibrary()
@@ -130,6 +132,7 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
 	w.SetLastCheckedIn(1563474077)
+	w.SetBuildLimit(2)
 
 	want := testWorker()
 
@@ -151,5 +154,6 @@ func testWorker() *Worker {
 		Routes:        []string{"vela"},
 		Active:        sql.NullBool{Bool: true, Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
+		BuildLimit:    sql.NullInt64{Int64: 2, Valid: true},
 	}
 }

@@ -18,7 +18,7 @@ type Worker struct {
 	Routes        *[]string `json:"routes,omitempty"`
 	Active        *bool     `json:"active,omitempty"`
 	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
-	BuildLimit    *int      `json:"build_limit,omitempty"`
+	BuildLimit    *int64    `json:"build_limit,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -103,7 +103,7 @@ func (w *Worker) GetLastCheckedIn() int64 {
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (w *Worker) GetBuildLimit() int {
+func (w *Worker) GetBuildLimit() int64 {
 	// return zero value if Worker type or BuildLimit field is nil
 	if w == nil || w.BuildLimit == nil {
 		return 0
@@ -194,7 +194,7 @@ func (w *Worker) SetLastCheckedIn(v int64) {
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (w *Worker) SetBuildLimit(v int) {
+func (w *Worker) SetBuildLimit(v int64) {
 	// return if Worker type is nil
 	if w == nil {
 		return

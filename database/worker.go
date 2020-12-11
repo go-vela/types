@@ -30,6 +30,7 @@ type Worker struct {
 	Routes        pq.StringArray `sql:"routes"`
 	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
+	BuildLimit    sql.NullInt64  `sql:"build_limit"`
 }
 
 // Nullify ensures the valid flag for
@@ -63,6 +64,10 @@ func (w *Worker) Nullify() *Worker {
 		w.LastCheckedIn.Valid = false
 	}
 
+	if w.BuildLimit.Int64 == 0 {
+		w.BuildLimit.Valid = false
+	}
+
 	return w
 }
 
@@ -77,6 +82,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetRoutes(w.Routes)
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
+	worker.SetBuildLimit(w.BuildLimit.Int64)
 	return worker
 }
 
@@ -106,6 +112,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		Routes:        w.GetRoutes(),
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
+		BuildLimit:    sql.NullInt64{Int64: w.GetBuildLimit(), Valid: true},
 	}
 
 	return worker.Nullify()

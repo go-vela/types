@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/raw"
 )
 
 func TestDatabase_Build_Crop(t *testing.T) {
@@ -39,34 +40,35 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 	var b *Build
 
 	want := &Build{
-		ID:           sql.NullInt64{Int64: 0, Valid: false},
-		RepoID:       sql.NullInt64{Int64: 0, Valid: false},
-		Number:       sql.NullInt32{Int32: 0, Valid: false},
-		Parent:       sql.NullInt32{Int32: 0, Valid: false},
-		Event:        sql.NullString{String: "", Valid: false},
-		Status:       sql.NullString{String: "", Valid: false},
-		Error:        sql.NullString{String: "", Valid: false},
-		Enqueued:     sql.NullInt64{Int64: 0, Valid: false},
-		Created:      sql.NullInt64{Int64: 0, Valid: false},
-		Started:      sql.NullInt64{Int64: 0, Valid: false},
-		Finished:     sql.NullInt64{Int64: 0, Valid: false},
-		Deploy:       sql.NullString{String: "", Valid: false},
-		Clone:        sql.NullString{String: "", Valid: false},
-		Source:       sql.NullString{String: "", Valid: false},
-		Title:        sql.NullString{String: "", Valid: false},
-		Message:      sql.NullString{String: "", Valid: false},
-		Commit:       sql.NullString{String: "", Valid: false},
-		Sender:       sql.NullString{String: "", Valid: false},
-		Author:       sql.NullString{String: "", Valid: false},
-		Email:        sql.NullString{String: "", Valid: false},
-		Link:         sql.NullString{String: "", Valid: false},
-		Branch:       sql.NullString{String: "", Valid: false},
-		Ref:          sql.NullString{String: "", Valid: false},
-		BaseRef:      sql.NullString{String: "", Valid: false},
-		HeadRef:      sql.NullString{String: "", Valid: false},
-		Host:         sql.NullString{String: "", Valid: false},
-		Runtime:      sql.NullString{String: "", Valid: false},
-		Distribution: sql.NullString{String: "", Valid: false},
+		ID:            sql.NullInt64{Int64: 0, Valid: false},
+		RepoID:        sql.NullInt64{Int64: 0, Valid: false},
+		Number:        sql.NullInt32{Int32: 0, Valid: false},
+		Parent:        sql.NullInt32{Int32: 0, Valid: false},
+		Event:         sql.NullString{String: "", Valid: false},
+		Status:        sql.NullString{String: "", Valid: false},
+		Error:         sql.NullString{String: "", Valid: false},
+		Enqueued:      sql.NullInt64{Int64: 0, Valid: false},
+		Created:       sql.NullInt64{Int64: 0, Valid: false},
+		Started:       sql.NullInt64{Int64: 0, Valid: false},
+		Finished:      sql.NullInt64{Int64: 0, Valid: false},
+		Deploy:        sql.NullString{String: "", Valid: false},
+		DeployPayload: nil,
+		Clone:         sql.NullString{String: "", Valid: false},
+		Source:        sql.NullString{String: "", Valid: false},
+		Title:         sql.NullString{String: "", Valid: false},
+		Message:       sql.NullString{String: "", Valid: false},
+		Commit:        sql.NullString{String: "", Valid: false},
+		Sender:        sql.NullString{String: "", Valid: false},
+		Author:        sql.NullString{String: "", Valid: false},
+		Email:         sql.NullString{String: "", Valid: false},
+		Link:          sql.NullString{String: "", Valid: false},
+		Branch:        sql.NullString{String: "", Valid: false},
+		Ref:           sql.NullString{String: "", Valid: false},
+		BaseRef:       sql.NullString{String: "", Valid: false},
+		HeadRef:       sql.NullString{String: "", Valid: false},
+		Host:          sql.NullString{String: "", Valid: false},
+		Runtime:       sql.NullString{String: "", Valid: false},
+		Distribution:  sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -114,6 +116,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetStarted(1563474078)
 	want.SetFinished(1563474079)
 	want.SetDeploy("")
+	want.SetDeployPayload(nil)
 	want.SetClone("https://github.com/github/octocat.git")
 	want.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
 	want.SetTitle("push received from https://github.com/github/octocat")
@@ -130,6 +133,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetHost("example.company.com")
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
+	want.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
 
 	// run test
 	got := testBuild().ToLibrary()
@@ -199,6 +203,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetStarted(1563474078)
 	b.SetFinished(1563474079)
 	b.SetDeploy("")
+	b.SetDeployPayload(nil)
 	b.SetClone("https://github.com/github/octocat.git")
 	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
 	b.SetTitle("push received from https://github.com/github/octocat")
@@ -215,6 +220,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
+	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
 
 	want := testBuild()
 
@@ -242,33 +248,34 @@ func randomString(n int) string {
 // type with all fields set to a fake value.
 func testBuild() *Build {
 	return &Build{
-		ID:           sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:       sql.NullInt64{Int64: 1, Valid: true},
-		Number:       sql.NullInt32{Int32: 1, Valid: true},
-		Parent:       sql.NullInt32{Int32: 1, Valid: true},
-		Event:        sql.NullString{String: "push", Valid: true},
-		Status:       sql.NullString{String: "running", Valid: true},
-		Error:        sql.NullString{String: "", Valid: false},
-		Enqueued:     sql.NullInt64{Int64: 1563474077, Valid: true},
-		Created:      sql.NullInt64{Int64: 1563474076, Valid: true},
-		Started:      sql.NullInt64{Int64: 1563474078, Valid: true},
-		Finished:     sql.NullInt64{Int64: 1563474079, Valid: true},
-		Deploy:       sql.NullString{String: "", Valid: false},
-		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
-		Source:       sql.NullString{String: "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
-		Title:        sql.NullString{String: "push received from https://github.com/github/octocat", Valid: true},
-		Message:      sql.NullString{String: "First commit...", Valid: true},
-		Commit:       sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
-		Sender:       sql.NullString{String: "OctoKitty", Valid: true},
-		Author:       sql.NullString{String: "OctoKitty", Valid: true},
-		Email:        sql.NullString{String: "OctoKitty@github.com", Valid: true},
-		Link:         sql.NullString{String: "https://example.company.com/github/octocat/1", Valid: true},
-		Branch:       sql.NullString{String: "master", Valid: true},
-		Ref:          sql.NullString{String: "refs/heads/master", Valid: true},
-		BaseRef:      sql.NullString{String: "", Valid: false},
-		HeadRef:      sql.NullString{String: "", Valid: false},
-		Host:         sql.NullString{String: "example.company.com", Valid: true},
-		Runtime:      sql.NullString{String: "docker", Valid: true},
-		Distribution: sql.NullString{String: "linux", Valid: true},
+		ID:            sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:        sql.NullInt64{Int64: 1, Valid: true},
+		Number:        sql.NullInt32{Int32: 1, Valid: true},
+		Parent:        sql.NullInt32{Int32: 1, Valid: true},
+		Event:         sql.NullString{String: "push", Valid: true},
+		Status:        sql.NullString{String: "running", Valid: true},
+		Error:         sql.NullString{String: "", Valid: false},
+		Enqueued:      sql.NullInt64{Int64: 1563474077, Valid: true},
+		Created:       sql.NullInt64{Int64: 1563474076, Valid: true},
+		Started:       sql.NullInt64{Int64: 1563474078, Valid: true},
+		Finished:      sql.NullInt64{Int64: 1563474079, Valid: true},
+		Deploy:        sql.NullString{String: "", Valid: false},
+		DeployPayload: raw.StringSliceMap{"foo": "test1", "bar": "test2"},
+		Clone:         sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
+		Source:        sql.NullString{String: "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
+		Title:         sql.NullString{String: "push received from https://github.com/github/octocat", Valid: true},
+		Message:       sql.NullString{String: "First commit...", Valid: true},
+		Commit:        sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
+		Sender:        sql.NullString{String: "OctoKitty", Valid: true},
+		Author:        sql.NullString{String: "OctoKitty", Valid: true},
+		Email:         sql.NullString{String: "OctoKitty@github.com", Valid: true},
+		Link:          sql.NullString{String: "https://example.company.com/github/octocat/1", Valid: true},
+		Branch:        sql.NullString{String: "master", Valid: true},
+		Ref:           sql.NullString{String: "refs/heads/master", Valid: true},
+		BaseRef:       sql.NullString{String: "", Valid: false},
+		HeadRef:       sql.NullString{String: "", Valid: false},
+		Host:          sql.NullString{String: "example.company.com", Valid: true},
+		Runtime:       sql.NullString{String: "docker", Valid: true},
+		Distribution:  sql.NullString{String: "linux", Valid: true},
 	}
 }

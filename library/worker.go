@@ -18,6 +18,7 @@ type Worker struct {
 	Routes        *[]string `json:"routes,omitempty"`
 	Active        *bool     `json:"active,omitempty"`
 	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
+	BuildLimit    *int64    `json:"build_limit,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -85,7 +86,7 @@ func (w *Worker) GetActive() bool {
 	return *w.Active
 }
 
-// GetLastCheckedIn returns the Active field.
+// GetLastCheckedIn returns the LastCheckedIn field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -96,6 +97,19 @@ func (w *Worker) GetLastCheckedIn() int64 {
 	}
 
 	return *w.LastCheckedIn
+}
+
+// GetBuildLimit returns the BuildLimit field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetBuildLimit() int64 {
+	// return zero value if Worker type or BuildLimit field is nil
+	if w == nil || w.BuildLimit == nil {
+		return 0
+	}
+
+	return *w.BuildLimit
 }
 
 // SetID sets the ID field.
@@ -176,6 +190,19 @@ func (w *Worker) SetLastCheckedIn(v int64) {
 	w.LastCheckedIn = &v
 }
 
+// SetBuildLimit sets the LastBuildLimit field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetBuildLimit(v int64) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.BuildLimit = &v
+}
+
 // String implements the Stringer interface for the Worker type.
 func (w *Worker) String() string {
 	return fmt.Sprintf(`{
@@ -185,6 +212,7 @@ func (w *Worker) String() string {
   Routes: %s,
   Active: %t,
   LastCheckedIn: %v,
+  BuildLimit: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
@@ -192,5 +220,6 @@ func (w *Worker) String() string {
 		w.GetRoutes(),
 		w.GetActive(),
 		w.GetLastCheckedIn(),
+		w.GetBuildLimit(),
 	)
 }

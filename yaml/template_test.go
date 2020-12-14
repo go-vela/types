@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
-	yaml "gopkg.in/yaml.v2"
+	"github.com/goccy/go-yaml"
 )
 
 func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
-	yaml "gopkg.in/yaml.v2"
+	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_Ruleset_ToPipeline(t *testing.T) {
@@ -243,7 +243,7 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 				t.Errorf("unable to read file: %v", err)
 			}
 		} else {
-			b = []byte("!@#$%^&*()")
+			b = []byte("``")
 		}
 
 		err = yaml.Unmarshal(b, got)

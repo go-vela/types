@@ -5,11 +5,15 @@
 package yaml
 
 import (
+	"errors"
+	"fmt"
 	"strings"
 
+	"github.com/docker/distribution/reference"
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
+	"github.com/goccy/go-yaml"
 )
 
 type (
@@ -93,6 +97,70 @@ func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// overwrite existing ServiceSlice
 	*s = ServiceSlice(*serviceSlice)
+
+	return nil
+}
+
+// Validate lints if the services configuration is valid.
+func (s *ServiceSlice) Validate(pipeline []byte) error {
+	invalid := errors.New("invalid service block found")
+
+	// iterate through each service and linting yaml tags
+	for i, service := range *s {
+		// check required fields
+		if len(service.Name) == 0 {
+			path, err := yaml.PathString(fmt.Sprintf("$.services[%d]", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for service:\n%s\n ", string(source)))
+		}
+
+		if len(service.Image) == 0 {
+			path, err := yaml.PathString(fmt.Sprintf("$.services[%d]", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no image provided for service:\n%s\n ", string(source)))
+		} else {
+			// parse the image provided into a
+			// named, fully qualified reference
+			//
+			// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
+			_, err := reference.ParseAnyReference(service.Image)
+			if err != nil {
+				// output error with YAML source
+				path, err := yaml.PathString(fmt.Sprintf("$.services[%d].image", i))
+				if err != nil {
+					return err
+				}
+				source, err := path.AnnotateSource(pipeline, true)
+				if err != nil {
+					return err
+				}
+
+				// nolint:cSpell // ignore line length
+				invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("invalid image value %s:\n%s\n ", service.Image, string(source)))
+			}
+		}
+	}
+
+	// check if only default error exists
+	if !strings.EqualFold(invalid.Error(), "invalid service block found") {
+		return invalid
+	}
 
 	return nil
 }

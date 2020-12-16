@@ -72,6 +72,9 @@ cd $HOME/go-vela/types
     func superComplexFunction() error {
       // ..
     }
+    ```
+
+    Check the [documentation for more examples](https://golangci-lint.run/usage/false-positives/).
 
 * Write tests for your changes and ensure they pass:
 

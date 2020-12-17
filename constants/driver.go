@@ -13,7 +13,7 @@ const (
 	DriverSqlite = "sqlite3"
 )
 
-// Agent executor drivers.
+// Worker executor drivers.
 const (
 	// DriverDarwin defines the driver type when integrating with a darwin distribution.
 	DriverDarwin = "darwin"
@@ -28,7 +28,7 @@ const (
 	DriverWindows = "windows"
 )
 
-// Server and agent queue drivers.
+// Server and worker queue drivers.
 const (
 
 	// DriverKafka defines the driver type when integrating with a Kafka queue.
@@ -38,7 +38,7 @@ const (
 	DriverRedis = "redis"
 )
 
-// Agent runtime drivers.
+// Worker runtime drivers.
 const (
 	// DriverDocker defines the driver type when integrating with a Docker runtime.
 	DriverDocker = "docker"
@@ -47,7 +47,7 @@ const (
 	DriverKubernetes = "kubernetes"
 )
 
-// Server and agent secret drivers.
+// Server and worker secret drivers.
 const (
 	// DriverNative defines the driver type when integrating with a Vela secret service.
 	DriverNative = "native"

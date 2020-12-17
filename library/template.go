@@ -2,6 +2,7 @@
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
+// nolint:dupl // false positive due to similarity with login.go
 package library
 
 import (

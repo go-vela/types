@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// nolint:dupl // false positive due to similarity with template.go
 package library
 
 import "fmt"

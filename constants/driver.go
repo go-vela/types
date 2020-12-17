@@ -15,14 +15,17 @@ const (
 
 // Agent executor drivers.
 const (
+	// DriverDarwin defines the driver type when integrating with a darwin distribution.
+	DriverDarwin = "darwin"
+
 	// DriverLinux defines the driver type when integrating with a linux distribution.
 	DriverLinux = "linux"
 
+	// DriverLocal defines the driver type when integrating with a local system.
+	DriverLocal = "local"
+
 	// DriverWindows defines the driver type when integrating with a windows distribution.
 	DriverWindows = "windows"
-
-	// DriverDarwin defines the driver type when integrating with a darwin distribution.
-	DriverDarwin = "darwin"
 )
 
 // Server and agent queue drivers.

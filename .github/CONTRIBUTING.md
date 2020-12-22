@@ -30,21 +30,21 @@ We are always open to new PRs! You can follow the below guide for learning how y
 * Clone this repository to your workstation:
 
 ```bash
-# Clone the project
+# clone the project
 git clone git@github.com:go-vela/types.git $HOME/go-vela/types
 ```
 
 * Navigate to the repository code:
 
 ```bash
-# Change into the project directory
+# change into the project directory
 cd $HOME/go-vela/types
 ```
 
 * Point the original code at your fork:
 
 ```bash
-# Add a remote branch pointing to your fork
+# add a remote branch pointing to your fork
 git remote add fork https://github.com/your_fork/types
 ```
 
@@ -53,7 +53,7 @@ git remote add fork https://github.com/your_fork/types
 * Navigate to the repository code:
 
 ```bash
-# Change into the project directory
+# change into the project directory
 cd $HOME/go-vela/types
 ```
 
@@ -64,7 +64,7 @@ cd $HOME/go-vela/types
     ```go
     // nolint:<linter(s)> // <short reason>
     ```
-  
+
     Example:
 
     ```go
@@ -76,26 +76,25 @@ cd $HOME/go-vela/types
 
     Check the [documentation for more examples](https://golangci-lint.run/usage/false-positives/).
 
-* Write tests for your changes and ensure they pass:
+
+* Test the repository code (ensures your changes don't break existing functionality):
 
 ```bash
-# Test the code with `go`
-go test ./...
+# execute the `test` target with `make`
+make test
 ```
 
-* Ensure your code meets the project standards:
+* Clean the repository code (ensures your code meets the project standards):
 
 ```bash
-# Clean the code with `go`
-go mod tidy
-go fmt ./...
-go vet ./...
+# execute the `test` target with `make`
+make clean
 ```
 
 * Push to your fork:
 
 ```bash
-# Push your code up to your fork
+# push your code up to your fork
 git push fork master
 ```
 

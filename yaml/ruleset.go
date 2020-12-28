@@ -25,14 +25,14 @@ type (
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch  []string `yaml:"branch,omitempty"  json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#branch"`
-		Comment []string `yaml:"comment,omitempty" json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#comment"`
-		Event   []string `yaml:"event,omitempty"   json:"event,omitempty" jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#event"`
-		Path    []string `yaml:"path,omitempty"    json:"path,omitempty" jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#path"`
-		Repo    []string `yaml:"repo,omitempty"    json:"repo,omitempty" jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
-		Status  []string `yaml:"status,omitempty"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#status"`
-		Tag     []string `yaml:"tag,omitempty"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#tag"`
-		Target  []string `yaml:"target,omitempty"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#target"`
+		Branch  []string `yaml:"branch,omitempty,flow"  json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#branch"`
+		Comment []string `yaml:"comment,omitempty,flow" json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#comment"`
+		Event   []string `yaml:"event,omitempty,flow"   json:"event,omitempty" jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#event"`
+		Path    []string `yaml:"path,omitempty,flow"    json:"path,omitempty" jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#path"`
+		Repo    []string `yaml:"repo,omitempty,flow"    json:"repo,omitempty" jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#fields"`
+		Status  []string `yaml:"status,omitempty,flow"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#status"`
+		Tag     []string `yaml:"tag,omitempty,flow"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#tag"`
+		Target  []string `yaml:"target,omitempty,flow"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/ruleset/#target"`
 	}
 )
 

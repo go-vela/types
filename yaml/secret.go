@@ -7,11 +7,13 @@ package yaml
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
+	"github.com/goccy/go-yaml"
 )
 
 // nolint:lll // jsonschema will cause long lines
@@ -220,4 +222,173 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	}
 
 	return errors.New("failed to unmarshal StepSecretSlice")
+}
+
+// Validate lints if the steps configuration is valid.
+func (s *SecretSlice) Validate(pipeline []byte) error {
+	invalid := errors.New("invalid step block found")
+
+	// iterate through each step and linting yaml tags
+	for i, secret := range *s {
+		// check required name field
+		if len(secret.Name) == 0 {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for secret:\n%s\n ", string(source)))
+		}
+
+		// validate secret by type
+		switch secret.Type {
+		case constants.SecretRepo:
+			err := secret.validateRepo(pipeline, i)
+			if err != nil {
+				invalid = fmt.Errorf("%w: %v", invalid, err)
+			}
+		case constants.SecretOrg:
+			err := secret.validateOrg(pipeline, i)
+			if err != nil {
+				invalid = fmt.Errorf("%w: %v", invalid, err)
+			}
+		}
+	}
+
+	// check if only default error exists
+	if !strings.EqualFold(invalid.Error(), "invalid step block found") {
+		return invalid
+	}
+
+	return nil
+}
+
+// validateRepo is a helper function to lint secrets of type "repo".
+//
+// this function is used to check the fields of secret with the explicit
+// definition yaml style.
+func (s *Secret) validateRepo(pipeline []byte, i int) error {
+	var invalid error
+
+	// check if the engine is not a "native" or "vault"
+	if len(s.Engine) != 0 {
+		if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+			!strings.EqualFold(s.Engine, constants.DriverVault) {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine provided for secret:\n%s\n ", string(source)))
+		}
+	}
+
+	// check if a key was provided for explicit definition
+	// when the key == name than we have an implicit definition
+	if len(s.Key) != 0 && s.Key != s.Name {
+		match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)
+		if err != nil {
+			return err
+		}
+
+		if !match {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key provided for secret:\n%s\n ", string(source)))
+		}
+	}
+
+	return invalid
+}
+
+// validateOrg is a helper function to lint secrets of type "org".
+func (s *Secret) validateOrg(pipeline []byte, i int) error {
+	var invalid error
+
+	// check if the engine is not a "native" or "vault"
+	if len(s.Engine) == 0 {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+		if err != nil {
+			return err
+		}
+		source, err := path.AnnotateSource(pipeline, true)
+		if err != nil {
+			return err
+		}
+
+		// nolint:cSpell // ignore line length
+		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no engine provided for secret:\n%s\n ", string(source)))
+	} else {
+		if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+			!strings.EqualFold(s.Engine, constants.DriverVault) {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine provided for secret:\n%s\n ", string(source)))
+		}
+	}
+
+	// check if a key was provided
+	if len(s.Key) == 0 {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+		if err != nil {
+			return err
+		}
+		source, err := path.AnnotateSource(pipeline, true)
+		if err != nil {
+			return err
+		}
+
+		// nolint:cSpell // ignore line length
+		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no key provided for secret:\n%s\n ", string(source)))
+	} else {
+		match, err := regexp.MatchString(`.+\/.+`, s.Key)
+		if err != nil {
+			return err
+		}
+
+		if !match {
+			// nolint:gomnd // accepting magic number
+			if len(strings.SplitN(s.Key, "/", 2)) != 2 {
+				path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
+				if err != nil {
+					return err
+				}
+				source, err := path.AnnotateSource(pipeline, true)
+				if err != nil {
+					return err
+				}
+
+				// nolint:cSpell // ignore line length
+				invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key provided for secret:\n%s\n ", string(source)))
+			}
+		}
+	}
+
+	return invalid
 }

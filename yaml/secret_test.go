@@ -334,3 +334,70 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_StepSecretSlice_Validate(t *testing.T) {
+	//setup types
+	tests := []struct {
+		name    string
+		file    string
+		wantErr bool
+	}{
+		{
+			name:    "failure: no secret name",
+			file:    "testdata/secret/validate/no_name.yml",
+			wantErr: true,
+		},
+		{
+			name:    "success: repo secret block",
+			file:    "testdata/secret/validate/repo.yml",
+			wantErr: false,
+		},
+		{
+			name:    "failure: repo secret bad engine yaml tag",
+			file:    "testdata/secret/validate/repo_bad_engine.yml",
+			wantErr: true,
+		},
+		{
+			name:    "failure: repo secret bad key yaml tag",
+			file:    "testdata/secret/validate/repo_bad_key.yml",
+			wantErr: true,
+		},
+		{
+			name:    "success: org secret block",
+			file:    "testdata/secret/validate/org.yml",
+			wantErr: false,
+		},
+		{
+			name:    "failure: org secret bad engine yaml tag",
+			file:    "testdata/secret/validate/org_bad_engine.yml",
+			wantErr: true,
+		},
+		{
+			name:    "failure: org secret bad engine yaml tag",
+			file:    "testdata/secret/validate/org_bad_key.yml",
+			wantErr: true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		b := new(Build)
+
+		pipeline, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("Reading file for Validate returned err: %v", err)
+		}
+
+		err = yaml.Unmarshal(pipeline, b)
+
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
+
+		t.Run(test.name, func(t *testing.T) {
+			if err := b.Secrets.Validate(pipeline); (err != nil) != test.wantErr {
+				t.Errorf("Validate is %v, want %v", err, test.wantErr)
+			}
+		})
+	}
+}

@@ -342,6 +342,7 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 }
 
 // validateOrg is a helper function to lint secrets of type "org".
+// nolint:dupl // ignoring dupl to make clearly define which function owns linting a secret type
 func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 	invalid, isInvalid := errors.New("invalid secret"), false
 
@@ -406,6 +407,7 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 }
 
 // validateShared is a helper function to lint secrets of type "shared".
+// nolint:dupl // ignoring dupl to make clearly define which function owns linting a secret type
 func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 	invalid, isInvalid := errors.New("invalid secret"), false
 

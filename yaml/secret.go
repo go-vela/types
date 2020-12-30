@@ -243,8 +243,8 @@ func (s *SecretSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Sprintf("no name provided:\n%s\n ", string(source)))
 			isInvalid = true
 		}
 
@@ -306,8 +306,8 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
 			isInvalid = true
 		}
 	}
@@ -332,8 +332,8 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
 			isInvalid = true
 		}
 	}
@@ -358,8 +358,8 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 			return isInvalid, err
 		}
 
-		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+		invalid = fmt.Errorf("%v: %s", invalid,
+			fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
 		isInvalid = true
 	}
 
@@ -396,8 +396,8 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%v: %s", invalid,
+				fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
 			isInvalid = true
 		}
 	}
@@ -422,8 +422,8 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 			return isInvalid, err
 		}
 
-		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+		invalid = fmt.Errorf("%v: %s", invalid,
+			fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
 		isInvalid = true
 	}
 
@@ -446,8 +446,8 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("no key provided:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%v: %s", invalid,
+				fmt.Sprintf("no key provided:\n%s\n ", string(source)))
 			isInvalid = true
 		} else {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
@@ -460,8 +460,8 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%v: %s", invalid,
+				fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
 			isInvalid = true
 		}
 	}
@@ -485,8 +485,8 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 			return isInvalid, err
 		}
 
-		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided:\n%s\n ", string(source)))
+		invalid = fmt.Errorf("%w: %s", invalid,
+			fmt.Sprintf("no name provided:\n%s\n ", string(source)))
 		isInvalid = true
 	}
 
@@ -501,8 +501,9 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 			return isInvalid, err
 		}
 
-		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no image provided %s:\n%s\n ", s.Origin.Name, string(source)))
+		invalid = fmt.Errorf("%w: %s", invalid,
+			fmt.Errorf("no image provided %s:\n%s\n ", s.Origin.Name, string(source)))
+		isInvalid = true
 	} else {
 		// parse the image provided into a
 		// named, fully qualified reference
@@ -521,8 +522,8 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 				return isInvalid, err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("invalid image value %s:\n%s\n ", s.Origin.Image, string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Errorf("invalid image value %s:\n%s\n ", s.Origin.Image, string(source)))
 			isInvalid = true
 		}
 	}

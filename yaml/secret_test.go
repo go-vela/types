@@ -405,7 +405,7 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 		{
 			name:    "failure: secret plugin bad image yaml tag",
 			file:    "testdata/secret/validate/plugin_bad_image.yml",
-			wantErr: false,
+			wantErr: true,
 		},
 	}
 

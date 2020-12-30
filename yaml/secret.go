@@ -46,8 +46,6 @@ type (
 	}
 )
 
-var InvalidSecretBlock = errors.New("invalid secret block found")
-
 // ToPipeline converts the SecretSlice type
 // to a pipeline SecretSlice type.
 func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {

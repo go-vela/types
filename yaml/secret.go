@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/docker/distribution/reference"
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -44,6 +45,8 @@ type (
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: coming soon"`
 	}
 )
+
+var InvalidSecretBlock = errors.New("invalid secret block found")
 
 // ToPipeline converts the SecretSlice type
 // to a pipeline SecretSlice type.
@@ -226,42 +229,58 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 
 // Validate lints if the steps configuration is valid.
 func (s *SecretSlice) Validate(pipeline []byte) error {
-	invalid := errors.New("invalid step block found")
+	invalid, isInvalid := errors.New("invalid secret block found"), false
 
 	// iterate through each step and linting yaml tags
 	for i, secret := range *s {
 		// check required name field
-		if len(secret.Name) == 0 {
+		if len(secret.Name) == 0 && secret.Origin.Empty() {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
 			if err != nil {
 				return err
 			}
+
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
 				return err
 			}
 
 			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for secret:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided:\n%s\n ", string(source)))
+			isInvalid = true
 		}
 
 		// validate secret by type
-		switch secret.Type {
-		case constants.SecretRepo:
-			err := secret.validateRepo(pipeline, i)
-			if err != nil {
-				invalid = fmt.Errorf("%w: %v", invalid, err)
+		switch {
+		case strings.EqualFold(secret.Type, constants.SecretRepo):
+			bad, err := secret.validateRepo(pipeline, i)
+			if bad {
+				invalid = fmt.Errorf("%v: %v", invalid, err)
+				isInvalid = true
 			}
-		case constants.SecretOrg:
-			err := secret.validateOrg(pipeline, i)
-			if err != nil {
-				invalid = fmt.Errorf("%w: %v", invalid, err)
+		case strings.EqualFold(secret.Type, constants.SecretOrg):
+			bad, err := secret.validateOrg(pipeline, i)
+			if bad {
+				invalid = fmt.Errorf("%v: %v", invalid, err)
+				isInvalid = true
+			}
+		case strings.EqualFold(secret.Type, constants.SecretShared):
+			bad, err := secret.validateShared(pipeline, i)
+			if bad {
+				invalid = fmt.Errorf("%v: %v", invalid, err)
+				isInvalid = true
+			}
+		case !secret.Origin.Empty():
+			bad, err := secret.validatePlugin(pipeline, i)
+			if bad {
+				invalid = fmt.Errorf("%v: %v", invalid, err)
+				isInvalid = true
 			}
 		}
 	}
 
 	// check if only default error exists
-	if !strings.EqualFold(invalid.Error(), "invalid step block found") {
+	if isInvalid {
 		return invalid
 	}
 
@@ -272,8 +291,8 @@ func (s *SecretSlice) Validate(pipeline []byte) error {
 //
 // this function is used to check the fields of secret with the explicit
 // definition yaml style.
-func (s *Secret) validateRepo(pipeline []byte, i int) error {
-	var invalid error
+func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
+	invalid, isInvalid := errors.New("invalid secret"), false
 
 	// check if the engine is not a "native" or "vault"
 	if len(s.Engine) != 0 {
@@ -281,15 +300,17 @@ func (s *Secret) validateRepo(pipeline []byte, i int) error {
 			!strings.EqualFold(s.Engine, constants.DriverVault) {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
 			if err != nil {
-				return err
+				return isInvalid, err
 			}
+
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return err
+				return isInvalid, err
 			}
 
 			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine provided for secret:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+			isInvalid = true
 		}
 	}
 
@@ -298,97 +319,215 @@ func (s *Secret) validateRepo(pipeline []byte, i int) error {
 	if len(s.Key) != 0 && s.Key != s.Name {
 		match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)
 		if err != nil {
-			return err
+			return isInvalid, err
 		}
 
+		// provide anotated error message when bad syntax is detected
 		if !match {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
 			if err != nil {
-				return err
+				return isInvalid, err
 			}
+
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return err
+				return isInvalid, err
 			}
 
 			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key provided for secret:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			isInvalid = true
 		}
 	}
 
-	return invalid
+	return isInvalid, invalid
 }
 
 // validateOrg is a helper function to lint secrets of type "org".
-func (s *Secret) validateOrg(pipeline []byte, i int) error {
-	var invalid error
+func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
+	invalid, isInvalid := errors.New("invalid secret"), false
 
 	// check if the engine is not a "native" or "vault"
-	if len(s.Engine) == 0 {
-		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+		!strings.EqualFold(s.Engine, constants.DriverVault) {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
 		if err != nil {
-			return err
+			return isInvalid, err
 		}
+
 		source, err := path.AnnotateSource(pipeline, true)
 		if err != nil {
-			return err
+			return isInvalid, err
 		}
 
 		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no engine provided for secret:\n%s\n ", string(source)))
-	} else {
-		if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-			!strings.EqualFold(s.Engine, constants.DriverVault) {
-			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
-			if err != nil {
-				return err
-			}
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return err
-			}
-
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid engine provided for secret:\n%s\n ", string(source)))
-		}
+		invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+		isInvalid = true
 	}
 
 	// check if a key was provided
-	if len(s.Key) == 0 {
-		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
-		if err != nil {
-			return err
-		}
-		source, err := path.AnnotateSource(pipeline, true)
-		if err != nil {
-			return err
-		}
+	match, err := regexp.MatchString(`.+\/.+`, s.Key)
+	if err != nil {
+		return isInvalid, err
+	}
 
-		// nolint:cSpell // ignore line length
-		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no key provided for secret:\n%s\n ", string(source)))
-	} else {
-		match, err := regexp.MatchString(`.+\/.+`, s.Key)
-		if err != nil {
-			return err
-		}
-
-		if !match {
-			// nolint:gomnd // accepting magic number
-			if len(strings.SplitN(s.Key, "/", 2)) != 2 {
-				path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
-				if err != nil {
-					return err
-				}
-				source, err := path.AnnotateSource(pipeline, true)
-				if err != nil {
-					return err
-				}
-
-				// nolint:cSpell // ignore line length
-				invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("invalid key provided for secret:\n%s\n ", string(source)))
+	// provide anotated error message when bad syntax is detected
+	if !match {
+		if strings.EqualFold(s.Name, s.Key) {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+			if err != nil {
+				return isInvalid, err
 			}
+
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return isInvalid, err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("no key provided:\n%s\n ", string(source)))
+			isInvalid = true
+		} else {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
+			if err != nil {
+				return isInvalid, err
+			}
+
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return isInvalid, err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			isInvalid = true
 		}
 	}
 
-	return invalid
+	return isInvalid, invalid
+}
+
+// validateShared is a helper function to lint secrets of type "shared".
+func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
+	invalid, isInvalid := errors.New("invalid secret"), false
+
+	// check if the engine is not a "native" or "vault"
+	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
+		!strings.EqualFold(s.Engine, constants.DriverVault) {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
+		if err != nil {
+			return isInvalid, err
+		}
+
+		source, err := path.AnnotateSource(pipeline, true)
+		if err != nil {
+			return isInvalid, err
+		}
+
+		// nolint:cSpell // ignore line length
+		invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+		isInvalid = true
+	}
+
+	// check if a key was provided
+	match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)
+	if err != nil {
+		return isInvalid, err
+	}
+
+	// provide anotated error message when bad syntax is detected
+	if !match {
+		if strings.EqualFold(s.Name, s.Key) {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+			if err != nil {
+				return isInvalid, err
+			}
+
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return isInvalid, err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("no key provided:\n%s\n ", string(source)))
+			isInvalid = true
+		} else {
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
+			if err != nil {
+				return isInvalid, err
+			}
+
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return isInvalid, err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("invalid key value:\n%s\n ", string(source)))
+			isInvalid = true
+		}
+	}
+
+	return isInvalid, invalid
+}
+
+// validatePlugin is a helper function to lint secret plugin fields.
+func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
+	invalid, isInvalid := errors.New("invalid secret plugin"), false
+
+	// check required fields
+	if len(s.Origin.Name) == 0 {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+		if err != nil {
+			return isInvalid, err
+		}
+
+		source, err := path.AnnotateSource(pipeline, true)
+		if err != nil {
+			return isInvalid, err
+		}
+
+		// nolint:cSpell // ignore line length
+		invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided:\n%s\n ", string(source)))
+		isInvalid = true
+	}
+
+	if len(s.Origin.Image) == 0 {
+		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
+		if err != nil {
+			return isInvalid, err
+		}
+
+		source, err := path.AnnotateSource(pipeline, true)
+		if err != nil {
+			return isInvalid, err
+		}
+
+		// nolint:cSpell // ignore line length
+		invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no image provided %s:\n%s\n ", s.Origin.Name, string(source)))
+	} else {
+		// parse the image provided into a
+		// named, fully qualified reference
+		//
+		// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
+		_, err := reference.ParseAnyReference(s.Origin.Image)
+		if err != nil {
+			// output error with YAML source
+			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].origin.image", i))
+			if err != nil {
+				return isInvalid, err
+			}
+
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return isInvalid, err
+			}
+
+			// nolint:cSpell // ignore line length
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("invalid image value %s:\n%s\n ", s.Origin.Image, string(source)))
+			isInvalid = true
+		}
+	}
+
+	return isInvalid, invalid
 }

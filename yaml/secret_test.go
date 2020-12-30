@@ -335,7 +335,7 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 	}
 }
 
-func TestYaml_StepSecretSlice_Validate(t *testing.T) {
+func TestYaml_SecretSlice_Validate(t *testing.T) {
 	//setup types
 	tests := []struct {
 		name    string
@@ -373,9 +373,39 @@ func TestYaml_StepSecretSlice_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "failure: org secret bad engine yaml tag",
+			name:    "failure: shared secret bad key yaml tag",
 			file:    "testdata/secret/validate/org_bad_key.yml",
 			wantErr: true,
+		},
+		{
+			name:    "success: shared secret block",
+			file:    "testdata/secret/validate/shared.yml",
+			wantErr: false,
+		},
+		{
+			name:    "failure: shared secret bad engine yaml tag",
+			file:    "testdata/secret/validate/shared_bad_engine.yml",
+			wantErr: true,
+		},
+		{
+			name:    "failure: shared secret bad key yaml tag",
+			file:    "testdata/secret/validate/shared_bad_key.yml",
+			wantErr: true,
+		},
+		{
+			name:    "success: secret plugin block",
+			file:    "testdata/secret/validate/plugin.yml",
+			wantErr: false,
+		},
+		{
+			name:    "failure: secret plugin bad name yaml tag",
+			file:    "testdata/secret/validate/plugin_bad_name.yml",
+			wantErr: true,
+		},
+		{
+			name:    "failure: secret plugin bad image yaml tag",
+			file:    "testdata/secret/validate/plugin_bad_image.yml",
+			wantErr: false,
 		},
 	}
 

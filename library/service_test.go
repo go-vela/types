@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/pipeline"
 )
 
 func TestLibrary_Service_Environment(t *testing.T) {
@@ -256,6 +258,59 @@ func TestService_String(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
+	}
+}
+
+func TestLibrary_ServiceFromContainer(t *testing.T) {
+	// setup types
+	s := testService()
+
+	// modify fields that aren't set
+	// via environment variables
+	s.ID = nil
+	s.BuildID = nil
+	s.RepoID = nil
+
+	// setup tests
+	tests := []struct {
+		container *pipeline.Container
+		want      *Service
+	}{
+		{
+			container: nil,
+			want:      nil,
+		},
+		{
+			container: new(pipeline.Container),
+			want:      nil,
+		},
+		{
+			container: &pipeline.Container{
+				Environment: map[string]string{
+					"VELA_SERVICE_CREATED":      "1563474076",
+					"VELA_SERVICE_DISTRIBUTION": "linux",
+					"VELA_SERVICE_EXIT_CODE":    "0",
+					"VELA_SERVICE_FINISHED":     "1563474079",
+					"VELA_SERVICE_HOST":         "example.company.com",
+					"VELA_SERVICE_IMAGE":        "postgres:12-alpine",
+					"VELA_SERVICE_NAME":         "postgres",
+					"VELA_SERVICE_NUMBER":       "1",
+					"VELA_SERVICE_RUNTIME":      "docker",
+					"VELA_SERVICE_STARTED":      "1563474078",
+					"VELA_SERVICE_STATUS":       "running",
+				},
+			},
+			want: s,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := ServiceFromContainer(test.container)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ServiceFromContainer is %v, want %v", got, test.want)
+		}
 	}
 }
 

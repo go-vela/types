@@ -4,7 +4,12 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+
+	"github.com/go-vela/types/pipeline"
+)
 
 // Step is the library representation of a step in a build.
 //
@@ -499,4 +504,124 @@ func (s *Step) String() string {
 		s.GetStarted(),
 		s.GetStatus(),
 	)
+}
+
+// StepFromContainer converts the pipeline
+// Container type to a library Step type.
+//
+// nolint: funlen // ignore function length due to comments and conditionals
+func StepFromContainer(ctn *pipeline.Container) *Step {
+	// check if container or container environment are nil
+	if ctn == nil || ctn.Environment == nil {
+		return nil
+	}
+
+	// create new step type we want to return
+	s := new(Step)
+
+	// check if the VELA_STEP_DISTRIBUTION environment variable exists
+	value, ok := ctn.Environment["VELA_STEP_DISTRIBUTION"]
+	if ok {
+		// set the Distribution field to the value from environment variable
+		s.SetDistribution(value)
+	}
+
+	// check if the VELA_STEP_HOST environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_HOST"]
+	if ok {
+		// set the Host field to the value from environment variable
+		s.SetHost(value)
+	}
+
+	// check if the VELA_STEP_IMAGE environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_IMAGE"]
+	if ok {
+		// set the Image field to the value from environment variable
+		s.SetImage(value)
+	}
+
+	// check if the VELA_STEP_NAME environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_NAME"]
+	if ok {
+		// set the Name field to the value from environment variable
+		s.SetName(value)
+	}
+
+	// check if the VELA_STEP_RUNTIME environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_RUNTIME"]
+	if ok {
+		// set the Runtime field to the value from environment variable
+		s.SetRuntime(value)
+	}
+
+	// check if the VELA_STEP_STAGE environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_STAGE"]
+	if ok {
+		// set the Stage field to the value from environment variable
+		s.SetStage(value)
+	}
+
+	// check if the VELA_STEP_STATUS environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_STATUS"]
+	if ok {
+		// set the Status field to the value from environment variable
+		s.SetStatus(value)
+	}
+
+	// check if the VELA_STEP_CREATED environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_CREATED"]
+	if ok {
+		// parse the environment variable value into an int64
+		i, err := strconv.ParseInt(value, 10, 64)
+		if err == nil {
+			// set the Created field to the parsed int64
+			s.SetCreated(i)
+		}
+	}
+
+	// check if the VELA_STEP_EXIT_CODE environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_EXIT_CODE"]
+	if ok {
+		// parse the environment variable value into an int
+		i, err := strconv.ParseInt(value, 10, 0)
+		if err == nil {
+			// set the ExitCode field to the parsed int
+			s.SetExitCode(int(i))
+		}
+	}
+
+	// check if the VELA_STEP_FINISHED environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_FINISHED"]
+	if ok {
+		// parse the environment variable value into an int64
+		i, err := strconv.ParseInt(value, 10, 64)
+		if err == nil {
+			// set the Finished field to the parsed int64
+			s.SetFinished(i)
+		}
+	}
+
+	// check if the VELA_STEP_NUMBER environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_NUMBER"]
+	if ok {
+		// parse the environment variable value into an int
+		i, err := strconv.ParseInt(value, 10, 0)
+		if err == nil {
+			// set the Number field to the parsed int
+			s.SetNumber(int(i))
+		}
+	}
+
+	// check if the VELA_STEP_STARTED environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_STARTED"]
+	if ok {
+		// parse the environment variable value into an int64
+		i, err := strconv.ParseInt(value, 10, 64)
+		if err == nil {
+			// set the Started field to the parsed int64
+			s.SetStarted(i)
+		}
+	}
+
+	return s
 }

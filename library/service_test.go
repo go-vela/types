@@ -36,7 +36,7 @@ func TestLibrary_Service_Environment(t *testing.T) {
 	}
 }
 
-func TestService_Getters(t *testing.T) {
+func TestLibrary_Service_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		service *Service
@@ -215,7 +215,7 @@ func TestLibrary_Service_Setters(t *testing.T) {
 	}
 }
 
-func TestService_String(t *testing.T) {
+func TestLibrary_Service_String(t *testing.T) {
 	// setup types
 	s := testService()
 

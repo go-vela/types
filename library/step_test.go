@@ -37,7 +37,7 @@ func TestLibrary_Step_Environment(t *testing.T) {
 	}
 }
 
-func TestStep_Getters(t *testing.T) {
+func TestLibrary_Step_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		step *Step
@@ -225,7 +225,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	}
 }
 
-func TestStep_String(t *testing.T) {
+func TestLibrary_Step_String(t *testing.T) {
 	// setup types
 	s := testStep()
 

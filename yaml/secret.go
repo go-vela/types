@@ -299,12 +299,12 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 			!strings.EqualFold(s.Engine, constants.DriverVault) {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%w: %s", invalid,
@@ -318,19 +318,19 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 	if len(s.Key) != 0 && s.Key != s.Name {
 		match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)
 		if err != nil {
-			return isInvalid, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
+			return false, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
 		}
 
 		// provide anotated error message when bad syntax is detected
 		if !match {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%w: %s", invalid,
@@ -352,12 +352,12 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
 		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 		}
 
 		source, err := path.AnnotateSource(pipeline, true)
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 		}
 
 		invalid = fmt.Errorf("%v: %s", invalid,
@@ -368,7 +368,7 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 	// check if a key was provided
 	match, err := regexp.MatchString(`.+\/.+`, s.Key)
 	if err != nil {
-		return isInvalid, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
+		return false, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
 	}
 
 	// provide anotated error message when bad syntax is detected
@@ -376,12 +376,12 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 		if strings.EqualFold(s.Name, s.Key) {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			// nolint:lll // ignore line length
@@ -390,12 +390,12 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 		} else {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%v: %s", invalid,
@@ -417,12 +417,12 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
 		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 		}
 
 		source, err := path.AnnotateSource(pipeline, true)
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 		}
 
 		invalid = fmt.Errorf("%v: %s", invalid,
@@ -433,7 +433,7 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 	// check if a key was provided
 	match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)
 	if err != nil {
-		return isInvalid, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
+		return false, fmt.Errorf("unable to execute regex on %s: %w", s.Key, err)
 	}
 
 	// provide anotated error message when bad syntax is detected
@@ -441,12 +441,12 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 		if strings.EqualFold(s.Name, s.Key) {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%v: %s", invalid,
@@ -455,12 +455,12 @@ func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 		} else {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%v: %s", invalid,
@@ -480,12 +480,12 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 	if len(s.Origin.Name) == 0 {
 		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 		}
 
 		source, err := path.AnnotateSource(pipeline, true)
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 		}
 
 		invalid = fmt.Errorf("%w: %s", invalid,
@@ -496,12 +496,12 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 	if len(s.Origin.Image) == 0 {
 		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d]", i))
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 		}
 
 		source, err := path.AnnotateSource(pipeline, true)
 		if err != nil {
-			return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 		}
 
 		invalid = fmt.Errorf("%w: %s", invalid,
@@ -517,12 +517,12 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 			// output error with YAML source
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].origin.image", i))
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to path index: %w", err)
+				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
 			}
 
 			source, err := path.AnnotateSource(pipeline, true)
 			if err != nil {
-				return isInvalid, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
 			invalid = fmt.Errorf("%w: %s", invalid,

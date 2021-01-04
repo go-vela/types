@@ -338,9 +338,10 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 func TestYaml_SecretSlice_Validate(t *testing.T) {
 	//setup types
 	tests := []struct {
-		name    string
-		file    string
-		wantErr bool
+		name        string
+		file        string
+		corruptYaml bool
+		wantErr     bool
 	}{
 		{
 			name:    "failure: no secret name",
@@ -348,9 +349,21 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:        "failure: repo secret compiled but has corrupt data",
+			file:        "testdata/secret/validate/no_name.yml",
+			corruptYaml: true,
+			wantErr:     true,
+		},
+		{
 			name:    "success: repo secret block",
 			file:    "testdata/secret/validate/repo.yml",
 			wantErr: false,
+		},
+		{
+			name:        "failure: repo secret compiled but has corrupt data",
+			file:        "testdata/secret/validate/repo_bad_engine.yml",
+			corruptYaml: true,
+			wantErr:     true,
 		},
 		{
 			name:    "failure: repo secret bad engine yaml tag",
@@ -373,6 +386,12 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:        "failure: org secret compiled but has corrupt data",
+			file:        "testdata/secret/validate/org_bad_engine.yml",
+			corruptYaml: true,
+			wantErr:     true,
+		},
+		{
 			name:    "failure: shared secret bad key yaml tag",
 			file:    "testdata/secret/validate/org_bad_key.yml",
 			wantErr: true,
@@ -388,6 +407,12 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:        "failure: shared secret compiled but has corrupt data",
+			file:        "testdata/secret/validate/shared_bad_engine.yml",
+			corruptYaml: true,
+			wantErr:     true,
+		},
+		{
 			name:    "failure: shared secret bad key yaml tag",
 			file:    "testdata/secret/validate/shared_bad_key.yml",
 			wantErr: true,
@@ -401,6 +426,12 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 			name:    "failure: secret plugin bad name yaml tag",
 			file:    "testdata/secret/validate/plugin_bad_name.yml",
 			wantErr: true,
+		},
+		{
+			name:        "failure: secret plugin compiled but has corrupt data",
+			file:        "testdata/secret/validate/plugin_bad_name.yml",
+			corruptYaml: true,
+			wantErr:     true,
 		},
 		{
 			name:    "failure: secret plugin bad image yaml tag",
@@ -422,6 +453,11 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 
 		if err != nil {
 			t.Errorf("Validate returned err: %v", err)
+		}
+
+		// set this flag when testing annotation failures
+		if test.corruptYaml {
+			pipeline = []byte("``")
 		}
 
 		t.Run(test.name, func(t *testing.T) {

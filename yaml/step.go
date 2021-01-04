@@ -135,7 +135,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
+			// nolint:lll // ignore line length
 			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for step:\n%s\n ", string(source)))
 		}
 
@@ -149,7 +149,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
+			// nolint:lll // ignore line length
 			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no image or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
@@ -166,7 +166,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
+			// nolint:lll // ignore line length
 			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
@@ -187,7 +187,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 					return err
 				}
 
-				// nolint:cSpell // ignore line length
+				// nolint:lll // ignore line length
 				invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("invalid image value %s:\n%s\n ", step.Image, string(source)))
 			}
 		}

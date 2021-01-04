@@ -225,11 +225,11 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 	return errors.New("failed to unmarshal StepSecretSlice")
 }
 
-// Validate lints if the steps configuration is valid.
+// Validate lints if the secrets configuration is valid.
 func (s *SecretSlice) Validate(pipeline []byte) error {
 	invalid, isInvalid := errors.New("invalid secret block found"), false
 
-	// iterate through each step and linting yaml tags
+	// iterate through each secret and linting yaml tags
 	for i, secret := range *s {
 		// check required name field
 		if len(secret.Name) == 0 && secret.Origin.Empty() {

@@ -248,6 +248,26 @@ func (s *SecretSlice) Validate(pipeline []byte) error {
 			isInvalid = true
 		}
 
+		// check if the engine is not a "native" or "vault"
+		if len(secret.Engine) != 0 {
+			if !strings.EqualFold(secret.Engine, constants.DriverNative) &&
+				!strings.EqualFold(secret.Engine, constants.DriverVault) {
+				path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
+				if err != nil {
+					return fmt.Errorf("failed compile: unable to path index: %w", err)
+				}
+
+				source, err := path.AnnotateSource(pipeline, true)
+				if err != nil {
+					return fmt.Errorf("failed compile: unable to annotate: %w", err)
+				}
+
+				invalid = fmt.Errorf("%w: %s", invalid,
+					fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
+				isInvalid = true
+			}
+		}
+
 		// allocate variables for secret type checks
 		var (
 			bad bool
@@ -293,26 +313,6 @@ func (s *SecretSlice) Validate(pipeline []byte) error {
 func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 	invalid, isInvalid := errors.New("invalid secret"), false
 
-	// check if the engine is not a "native" or "vault"
-	if len(s.Engine) != 0 {
-		if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-			!strings.EqualFold(s.Engine, constants.DriverVault) {
-			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
-			if err != nil {
-				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
-			}
-
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
-			}
-
-			invalid = fmt.Errorf("%w: %s", invalid,
-				fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
-			isInvalid = true
-		}
-	}
-
 	// check if a key was provided for explicit definition
 	// when the key == name than we have an implicit definition
 	if len(s.Key) != 0 && s.Key != s.Name {
@@ -346,24 +346,6 @@ func (s *Secret) validateRepo(pipeline []byte, i int) (bool, error) {
 // nolint:dupl // ignoring dupl to make clearly define which function owns linting a secret type
 func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 	invalid, isInvalid := errors.New("invalid secret"), false
-
-	// check if the engine is not a "native" or "vault"
-	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
-		if err != nil {
-			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
-		}
-
-		source, err := path.AnnotateSource(pipeline, true)
-		if err != nil {
-			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
-		}
-
-		invalid = fmt.Errorf("%v: %s", invalid,
-			fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
-		isInvalid = true
-	}
 
 	// check if a key was provided
 	match, err := regexp.MatchString(`.+\/.+`, s.Key)
@@ -411,24 +393,6 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 // nolint:dupl // ignoring dupl to make clearly define which function owns linting a secret type
 func (s *Secret) validateShared(pipeline []byte, i int) (bool, error) {
 	invalid, isInvalid := errors.New("invalid secret"), false
-
-	// check if the engine is not a "native" or "vault"
-	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].engine", i))
-		if err != nil {
-			return false, fmt.Errorf("failed compile: unable to path index: %w", err)
-		}
-
-		source, err := path.AnnotateSource(pipeline, true)
-		if err != nil {
-			return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
-		}
-
-		invalid = fmt.Errorf("%v: %s", invalid,
-			fmt.Sprintf("invalid engine value:\n%s\n ", string(source)))
-		isInvalid = true
-	}
 
 	// check if a key was provided
 	match, err := regexp.MatchString(`.+\/.+\/.+`, s.Key)

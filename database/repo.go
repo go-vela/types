@@ -49,6 +49,7 @@ type Repo struct {
 	Clone        sql.NullString `sql:"clone"`
 	Branch       sql.NullString `sql:"branch"`
 	Timeout      sql.NullInt64  `sql:"timeout"`
+	MaxBuilds    sql.NullInt64  `sql:"max_builds"` // todo
 	Visibility   sql.NullString `sql:"visibility"`
 	Private      sql.NullBool   `sql:"private"`
 	Trusted      sql.NullBool   `sql:"trusted"`
@@ -121,6 +122,11 @@ func (r *Repo) Nullify() *Repo {
 		r.Timeout.Valid = false
 	}
 
+	// check if the Max Builds field should be false
+	if r.MaxBuilds.Int64 == 0 {
+		r.MaxBuilds.Valid = false
+	}
+
 	// check if the Visibility field should be false
 	if len(r.Visibility.String) == 0 {
 		r.Visibility.Valid = false
@@ -144,6 +150,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetClone(r.Clone.String)
 	repo.SetBranch(r.Branch.String)
 	repo.SetTimeout(r.Timeout.Int64)
+	repo.SetMaxBuilds(r.MaxBuilds.Int64)
 	repo.SetVisibility(r.Visibility.String)
 	repo.SetPrivate(r.Private.Bool)
 	repo.SetTrusted(r.Trusted.Bool)
@@ -207,6 +214,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		Clone:        sql.NullString{String: r.GetClone(), Valid: true},
 		Branch:       sql.NullString{String: r.GetBranch(), Valid: true},
 		Timeout:      sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
+		MaxBuilds:    sql.NullInt64{Int64: r.GetMaxBuilds(), Valid: true},
 		Visibility:   sql.NullString{String: r.GetVisibility(), Valid: true},
 		Private:      sql.NullBool{Bool: r.GetPrivate(), Valid: true},
 		Trusted:      sql.NullBool{Bool: r.GetTrusted(), Valid: true},

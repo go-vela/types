@@ -15,6 +15,12 @@ const (
 	// BuildTimeoutDefault defines the default value in minutes for repo build timeout.
 	BuildTimeoutDefault = 30
 
+	// todo name is silly - defines the maximimum number of concurrent builds for a repo
+	MaxBuildsMax = 20
+
+	// MaxBuildsDefault defines the default number of concurrent builds for a repo.
+	MaxBuildsDefault = 5
+
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.
 	FavoritesMaxSize = 5000
 )

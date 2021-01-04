@@ -20,6 +20,7 @@ type Repo struct {
 	Clone        *string `json:"clone,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
 	Timeout      *int64  `json:"timeout,omitempty"`
+	MaxBuilds    *int64  `json:"max_builds,omitempty"`
 	Visibility   *string `json:"visibility,omitempty"`
 	Private      *bool   `json:"private,omitempty"`
 	Trusted      *bool   `json:"trusted,omitempty"`
@@ -49,6 +50,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_ORG":           ToString(r.GetOrg()),
 		"VELA_REPO_PRIVATE":       ToString(r.GetPrivate()),
 		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
+		"VELA_REPO_MAX_BUILDS":    ToString(r.GetMaxBuilds()),
 		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
 		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
 
@@ -67,8 +69,9 @@ func (r *Repo) Environment() map[string]string {
 		"REPOSITORY_ORG":           ToString(r.GetOrg()),
 		"REPOSITORY_PRIVATE":       ToString(r.GetPrivate()),
 		"REPOSITORY_TIMEOUT":       ToString(r.GetTimeout()),
-		"REPOSITORY_TRUSTED":       ToString(r.GetTrusted()),
-		"REPOSITORY_VISIBILITY":    ToString(r.GetVisibility()),
+		// todo - likely not adding it to deprecated env vars
+		"REPOSITORY_TRUSTED":    ToString(r.GetTrusted()),
+		"REPOSITORY_VISIBILITY": ToString(r.GetVisibility()),
 	}
 }
 
@@ -200,6 +203,19 @@ func (r *Repo) GetTimeout() int64 {
 	}
 
 	return *r.Timeout
+}
+
+// GetMaxBuilds returns the MaxBuilds field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetMaxBuilds() int64 {
+	// return zero value if Repo type or MaxBuilds field is nil
+	if r == nil || r.MaxBuilds == nil {
+		return 0
+	}
+
+	return *r.MaxBuilds
 }
 
 // GetVisibility returns the Visibility field.
@@ -449,6 +465,19 @@ func (r *Repo) SetTimeout(v int64) {
 	r.Timeout = &v
 }
 
+// SetMaxBuilds sets the MaxBuilds field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetMaxBuilds(v int64) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.MaxBuilds = &v
+}
+
 // SetVisibility sets the Visibility field.
 //
 // When the provided Repo type is nil, it
@@ -584,6 +613,7 @@ func (r *Repo) String() string {
   Org: %s,
   Private: %t,
   Timeout: %d,
+  MaxBuilds: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
@@ -603,6 +633,7 @@ func (r *Repo) String() string {
 		r.GetOrg(),
 		r.GetPrivate(),
 		r.GetTimeout(),
+		r.GetMaxBuilds(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),

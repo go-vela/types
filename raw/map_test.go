@@ -5,11 +5,12 @@
 package raw
 
 import (
+	"database/sql/driver"
 	"io/ioutil"
 	"reflect"
 	"testing"
 
-	yaml "gopkg.in/yaml.v2"
+	"github.com/goccy/go-yaml"
 )
 
 func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {
@@ -137,5 +138,49 @@ func TestRaw_StringSliceMap_UnmarshalYAML(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
 		}
+	}
+}
+
+func TestStringSliceMap_Value(t *testing.T) {
+	tests := []struct {
+		name    string
+		s       StringSliceMap
+		want    driver.Value
+		wantErr bool
+	}{
+		{"valid", StringSliceMap{"foo": "test1"}, "{\"foo\":\"test1\"}", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.s.Value()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("StringSliceMap.Value() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("StringSliceMap.Value() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStringSliceMap_Scan(t *testing.T) {
+	type args struct {
+		value interface{}
+	}
+	tests := []struct {
+		name    string
+		s       *StringSliceMap
+		args    args
+		wantErr bool
+	}{
+		{"valid", &StringSliceMap{"foo": "test1"}, args{value: "{\"foo\":\"test1\"}"}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.s.Scan(tt.args.value); (err != nil) != tt.wantErr {
+				t.Errorf("StringSliceMap.Scan() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
 	}
 }

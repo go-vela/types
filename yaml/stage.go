@@ -5,12 +5,14 @@
 package yaml
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 
-	"github.com/buildkite/yaml"
+	"github.com/goccy/go-yaml"
 )
 
 type (
@@ -85,6 +87,69 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 		// append stage to stage slice
 		*s = append(*s, stage)
+	}
+
+	return nil
+}
+
+// Validate lints if the stages configuration is valid.
+func (s *StageSlice) Validate(pipeline []byte) error {
+	invalid := errors.New("invalid stage block found")
+
+	// iterate through each stage and linting yaml tags
+	for _, stage := range *s {
+		if stage.Name == "clone" || stage.Name == "init" {
+			continue
+		}
+
+		// check required fields
+		if len(stage.Name) == 0 {
+			path, err := yaml.PathString("$.stages")
+			if err != nil {
+				return err
+			}
+			source, err := path.AnnotateSource(pipeline, true)
+			if err != nil {
+				return err
+			}
+
+			invalid = fmt.Errorf(
+				"%w: %s",
+				invalid,
+				fmt.Sprintf("no name provided for stage:\n%s\n ", string(source)),
+			)
+		}
+
+		// extract the raw yaml steps from pipeline
+		path, err := yaml.PathString(fmt.Sprintf("$.stages.%s", stage.Name))
+		if err != nil {
+			return err
+		}
+
+		stage := &Stage{}
+
+		// read steps within stage
+		err = path.Read(strings.NewReader(string(pipeline)), stage)
+		if err != nil {
+			return err
+		}
+
+		// convert the steps slice into bytes
+		raw, err := yaml.Marshal(stage)
+		if err != nil {
+			return err
+		}
+
+		// check steps within that stage
+		err = stage.Steps.Validate(raw)
+		if err != nil {
+			invalid = fmt.Errorf("%w: %v", invalid, err)
+		}
+	}
+
+	// check if only default error exists
+	if !strings.EqualFold(invalid.Error(), "invalid stage block found") {
+		return invalid
 	}
 
 	return nil

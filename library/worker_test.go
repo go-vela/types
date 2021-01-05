@@ -52,6 +52,10 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
 			t.Errorf("GetLastCheckedIn is %v, want %v", test.worker.GetLastCheckedIn(), test.want.GetLastCheckedIn())
 		}
+
+		if test.worker.GetBuildLimit() != test.want.GetBuildLimit() {
+			t.Errorf("GetBuildLimit is %v, want %v", test.worker.GetBuildLimit(), test.want.GetBuildLimit())
+		}
 	}
 }
 
@@ -81,6 +85,7 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		test.worker.SetAddress(test.want.GetAddress())
 		test.worker.SetActive(test.want.GetActive())
 		test.worker.SetLastCheckedIn(test.want.GetLastCheckedIn())
+		test.worker.SetBuildLimit(test.want.GetBuildLimit())
 
 		if test.worker.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.worker.GetID(), test.want.GetID())
@@ -105,6 +110,10 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
 			t.Errorf("SetLastCheckedIn is %v, want %v", test.worker.GetLastCheckedIn(), test.want.GetLastCheckedIn())
 		}
+
+		if test.worker.GetBuildLimit() != test.want.GetBuildLimit() {
+			t.Errorf("SetBuildLimit is %v, want %v", test.worker.GetBuildLimit(), test.want.GetBuildLimit())
+		}
 	}
 }
 
@@ -119,6 +128,7 @@ func TestLibrary_Worker_String(t *testing.T) {
   Routes: %s,
   Active: %t,
   LastCheckedIn: %v,
+  BuildLimit: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
@@ -126,6 +136,7 @@ func TestLibrary_Worker_String(t *testing.T) {
 		w.GetRoutes(),
 		w.GetActive(),
 		w.GetLastCheckedIn(),
+		w.GetBuildLimit(),
 	)
 
 	// run test
@@ -147,6 +158,7 @@ func testWorker() *Worker {
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
 	w.SetLastCheckedIn(time.Time{}.UTC().Unix())
+	w.SetBuildLimit(2)
 
 	return w
 }

@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/pipeline"
 )
 
 func TestLibrary_Step_Environment(t *testing.T) {
@@ -35,7 +37,7 @@ func TestLibrary_Step_Environment(t *testing.T) {
 	}
 }
 
-func TestStep_Getters(t *testing.T) {
+func TestLibrary_Step_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		step *Step
@@ -223,7 +225,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 	}
 }
 
-func TestStep_String(t *testing.T) {
+func TestLibrary_Step_String(t *testing.T) {
 	// setup types
 	s := testStep()
 
@@ -268,6 +270,61 @@ func TestStep_String(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
+	}
+}
+
+func TestLibrary_StepFromContainer(t *testing.T) {
+	// setup types
+	s := testStep()
+
+	// modify fields that aren't set
+	// via environment variables
+	s.ID = nil
+	s.BuildID = nil
+	s.RepoID = nil
+	s.SetStage("clone")
+
+	// setup tests
+	tests := []struct {
+		container *pipeline.Container
+		want      *Step
+	}{
+		{
+			container: nil,
+			want:      nil,
+		},
+		{
+			container: new(pipeline.Container),
+			want:      nil,
+		},
+		{
+			container: &pipeline.Container{
+				Environment: map[string]string{
+					"VELA_STEP_CREATED":      "1563474076",
+					"VELA_STEP_DISTRIBUTION": "linux",
+					"VELA_STEP_EXIT_CODE":    "0",
+					"VELA_STEP_FINISHED":     "1563474079",
+					"VELA_STEP_HOST":         "example.company.com",
+					"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
+					"VELA_STEP_NAME":         "clone",
+					"VELA_STEP_NUMBER":       "1",
+					"VELA_STEP_RUNTIME":      "docker",
+					"VELA_STEP_STAGE":        "clone",
+					"VELA_STEP_STARTED":      "1563474078",
+					"VELA_STEP_STATUS":       "running",
+				},
+			},
+			want: s,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := StepFromContainer(test.container)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
+		}
 	}
 }
 

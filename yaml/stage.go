@@ -98,6 +98,10 @@ func (s *StageSlice) Validate(pipeline []byte) error {
 
 	// iterate through each stage and linting yaml tags
 	for _, stage := range *s {
+		if stage.Name == "clone" || stage.Name == "init" {
+			continue
+		}
+
 		// check required fields
 		if len(stage.Name) == 0 {
 			path, err := yaml.PathString("$.stages")

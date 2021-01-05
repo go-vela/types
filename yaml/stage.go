@@ -113,8 +113,8 @@ func (s *StageSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for stage:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s",
+				invalid, fmt.Sprintf("no name provided for stage:\n%s\n ", string(source)))
 		}
 
 		// extract the raw yaml steps from pipeline

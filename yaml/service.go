@@ -118,8 +118,8 @@ func (s *ServiceSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Sprintf("no name provided for service:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Sprintf("no name provided for service:\n%s\n ", string(source)))
 		}
 
 		if len(service.Image) == 0 {
@@ -132,8 +132,8 @@ func (s *ServiceSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			// nolint:cSpell // ignore line length
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no image provided for service:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Errorf("no image provided for service:\n%s\n ", string(source)))
 		} else {
 			// parse the image provided into a
 			// named, fully qualified reference
@@ -151,8 +151,8 @@ func (s *ServiceSlice) Validate(pipeline []byte) error {
 					return err
 				}
 
-				// nolint:cSpell // ignore line length
-				invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("invalid image value %s:\n%s\n ", service.Image, string(source)))
+				invalid = fmt.Errorf("%w: %s", invalid,
+					fmt.Errorf("invalid image value %s:\n%s\n ", service.Image, string(source)))
 			}
 		}
 	}

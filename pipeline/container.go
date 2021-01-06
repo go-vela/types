@@ -5,9 +5,14 @@
 package pipeline
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 
+	"github.com/drone/envsubst"
 	"github.com/go-vela/types/constants"
 )
 
@@ -93,46 +98,6 @@ func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 	}
 
 	return containers
-}
-
-// Sanitize cleans the fields for every step in the pipeline so they
-// can be safely executed on the worker. The fields are sanitized
-// based off of the provided runtime driver which is setup on every
-// worker. Currently, this function supports the following runtimes:
-//
-//   * Docker
-//   * Kubernetes
-func (c *Container) Sanitize(driver string) *Container {
-	container := c
-
-	switch driver {
-	// sanitize container for Docker
-	case constants.DriverDocker:
-		if strings.Contains(c.ID, " ") {
-			c.ID = strings.ReplaceAll(c.ID, " ", "-")
-		}
-
-		return container
-	// sanitize container for Kubernetes
-	case constants.DriverKubernetes:
-		if strings.Contains(c.ID, " ") {
-			container.ID = strings.ReplaceAll(c.ID, " ", "-")
-		}
-
-		if strings.Contains(c.ID, "_") {
-			container.ID = strings.ReplaceAll(c.ID, "_", "-")
-		}
-
-		if strings.Contains(c.ID, ".") {
-			container.ID = strings.ReplaceAll(c.ID, ".", "-")
-		}
-
-		return container
-	// unrecognized driver
-	default:
-		// TODO: add a log message indicating how we got here
-		return nil
-	}
 }
 
 // Empty returns true if the provided container is empty.
@@ -234,4 +199,104 @@ func (c *Container) Execute(r *RuleData) bool {
 	}
 
 	return execute
+}
+
+// Sanitize cleans the fields for every step in the pipeline so they
+// can be safely executed on the worker. The fields are sanitized
+// based off of the provided runtime driver which is setup on every
+// worker. Currently, this function supports the following runtimes:
+//
+//   * Docker
+//   * Kubernetes
+func (c *Container) Sanitize(driver string) *Container {
+	container := c
+
+	switch driver {
+	// sanitize container for Docker
+	case constants.DriverDocker:
+		if strings.Contains(c.ID, " ") {
+			c.ID = strings.ReplaceAll(c.ID, " ", "-")
+		}
+
+		return container
+	// sanitize container for Kubernetes
+	case constants.DriverKubernetes:
+		if strings.Contains(c.ID, " ") {
+			container.ID = strings.ReplaceAll(c.ID, " ", "-")
+		}
+
+		if strings.Contains(c.ID, "_") {
+			container.ID = strings.ReplaceAll(c.ID, "_", "-")
+		}
+
+		if strings.Contains(c.ID, ".") {
+			container.ID = strings.ReplaceAll(c.ID, ".", "-")
+		}
+
+		return container
+	// unrecognized driver
+	default:
+		// TODO: add a log message indicating how we got here
+		return nil
+	}
+}
+
+// Substitute replaces every reference (${VAR} or $${VAR}) to an
+// environment variable in the container configuration with the
+// corresponding value for that environment variable.
+func (c *Container) Substitute() error {
+	// check if container or container environment are nil
+	if c == nil || c.Environment == nil {
+		return errors.New("empty container environment provided")
+	}
+
+	// marshal container configuration
+	body, err := json.Marshal(c)
+	if err != nil {
+		return err
+	}
+
+	// create substitute function
+	subFunc := func(name string) string {
+		// capture the environment variable value
+		value := c.Environment[name]
+
+		// check for a new line in the value
+		if strings.Contains(value, "\n") {
+			// safely escape the environment variable
+			value = fmt.Sprintf("%q", value)
+		}
+
+		return value
+	}
+
+	// substitute the environment variables
+	//
+	// https://pkg.go.dev/github.com/drone/envsubst?tab=doc#Eval
+	ctn, err := envsubst.Eval(string(body), subFunc)
+	if err != nil {
+		return err
+	}
+
+	// unmarshal container configuration
+	err = json.Unmarshal([]byte(ctn), c)
+	if err != nil {
+		// create a new buffer for encoded JSON
+		//
+		// will be thrown away after encoding
+		b := new(bytes.Buffer)
+
+		// create new JSON encoder attached to buffer
+		enc := json.NewEncoder(b)
+
+		// JSON encode container output
+		//
+		// buffer is thrown away
+		err = enc.Encode(c)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

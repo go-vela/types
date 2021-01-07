@@ -11,7 +11,7 @@ import "github.com/go-vela/types/pipeline"
 // nolint:lll // jsonschema will cause long lines
 type Metadata struct {
 	Template bool  `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
-	Clone    *bool `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"description=Disables injecting the default clone step.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
+	Clone    *bool `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/concepts/pipeline/metadata/"`
 }
 
 // ToPipeline converts the Metadata type

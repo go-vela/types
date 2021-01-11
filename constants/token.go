@@ -7,5 +7,5 @@ package constants
 // Constants for tokens.
 const (
 	// RefreshTokenName is the name associated with the refresh token.
-	RefreshTokenName = "vela-refresh-token"
+	RefreshTokenName = "vela_refresh_token"
 )

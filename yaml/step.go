@@ -135,11 +135,8 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			invalid = fmt.Errorf(
-				"%w: %s",
-				invalid,
-				fmt.Sprintf("no name provided for step:\n%s\n ", string(source)),
-			)
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Sprintf("no name provided for step:\n%s\n ", string(source)))
 		}
 
 		if len(step.Image) == 0 && len(step.Template.Name) == 0 {
@@ -152,11 +149,8 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			invalid = fmt.Errorf(
-				"%w: %s",
-				invalid,
-				fmt.Errorf("no image or template provided for step %s:\n%s\n ", step.Name, string(source)),
-			)
+			invalid = fmt.Errorf("%w: %s", invalid,
+				fmt.Errorf("no image or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
 		if len(step.Commands) == 0 && len(step.Environment) == 0 &&
@@ -172,12 +166,8 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 				return err
 			}
 
-			invalid = fmt.Errorf(
-				"%w: %s",
-				invalid,
-				fmt.Errorf("no commands, environment, parameters, secrets or template "+
-					"provided for step %s:\n%s\n ", step.Name, string(source)),
-			)
+			// nolint:lll // line can not be shortened due to providing detailed error message
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
 		if len(step.Image) != 0 {
@@ -197,11 +187,8 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 					return err
 				}
 
-				invalid = fmt.Errorf(
-					"%w: %s",
-					invalid,
-					fmt.Errorf("invalid image value %s:\n%s\n ", step.Image, string(source)),
-				)
+				invalid = fmt.Errorf("%w: %s", invalid,
+					fmt.Errorf("invalid image value %s:\n%s\n ", step.Image, string(source)))
 			}
 		}
 	}

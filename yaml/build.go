@@ -42,8 +42,14 @@ func (b *Build) Validate(pipeline []byte) error {
 		invalid = fmt.Errorf("%w: %s", invalid, "stages and steps provided")
 	}
 
+	// validate the secrets block provided
+	err := b.Secrets.Validate(pipeline)
+	if err != nil {
+		invalid = fmt.Errorf("%v: %w", invalid, err)
+	}
+
 	// validate the services block provided
-	err := b.Services.Validate(pipeline)
+	err = b.Services.Validate(pipeline)
 	if err != nil {
 		invalid = fmt.Errorf("%v: %w", invalid, err)
 	}

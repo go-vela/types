@@ -366,8 +366,8 @@ func (s *Secret) validateOrg(pipeline []byte, i int) (bool, error) {
 				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
 			}
 
-			// nolint:lll // ignore line length
-			invalid = fmt.Errorf("%v: %s", invalid, fmt.Sprintf("no key provided:\n%s\n ", string(source)))
+			invalid = fmt.Errorf("%v: %s", invalid,
+				fmt.Sprintf("no key provided:\n%s\n ", string(source)))
 			isInvalid = true
 		} else {
 			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].key", i))

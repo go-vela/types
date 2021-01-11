@@ -167,8 +167,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 			}
 
 			// nolint:lll // line can not be shortened due to providing detailed error message
-			invalid = fmt.Errorf("%w: %s", invalid,
-				fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
+			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
 		if len(step.Image) != 0 {

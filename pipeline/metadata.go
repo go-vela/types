@@ -9,4 +9,5 @@ package pipeline
 // swagger:model PipelineMetadata
 type Metadata struct {
 	Template bool `json:"template,omitempty" yaml:"template,omitempty"`
+	Clone    bool `json:"clone,omitempty" yaml:"clone,omitempty"`
 }

@@ -671,6 +671,95 @@ func TestPipeline_Container_Execute(t *testing.T) {
 	}
 }
 
+func TestPipeline_Container_Substitute(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		container *Container
+		want      *Container
+		failure   bool
+	}{
+		{
+			container: &Container{
+				ID:          "step_github_octocat_1_echo",
+				Commands:    []string{"echo ${FOO}", "echo $${BAR}"},
+				Environment: map[string]string{"FOO": "baz", "BAR": "baz"},
+				Image:       "alpine:latest",
+				Name:        "echo",
+				Number:      1,
+				Pull:        "always",
+			},
+			want: &Container{
+				ID:          "step_github_octocat_1_echo",
+				Commands:    []string{"echo baz", "echo ${BAR}"},
+				Environment: map[string]string{"FOO": "baz", "BAR": "baz"},
+				Image:       "alpine:latest",
+				Name:        "echo",
+				Number:      1,
+				Pull:        "always",
+			},
+			failure: false,
+		},
+		{
+			container: &Container{
+				ID:       "step_github_octocat_1_echo",
+				Commands: []string{"echo ${FOO}", "echo ${BAR}"},
+				Environment: map[string]string{
+					"FOO": "1\n2\n",
+					"BAR": "`~!@#$%^&*()-_=+[{]}\\|;:',<.>/?",
+				},
+				Image:  "alpine:latest",
+				Name:   "echo",
+				Number: 1,
+				Pull:   "always",
+			},
+			want: &Container{
+				ID:       "step_github_octocat_1_echo",
+				Commands: []string{"echo ${FOO}", "echo ${BAR}"},
+				Environment: map[string]string{
+					"FOO": "1\n2\n",
+					"BAR": "`~!@#$%^&*()-_=+[{]}\\|;:',<.>/?",
+				},
+				Image:  "alpine:latest",
+				Name:   "echo",
+				Number: 1,
+				Pull:   "always",
+			},
+			failure: false,
+		},
+		{
+			container: nil,
+			want:      nil,
+			failure:   true,
+		},
+		{
+			container: new(Container),
+			want:      new(Container),
+			failure:   true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.container.Substitute()
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Substitute should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Substitute returned err: %v", err)
+		}
+
+		if !reflect.DeepEqual(test.container, test.want) {
+			t.Errorf("Substitute is %v, want %v", test.container, test.want)
+		}
+	}
+}
+
 func testContainers() *ContainerSlice {
 	return &ContainerSlice{
 		{

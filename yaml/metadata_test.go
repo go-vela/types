@@ -15,6 +15,8 @@ import (
 )
 
 func TestYaml_Metadata_ToPipeline(t *testing.T) {
+	tBool := true
+	fBool := false
 	// setup tests
 	tests := []struct {
 		metadata *Metadata
@@ -23,9 +25,31 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 		{
 			metadata: &Metadata{
 				Template: false,
+				Clone:    &fBool,
 			},
 			want: &pipeline.Metadata{
 				Template: false,
+				Clone:    false,
+			},
+		},
+		{
+			metadata: &Metadata{
+				Template: false,
+				Clone:    &tBool,
+			},
+			want: &pipeline.Metadata{
+				Template: false,
+				Clone:    true,
+			},
+		},
+		{
+			metadata: &Metadata{
+				Template: false,
+				Clone:    nil,
+			},
+			want: &pipeline.Metadata{
+				Template: false,
+				Clone:    true,
 			},
 		},
 	}
@@ -50,6 +74,7 @@ func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 			file: "testdata/metadata.yml",
 			want: &Metadata{
 				Template: false,
+				Clone:    nil,
 			},
 		},
 	}

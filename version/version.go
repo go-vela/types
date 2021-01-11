@@ -31,11 +31,11 @@ type Version struct {
 	// Canonical represents a canonical semantic version for the application.
 	Canonical string `json:"canonical"`
 	// Major represents incompatible API changes.
-	Major int64 `json:"major"`
+	Major uint64 `json:"major"`
 	// Minor represents added functionality in a backwards compatible manner.
-	Minor int64 `json:"minor"`
+	Minor uint64 `json:"minor"`
 	// Patch represents backwards compatible bug fixes.
-	Patch int64 `json:"patch"`
+	Patch uint64 `json:"patch"`
 	// PreRelease represents unstable changes that might not be compatible.
 	PreRelease string `json:"pre_release,omitempty"`
 	// Metadata represents extra information surrounding the application version.

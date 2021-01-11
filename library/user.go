@@ -10,13 +10,14 @@ import "fmt"
 //
 // swagger:model User
 type User struct {
-	ID        *int64    `json:"id,omitempty"`
-	Name      *string   `json:"name,omitempty"`
-	Token     *string   `json:"token,omitempty"`
-	Hash      *string   `json:"-"`
-	Favorites *[]string `json:"favorites,omitempty"`
-	Active    *bool     `json:"active,omitempty"`
-	Admin     *bool     `json:"admin,omitempty"`
+	ID           *int64    `json:"id,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	RefreshToken *string   `json:"-"`
+	Token        *string   `json:"-"`
+	Hash         *string   `json:"-"`
+	Favorites    *[]string `json:"favorites,omitempty"`
+	Active       *bool     `json:"active,omitempty"`
+	Admin        *bool     `json:"admin,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -54,6 +55,19 @@ func (u *User) GetName() string {
 	}
 
 	return *u.Name
+}
+
+// GetRefreshToken returns the RefreshToken field.
+//
+// When the provided User type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (u *User) GetRefreshToken() string {
+	// return zero value if User type or RefreshToken field is nil
+	if u == nil || u.RefreshToken == nil {
+		return ""
+	}
+
+	return *u.RefreshToken
 }
 
 // GetToken returns the Token field.
@@ -145,6 +159,19 @@ func (u *User) SetName(v string) {
 	}
 
 	u.Name = &v
+}
+
+// SetRefreshToken sets the RefreshToken field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
+func (u *User) SetRefreshToken(v string) {
+	// return if User type is nil
+	if u == nil {
+		return
+	}
+
+	u.RefreshToken = &v
 }
 
 // SetToken sets the Token field.

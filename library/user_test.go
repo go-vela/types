@@ -53,6 +53,10 @@ func TestLibrary_User_Getters(t *testing.T) {
 			t.Errorf("GetName is %v, want %v", test.user.GetName(), test.want.GetName())
 		}
 
+		if test.user.GetRefreshToken() != test.want.GetRefreshToken() {
+			t.Errorf("GetRefreshToken is %v, want %v", test.user.GetRefreshToken(), test.want.GetRefreshToken())
+		}
+
 		if test.user.GetToken() != test.want.GetToken() {
 			t.Errorf("GetToken is %v, want %v", test.user.GetToken(), test.want.GetToken())
 		}
@@ -98,6 +102,7 @@ func TestLibrary_User_Setters(t *testing.T) {
 	for _, test := range tests {
 		test.user.SetID(test.want.GetID())
 		test.user.SetName(test.want.GetName())
+		test.user.SetRefreshToken(test.want.GetRefreshToken())
 		test.user.SetToken(test.want.GetToken())
 		test.user.SetHash(test.want.GetHash())
 		test.user.SetFavorites(test.want.GetFavorites())
@@ -110,6 +115,10 @@ func TestLibrary_User_Setters(t *testing.T) {
 
 		if test.user.GetName() != test.want.GetName() {
 			t.Errorf("SetName is %v, want %v", test.user.GetName(), test.want.GetName())
+		}
+
+		if test.user.GetRefreshToken() != test.want.GetRefreshToken() {
+			t.Errorf("SetRefreshToken is %v, want %v", test.user.GetRefreshToken(), test.want.GetRefreshToken())
 		}
 
 		if test.user.GetToken() != test.want.GetToken() {

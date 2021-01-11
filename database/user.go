@@ -27,6 +27,10 @@ var (
 	// User type has an empty Name field provided.
 	ErrEmptyUserName = errors.New("empty user name provided")
 
+	// ErrEmptyUserRefreshToken defines the error type when a
+	// User type has an empty RefreshToken field provided.
+	ErrEmptyUserRefreshToken = errors.New("empty user refresh token provided")
+
 	// ErrEmptyUserToken defines the error type when a
 	// User type has an empty Token field provided.
 	ErrEmptyUserToken = errors.New("empty user token provided")
@@ -42,13 +46,14 @@ var (
 
 // User is the database representation of a user.
 type User struct {
-	ID        sql.NullInt64  `sql:"id"`
-	Name      sql.NullString `sql:"name"`
-	Token     sql.NullString `sql:"token"`
-	Hash      sql.NullString `sql:"hash"`
-	Favorites pq.StringArray `sql:"favorites"`
-	Active    sql.NullBool   `sql:"active"`
-	Admin     sql.NullBool   `sql:"admin"`
+	ID           sql.NullInt64  `sql:"id"`
+	Name         sql.NullString `sql:"name"`
+	RefreshToken sql.NullString `sql:"refresh_token"`
+	Token        sql.NullString `sql:"token"`
+	Hash         sql.NullString `sql:"hash"`
+	Favorites    pq.StringArray `sql:"favorites"`
+	Active       sql.NullBool   `sql:"active"`
+	Admin        sql.NullBool   `sql:"admin"`
 }
 
 // Nullify ensures the valid flag for
@@ -72,6 +77,11 @@ func (u *User) Nullify() *User {
 		u.Name.Valid = false
 	}
 
+	// check if the RefreshToken field should be false
+	if len(u.RefreshToken.String) == 0 {
+		u.RefreshToken.Valid = false
+	}
+
 	// check if the Token field should be false
 	if len(u.Token.String) == 0 {
 		u.Token.Valid = false
@@ -92,6 +102,7 @@ func (u *User) ToLibrary() *library.User {
 
 	user.SetID(u.ID.Int64)
 	user.SetName(u.Name.String)
+	user.SetRefreshToken(u.RefreshToken.String)
 	user.SetToken(u.Token.String)
 	user.SetHash(u.Hash.String)
 	user.SetActive(u.Active.Bool)
@@ -142,13 +153,14 @@ func (u *User) Validate() error {
 // to a database User type.
 func UserFromLibrary(u *library.User) *User {
 	user := &User{
-		ID:        sql.NullInt64{Int64: u.GetID(), Valid: true},
-		Name:      sql.NullString{String: u.GetName(), Valid: true},
-		Token:     sql.NullString{String: u.GetToken(), Valid: true},
-		Hash:      sql.NullString{String: u.GetHash(), Valid: true},
-		Active:    sql.NullBool{Bool: u.GetActive(), Valid: true},
-		Admin:     sql.NullBool{Bool: u.GetAdmin(), Valid: true},
-		Favorites: u.GetFavorites(),
+		ID:           sql.NullInt64{Int64: u.GetID(), Valid: true},
+		Name:         sql.NullString{String: u.GetName(), Valid: true},
+		RefreshToken: sql.NullString{String: u.GetRefreshToken(), Valid: true},
+		Token:        sql.NullString{String: u.GetToken(), Valid: true},
+		Hash:         sql.NullString{String: u.GetHash(), Valid: true},
+		Active:       sql.NullBool{Bool: u.GetActive(), Valid: true},
+		Admin:        sql.NullBool{Bool: u.GetAdmin(), Valid: true},
+		Favorites:    u.GetFavorites(),
 	}
 
 	return user.Nullify()

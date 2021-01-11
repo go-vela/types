@@ -18,12 +18,13 @@ func TestDatabase_User_Nullify(t *testing.T) {
 	var u *User
 
 	want := &User{
-		ID:     sql.NullInt64{Int64: 0, Valid: false},
-		Name:   sql.NullString{String: "", Valid: false},
-		Token:  sql.NullString{String: "", Valid: false},
-		Hash:   sql.NullString{String: "", Valid: false},
-		Active: sql.NullBool{Bool: false, Valid: false},
-		Admin:  sql.NullBool{Bool: false, Valid: false},
+		ID:           sql.NullInt64{Int64: 0, Valid: false},
+		Name:         sql.NullString{String: "", Valid: false},
+		RefreshToken: sql.NullString{String: "", Valid: false},
+		Token:        sql.NullString{String: "", Valid: false},
+		Hash:         sql.NullString{String: "", Valid: false},
+		Active:       sql.NullBool{Bool: false, Valid: false},
+		Admin:        sql.NullBool{Bool: false, Valid: false},
 	}
 
 	// setup tests
@@ -61,6 +62,7 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 
 	want.SetID(1)
 	want.SetName("octocat")
+	want.SetRefreshToken("superSecretRefreshToken")
 	want.SetToken("superSecretToken")
 	want.SetHash("superSecretHash")
 	want.SetFavorites([]string{"github/octocat"})
@@ -104,18 +106,20 @@ func TestDatabase_User_Validate(t *testing.T) {
 		{ // no hash set for user
 			failure: true,
 			user: &User{
-				ID:    sql.NullInt64{Int64: 1, Valid: true},
-				Name:  sql.NullString{String: "octocat", Valid: true},
-				Token: sql.NullString{String: "superSecretToken", Valid: true},
+				ID:           sql.NullInt64{Int64: 1, Valid: true},
+				Name:         sql.NullString{String: "octocat", Valid: true},
+				RefreshToken: sql.NullString{String: "superSecretRefreshToken", Valid: true},
+				Token:        sql.NullString{String: "superSecretToken", Valid: true},
 			},
 		},
 		{ // invalid name set for user
 			failure: true,
 			user: &User{
-				ID:    sql.NullInt64{Int64: 1, Valid: true},
-				Name:  sql.NullString{String: "!@#$%^&*()", Valid: true},
-				Token: sql.NullString{String: "superSecretToken", Valid: true},
-				Hash:  sql.NullString{String: "superSecretHash", Valid: true},
+				ID:           sql.NullInt64{Int64: 1, Valid: true},
+				Name:         sql.NullString{String: "!@#$%^&*()", Valid: true},
+				RefreshToken: sql.NullString{String: "superSecretRefreshToken", Valid: true},
+				Token:        sql.NullString{String: "superSecretToken", Valid: true},
+				Hash:         sql.NullString{String: "superSecretHash", Valid: true},
 			},
 		},
 		{ // invalid favorites set for user
@@ -154,6 +158,7 @@ func TestDatabase_UserFromLibrary(t *testing.T) {
 
 	u.SetID(1)
 	u.SetName("octocat")
+	u.SetRefreshToken("superSecretRefreshToken")
 	u.SetToken("superSecretToken")
 	u.SetHash("superSecretHash")
 	u.SetFavorites([]string{"github/octocat"})
@@ -174,13 +179,14 @@ func TestDatabase_UserFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testUser() *User {
 	return &User{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		Name:      sql.NullString{String: "octocat", Valid: true},
-		Token:     sql.NullString{String: "superSecretToken", Valid: true},
-		Hash:      sql.NullString{String: "superSecretHash", Valid: true},
-		Favorites: []string{"github/octocat"},
-		Active:    sql.NullBool{Bool: true, Valid: true},
-		Admin:     sql.NullBool{Bool: false, Valid: true},
+		ID:           sql.NullInt64{Int64: 1, Valid: true},
+		Name:         sql.NullString{String: "octocat", Valid: true},
+		RefreshToken: sql.NullString{String: "superSecretRefreshToken", Valid: true},
+		Token:        sql.NullString{String: "superSecretToken", Valid: true},
+		Hash:         sql.NullString{String: "superSecretHash", Valid: true},
+		Favorites:    []string{"github/octocat"},
+		Active:       sql.NullBool{Bool: true, Valid: true},
+		Admin:        sql.NullBool{Bool: false, Valid: true},
 	}
 }
 

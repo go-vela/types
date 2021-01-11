@@ -38,18 +38,6 @@ func TestLibrary_Login_Getters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		if test.login.GetUsername() != test.want.GetUsername() {
-			t.Errorf("GetUsername is %v, want %v", test.login.GetUsername(), test.want.GetUsername())
-		}
-
-		if test.login.GetPassword() != test.want.GetPassword() {
-			t.Errorf("GetPassword is %v, want %v", test.login.GetPassword(), test.want.GetPassword())
-		}
-
-		if test.login.GetOTP() != test.want.GetOTP() {
-			t.Errorf("GetOTP is %v, want %v", test.login.GetOTP(), test.want.GetOTP())
-		}
-
 		if test.login.GetToken() != test.want.GetToken() {
 			t.Errorf("GetToken is %v, want %v", test.login.GetToken(), test.want.GetToken())
 		}
@@ -77,20 +65,8 @@ func TestLibrary_Login_Setters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		test.login.SetUsername(test.want.GetUsername())
-		test.login.SetPassword(test.want.GetPassword())
-		test.login.SetOTP(test.want.GetOTP())
 		test.login.SetToken(test.want.GetToken())
 
-		if test.login.GetUsername() != test.want.GetUsername() {
-			t.Errorf("SetUsername is %v, want %v", test.login.GetUsername(), test.want.GetUsername())
-		}
-		if test.login.GetPassword() != test.want.GetPassword() {
-			t.Errorf("SetPassword is %v, want %v", test.login.GetPassword(), test.want.GetPassword())
-		}
-		if test.login.GetOTP() != test.want.GetOTP() {
-			t.Errorf("SetOTP is %v, want %v", test.login.GetOTP(), test.want.GetOTP())
-		}
 		if test.login.GetToken() != test.want.GetToken() {
 			t.Errorf("SetToken is %v, want %v", test.login.GetToken(), test.want.GetToken())
 		}
@@ -102,15 +78,9 @@ func TestLogin_String(t *testing.T) {
 	l := testLogin()
 
 	want := fmt.Sprintf(`{
-  OTP: %s,
-  Password: %s,
   Token: %s,
-  Username: %s,
 }`,
-		l.GetOTP(),
-		l.GetPassword(),
 		l.GetToken(),
-		l.GetUsername(),
 	)
 
 	// run test
@@ -126,9 +96,6 @@ func TestLogin_String(t *testing.T) {
 func testLogin() *Login {
 	l := new(Login)
 
-	l.SetUsername("octocat")
-	l.SetPassword("superSecretPassword")
-	l.SetOTP("123456")
 	l.SetToken("superSecretToken")
 
 	return l

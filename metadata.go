@@ -30,6 +30,7 @@ type (
 	Vela struct {
 		Address              string        `json:"address"`
 		WebAddress           string        `json:"web_address"`
+		WebOauthCallbackPath string        `json:"web_oauth_callback_path"`
 		AccessTokenDuration  time.Duration `json:"access_token_duration"`
 		RefreshTokenDuration time.Duration `json:"refresh_token_duration"`
 	}

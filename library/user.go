@@ -4,7 +4,11 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-vela/types/constants"
+)
 
 // User is the library representation of a user.
 //
@@ -18,6 +22,25 @@ type User struct {
 	Favorites    *[]string `json:"favorites,omitempty"`
 	Active       *bool     `json:"active,omitempty"`
 	Admin        *bool     `json:"admin,omitempty"`
+}
+
+// Sanitize creates a duplicate of the User without the token values.
+func (u *User) Sanitize() *User {
+	// create a variable since constants can not be addressable
+	//
+	// https://golang.org/ref/spec#Address_operators
+	value := constants.SecretMask
+
+	return &User{
+		ID:           u.ID,
+		Name:         u.Name,
+		RefreshToken: &value,
+		Token:        &value,
+		Hash:         &value,
+		Favorites:    u.Favorites,
+		Active:       u.Active,
+		Admin:        u.Admin,
+	}
 }
 
 // Environment returns a list of environment variables

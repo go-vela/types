@@ -8,7 +8,26 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
+
+func TestLibrary_User_Sanitize(t *testing.T) {
+	// setup types
+	u := testUser()
+
+	want := testUser()
+	want.SetHash(constants.SecretMask)
+	want.SetToken(constants.SecretMask)
+	want.SetRefreshToken(constants.SecretMask)
+
+	// run test
+	got := u.Sanitize()
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Sanitize is %v, want %v", got, want)
+	}
+}
 
 func TestLibrary_User_Environment(t *testing.T) {
 	// setup types

@@ -2,6 +2,8 @@ module github.com/go-vela/types
 
 go 1.15
 
+replace github.com/goccy/go-yaml => github.com/go-vela/go-yaml v1.8.5-0.20210119172014-31f8c1792cea
+
 require (
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/drone/envsubst v1.0.2

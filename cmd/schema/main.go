@@ -13,6 +13,8 @@
 // deal with instances where the struct definition
 // is not telling the whole story.
 
+// TODO: add test files
+
 package main
 
 import (
@@ -21,6 +23,7 @@ import (
 	"reflect"
 
 	"github.com/alecthomas/jsonschema"
+	"github.com/iancoleman/orderedmap"
 
 	"github.com/go-vela/types/raw"
 	"github.com/go-vela/types/yaml"
@@ -79,7 +82,7 @@ func main() {
 	// anchors when unset at top level
 	s.AdditionalProperties = []byte("")
 
-	// fix Rules
+	// -- Rules
 	// struct says they are []string, but
 	// they're basically raw.StringSlice,
 	// with the addition of potential enums
@@ -112,7 +115,113 @@ func main() {
 		}
 	}
 
-	// fix stages
+	// -- Ruleset
+	// rules can currently live at ruleset level or
+	// nested within 'if' (default) or 'unless'.
+	// without changes the struct would only allow
+	// the nested version.
+	if rd, ok := s.Definitions["Ruleset"]; ok {
+		// original
+		rulesetProps := rd.Properties
+
+		// create a flattened copy of ruleset
+		rulesetPropsFlattened := orderedmap.New()
+		for _, key := range rd.Properties.Keys() {
+			if key != "if" && key != "unless" {
+				if v, ok := rd.Properties.Get(key); ok {
+					rulesetPropsFlattened.Set(key, v)
+				}
+			}
+		}
+
+		// merge in the props from rules
+		// note: this causes an additional copy
+		// of #/definitions/Rules in the final
+		// output. using anyof/allof/oneof and
+		// using a reference to Rules does not
+		// seem to work as a way to "merge"
+		// partially due to additionalProperties
+		// being false
+		if r, ok := s.Definitions["Rules"]; ok {
+			for _, key := range r.Properties.Keys() {
+				if v, ok := r.Properties.Get(key); ok {
+					rulesetPropsFlattened.Set(key, v)
+				}
+			}
+		}
+
+		// clear props on the original definition
+		s.Definitions["Ruleset"].Type = ""
+		s.Definitions["Ruleset"].Properties = nil
+		s.Definitions["Ruleset"].AdditionalProperties = []byte("")
+
+		// at the top level for Ruleset
+		s.Definitions["Ruleset"].OneOf = []*jsonschema.Type{
+			{
+				Properties:           rulesetProps,
+				Type:                 "object",
+				AdditionalProperties: []byte("false"),
+			},
+			{
+				Properties:           rulesetPropsFlattened,
+				Type:                 "object",
+				AdditionalProperties: []byte("false"),
+			},
+		}
+	}
+
+	// -- StepSecret
+	// without changes it would only allow an array
+	// of objects per the struct, but we also allow
+	// an array of strings. this will allow one
+	// or the other.
+
+	// create a temp secret struct
+	secret := &jsonschema.Type{
+		OneOf: []*jsonschema.Type{
+			{
+				Type: "array",
+				Items: &jsonschema.Type{
+					Type:                 "string",
+					AdditionalProperties: []byte("false"),
+				},
+			},
+			{
+				Type: "array",
+				Items: &jsonschema.Type{
+					Ref: "#/definitions/StepSecret",
+				},
+			},
+		},
+	}
+
+	// replace "secrets" field for Step
+	if step, ok := s.Definitions["Step"]; ok {
+		if stepSecrets, ok := step.Properties.Get("secrets"); ok {
+			stepSecret := stepSecrets.(*jsonschema.Type)
+
+			// corry over current description
+			secret.Description = stepSecret.Description
+			step.Properties.Set("secrets", secret)
+		}
+	}
+
+	// replace "secrets" field for Origin
+	if origin, ok := s.Definitions["Origin"]; ok {
+		if originSecrets, ok := origin.Properties.Get("secrets"); ok {
+			// create a copy of the secret
+			originSecretNew := &jsonschema.Type{}
+			*originSecretNew = *secret
+
+			originSecret := originSecrets.(*jsonschema.Type)
+
+			// carry over current description
+			originSecretNew.Description = originSecret.Description
+			origin.Properties.Set("secrets", originSecretNew)
+		}
+	}
+
+	// -- Stages
 	// they claim to be a slice of stage, but
 	// they're really a map/object
 	if stages, ok := s.Properties.Get("stages"); ok {
@@ -131,31 +240,7 @@ func main() {
 		s.Properties.Set("stages", sj)
 	}
 
-	// fix ruleset
-	// rules can currently live at ruleset level or
-	// nested within 'if' (default) or 'unless'.
-	// without changes the struct would only allow
-	// the nested version.
-	if rd, ok := s.Definitions["Ruleset"]; ok {
-		rulesetProps := rd.Properties
-		s.Definitions["Ruleset"].Type = ""
-		s.Definitions["Ruleset"].Properties = nil
-		s.Definitions["Ruleset"].AdditionalProperties = []byte("")
-
-		// at the top level for Ruleset
-		s.Definitions["Ruleset"].OneOf = []*jsonschema.Type{
-			{
-				Ref: "#/definitions/Rules",
-			},
-			{
-				Properties:           rulesetProps,
-				Type:                 "object",
-				AdditionalProperties: []byte("false"),
-			},
-		}
-	}
-
-	// fix ulimit
+	// -- Ulimit
 	// without changes it would only allow an object
 	// per the struct, but we do some special handling
 	// to allow specially formatted strings
@@ -181,29 +266,7 @@ func main() {
 		}
 	}
 
-	// fix StepSecret
-	// without changes it would only allow an array
-	// of objects per the struct, but we also allow
-	// an array of strings
-	if ssd, ok := s.Definitions["StepSecret"]; ok {
-		stepSecretProps := ssd.Properties
-		s.Definitions["StepSecret"].Type = ""
-		s.Definitions["StepSecret"].Properties = nil
-		s.Definitions["StepSecret"].AdditionalProperties = []byte("")
-		s.Definitions["StepSecret"].OneOf = []*jsonschema.Type{
-			{
-				Type:                 "string",
-				AdditionalProperties: []byte("false"),
-			},
-			{
-				Type:                 "object",
-				Properties:           stepSecretProps,
-				AdditionalProperties: []byte("false"),
-			},
-		}
-	}
-
-	// fix volume
+	// -- Volume
 	// without changes it would only allow an object
 	// per the struct, but we do some special handling
 	// to allow specially formatted strings

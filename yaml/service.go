@@ -7,8 +7,9 @@ package yaml
 import (
 	"errors"
 	"fmt"
-	"github.com/docker/distribution/reference"
 	"strings"
+
+	"github.com/docker/distribution/reference"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"

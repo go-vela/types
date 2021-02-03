@@ -7,9 +7,9 @@ package yaml
 import (
 	"errors"
 	"fmt"
+	"github.com/docker/distribution/reference"
 	"strings"
 
-	"github.com/docker/distribution/reference"
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -135,24 +135,27 @@ func (s *ServiceSlice) Validate(pipeline []byte) error {
 			invalid = fmt.Errorf("%w: %s", invalid,
 				fmt.Errorf("no image provided for service:\n%s\n ", string(source)))
 		} else {
-			// parse the image provided into a
-			// named, fully qualified reference
-			//
-			// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
-			_, err := reference.ParseAnyReference(service.Image)
-			if err != nil {
-				// output error with YAML source
-				path, err := yaml.PathString(fmt.Sprintf("$.services[%d].image", i))
+			// ignore images that contain variable interpolation since expansion is not handled until later
+			if !strings.Contains(service.Image, "${") {
+				// parse the image provided into a
+				// named, fully qualified reference
+				//
+				// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
+				_, err := reference.ParseAnyReference(service.Image)
 				if err != nil {
-					return err
-				}
-				source, err := path.AnnotateSource(pipeline, true)
-				if err != nil {
-					return err
-				}
+					// output error with YAML source
+					path, err := yaml.PathString(fmt.Sprintf("$.services[%d].image", i))
+					if err != nil {
+						return err
+					}
+					source, err := path.AnnotateSource(pipeline, true)
+					if err != nil {
+						return err
+					}
 
-				invalid = fmt.Errorf("%w: %s", invalid,
-					fmt.Errorf("invalid image value %s:\n%s\n ", service.Image, string(source)))
+					invalid = fmt.Errorf("%w: %s", invalid,
+						fmt.Errorf("invalid image value %s:\n%s\n ", service.Image, string(source)))
+				}
 			}
 		}
 	}

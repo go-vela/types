@@ -472,26 +472,29 @@ func (s *Secret) validatePlugin(pipeline []byte, i int) (bool, error) {
 			fmt.Errorf("no image provided %s:\n%s\n ", s.Origin.Name, string(source)))
 		isInvalid = true
 	} else {
-		// parse the image provided into a
-		// named, fully qualified reference
-		//
-		// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
-		_, err := reference.ParseAnyReference(s.Origin.Image)
-		if err != nil {
-			// output error with YAML source
-			path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].origin.image", i))
+		// ignore images that contain variable interpolation since expansion is not handled until later
+		if !strings.Contains(s.Origin.Image, "${") {
+			// parse the image provided into a
+			// named, fully qualified reference
+			//
+			// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
+			_, err := reference.ParseAnyReference(s.Origin.Image)
 			if err != nil {
-				return false, fmt.Errorf("failed compile: unable to path index: %w", err)
-			}
+				// output error with YAML source
+				path, err := yaml.PathString(fmt.Sprintf("$.secrets[%d].origin.image", i))
+				if err != nil {
+					return false, fmt.Errorf("failed compile: unable to path index: %w", err)
+				}
 
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
-			}
+				source, err := path.AnnotateSource(pipeline, true)
+				if err != nil {
+					return false, fmt.Errorf("failed compile: unable to annotate: %w", err)
+				}
 
-			invalid = fmt.Errorf("%w: %s", invalid,
-				fmt.Errorf("invalid image value %s:\n%s\n ", s.Origin.Image, string(source)))
-			isInvalid = true
+				invalid = fmt.Errorf("%w: %s", invalid,
+					fmt.Errorf("invalid image value %s:\n%s\n ", s.Origin.Image, string(source)))
+				isInvalid = true
+			}
 		}
 	}
 

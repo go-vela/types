@@ -149,6 +149,11 @@ func TestServiceSlice_Validate(t *testing.T) {
 			file:    "testdata/service/validate/bad_image.yml",
 			wantErr: true,
 		},
+		{
+			name:    "success: image with variable image",
+			file:    "testdata/service/validate/variable_image.yml",
+			wantErr: false,
+		},
 	}
 
 	// run tests

@@ -1,0 +1,3 @@
+services:
+  - name: postgres
+    image: alpine:${VELA_BUILD_COMMIT:0:7}

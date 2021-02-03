@@ -438,6 +438,11 @@ func TestYaml_SecretSlice_Validate(t *testing.T) {
 			file:    "testdata/secret/validate/plugin_bad_image.yml",
 			wantErr: true,
 		},
+		{
+			name:    "success: secret plugin variable image",
+			file:    "testdata/secret/validate/plugin_variable_image.yml",
+			wantErr: false,
+		},
 	}
 
 	// run tests

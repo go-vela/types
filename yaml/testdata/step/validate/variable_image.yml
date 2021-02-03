@@ -1,0 +1,5 @@
+steps:
+  - name: hello
+    image: alpine:${VELA_BUILD_COMMIT:0:7}
+    commands:
+      - echo "hello vela"

@@ -170,7 +170,7 @@ func (s *StepSlice) Validate(pipeline []byte) error {
 			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
 		}
 
-		if len(step.Image) != 0 {
+		if len(step.Image) != 0 && !strings.Contains(step.Image, "${") {
 			// parse the image provided into a
 			// named, fully qualified reference
 			//

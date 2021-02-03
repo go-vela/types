@@ -280,6 +280,11 @@ func TestStepSlice_Validate(t *testing.T) {
 			file:    "testdata/step/validate/bad_image.yml",
 			wantErr: true,
 		},
+		{
+			name:    "success: step with variable image",
+			file:    "testdata/step/validate/variable_image.yml",
+			wantErr: false,
+		},
 	}
 
 	// run tests

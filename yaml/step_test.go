@@ -12,7 +12,7 @@ import (
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 
-	"github.com/goccy/go-yaml"
+	"github.com/buildkite/yaml"
 )
 
 func TestYaml_StepSlice_ToPipeline(t *testing.T) {
@@ -245,62 +245,5 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
 		}
-	}
-}
-
-func TestStepSlice_Validate(t *testing.T) {
-	//setup types
-	tests := []struct {
-		name    string
-		file    string
-		wantErr bool
-	}{
-		{
-			name:    "success: minimal step block",
-			file:    "testdata/step/validate/minimal.yml",
-			wantErr: false,
-		},
-		{
-			name:    "failure: missing commands, environment, parameters, secrets or template yaml tag",
-			file:    "testdata/step/validate/missing.yml",
-			wantErr: true,
-		},
-		{
-			name:    "failure: missing name yaml tag",
-			file:    "testdata/step/validate/missing_name.yml",
-			wantErr: true,
-		},
-		{
-			name:    "failure: missing image yaml tag",
-			file:    "testdata/step/validate/missing_image.yml",
-			wantErr: true,
-		},
-		{
-			name:    "failure: bad image tag data",
-			file:    "testdata/step/validate/bad_image.yml",
-			wantErr: true,
-		},
-	}
-
-	// run tests
-	for _, test := range tests {
-		b := new(Build)
-
-		pipeline, err := ioutil.ReadFile(test.file)
-		if err != nil {
-			t.Errorf("Reading file for Validate returned err: %v", err)
-		}
-
-		err = yaml.Unmarshal(pipeline, b)
-
-		if err != nil {
-			t.Errorf("Validate returned err: %v", err)
-		}
-
-		t.Run(test.name, func(t *testing.T) {
-			if err := b.Steps.Validate(pipeline); (err != nil) != test.wantErr {
-				t.Errorf("Validate is %v, want %v", err, test.wantErr)
-			}
-		})
 	}
 }

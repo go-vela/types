@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildkite/yaml"
 	"github.com/go-vela/types/pipeline"
-	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
@@ -332,138 +332,5 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
 		}
-	}
-}
-
-func TestYaml_SecretSlice_Validate(t *testing.T) {
-	//setup types
-	tests := []struct {
-		name        string
-		file        string
-		corruptYaml bool
-		wantErr     bool
-	}{
-		{
-			name:    "failure: no secret name",
-			file:    "testdata/secret/validate/no_name.yml",
-			wantErr: true,
-		},
-		{
-			name:        "failure: repo secret compiled but has corrupt data",
-			file:        "testdata/secret/validate/no_name.yml",
-			corruptYaml: true,
-			wantErr:     true,
-		},
-		{
-			name:    "success: repo secret block",
-			file:    "testdata/secret/validate/repo.yml",
-			wantErr: false,
-		},
-		{
-			name:        "failure: repo secret compiled but has corrupt data",
-			file:        "testdata/secret/validate/repo_bad_engine.yml",
-			corruptYaml: true,
-			wantErr:     true,
-		},
-		{
-			name:    "failure: repo secret bad engine yaml tag",
-			file:    "testdata/secret/validate/repo_bad_engine.yml",
-			wantErr: true,
-		},
-		{
-			name:    "failure: repo secret bad key yaml tag",
-			file:    "testdata/secret/validate/repo_bad_key.yml",
-			wantErr: true,
-		},
-		{
-			name:    "success: org secret block",
-			file:    "testdata/secret/validate/org.yml",
-			wantErr: false,
-		},
-		{
-			name:    "failure: org secret bad engine yaml tag",
-			file:    "testdata/secret/validate/org_bad_engine.yml",
-			wantErr: true,
-		},
-		{
-			name:        "failure: org secret compiled but has corrupt data",
-			file:        "testdata/secret/validate/org_bad_engine.yml",
-			corruptYaml: true,
-			wantErr:     true,
-		},
-		{
-			name:    "failure: shared secret bad key yaml tag",
-			file:    "testdata/secret/validate/org_bad_key.yml",
-			wantErr: true,
-		},
-		{
-			name:    "success: shared secret block",
-			file:    "testdata/secret/validate/shared.yml",
-			wantErr: false,
-		},
-		{
-			name:    "failure: shared secret bad engine yaml tag",
-			file:    "testdata/secret/validate/shared_bad_engine.yml",
-			wantErr: true,
-		},
-		{
-			name:        "failure: shared secret compiled but has corrupt data",
-			file:        "testdata/secret/validate/shared_bad_engine.yml",
-			corruptYaml: true,
-			wantErr:     true,
-		},
-		{
-			name:    "failure: shared secret bad key yaml tag",
-			file:    "testdata/secret/validate/shared_bad_key.yml",
-			wantErr: true,
-		},
-		{
-			name:    "success: secret plugin block",
-			file:    "testdata/secret/validate/plugin.yml",
-			wantErr: false,
-		},
-		{
-			name:    "failure: secret plugin bad name yaml tag",
-			file:    "testdata/secret/validate/plugin_bad_name.yml",
-			wantErr: true,
-		},
-		{
-			name:        "failure: secret plugin compiled but has corrupt data",
-			file:        "testdata/secret/validate/plugin_bad_name.yml",
-			corruptYaml: true,
-			wantErr:     true,
-		},
-		{
-			name:    "failure: secret plugin bad image yaml tag",
-			file:    "testdata/secret/validate/plugin_bad_image.yml",
-			wantErr: true,
-		},
-	}
-
-	// run tests
-	for _, test := range tests {
-		b := new(Build)
-
-		pipeline, err := ioutil.ReadFile(test.file)
-		if err != nil {
-			t.Errorf("Reading file for Validate returned err: %v", err)
-		}
-
-		err = yaml.Unmarshal(pipeline, b)
-
-		if err != nil {
-			t.Errorf("Validate returned err: %v", err)
-		}
-
-		// set this flag when testing annotation failures
-		if test.corruptYaml {
-			pipeline = []byte("``")
-		}
-
-		t.Run(test.name, func(t *testing.T) {
-			if err := b.Secrets.Validate(pipeline); (err != nil) != test.wantErr {
-				t.Errorf("Validate is %v, want %v", err, test.wantErr)
-			}
-		})
 	}
 }

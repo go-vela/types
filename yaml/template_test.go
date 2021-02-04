@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildkite/yaml"
 	"github.com/go-vela/types/library"
-	"github.com/goccy/go-yaml"
 )
 
 func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {

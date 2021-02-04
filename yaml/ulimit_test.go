@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildkite/yaml"
 	"github.com/go-vela/types/pipeline"
-	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_UlimitSlice_ToPipeline(t *testing.T) {

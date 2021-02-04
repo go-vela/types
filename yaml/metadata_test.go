@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-vela/types/pipeline"
 
-	"github.com/goccy/go-yaml"
+	"github.com/buildkite/yaml"
 )
 
 func TestYaml_Metadata_ToPipeline(t *testing.T) {

@@ -7,7 +7,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/drone/envsubst v1.0.2
 	github.com/ghodss/yaml v1.0.0
-	github.com/goccy/go-yaml v1.8.5
+	github.com/goccy/go-yaml v1.8.8
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/lib/pq v1.9.0
 	github.com/stretchr/testify v1.6.1 // indirect

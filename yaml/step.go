@@ -5,15 +5,11 @@
 package yaml
 
 import (
-	"errors"
-	"fmt"
 	"strings"
 
-	"github.com/docker/distribution/reference"
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
-	"github.com/goccy/go-yaml"
 )
 
 type (
@@ -110,93 +106,6 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// overwrite existing StepSlice
 	*s = StepSlice(*stepSlice)
-
-	return nil
-}
-
-// Validate lints if the steps configuration is valid.
-func (s *StepSlice) Validate(pipeline []byte) error {
-	invalid := errors.New("invalid step block found")
-
-	// iterate through each step and linting yaml tags
-	for i, step := range *s {
-		if step.Name == "clone" || step.Name == "init" {
-			continue
-		}
-
-		// check required fields
-		if len(step.Name) == 0 {
-			path, err := yaml.PathString(fmt.Sprintf("$.steps[%d]", i))
-			if err != nil {
-				return err
-			}
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return err
-			}
-
-			invalid = fmt.Errorf("%w: %s", invalid,
-				fmt.Sprintf("no name provided for step:\n%s\n ", string(source)))
-		}
-
-		if len(step.Image) == 0 && len(step.Template.Name) == 0 {
-			path, err := yaml.PathString(fmt.Sprintf("$.steps[%d]", i))
-			if err != nil {
-				return err
-			}
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return err
-			}
-
-			invalid = fmt.Errorf("%w: %s", invalid,
-				fmt.Errorf("no image or template provided for step %s:\n%s\n ", step.Name, string(source)))
-		}
-
-		if len(step.Commands) == 0 && len(step.Environment) == 0 &&
-			len(step.Parameters) == 0 && len(step.Secrets) == 0 &&
-			len(step.Template.Name) == 0 && !step.Detach {
-			path, err := yaml.PathString(fmt.Sprintf("$.steps[%d]", i))
-			if err != nil {
-				return err
-			}
-
-			source, err := path.AnnotateSource(pipeline, true)
-			if err != nil {
-				return err
-			}
-
-			// nolint:lll // line can not be shortened due to providing detailed error message
-			invalid = fmt.Errorf("%w: %s", invalid, fmt.Errorf("no commands, environment, parameters, secrets or template provided for step %s:\n%s\n ", step.Name, string(source)))
-		}
-
-		if len(step.Image) != 0 {
-			// parse the image provided into a
-			// named, fully qualified reference
-			//
-			// https://pkg.go.dev/github.com/docker/distribution/reference?tab=doc#ParseAnyReference
-			_, err := reference.ParseAnyReference(step.Image)
-			if err != nil {
-				// output error with YAML source
-				path, err := yaml.PathString(fmt.Sprintf("$.steps[%d].image", i))
-				if err != nil {
-					return err
-				}
-				source, err := path.AnnotateSource(pipeline, true)
-				if err != nil {
-					return err
-				}
-
-				invalid = fmt.Errorf("%w: %s", invalid,
-					fmt.Errorf("invalid image value %s:\n%s\n ", step.Image, string(source)))
-			}
-		}
-	}
-
-	// check if only default error exists
-	if !strings.EqualFold(invalid.Error(), "invalid step block found") {
-		return invalid
-	}
 
 	return nil
 }

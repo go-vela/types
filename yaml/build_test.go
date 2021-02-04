@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildkite/yaml"
 	"github.com/go-vela/types/raw"
-	"github.com/goccy/go-yaml"
 )
 
 func TestYaml_Build_UnmarshalYAML(t *testing.T) {
@@ -452,58 +452,5 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
 		}
-	}
-}
-
-func TestYaml_Build_Validate(t *testing.T) {
-	// setup tests
-	tests := []struct {
-		name    string
-		file    string
-		wantErr bool
-	}{
-		{
-			name:    "success: valid steps pipeline",
-			file:    "testdata/build/validate/step.yml",
-			wantErr: false,
-		},
-		{
-			name:    "failure: bad version yaml tag",
-			file:    "testdata/build/validate/bad_version.yml",
-			wantErr: true,
-		},
-		{
-			name:    "failure: bad pipeline (no steps/stages)",
-			file:    "testdata/build/validate/bad_version.yml",
-			wantErr: true,
-		},
-
-		{
-			name:    "failure: bad pipeline (both steps/stages)",
-			file:    "testdata/build/validate/bad_version.yml",
-			wantErr: true,
-		},
-	}
-
-	// run tests
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			b := new(Build)
-
-			pipeline, err := ioutil.ReadFile(test.file)
-			if err != nil {
-				t.Errorf("Reading file for Validate returned err: %v", err)
-			}
-
-			err = yaml.Unmarshal(pipeline, b)
-
-			if err != nil {
-				t.Errorf("Validate returned err: %v", err)
-			}
-
-			if err := b.Validate(pipeline); (err != nil) != test.wantErr {
-				t.Errorf("Validate is %v, want %v", err, test.wantErr)
-			}
-		})
 	}
 }

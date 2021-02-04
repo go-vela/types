@@ -3,6 +3,7 @@ module github.com/go-vela/types
 go 1.15
 
 require (
+	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/drone/envsubst v1.0.2

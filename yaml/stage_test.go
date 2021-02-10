@@ -398,8 +398,8 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("MarshalYAML is %v, want %v", got, test.want)
+		if !reflect.DeepEqual(got2, test.want) {
+			t.Errorf("MarshalYAML is %v, want %v", got2, test.want)
 		}
 	}
 }

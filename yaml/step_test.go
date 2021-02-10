@@ -247,3 +247,108 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_StepSlice_MarshalYAML(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StepSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/step.yml",
+			want: &StepSlice{
+				{
+					Commands: raw.StringSlice{"./gradlew downloadDependencies"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "install",
+					Image: "openjdk:latest",
+					Pull:  "always",
+				},
+				{
+					Commands: raw.StringSlice{"./gradlew check"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "test",
+					Image: "openjdk:latest",
+					Pull:  "always",
+				},
+				{
+					Commands: raw.StringSlice{"./gradlew build"},
+					Environment: raw.StringSliceMap{
+						"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+						"GRADLE_USER_HOME": ".gradle",
+					},
+					Name:  "build",
+					Image: "openjdk:latest",
+					Pull:  "always",
+				},
+				{
+					Name:  "docker_build",
+					Image: "plugins/docker:18.09",
+					Pull:  "always",
+					Parameters: map[string]interface{}{
+						"registry": "index.docker.io",
+						"repo":     "github/octocat",
+						"tags":     []interface{}{"latest", "dev"},
+					},
+				},
+				{
+					Name: "templated_publish",
+					Pull: "not_present",
+					Template: StepTemplate{
+						Name: "docker_publish",
+						Variables: map[string]interface{}{
+							"registry": "index.docker.io",
+							"repo":     "github/octocat",
+							"tags":     []interface{}{"latest", "dev"},
+						},
+					},
+				},
+			},
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := new(StepSlice)
+		got2 := new(StepSlice)
+
+		b, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file: %v", err)
+		}
+
+		err = yaml.Unmarshal(b, got)
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
+
+			continue
+		}
+		out, err := yaml.Marshal(got)
+		if err != nil {
+			t.Errorf("MarshalYAML returned err: %v", err)
+		}
+		err = yaml.Unmarshal(out, got2)
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("MarshalYAML is %v, want %v", got2, test.want)
+		}
+	}
+}

@@ -281,3 +281,125 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
+	// setup types
+	var (
+		b   []byte
+		err error
+	)
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		file    string
+		want    *StageSlice
+	}{
+		{
+			failure: false,
+			file:    "testdata/stage.yml",
+			want: &StageSlice{
+				{
+					Name:  "dependencies",
+					Needs: []string{"clone"},
+					Steps: StepSlice{
+						{
+							Commands: []string{"./gradlew downloadDependencies"},
+							Environment: map[string]string{
+								"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+								"GRADLE_USER_HOME": ".gradle",
+							},
+							Image: "openjdk:latest",
+							Name:  "install",
+							Pull:  "always",
+						},
+					},
+				},
+				{
+					Name:  "test",
+					Needs: []string{"dependencies"},
+					Steps: StepSlice{
+						{
+							Commands: []string{"./gradlew check"},
+							Environment: map[string]string{
+								"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+								"GRADLE_USER_HOME": ".gradle",
+							},
+							Name:  "test",
+							Image: "openjdk:latest",
+							Pull:  "always",
+						},
+					},
+				},
+				{
+					Name:  "build",
+					Needs: []string{"dependencies"},
+					Steps: StepSlice{
+						{
+							Commands: []string{"./gradlew build"},
+							Environment: map[string]string{
+								"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+								"GRADLE_USER_HOME": ".gradle",
+							},
+							Name:  "build",
+							Image: "openjdk:latest",
+							Pull:  "always",
+						},
+					},
+				},
+			},
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "",
+			want:    nil,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := new(StageSlice)
+		got2 := new(StageSlice)
+
+		if len(test.file) > 0 {
+			b, err = ioutil.ReadFile(test.file)
+			if err != nil {
+				t.Errorf("unable to read file: %v", err)
+			}
+		} else {
+			b = []byte("- foo")
+		}
+
+		err = yaml.Unmarshal(b, got)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("UnmarshalYAML should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
+
+		out, err := yaml.Marshal(got)
+		if err != nil {
+			t.Errorf("MarshalYAML returned err: %v", err)
+		}
+		err = yaml.Unmarshal(out, got2)
+		if err != nil {
+			t.Errorf("UnmarshalYAML returned err: %v", err)
+		}
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("MarshalYAML is %v, want %v", got, test.want)
+		}
+	}
+}

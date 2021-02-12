@@ -133,7 +133,7 @@ func (s *Step) MergeEnv(environment map[string]string) error {
 
 	// iterate through all environment variables provided
 	for key, value := range environment {
-		// set or update the container environment variable
+		// set or update the step environment variable
 		s.Environment[key] = value
 	}
 

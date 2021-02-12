@@ -120,7 +120,7 @@ func (s *Service) MergeEnv(environment map[string]string) error {
 
 	// iterate through all environment variables provided
 	for key, value := range environment {
-		// set or update the container environment variable
+		// set or update the service environment variable
 		s.Environment[key] = value
 	}
 

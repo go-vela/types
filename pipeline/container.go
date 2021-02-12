@@ -202,8 +202,8 @@ func (c *Container) Execute(r *RuleData) bool {
 }
 
 // MergeEnv takes a list of environment variables and attempts
-// to set them in the secret environment. If the environment
-// variable already exists in the secret, than this will
+// to set them in the container environment. If the environment
+// variable already exists in the container, than this will
 // overwrite the existing environment variable.
 func (c *Container) MergeEnv(environment map[string]string) error {
 	// check if the container is empty

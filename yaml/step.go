@@ -5,6 +5,7 @@
 package yaml
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -106,6 +107,35 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// overwrite existing StepSlice
 	*s = StepSlice(*stepSlice)
+
+	return nil
+}
+
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the step environment. If the environment
+// variable already exists in the step, than this will
+// overwrite the existing environment variable.
+func (s *Step) MergeEnv(environment map[string]string) error {
+	// check if the step container is empty
+	if s == nil || s.Environment == nil {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for step %s", s.Name)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the container environment variable
+		s.Environment[key] = value
+	}
 
 	return nil
 }

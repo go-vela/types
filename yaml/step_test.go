@@ -247,3 +247,68 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_Step_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		step        *Step
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			step: &Step{
+				Commands:    []string{"echo hello"},
+				Detach:      false,
+				Entrypoint:  []string{"/bin/sh"},
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "alpine:latest",
+				Name:        "echo",
+				Privileged:  false,
+				Pull:        "not_present",
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			step:        &Step{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			step:        nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			step: &Step{
+				Commands:    []string{"echo hello"},
+				Detach:      false,
+				Entrypoint:  []string{"/bin/sh"},
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "alpine:latest",
+				Name:        "echo",
+				Privileged:  false,
+				Pull:        "not_present",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.step.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}

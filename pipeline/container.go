@@ -201,6 +201,35 @@ func (c *Container) Execute(r *RuleData) bool {
 	return execute
 }
 
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the secret environment. If the environment
+// variable already exists in the secret, than this will
+// overwrite the existing environment variable.
+func (c *Container) MergeEnv(environment map[string]string) error {
+	// check if the container is empty
+	if c.Empty() {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for container %s", c.ID)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the container environment variable
+		c.Environment[key] = value
+	}
+
+	return nil
+}
+
 // Sanitize cleans the fields for every step in the pipeline so they
 // can be safely executed on the worker. The fields are sanitized
 // based off of the provided runtime driver which is setup on every

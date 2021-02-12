@@ -671,6 +671,69 @@ func TestPipeline_Container_Execute(t *testing.T) {
 	}
 }
 
+func TestPipeline_Container_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		container   *Container
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			container: &Container{
+				ID:          "step_github_octocat_1_init",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "#init",
+				Name:        "init",
+				Number:      1,
+				Pull:        "always",
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			container:   &Container{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			container:   nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			container: &Container{
+				ID:          "step_github_octocat_1_init",
+				Directory:   "/home/github/octocat",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "#init",
+				Name:        "init",
+				Number:      1,
+				Pull:        "always",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.container.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}
+
 func TestPipeline_Container_Substitute(t *testing.T) {
 	// setup tests
 	tests := []struct {

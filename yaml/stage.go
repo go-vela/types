@@ -23,7 +23,7 @@ type (
 	// nolint:lll // jsonschema will cause long lines
 	Stage struct {
 		Name  string          `yaml:"name,omitempty"  json:"name,omitempty"  jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/"`
-		Needs raw.StringSlice `yaml:"needs,omitempty" json:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"`
+		Needs raw.StringSlice `yaml:"needs,omitempty,flow" json:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/needs/"`
 		Steps StepSlice       `yaml:"steps,omitempty" json:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/concepts/pipeline/stages/steps/"`
 	}
 )
@@ -79,7 +79,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 
 		// implicitly set the stage `needs` if empty
-		if len(stage.Needs) == 0 {
+		if len(stage.Needs) == 0 && stage.Name != "clone" && stage.Name != "init" {
 			stage.Needs = []string{"clone"}
 		}
 
@@ -88,4 +88,27 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	return nil
+}
+
+// MarshalYAML implements the marshaler interface for the StageSlice type.
+func (s StageSlice) MarshalYAML() (interface{}, error) {
+	// map slice to return as marshaled output
+	var output yaml.MapSlice
+
+	// loop over the input stages
+	for _, inputStage := range s {
+		// create a new stage
+		outputStage := new(Stage)
+
+		// add the existing needs to the new stage
+		outputStage.Needs = inputStage.Needs
+
+		// add the existing steps to the new stage
+		outputStage.Steps = inputStage.Steps
+
+		// append stage to MapSlice
+		output = append(output, yaml.MapItem{Key: inputStage.Name, Value: outputStage})
+	}
+
+	return output, nil
 }

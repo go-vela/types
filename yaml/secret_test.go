@@ -13,6 +13,89 @@ import (
 	"github.com/go-vela/types/pipeline"
 )
 
+func TestYaml_Origin_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		origin      *Origin
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			origin: &Origin{
+				Name:        "vault",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "target/vela-vault:latest",
+				Parameters: map[string]interface{}{
+					"addr":        "vault.example.com",
+					"auth_method": "token",
+					"items": []interface{}{
+						map[string]string{"source": "secret/docker", "path": "docker"},
+					},
+				},
+				Pull: "always",
+				Secrets: StepSecretSlice{
+					{
+						Source: "vault_token",
+						Target: "vault_token",
+					},
+				},
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			origin:      &Origin{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			origin:      nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			origin: &Origin{
+				Name:        "vault",
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "target/vela-vault:latest",
+				Parameters: map[string]interface{}{
+					"addr":        "vault.example.com",
+					"auth_method": "token",
+					"items": []interface{}{
+						map[string]string{"source": "secret/docker", "path": "docker"},
+					},
+				},
+				Pull: "always",
+				Secrets: StepSecretSlice{
+					{
+						Source: "vault_token",
+						Target: "vault_token",
+					},
+				},
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.origin.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}
+
 func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 	// setup tests
 	tests := []struct {

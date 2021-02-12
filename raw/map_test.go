@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/goccy/go-yaml"
+	"github.com/buildkite/yaml"
 )
 
 func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {

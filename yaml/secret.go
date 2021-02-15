@@ -124,6 +124,11 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 // Empty returns true if the provided origin is empty.
 func (o *Origin) Empty() bool {
+	// return true if the origin is nil
+	if o == nil {
+		return true
+	}
+
 	// return true if every origin field is empty
 	if o.Environment == nil &&
 		len(o.Image) == 0 &&
@@ -135,6 +140,35 @@ func (o *Origin) Empty() bool {
 	}
 
 	return false
+}
+
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the secret environment. If the environment
+// variable already exists in the secret, than this will
+// overwrite the existing environment variable.
+func (o *Origin) MergeEnv(environment map[string]string) error {
+	// check if the secret container is empty
+	if o.Empty() {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for secret %s", o.Name)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the secret environment variable
+		o.Environment[key] = value
+	}
+
+	return nil
 }
 
 // ToPipeline converts the Origin type

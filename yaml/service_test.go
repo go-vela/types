@@ -121,3 +121,62 @@ func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_Service_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		service     *Service
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			service: &Service{
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "postgres:latest",
+				Name:        "postgres",
+				Ports:       []string{"5432:5432"},
+				Pull:        "not_present",
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			service:     &Service{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			service:     nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			service: &Service{
+				Environment: map[string]string{"FOO": "bar"},
+				Image:       "postgres:latest",
+				Name:        "postgres",
+				Ports:       []string{"5432:5432"},
+				Pull:        "not_present",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.service.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}

@@ -5,6 +5,7 @@
 package yaml
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -93,6 +94,35 @@ func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// overwrite existing ServiceSlice
 	*s = ServiceSlice(*serviceSlice)
+
+	return nil
+}
+
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the service environment. If the environment
+// variable already exists in the service, than this will
+// overwrite the existing environment variable.
+func (s *Service) MergeEnv(environment map[string]string) error {
+	// check if the service container is empty
+	if s == nil || s.Environment == nil {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for service %s", s.Name)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the service environment variable
+		s.Environment[key] = value
+	}
 
 	return nil
 }

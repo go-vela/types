@@ -5,9 +5,13 @@
 package database
 
 import (
+	"bytes"
+	"compress/zlib"
 	"database/sql"
 	"errors"
+	"io/ioutil"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 )
 
@@ -33,6 +37,61 @@ type Log struct {
 	ServiceID sql.NullInt64 `sql:"service_id"`
 	StepID    sql.NullInt64 `sql:"step_id"`
 	Data      []byte        `sql:"data"`
+}
+
+// Compress does stuff...
+func (l *Log) Compress() error {
+	// create new buffer for storing compressed log data
+	b := new(bytes.Buffer)
+
+	// create new writer for writing compressed log data
+	w, err := zlib.NewWriterLevel(b, constants.CompressionLevel)
+	if err != nil {
+		return err
+	}
+
+	// write compressed log data to buffer
+	_, err = w.Write(l.Data)
+	if err != nil {
+		return err
+	}
+
+	// close the writer
+	//
+	// compressed bytes are not flushed until the
+	// writer is closed or explicitly flushed
+	w.Close()
+
+	// overwrite database log data with compressed log data
+	l.Data = b.Bytes()
+
+	return nil
+}
+
+// Decompress does stuff...
+func (l *Log) Decompress() error {
+	// create new buffer from the compressed log data
+	b := bytes.NewBuffer(l.Data)
+
+	// create new reader for reading the compressed log data
+	r, err := zlib.NewReader(b)
+	if err != nil {
+		return err
+	}
+
+	// defer closing the reader
+	defer r.Close()
+
+	// capture decompressed log data from the compressed log data
+	data, err := ioutil.ReadAll(r)
+	if err != nil {
+		return err
+	}
+
+	// overwrite compressed log data with decompressed log data
+	l.Data = data
+
+	return nil
 }
 
 // Nullify ensures the valid flag for

@@ -39,7 +39,10 @@ type Log struct {
 	Data      []byte        `sql:"data"`
 }
 
-// Compress does stuff...
+// Compress will manipulate the existing data for the
+// log entry by compressing that data. This produces
+// a significantly smaller amount of data that is
+// required to store in the system.
 func (l *Log) Compress() error {
 	// create new buffer for storing compressed log data
 	b := new(bytes.Buffer)
@@ -68,7 +71,10 @@ func (l *Log) Compress() error {
 	return nil
 }
 
-// Decompress does stuff...
+// Decompress will manipulate the existing data for the
+// log entry by decompressing that data. This allows us
+// to have a significantly smaller amount of data that is
+// stored in the system.
 func (l *Log) Decompress() error {
 	// create new buffer from the compressed log data
 	b := bytes.NewBuffer(l.Data)

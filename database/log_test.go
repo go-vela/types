@@ -12,6 +12,77 @@ import (
 	"github.com/go-vela/types/library"
 )
 
+func TestDatabase_Log_Compress(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		failure bool
+		log     *Log
+	}{
+		{
+			failure: false,
+			log:     testLog(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.log.Compress()
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Compress should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Compress returned err: %v", err)
+		}
+	}
+}
+
+func TestDatabase_Log_Decompress(t *testing.T) {
+	// setup types
+	l := testLog()
+	err := l.Compress()
+	if err != nil {
+		t.Errorf("unable to compress log: %v", err)
+	}
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		log     *Log
+	}{
+		{
+			failure: false,
+			log:     l,
+		},
+		{
+			failure: true,
+			log:     testLog(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.log.Decompress()
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Decompress should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Decompress returned err: %v", err)
+		}
+	}
+}
+
 func TestDatabase_Log_Nullify(t *testing.T) {
 	// setup types
 	var l *Log

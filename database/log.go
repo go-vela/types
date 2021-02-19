@@ -13,6 +13,7 @@ import (
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -63,7 +64,10 @@ func (l *Log) Compress() error {
 	//
 	// compressed bytes are not flushed until the
 	// writer is closed or explicitly flushed
-	w.Close()
+	err = w.Close()
+	if err != nil {
+		logrus.Errorf("unable to close compression buffer: %v", err)
+	}
 
 	// overwrite database log data with compressed log data
 	l.Data = b.Bytes()

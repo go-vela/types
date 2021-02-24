@@ -11,7 +11,6 @@ import (
 	"errors"
 	"io/ioutil"
 
-	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 	"github.com/sirupsen/logrus"
 )
@@ -44,12 +43,12 @@ type Log struct {
 // log entry by compressing that data. This produces
 // a significantly smaller amount of data that is
 // required to store in the system.
-func (l *Log) Compress() error {
+func (l *Log) Compress(level int) error {
 	// create new buffer for storing compressed log data
 	b := new(bytes.Buffer)
 
 	// create new writer for writing compressed log data
-	w, err := zlib.NewWriterLevel(b, constants.CompressionLevel)
+	w, err := zlib.NewWriterLevel(b, level)
 	if err != nil {
 		return err
 	}

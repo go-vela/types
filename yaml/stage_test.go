@@ -205,7 +205,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 				},
 				{
 					Name:  "test",
-					Needs: []string{"dependencies"},
+					Needs: []string{"clone", "dependencies"},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -221,7 +221,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 				},
 				{
 					Name:  "build",
-					Needs: []string{"dependencies"},
+					Needs: []string{"clone", "dependencies"},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},
@@ -317,7 +317,7 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 				},
 				{
 					Name:  "test",
-					Needs: []string{"dependencies"},
+					Needs: []string{"clone", "dependencies"},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -333,7 +333,7 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 				},
 				{
 					Name:  "build",
-					Needs: []string{"dependencies"},
+					Needs: []string{"clone", "dependencies"},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},

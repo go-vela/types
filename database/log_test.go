@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 )
 
@@ -16,17 +17,69 @@ func TestDatabase_Log_Compress(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		failure bool
+		level   int
 		log     *Log
 	}{
 		{
 			failure: false,
+			level:   constants.CompressionNegOne,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionZero,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionOne,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionTwo,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionThree,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionFour,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionFive,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionSix,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionSeven,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionEight,
+			log:     testLog(),
+		},
+		{
+			failure: false,
+			level:   constants.CompressionNine,
 			log:     testLog(),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		err := test.log.Compress()
+		err := test.log.Compress(test.level)
 
 		if test.failure {
 			if err == nil {
@@ -45,7 +98,7 @@ func TestDatabase_Log_Compress(t *testing.T) {
 func TestDatabase_Log_Decompress(t *testing.T) {
 	// setup types
 	l := testLog()
-	err := l.Compress()
+	err := l.Compress(constants.CompressionThree)
 	if err != nil {
 		t.Errorf("unable to compress log: %v", err)
 	}

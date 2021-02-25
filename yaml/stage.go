@@ -78,9 +78,17 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			stage.Name = fmt.Sprintf("%v", v.Key)
 		}
 
-		// implicitly set the stage `needs` if empty
-		if len(stage.Needs) == 0 && stage.Name != "clone" && stage.Name != "init" {
-			stage.Needs = []string{"clone"}
+		// implicitly set the stage `needs`
+		if stage.Name != "clone" && stage.Name != "init" {
+			// add clone if not present
+			stage.Needs = func(needs []string) []string {
+				for _, s := range needs {
+					if s == "clone" {
+						return needs
+					}
+				}
+				return append(needs, "clone")
+			}(stage.Needs)
 		}
 
 		// append stage to stage slice

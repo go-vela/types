@@ -263,7 +263,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 					},
 					{
 						Name:  "test",
-						Needs: []string{"dependencies"},
+						Needs: []string{"dependencies", "clone"},
 						Steps: StepSlice{
 							{
 								Commands: raw.StringSlice{"./gradlew check"},
@@ -298,7 +298,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 					},
 					{
 						Name:  "build",
-						Needs: []string{"dependencies"},
+						Needs: []string{"dependencies", "clone"},
 						Steps: StepSlice{
 							{
 								Commands: raw.StringSlice{"./gradlew build"},

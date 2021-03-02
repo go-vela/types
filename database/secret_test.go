@@ -15,7 +15,6 @@ import (
 func TestDatabase_Secret_Decrypt(t *testing.T) {
 	// setup types
 
-	// nolint: gosec // ignore false positive
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
 
 	s := testSecret()
@@ -68,7 +67,6 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 func TestDatabase_Secret_Encrypt(t *testing.T) {
 	// setup types
 
-	// nolint: gosec // ignore false positive
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
 
 	// setup tests

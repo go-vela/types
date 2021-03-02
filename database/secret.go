@@ -5,8 +5,13 @@
 package database
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"errors"
+	"io"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -53,6 +58,78 @@ type Secret struct {
 	Images       pq.StringArray `sql:"images"`
 	Events       pq.StringArray `sql:"events"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
+}
+
+// Decrypt does stuff...
+func (s *Secret) Decrypt(key string) error {
+	// base64 decode the encrypted secret value
+	decoded, err := base64.StdEncoding.DecodeString(s.Value.String)
+	if err != nil {
+		return err
+	}
+
+	// within the validate process we enforce a 64 bit key which
+	// ensures all secrets are decrypted with AES-256:
+	// https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		return err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return err
+	}
+
+	// nonce is an arbitrary number used to to ensure that
+	// old communications cannot be reused in replay attacks.
+	// https://en.wikipedia.org/wiki/Cryptographic_nonce
+	nonceSize := gcm.NonceSize()
+
+	nonce, ciphertext := decoded[:nonceSize], decoded[nonceSize:]
+
+	decrypted, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return err
+	}
+
+	s.Value = sql.NullString{String: string(decrypted), Valid: true}
+
+	return nil
+}
+
+// Encrypt does stuff...
+func (s *Secret) Encrypt(key string) error {
+	// within the validate process we enforce a 64 bit key which
+	// ensures all secrets are encrypted with AES-256:
+	// https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
+	block, err := aes.NewCipher([]byte(key))
+	if err != nil {
+		return err
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return err
+	}
+
+	// nonce is an arbitrary number used to to ensure that
+	// old communications cannot be reused in replay attacks.
+	// https://en.wikipedia.org/wiki/Cryptographic_nonce
+	nonce := make([]byte, gcm.NonceSize())
+
+	_, err = io.ReadFull(rand.Reader, nonce)
+	if err != nil {
+		return err
+	}
+
+	// encrypt the data with the randomly generated nonce
+	encrypted := gcm.Seal(nonce, nonce, []byte(s.Value.String), nil)
+
+	// encode the encrypt data to make it network safe
+	s.Value = sql.NullString{String: base64.StdEncoding.EncodeToString(encrypted), Valid: true}
+
+	return nil
 }
 
 // Nullify ensures the valid flag for

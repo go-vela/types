@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"reflect"
 	"testing"
 
@@ -21,6 +22,12 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 	err := s.Encrypt(key)
 	if err != nil {
 		t.Errorf("unable to encrypt secret: %v", err)
+	}
+
+	unencrypted := testSecret()
+	unencrypted.Value = sql.NullString{
+		String: base64.StdEncoding.EncodeToString([]byte("b")),
+		Valid:  true,
 	}
 
 	// setup tests
@@ -43,6 +50,11 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 			failure: true,
 			key:     key,
 			secret:  *testSecret(),
+		},
+		{
+			failure: true,
+			key:     key,
+			secret:  *unencrypted,
 		},
 	}
 

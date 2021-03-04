@@ -6,11 +6,116 @@ package database
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"reflect"
 	"testing"
 
 	"github.com/go-vela/types/library"
 )
+
+func TestDatabase_Secret_Decrypt(t *testing.T) {
+	// setup types
+
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+
+	s := testSecret()
+	err := s.Encrypt(key)
+	if err != nil {
+		t.Errorf("unable to encrypt secret: %v", err)
+	}
+
+	unencrypted := testSecret()
+	unencrypted.Value = sql.NullString{
+		String: base64.StdEncoding.EncodeToString([]byte("b")),
+		Valid:  true,
+	}
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		key     string
+		secret  Secret
+	}{
+		{
+			failure: false,
+			key:     key,
+			secret:  *s,
+		},
+		{
+			failure: true,
+			key:     "",
+			secret:  *s,
+		},
+		{
+			failure: true,
+			key:     key,
+			secret:  *testSecret(),
+		},
+		{
+			failure: true,
+			key:     key,
+			secret:  *unencrypted,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.secret.Decrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Decrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Decrypt returned err: %v", err)
+		}
+	}
+}
+
+func TestDatabase_Secret_Encrypt(t *testing.T) {
+	// setup types
+
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		key     string
+		secret  *Secret
+	}{
+		{
+			failure: false,
+			key:     key,
+			secret:  testSecret(),
+		},
+		{
+			failure: true,
+			key:     "",
+			secret:  testSecret(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.secret.Encrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Encrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Encrypt returned err: %v", err)
+		}
+	}
+}
 
 func TestDatabase_Secret_Nullify(t *testing.T) {
 	// setup types

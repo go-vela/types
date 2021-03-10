@@ -70,6 +70,8 @@ type Repo struct {
 // base64 decoding that value. Then, a AES-256 cipher
 // block is created from the encryption key in order to
 // decrypt the base64 decoded secret value.
+//
+// nolint: dupl // ignore similar code
 func (r *Repo) Decrypt(key string) error {
 	// base64 decode the encrypted repo hash
 	decoded, err := base64.StdEncoding.DecodeString(r.Hash.String)

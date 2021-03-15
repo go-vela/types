@@ -6,12 +6,119 @@ package database
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"reflect"
 	"strconv"
 	"testing"
 
 	"github.com/go-vela/types/library"
 )
+
+func TestDatabase_User_Decrypt(t *testing.T) {
+	// setup types
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+
+	s := testUser()
+	err := s.Encrypt(key)
+	if err != nil {
+		t.Errorf("unable to encrypt secret: %v", err)
+	}
+
+	unencrypted := testUser()
+	unencrypted.Token = sql.NullString{
+		String: base64.StdEncoding.EncodeToString([]byte("a")),
+		Valid:  true,
+	}
+	unencrypted.RefreshToken = sql.NullString{
+		String: base64.StdEncoding.EncodeToString([]byte("b")),
+		Valid:  true,
+	}
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		key     string
+		user    User
+	}{
+		{
+			failure: false,
+			key:     key,
+			user:    *s,
+		},
+		{
+			failure: true,
+			key:     "",
+			user:    *s,
+		},
+		{
+			failure: true,
+			key:     key,
+			user:    *testUser(),
+		},
+		{
+			failure: true,
+			key:     key,
+			user:    *unencrypted,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.user.Decrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Decrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Decrypt returned err: %v", err)
+		}
+	}
+}
+
+func TestDatabase_User_Encrypt(t *testing.T) {
+	// setup types
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+
+	// setup tests
+	tests := []struct {
+		failure bool
+		key     string
+		user    *User
+	}{
+		{
+			failure: false,
+			key:     key,
+			user:    testUser(),
+		},
+		{
+			failure: true,
+			key:     "",
+			user:    testUser(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.user.Encrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Encrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Encrypt returned err: %v", err)
+		}
+	}
+}
 
 func TestDatabase_User_Nullify(t *testing.T) {
 	// setup types

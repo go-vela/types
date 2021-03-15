@@ -65,6 +65,8 @@ type Secret struct {
 // base64 decoding that value. Then, a AES-256 cipher
 // block is created from the encryption key in order to
 // decrypt the base64 decoded secret value.
+//
+// nolint: dupl // ignore similar code
 func (s *Secret) Decrypt(key string) error {
 	// base64 decode the encrypted secret value
 	decoded, err := base64.StdEncoding.DecodeString(s.Value.String)

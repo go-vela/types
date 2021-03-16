@@ -6,7 +6,6 @@ package database
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"reflect"
 	"testing"
 
@@ -15,19 +14,12 @@ import (
 
 func TestDatabase_Secret_Decrypt(t *testing.T) {
 	// setup types
-
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
 
-	s := testSecret()
-	err := s.Encrypt(key)
+	encrypted := testSecret()
+	err := encrypted.Encrypt(key)
 	if err != nil {
 		t.Errorf("unable to encrypt secret: %v", err)
-	}
-
-	unencrypted := testSecret()
-	unencrypted.Value = sql.NullString{
-		String: base64.StdEncoding.EncodeToString([]byte("b")),
-		Valid:  true,
 	}
 
 	// setup tests
@@ -39,22 +31,17 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 		{
 			failure: false,
 			key:     key,
-			secret:  *s,
+			secret:  *encrypted,
 		},
 		{
 			failure: true,
 			key:     "",
-			secret:  *s,
+			secret:  *encrypted,
 		},
 		{
 			failure: true,
 			key:     key,
 			secret:  *testSecret(),
-		},
-		{
-			failure: true,
-			key:     key,
-			secret:  *unencrypted,
 		},
 	}
 
@@ -78,7 +65,6 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 
 func TestDatabase_Secret_Encrypt(t *testing.T) {
 	// setup types
-
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
 
 	// setup tests

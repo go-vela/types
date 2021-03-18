@@ -6,7 +6,6 @@ package database
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"reflect"
 	"strconv"
 	"testing"
@@ -18,20 +17,10 @@ func TestDatabase_User_Decrypt(t *testing.T) {
 	// setup types
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
 
-	s := testUser()
-	err := s.Encrypt(key)
+	encrypted := testUser()
+	err := encrypted.Encrypt(key)
 	if err != nil {
-		t.Errorf("unable to encrypt secret: %v", err)
-	}
-
-	unencrypted := testUser()
-	unencrypted.Token = sql.NullString{
-		String: base64.StdEncoding.EncodeToString([]byte("a")),
-		Valid:  true,
-	}
-	unencrypted.RefreshToken = sql.NullString{
-		String: base64.StdEncoding.EncodeToString([]byte("b")),
-		Valid:  true,
+		t.Errorf("unable to encrypt user: %v", err)
 	}
 
 	// setup tests
@@ -43,22 +32,17 @@ func TestDatabase_User_Decrypt(t *testing.T) {
 		{
 			failure: false,
 			key:     key,
-			user:    *s,
+			user:    *encrypted,
 		},
 		{
 			failure: true,
 			key:     "",
-			user:    *s,
+			user:    *encrypted,
 		},
 		{
 			failure: true,
 			key:     key,
 			user:    *testUser(),
-		},
-		{
-			failure: true,
-			key:     key,
-			user:    *unencrypted,
 		},
 	}
 

@@ -5,14 +5,9 @@
 package database
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
 	"database/sql"
 	"encoding/base64"
 	"errors"
-	"fmt"
-	"io"
 	"strings"
 
 	"github.com/go-vela/types/constants"
@@ -65,8 +60,6 @@ type Secret struct {
 // base64 decoding that value. Then, a AES-256 cipher
 // block is created from the encryption key in order to
 // decrypt the base64 decoded secret value.
-//
-// nolint: dupl // ignore similar code
 func (s *Secret) Decrypt(key string) error {
 	// base64 decode the encrypted secret value
 	decoded, err := base64.StdEncoding.DecodeString(s.Value.String)
@@ -74,49 +67,17 @@ func (s *Secret) Decrypt(key string) error {
 		return err
 	}
 
-	// create a new cipher block from the encryption key
-	//
-	// the key should have a length of 64 bits to ensure
-	// we are using the AES-256 standard
-	//
-	// https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return err
-	}
-
-	// creates a new Galois Counter Mode cipher block
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return err
-	}
-
-	// nonce is an arbitrary number used to to ensure that
-	// old communications cannot be reused in replay attacks.
-	//
-	// https://en.wikipedia.org/wiki/Cryptographic_nonce
-	nonceSize := gcm.NonceSize()
-
-	// verify the decoded secret length is greater than nonce
-	//
-	// if the base64 decoded secret value is less than the
-	// nonce size, then we can reasonably assume the secret
-	// hasn't been encrypted yet.
-	if len(decoded) < nonceSize {
-		return fmt.Errorf("invalid length for decoded secret value")
-	}
-
-	// capture nonce and ciphertext from decoded secret value
-	nonce, ciphertext := decoded[:nonceSize], decoded[nonceSize:]
-
-	// decrypt the decoded secret value from the ciphertext
-	decrypted, err := gcm.Open(nil, nonce, ciphertext, nil)
+	// decrypt the base64 decoded secret value
+	decrypted, err := decrypt(key, decoded)
 	if err != nil {
 		return err
 	}
 
 	// set the decrypted secret value
-	s.Value = sql.NullString{String: string(decrypted), Valid: true}
+	s.Value = sql.NullString{
+		String: string(decrypted),
+		Valid:  true,
+	}
 
 	return nil
 }
@@ -127,40 +88,17 @@ func (s *Secret) Decrypt(key string) error {
 // secret value is base64 encoded for transport across
 // network boundaries.
 func (s *Secret) Encrypt(key string) error {
-	// create a new cipher block from the encryption key
-	//
-	// the key should have a length of 64 bits to ensure
-	// we are using the AES-256 standard
-	//
-	// https://en.wikipedia.org/wiki/Advanced_Encryption_Standard
-	block, err := aes.NewCipher([]byte(key))
+	// encrypt the secret value
+	encrypted, err := encrypt(key, []byte(s.Value.String))
 	if err != nil {
 		return err
 	}
-
-	// creates a new Galois Counter Mode cipher block
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return err
-	}
-
-	// nonce is an arbitrary number used to to ensure that
-	// old communications cannot be reused in replay attacks.
-	//
-	// https://en.wikipedia.org/wiki/Cryptographic_nonce
-	nonce := make([]byte, gcm.NonceSize())
-
-	// set nonce from a cryptographically secure random number generator
-	_, err = io.ReadFull(rand.Reader, nonce)
-	if err != nil {
-		return err
-	}
-
-	// encrypt the data with the randomly generated nonce
-	encrypted := gcm.Seal(nonce, nonce, []byte(s.Value.String), nil)
 
 	// base64 encode the encrypted secret data to make it network safe
-	s.Value = sql.NullString{String: base64.StdEncoding.EncodeToString(encrypted), Valid: true}
+	s.Value = sql.NullString{
+		String: base64.StdEncoding.EncodeToString(encrypted),
+		Valid:  true,
+	}
 
 	return nil
 }

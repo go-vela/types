@@ -23,7 +23,7 @@ func sanitize(v interface{}) error {
 	buffer := bytes.NewBufferString(object)
 
 	// check if the buffer bytes are different than the HTML sanitized bytes
-	if bytes.Compare(buffer.Bytes(), p.SanitizeBytes(buffer.Bytes())) != 0 {
+	if !bytes.Equal(buffer.Bytes(), p.SanitizeBytes(buffer.Bytes())) {
 		return fmt.Errorf("resource failed HTML input validation")
 	}
 

@@ -259,7 +259,7 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 			},
 		},
 		{ // invalid HTML in fields set for repo
-			failure: false,
+			failure: true,
 			repo: &Repo{
 				ID:         sql.NullInt64{Int64: 1, Valid: true},
 				UserID:     sql.NullInt64{Int64: 1, Valid: true},
@@ -271,7 +271,7 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 			},
 		},
 		{ // invalid HTML in fields set for repo
-			failure: false,
+			failure: true,
 			repo: &Repo{
 				ID:         sql.NullInt64{Int64: 1, Valid: true},
 				UserID:     sql.NullInt64{Int64: 1, Valid: true},

@@ -258,6 +258,30 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 				FullName: sql.NullString{String: "github/octocat", Valid: true},
 			},
 		},
+		{ // invalid HTML in fields set for repo
+			failure: false,
+			repo: &Repo{
+				ID:         sql.NullInt64{Int64: 1, Valid: true},
+				UserID:     sql.NullInt64{Int64: 1, Valid: true},
+				Hash:       sql.NullString{String: "superSecretHash", Valid: true},
+				Org:        sql.NullString{String: "github", Valid: true},
+				Name:       sql.NullString{String: "octocat", Valid: true},
+				FullName:   sql.NullString{String: "github/octocat", Valid: true},
+				Visibility: sql.NullString{String: `<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>`, Valid: true},
+			},
+		},
+		{ // invalid HTML in fields set for repo
+			failure: false,
+			repo: &Repo{
+				ID:         sql.NullInt64{Int64: 1, Valid: true},
+				UserID:     sql.NullInt64{Int64: 1, Valid: true},
+				Hash:       sql.NullString{String: "superSecretHash", Valid: true},
+				Org:        sql.NullString{String: "github", Valid: true},
+				Name:       sql.NullString{String: "octocat", Valid: true},
+				FullName:   sql.NullString{String: "github/octocat", Valid: true},
+				Visibility: sql.NullString{String: `%3cDIV%20STYLE%3d%22width%3a%20expression(alert('XSS'))%3b%22%3e`, Valid: true},
+			},
+		},
 	}
 
 	// run tests

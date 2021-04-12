@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 )
@@ -36,6 +37,10 @@ var (
 	// ErrEmptyRepoVisibility defines the error type when a
 	// Repo type has an empty Visibility field provided.
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
+
+	// ErrInvalidRepoInput defines the error type when a
+	// Repo type has invalid HTML in the field provided.
+	ErrInvalidRepoInput = errors.New("invalid repo field(s) provided")
 )
 
 // Repo is the database representation of a repo.
@@ -236,6 +241,12 @@ func (r *Repo) Validate() error {
 	// verify the Visibility field is populated
 	if len(r.Visibility.String) == 0 {
 		return ErrEmptyRepoVisibility
+	}
+
+	// check if the repo fields are HTML sanitized
+	err := sanitize(*r)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidRepoInput, err)
 	}
 
 	return nil

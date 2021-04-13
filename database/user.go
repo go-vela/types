@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"regexp"
 
 	"github.com/go-vela/types/constants"
@@ -43,6 +44,10 @@ var (
 	// ErrExceededFavoritesLimit defines the error type when a
 	// User type has Favorites field provided that exceeds the database limit.
 	ErrExceededFavoritesLimit = errors.New("exceeded favorites limit")
+
+	// ErrInvalidUserInput defines the error type when a
+	// User type has invalid HTML in the field provided.
+	ErrInvalidUserInput = errors.New("invalid user field(s) provided")
 )
 
 // User is the database representation of a user.
@@ -252,6 +257,12 @@ func (u *User) Validate() error {
 	// verify the Favorites field is within the database constraints
 	if total > constants.FavoritesMaxSize {
 		return ErrExceededFavoritesLimit
+	}
+
+	// check if the user fields are HTML sanitized
+	err := sanitize(*u)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidUserInput, err)
 	}
 
 	return nil

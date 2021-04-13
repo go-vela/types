@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 )
@@ -31,6 +32,10 @@ var (
 	// ErrEmptyServiceRepoID defines the error type when a
 	// Service type has an empty RepoID field provided.
 	ErrEmptyServiceRepoID = errors.New("empty service repo_id provided")
+
+	// ErrInvalidServiceInput defines the error type when a
+	// Service type has invalid HTML in the field provided.
+	ErrInvalidServiceInput = errors.New("invalid service field(s) provided")
 )
 
 // Service is the database representation of a service in a build.
@@ -191,6 +196,12 @@ func (s *Service) Validate() error {
 	// verify the Image field is populated
 	if len(s.Image.String) == 0 {
 		return ErrEmptyServiceImage
+	}
+
+	// check if the service fields are HTML sanitized
+	err := sanitize(*s)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidServiceInput, err)
 	}
 
 	return nil

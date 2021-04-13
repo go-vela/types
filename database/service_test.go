@@ -150,6 +150,28 @@ func TestDatabase_Service_Validate(t *testing.T) {
 				Name:    sql.NullString{String: "postgres", Valid: true},
 			},
 		},
+		{ // invalid HTML in fields set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "postgres", Valid: true},
+				Image:   sql.NullString{String: `<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>`, Valid: true},
+			},
+		},
+		{ // invalid HTML in fields set for service
+			failure: true,
+			service: &Service{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Name:    sql.NullString{String: "postgres", Valid: true},
+				Image:   sql.NullString{String: `%3cDIV%20STYLE%3d%22width%3a%20expression(alert('XSS'))%3b%22%3e`, Valid: true},
+			},
+		},
 	}
 
 	// run tests

@@ -102,6 +102,26 @@ func TestDatabase_Worker_Validate(t *testing.T) {
 				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 			},
 		},
+		{ // invalid HTML in fields set for worker
+			failure: true,
+			worker: &Worker{
+				ID:            sql.NullInt64{Int64: 1, Valid: true},
+				Address:       sql.NullString{String: `<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>`, Valid: true},
+				Hostname:      sql.NullString{String: "worker_0", Valid: true},
+				Active:        sql.NullBool{Bool: true, Valid: true},
+				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
+			},
+		},
+		{ // invalid HTML in fields set for worker
+			failure: true,
+			worker: &Worker{
+				ID:            sql.NullInt64{Int64: 1, Valid: true},
+				Address:       sql.NullString{String: `%3cDIV%20STYLE%3d%22width%3a%20expression(alert('XSS'))%3b%22%3e`, Valid: true},
+				Hostname:      sql.NullString{String: "worker_0", Valid: true},
+				Active:        sql.NullBool{Bool: true, Valid: true},
+				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
+			},
+		},
 	}
 
 	// run tests

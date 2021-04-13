@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 	"github.com/lib/pq"
@@ -20,6 +21,10 @@ var (
 	// ErrEmptyWorkerAddress defines the error type when a
 	// Worker type has an empty Address field provided.
 	ErrEmptyWorkerAddress = errors.New("empty worker address provided")
+
+	// ErrInvalidWorkerInput defines the error type when a
+	// Worker type has invalid HTML in the field provided.
+	ErrInvalidWorkerInput = errors.New("invalid worker field(s) provided")
 )
 
 // Worker is the database representation of a worker.
@@ -97,6 +102,12 @@ func (w *Worker) Validate() error {
 	// verify the Address field is populated
 	if len(w.Address.String) == 0 {
 		return ErrEmptyWorkerAddress
+	}
+
+	// check if the worker fields are HTML sanitized
+	err := sanitize(*w)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidWorkerInput, err)
 	}
 
 	return nil

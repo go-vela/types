@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 	"github.com/go-vela/types/raw"
@@ -20,6 +21,10 @@ var (
 	// ErrEmptyBuildRepoID defines the error type when a
 	// Build type has an empty `RepoID` field provided.
 	ErrEmptyBuildRepoID = errors.New("empty build repo_id provided")
+
+	// ErrInvalidBuildInput defines the error type when a
+	// Build type has invalid HTML in the field provided.
+	ErrInvalidBuildInput = errors.New("invalid build field(s) provided")
 )
 
 const (
@@ -282,6 +287,12 @@ func (b *Build) Validate() error {
 	// verify the Number field is populated
 	if b.Number.Int32 <= 0 {
 		return ErrEmptyBuildNumber
+	}
+
+	// check if the build fields are HTML sanitized
+	err := sanitize(*b)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidBuildInput, err)
 	}
 
 	return nil

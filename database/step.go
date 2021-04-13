@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 )
@@ -31,6 +32,10 @@ var (
 	// ErrEmptyStepRepoID defines the error type when a
 	// Step type has an empty RepoID field provided.
 	ErrEmptyStepRepoID = errors.New("empty step repo_id provided")
+
+	// ErrInvalidStepInput defines the error type when a
+	// Step type has invalid HTML in the field provided.
+	ErrInvalidStepInput = errors.New("invalid step field(s) provided")
 )
 
 // Step is the database representation of a step in a build.
@@ -198,6 +203,12 @@ func (s *Step) Validate() error {
 	// verify the Image field is populated
 	if len(s.Image.String) == 0 {
 		return ErrEmptyStepImage
+	}
+
+	// check if the step fields are HTML sanitized
+	err := sanitize(*s)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidStepInput, err)
 	}
 
 	return nil

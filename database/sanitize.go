@@ -11,7 +11,9 @@ import (
 	"github.com/microcosm-cc/bluemonday"
 )
 
-// sanitize does stuff..
+// sanitize is a helper function to verify the provided input
+// does not contain HTML content. If the input does contain
+// HTML, then the function will return an error.
 func sanitize(v interface{}) error {
 	// create new HTML input microcosm-cc/bluemonday policy
 	p := bluemonday.StrictPolicy()

@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/library"
 )
@@ -23,6 +24,10 @@ var (
 	// ErrEmptyHookSourceID defines the error type when a
 	// Hook type has an empty SourceID field provided.
 	ErrEmptyHookSourceID = errors.New("empty webhook source_id provided")
+
+	// ErrInvalidHookInput defines the error type when a
+	// Hook type has invalid HTML in the field provided.
+	ErrInvalidHookInput = errors.New("invalid hook field(s) provided")
 )
 
 // Hook is the database representation of a webhook for a repo.
@@ -152,6 +157,12 @@ func (h *Hook) Validate() error {
 	// verify the SourceID field is populated
 	if len(h.SourceID.String) <= 0 {
 		return ErrEmptyHookSourceID
+	}
+
+	// check if the hook fields are HTML sanitized
+	err := sanitize(*h)
+	if err != nil {
+		return fmt.Errorf("%v: %v", ErrInvalidHookInput, err)
 	}
 
 	return nil

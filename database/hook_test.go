@@ -101,67 +101,74 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 }
 
 func TestDatabase_Hook_Validate(t *testing.T) {
-	// setup types
-	h := &Hook{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
-		Number:   sql.NullInt32{Int32: 1, Valid: true},
-		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+	// setup tests
+	tests := []struct {
+		failure bool
+		hook    *Hook
+	}{
+		{
+			failure: false,
+			hook:    testHook(),
+		},
+		{ // no number set for hook
+			failure: true,
+			hook: &Hook{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+			},
+		},
+		{ // no repo_id set for hook
+			failure: true,
+			hook: &Hook{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
+				SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+			},
+		},
+		{ // no source_id set for hook
+			failure: true,
+			hook: &Hook{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt32{Int32: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
+		{ // invalid HTML in fields set for hook
+			failure: true,
+			hook: &Hook{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				SourceID: sql.NullString{String: `<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>`, Valid: true},
+			},
+		},
+		{ // invalid HTML in fields set for hook
+			failure: true,
+			hook: &Hook{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				SourceID: sql.NullString{String: `%3cDIV%20STYLE%3d%22width%3a%20expression(alert('XSS'))%3b%22%3e`, Valid: true},
+			},
+		},
 	}
 
-	// run test
-	err := h.Validate()
+	// run tests
+	for _, test := range tests {
+		err := test.hook.Validate()
 
-	if err != nil {
-		t.Errorf("Validate returned err: %v", err)
-	}
-}
+		if test.failure {
+			if err == nil {
+				t.Errorf("Validate should have returned err")
+			}
 
-func TestDatabase_Hook_Validate_NoNumber(t *testing.T) {
-	// setup types
-	h := &Hook{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
-		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
-	}
+			continue
+		}
 
-	// run test
-	err := h.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Hook_Validate_NoRepoID(t *testing.T) {
-	// setup types
-	h := &Hook{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		Number:   sql.NullInt32{Int32: 1, Valid: true},
-		SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
-	}
-
-	// run test
-	err := h.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
-	}
-}
-
-func TestDatabase_Hook_Validate_NoSourceID(t *testing.T) {
-	// setup types
-	h := &Hook{
-		ID:     sql.NullInt64{Int64: 1, Valid: true},
-		Number: sql.NullInt32{Int32: 1, Valid: true},
-		RepoID: sql.NullInt64{Int64: 1, Valid: true},
-	}
-
-	// run test
-	err := h.Validate()
-
-	if err == nil {
-		t.Errorf("Validate should have returned err")
+		if err != nil {
+			t.Errorf("Validate returned err: %v", err)
+		}
 	}
 }
 

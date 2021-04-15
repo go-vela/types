@@ -223,24 +223,6 @@ func TestDatabase_User_Validate(t *testing.T) {
 				Favorites: exceededFavorites(),
 			},
 		},
-		{ // invalid HTML in fields set for user
-			failure: true,
-			user: &User{
-				ID:    sql.NullInt64{Int64: 1, Valid: true},
-				Name:  sql.NullString{String: "octocat", Valid: true},
-				Token: sql.NullString{String: "superSecretToken", Valid: true},
-				Hash:  sql.NullString{String: `<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>`, Valid: true},
-			},
-		},
-		{ // invalid HTML in fields set for user
-			failure: true,
-			user: &User{
-				ID:    sql.NullInt64{Int64: 1, Valid: true},
-				Name:  sql.NullString{String: "octocat", Valid: true},
-				Token: sql.NullString{String: "superSecretToken", Valid: true},
-				Hash:  sql.NullString{String: `%3cDIV%20STYLE%3d%22width%3a%20expression(alert('XSS'))%3b%22%3e`, Valid: true},
-			},
-		},
 	}
 
 	// run tests

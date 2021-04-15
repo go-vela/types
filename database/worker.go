@@ -7,7 +7,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/go-vela/types/library"
 	"github.com/lib/pq"
@@ -104,10 +103,16 @@ func (w *Worker) Validate() error {
 		return ErrEmptyWorkerAddress
 	}
 
-	// check if the worker fields are HTML sanitized
-	err := sanitize(*w)
-	if err != nil {
-		return fmt.Errorf("%v: %v", ErrInvalidWorkerInput, err)
+	// ensure that all Worker string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	w.Hostname = sql.NullString{String: sanitize(w.Hostname.String), Valid: true}
+	w.Address = sql.NullString{String: sanitize(w.Address.String), Valid: true}
+
+	// ensure that all Routes are sanitized
+	// to avoid unsafe HTML content
+	for i, v := range w.Routes {
+		w.Routes[i] = sanitize(v)
 	}
 
 	return nil

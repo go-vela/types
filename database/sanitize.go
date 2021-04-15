@@ -5,8 +5,8 @@
 package database
 
 import (
-	"bytes"
-	"fmt"
+	"html"
+	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
 )
@@ -14,20 +14,22 @@ import (
 // sanitize is a helper function to verify the provided input
 // does not contain HTML content. If the input does contain
 // HTML, then the function will return an error.
-func sanitize(v interface{}) error {
+func sanitize(field string) string {
 	// create new HTML input microcosm-cc/bluemonday policy
 	p := bluemonday.StrictPolicy()
 
-	// create a new object string from the input
-	object := fmt.Sprintf("%v", v)
+	// create an HTML escaped string from the field
+	htmlEscaped := html.EscapeString(field) // &#34;hello&#34;
 
-	// create new bytes buffer from the object string
-	buffer := bytes.NewBufferString(object)
+	// create a bluemonday escaped string from the field
+	bluemondayEscaped := p.Sanitize(field) // &#34;hello&#34;
 
-	// check if the buffer bytes are different than the HTML sanitized bytes
-	if !bytes.Equal(buffer.Bytes(), p.SanitizeBytes(buffer.Bytes())) {
-		return fmt.Errorf("resource failed HTML input validation")
+	// check if the field contains html
+	if !strings.EqualFold(htmlEscaped, bluemondayEscaped) {
+		// create new HTML input microcosm-cc/bluemonday policy
+		return bluemondayEscaped
 	}
 
-	return nil
+	// return the unmodified field
+	return field
 }

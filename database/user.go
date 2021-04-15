@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"regexp"
 
 	"github.com/go-vela/types/constants"
@@ -259,10 +258,15 @@ func (u *User) Validate() error {
 		return ErrExceededFavoritesLimit
 	}
 
-	// check if the user fields are HTML sanitized
-	err := sanitize(*u)
-	if err != nil {
-		return fmt.Errorf("%v: %v", ErrInvalidUserInput, err)
+	// ensure that all User string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	u.Name = sql.NullString{String: sanitize(u.Name.String), Valid: true}
+
+	// ensure that all Favorites are sanitized
+	// to avoid unsafe HTML content
+	for i, v := range u.Favorites {
+		u.Favorites[i] = sanitize(v)
 	}
 
 	return nil

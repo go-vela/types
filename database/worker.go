@@ -20,10 +20,6 @@ var (
 	// ErrEmptyWorkerAddress defines the error type when a
 	// Worker type has an empty Address field provided.
 	ErrEmptyWorkerAddress = errors.New("empty worker address provided")
-
-	// ErrInvalidWorkerInput defines the error type when a
-	// Worker type has invalid HTML in the field provided.
-	ErrInvalidWorkerInput = errors.New("invalid worker field(s) provided")
 )
 
 // Worker is the database representation of a worker.

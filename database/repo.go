@@ -36,10 +36,6 @@ var (
 	// ErrEmptyRepoVisibility defines the error type when a
 	// Repo type has an empty Visibility field provided.
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
-
-	// ErrInvalidRepoInput defines the error type when a
-	// Repo type has invalid HTML in the field provided.
-	ErrInvalidRepoInput = errors.New("invalid repo field(s) provided")
 )
 
 // Repo is the database representation of a repo.

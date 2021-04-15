@@ -23,10 +23,6 @@ var (
 	// ErrEmptyHookSourceID defines the error type when a
 	// Hook type has an empty SourceID field provided.
 	ErrEmptyHookSourceID = errors.New("empty webhook source_id provided")
-
-	// ErrInvalidHookInput defines the error type when a
-	// Hook type has invalid HTML in the field provided.
-	ErrInvalidHookInput = errors.New("invalid hook field(s) provided")
 )
 
 // Hook is the database representation of a webhook for a repo.

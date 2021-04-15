@@ -31,10 +31,6 @@ var (
 	// ErrEmptyStepRepoID defines the error type when a
 	// Step type has an empty RepoID field provided.
 	ErrEmptyStepRepoID = errors.New("empty step repo_id provided")
-
-	// ErrInvalidStepInput defines the error type when a
-	// Step type has invalid HTML in the field provided.
-	ErrInvalidStepInput = errors.New("invalid step field(s) provided")
 )
 
 // Step is the database representation of a step in a build.

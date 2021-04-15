@@ -31,10 +31,6 @@ var (
 	// ErrEmptyServiceRepoID defines the error type when a
 	// Service type has an empty RepoID field provided.
 	ErrEmptyServiceRepoID = errors.New("empty service repo_id provided")
-
-	// ErrInvalidServiceInput defines the error type when a
-	// Service type has invalid HTML in the field provided.
-	ErrInvalidServiceInput = errors.New("invalid service field(s) provided")
 )
 
 // Service is the database representation of a service in a build.

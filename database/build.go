@@ -20,10 +20,6 @@ var (
 	// ErrEmptyBuildRepoID defines the error type when a
 	// Build type has an empty `RepoID` field provided.
 	ErrEmptyBuildRepoID = errors.New("empty build repo_id provided")
-
-	// ErrInvalidBuildInput defines the error type when a
-	// Build type has invalid HTML in the field provided.
-	ErrInvalidBuildInput = errors.New("invalid build field(s) provided")
 )
 
 const (

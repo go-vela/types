@@ -43,10 +43,6 @@ var (
 	// ErrExceededFavoritesLimit defines the error type when a
 	// User type has Favorites field provided that exceeds the database limit.
 	ErrExceededFavoritesLimit = errors.New("exceeded favorites limit")
-
-	// ErrInvalidUserInput defines the error type when a
-	// User type has invalid HTML in the field provided.
-	ErrInvalidUserInput = errors.New("invalid user field(s) provided")
 )
 
 // User is the database representation of a user.

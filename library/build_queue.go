@@ -2,6 +2,7 @@
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
+// nolint: dupl // ignore false positive with template.go
 package library
 
 import "fmt"
@@ -121,7 +122,6 @@ func (b *BuildQueue) SetFullName(v string) {
 }
 
 // String implements the Stringer interface for the BuildQueue type.
-// nolint:dupl // this is duplicated in the test
 func (b *BuildQueue) String() string {
 	return fmt.Sprintf(`{
   Created: %d,

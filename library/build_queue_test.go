@@ -28,7 +28,6 @@ func TestLibrary_BuildQueue_Getters(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-
 		if test.buildQueue.GetNumber() != test.want.GetNumber() {
 			t.Errorf("GetNumber is %v, want %v", test.buildQueue.GetNumber(), test.want.GetNumber())
 		}
@@ -44,7 +43,6 @@ func TestLibrary_BuildQueue_Getters(t *testing.T) {
 		if test.buildQueue.GetFullName() != test.want.GetFullName() {
 			t.Errorf("GetFullName is %v, want %v", test.buildQueue.GetFullName(), test.want.GetFullName())
 		}
-
 	}
 }
 

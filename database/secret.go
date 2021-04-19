@@ -211,6 +211,27 @@ func (s *Secret) Validate() error {
 		return ErrEmptySecretValue
 	}
 
+	// ensure that all Secret string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	s.Org = sql.NullString{String: sanitize(s.Org.String), Valid: true}
+	s.Repo = sql.NullString{String: sanitize(s.Repo.String), Valid: true}
+	s.Team = sql.NullString{String: sanitize(s.Team.String), Valid: true}
+	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: true}
+	s.Type = sql.NullString{String: sanitize(s.Type.String), Valid: true}
+
+	// ensure that all Images are sanitized
+	// to avoid unsafe HTML content
+	for i, v := range s.Images {
+		s.Images[i] = sanitize(v)
+	}
+
+	// ensure that all Events are sanitized
+	// to avoid unsafe HTML content
+	for i, v := range s.Events {
+		s.Events[i] = sanitize(v)
+	}
+
 	return nil
 }
 

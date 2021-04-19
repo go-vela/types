@@ -154,6 +154,17 @@ func (h *Hook) Validate() error {
 		return ErrEmptyHookSourceID
 	}
 
+	// ensure that all Hook string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	h.SourceID = sql.NullString{String: sanitize(h.SourceID.String), Valid: true}
+	h.Host = sql.NullString{String: sanitize(h.Host.String), Valid: true}
+	h.Event = sql.NullString{String: sanitize(h.Event.String), Valid: true}
+	h.Branch = sql.NullString{String: sanitize(h.Branch.String), Valid: true}
+	h.Error = sql.NullString{String: sanitize(h.Error.String), Valid: true}
+	h.Status = sql.NullString{String: sanitize(h.Status.String), Valid: true}
+	h.Link = sql.NullString{String: sanitize(h.Link.String), Valid: true}
+
 	return nil
 }
 

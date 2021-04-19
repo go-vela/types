@@ -238,6 +238,17 @@ func (r *Repo) Validate() error {
 		return ErrEmptyRepoVisibility
 	}
 
+	// ensure that all Repo string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	r.Org = sql.NullString{String: sanitize(r.Org.String), Valid: true}
+	r.Name = sql.NullString{String: sanitize(r.Name.String), Valid: true}
+	r.FullName = sql.NullString{String: sanitize(r.FullName.String), Valid: true}
+	r.Link = sql.NullString{String: sanitize(r.Link.String), Valid: true}
+	r.Clone = sql.NullString{String: sanitize(r.Clone.String), Valid: true}
+	r.Branch = sql.NullString{String: sanitize(r.Branch.String), Valid: true}
+	r.Visibility = sql.NullString{String: sanitize(r.Visibility.String), Valid: true}
+
 	return nil
 }
 

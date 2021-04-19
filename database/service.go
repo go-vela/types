@@ -193,6 +193,17 @@ func (s *Service) Validate() error {
 		return ErrEmptyServiceImage
 	}
 
+	// ensure that all Service string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: true}
+	s.Image = sql.NullString{String: sanitize(s.Image.String), Valid: true}
+	s.Status = sql.NullString{String: sanitize(s.Status.String), Valid: true}
+	s.Error = sql.NullString{String: sanitize(s.Error.String), Valid: true}
+	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: true}
+	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: true}
+	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: true}
+
 	return nil
 }
 

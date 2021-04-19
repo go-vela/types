@@ -254,6 +254,17 @@ func (u *User) Validate() error {
 		return ErrExceededFavoritesLimit
 	}
 
+	// ensure that all User string fields
+	// that can be returned as JSON are sanitized
+	// to avoid unsafe HTML content
+	u.Name = sql.NullString{String: sanitize(u.Name.String), Valid: true}
+
+	// ensure that all Favorites are sanitized
+	// to avoid unsafe HTML content
+	for i, v := range u.Favorites {
+		u.Favorites[i] = sanitize(v)
+	}
+
 	return nil
 }
 

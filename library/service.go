@@ -39,7 +39,6 @@ func (s *Service) Environment() map[string]string {
 		"VELA_SERVICE_CREATED":      ToString(s.GetCreated()),
 		"VELA_SERVICE_DISTRIBUTION": ToString(s.GetDistribution()),
 		"VELA_SERVICE_EXIT_CODE":    ToString(s.GetExitCode()),
-		"VELA_SERVICE_FINISHED":     ToString(s.GetFinished()),
 		"VELA_SERVICE_HOST":         ToString(s.GetHost()),
 		"VELA_SERVICE_IMAGE":        ToString(s.GetImage()),
 		"VELA_SERVICE_NAME":         ToString(s.GetName()),

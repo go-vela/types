@@ -18,7 +18,6 @@ func TestLibrary_Service_Environment(t *testing.T) {
 		"VELA_SERVICE_CREATED":      "1563474076",
 		"VELA_SERVICE_DISTRIBUTION": "linux",
 		"VELA_SERVICE_EXIT_CODE":    "0",
-		"VELA_SERVICE_FINISHED":     "1563474079",
 		"VELA_SERVICE_HOST":         "example.company.com",
 		"VELA_SERVICE_IMAGE":        "postgres:12-alpine",
 		"VELA_SERVICE_NAME":         "postgres",
@@ -290,7 +289,6 @@ func TestLibrary_ServiceFromContainer(t *testing.T) {
 					"VELA_SERVICE_CREATED":      "1563474076",
 					"VELA_SERVICE_DISTRIBUTION": "linux",
 					"VELA_SERVICE_EXIT_CODE":    "0",
-					"VELA_SERVICE_FINISHED":     "1563474079",
 					"VELA_SERVICE_HOST":         "example.company.com",
 					"VELA_SERVICE_IMAGE":        "postgres:12-alpine",
 					"VELA_SERVICE_NAME":         "postgres",
@@ -329,7 +327,6 @@ func testService() *Service {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
-	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

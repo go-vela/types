@@ -341,7 +341,6 @@ func testStep() *Step {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
-	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

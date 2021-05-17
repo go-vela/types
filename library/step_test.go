@@ -18,7 +18,6 @@ func TestLibrary_Step_Environment(t *testing.T) {
 		"VELA_STEP_CREATED":      "1563474076",
 		"VELA_STEP_DISTRIBUTION": "linux",
 		"VELA_STEP_EXIT_CODE":    "0",
-		"VELA_STEP_FINISHED":     "1563474079",
 		"VELA_STEP_HOST":         "example.company.com",
 		"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 		"VELA_STEP_NAME":         "clone",
@@ -303,7 +302,6 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 					"VELA_STEP_CREATED":      "1563474076",
 					"VELA_STEP_DISTRIBUTION": "linux",
 					"VELA_STEP_EXIT_CODE":    "0",
-					"VELA_STEP_FINISHED":     "1563474079",
 					"VELA_STEP_HOST":         "example.company.com",
 					"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 					"VELA_STEP_NAME":         "clone",
@@ -343,7 +341,6 @@ func testStep() *Step {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
-	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

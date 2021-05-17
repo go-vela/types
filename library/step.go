@@ -40,7 +40,6 @@ func (s *Step) Environment() map[string]string {
 		"VELA_STEP_CREATED":      ToString(s.GetCreated()),
 		"VELA_STEP_DISTRIBUTION": ToString(s.GetDistribution()),
 		"VELA_STEP_EXIT_CODE":    ToString(s.GetExitCode()),
-		"VELA_STEP_FINISHED":     ToString(s.GetFinished()),
 		"VELA_STEP_HOST":         ToString(s.GetHost()),
 		"VELA_STEP_IMAGE":        ToString(s.GetImage()),
 		"VELA_STEP_NAME":         ToString(s.GetName()),

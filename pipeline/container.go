@@ -290,6 +290,17 @@ func (c *Container) Substitute() error {
 		// capture the environment variable value
 		value := c.Environment[name]
 
+		// if the value originated from secrets
+		// then skip the newline substitution
+		for _, _secret := range c.Secrets {
+			// if name matches the ctn.Environment secret key
+			// https://github.com/go-vela/pkg-executor/blob/master/executor/linux/secret.go#L350
+			// then return the value
+			if strings.ToUpper(_secret.Target) == name {
+				return value
+			}
+		}
+
 		// check for a new line in the value
 		if strings.Contains(value, "\n") {
 			// safely escape the environment variable

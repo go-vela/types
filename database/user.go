@@ -52,7 +52,7 @@ type User struct {
 	RefreshToken sql.NullString `sql:"refresh_token"`
 	Token        sql.NullString `sql:"token"`
 	Hash         sql.NullString `sql:"hash"`
-	Favorites    pq.StringArray `sql:"favorites"`
+	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
 	Active       sql.NullBool   `sql:"active"`
 	Admin        sql.NullBool   `sql:"admin"`
 }
@@ -279,7 +279,7 @@ func UserFromLibrary(u *library.User) *User {
 		Hash:         sql.NullString{String: u.GetHash(), Valid: true},
 		Active:       sql.NullBool{Bool: u.GetActive(), Valid: true},
 		Admin:        sql.NullBool{Bool: u.GetAdmin(), Valid: true},
-		Favorites:    u.GetFavorites(),
+		Favorites:    pq.StringArray(u.GetFavorites()),
 	}
 
 	return user.Nullify()

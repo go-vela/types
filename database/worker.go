@@ -27,7 +27,7 @@ type Worker struct {
 	ID            sql.NullInt64  `sql:"id"`
 	Hostname      sql.NullString `sql:"hostname"`
 	Address       sql.NullString `sql:"address"`
-	Routes        pq.StringArray `sql:"routes"`
+	Routes        pq.StringArray `sql:"routes" gorm:"type:varchar(1000)"`
 	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit    sql.NullInt64  `sql:"build_limit"`
@@ -121,7 +121,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		ID:            sql.NullInt64{Int64: w.GetID(), Valid: true},
 		Hostname:      sql.NullString{String: w.GetHostname(), Valid: true},
 		Address:       sql.NullString{String: w.GetAddress(), Valid: true},
-		Routes:        w.GetRoutes(),
+		Routes:        pq.StringArray(w.GetRoutes()),
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
 		BuildLimit:    sql.NullInt64{Int64: w.GetBuildLimit(), Valid: true},

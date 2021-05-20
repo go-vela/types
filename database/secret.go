@@ -51,8 +51,8 @@ type Secret struct {
 	Name         sql.NullString `sql:"name"`
 	Value        sql.NullString `sql:"value"`
 	Type         sql.NullString `sql:"type"`
-	Images       pq.StringArray `sql:"images"`
-	Events       pq.StringArray `sql:"events"`
+	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
+	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
 }
 
@@ -246,8 +246,8 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Name:         sql.NullString{String: s.GetName(), Valid: true},
 		Value:        sql.NullString{String: s.GetValue(), Valid: true},
 		Type:         sql.NullString{String: s.GetType(), Valid: true},
-		Images:       s.GetImages(),
-		Events:       s.GetEvents(),
+		Images:       pq.StringArray(s.GetImages()),
+		Events:       pq.StringArray(s.GetEvents()),
 		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
 	}
 

@@ -160,6 +160,19 @@ func (c *Container) Execute(r *RuleData) bool {
 		c.Ruleset.If.Path = []string{}
 		c.Ruleset.Unless.Path = []string{}
 
+		// skip evaluating comment in ruleset
+		//
+		// the compiler is the component responsible for
+		// choosing whether a container will run based
+		// off the PR comment matching the pipeline comment
+		//
+		// the worker doesn't have any record of
+		// the PR comment so we
+		// should "skip" evaluating what the
+		// user provided for the PR comment
+		c.Ruleset.If.Comment = []string{}
+		c.Ruleset.Unless.Comment = []string{}
+
 		// return if the container ruleset matches the conditions
 		return c.Ruleset.Match(r)
 	}

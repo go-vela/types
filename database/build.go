@@ -43,7 +43,7 @@ type Build struct {
 	Started       sql.NullInt64      `sql:"started"`
 	Finished      sql.NullInt64      `sql:"finished"`
 	Deploy        sql.NullString     `sql:"deploy"`
-	DeployPayload raw.StringSliceMap `sql:"deploy_payload"`
+	DeployPayload raw.StringSliceMap `sql:"deploy_payload" gorm:"type:varchar(2000)"`
 	Clone         sql.NullString     `sql:"clone"`
 	Source        sql.NullString     `sql:"source"`
 	Title         sql.NullString     `sql:"title"`

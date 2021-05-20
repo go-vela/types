@@ -306,7 +306,7 @@ func (r *Repo) GetAllowTag() bool {
 	return *r.AllowTag
 }
 
-// GetAllowComment returns the AllowTag field.
+// GetAllowComment returns the AllowComment field.
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.

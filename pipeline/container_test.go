@@ -409,6 +409,69 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: false,
 		},
+		{ // branch/event/comment container with build running
+			container: &Container{
+				Name:     "branch/event/comment-running",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch:  []string{"develop"},
+						Event:   []string{constants.EventComment},
+						Comment: []string{"run vela"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "develop",
+				Event:  "comment",
+				Repo:   "foo/bar",
+				Status: "running",
+			},
+			want: true,
+		},
+		{ // branch/event/comment container with build success
+			container: &Container{
+				Name:     "branch/event/comment-success",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch:  []string{"develop"},
+						Event:   []string{constants.EventComment},
+						Comment: []string{"run vela"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "develop",
+				Event:  "comment",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // branch/event/comment container with build failure
+			container: &Container{
+				Name:     "branch/event/comment-failure",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch:  []string{"develop"},
+						Event:   []string{constants.EventComment},
+						Comment: []string{"run vela"},
+					},
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "develop",
+				Event:  "comment",
+				Repo:   "foo/bar",
+				Status: "failure",
+			},
+			want: false,
+		},
 		{ // branch/event/status container with build running
 			container: &Container{
 				Name:     "branch/event/status-running",

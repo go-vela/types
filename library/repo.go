@@ -20,6 +20,7 @@ type Repo struct {
 	Clone        *string `json:"clone,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
 	Timeout      *int64  `json:"timeout,omitempty"`
+	Counter      *int    `json:"counter,omitempty"`
 	Visibility   *string `json:"visibility,omitempty"`
 	Private      *bool   `json:"private,omitempty"`
 	Trusted      *bool   `json:"trusted,omitempty"`
@@ -200,6 +201,19 @@ func (r *Repo) GetTimeout() int64 {
 	}
 
 	return *r.Timeout
+}
+
+// GetCounter returns the Counter field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetCounter() int {
+	// return zero value if Repo type or Counter field is nil
+	if r == nil || r.Counter == nil {
+		return 0
+	}
+
+	return *r.Counter
 }
 
 // GetVisibility returns the Visibility field.
@@ -449,6 +463,19 @@ func (r *Repo) SetTimeout(v int64) {
 	r.Timeout = &v
 }
 
+// SetCounter sets the Counter field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetCounter(v int) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.Counter = &v
+}
+
 // SetVisibility sets the Visibility field.
 //
 // When the provided Repo type is nil, it
@@ -584,6 +611,7 @@ func (r *Repo) String() string {
   Org: %s,
   Private: %t,
   Timeout: %d,
+	Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
@@ -603,6 +631,7 @@ func (r *Repo) String() string {
 		r.GetOrg(),
 		r.GetPrivate(),
 		r.GetTimeout(),
+		r.GetCounter(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),

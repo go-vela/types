@@ -291,7 +291,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Org: %s,
   Private: %t,
   Timeout: %d,
-	Counter: %d,
+  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,

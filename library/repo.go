@@ -611,7 +611,7 @@ func (r *Repo) String() string {
   Org: %s,
   Private: %t,
   Timeout: %d,
-	Counter: %d,
+  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,

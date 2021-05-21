@@ -182,6 +182,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetClone(test.want.GetClone())
 		test.repo.SetBranch(test.want.GetBranch())
 		test.repo.SetTimeout(test.want.GetTimeout())
+		test.repo.SetCounter(test.want.GetCounter())
 		test.repo.SetVisibility(test.want.GetVisibility())
 		test.repo.SetPrivate(test.want.GetPrivate())
 		test.repo.SetTrusted(test.want.GetTrusted())
@@ -290,6 +291,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Org: %s,
   Private: %t,
   Timeout: %d,
+  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
@@ -309,6 +311,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetOrg(),
 		r.GetPrivate(),
 		r.GetTimeout(),
+		r.GetCounter(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
@@ -335,6 +338,7 @@ func testRepo() *Repo {
 	r.SetClone("https://github.com/github/octocat.git")
 	r.SetBranch("master")
 	r.SetTimeout(30)
+	r.SetCounter(0)
 	r.SetVisibility("public")
 	r.SetPrivate(false)
 	r.SetTrusted(false)

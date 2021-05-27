@@ -17,17 +17,17 @@ type (
 	// Template is the yaml representation of a template
 	// from the templates block for a pipeline.
 	Template struct {
-		Name   string `yaml:"name,omitempty"   json:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/templates/"`
-		Source string `yaml:"source,omitempty" json:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/templates/"`
-		Format string `yaml:"format,omitempty"   json:"format,omitempty" jsonschema:"enum=starlark,enum=golang,enum=go,default=go,minLength=1,description=language used within the template file \nReference: https://go-vela.github.io/docs/templates/#format"`
-		Type   string `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"minLength=1,example=github,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/templates/"`
+		Name   string `yaml:"name,omitempty"   json:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-name-tag"`
+		Source string `yaml:"source,omitempty" json:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-source-tag"`
+		Format string `yaml:"format,omitempty"   json:"format,omitempty" jsonschema:"enum=starlark,enum=golang,enum=go,default=go,minLength=1,description=language used within the template file \nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-format-tag"`
+		Type   string `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"minLength=1,example=github,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-type-tag"`
 	}
 
 	// StepTemplate is the yaml representation of the
 	// template block for a step in a pipeline.
 	StepTemplate struct {
-		Name      string                 `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/#fields"`
-		Variables map[string]interface{} `yaml:"vars,omitempty" json:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/concepts/pipeline/steps/template/#fields"`
+		Name      string                 `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-template-tag"`
+		Variables map[string]interface{} `yaml:"vars,omitempty" json:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-template-tag"`
 	}
 )
 

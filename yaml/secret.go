@@ -79,7 +79,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// iterate through each element in the secret slice
 	for _, secret := range *secretSlice {
-		if len(secret.Name) == 0 {
+		if secret.Origin.Empty() && len(secret.Name) == 0 {
 			continue
 		}
 

@@ -265,6 +265,37 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 						},
 					},
 				},
+				{
+					Name:   "",
+					Key:    "",
+					Engine: "",
+					Type:   "",
+					Origin: Origin{
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "target/vela-vault:latest",
+						Parameters: map[string]interface{}{
+							"addr": "vault.company.com",
+						},
+						Pull: "always",
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Operator: "and",
+							Matcher:  "filepath",
+						},
+						Secrets: StepSecretSlice{
+							{
+								Source: "foo",
+								Target: "foo",
+							},
+							{
+								Source: "foobar",
+								Target: "foobar",
+							},
+						},
+					},
+				},
 			},
 		},
 		{

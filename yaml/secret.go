@@ -75,9 +75,14 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return err
 	}
 
+	tmp := SecretSlice{}
+
 	// iterate through each element in the secret slice
 	for _, secret := range *secretSlice {
-		// implicitly set `key` field if empty
+		if secret.Origin.Empty() && len(secret.Name) == 0 {
+			continue
+		}
+
 		if secret.Origin.Empty() && len(secret.Key) == 0 {
 			secret.Key = secret.Name
 		}
@@ -114,10 +119,12 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if !secret.Origin.Empty() && strings.EqualFold(secret.Origin.Pull, "false") {
 			secret.Origin.Pull = constants.PullNotPresent
 		}
+
+		tmp = append(tmp, secret)
 	}
 
 	// overwrite existing SecretSlice
-	*s = *secretSlice
+	*s = tmp
 
 	return nil
 }

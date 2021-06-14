@@ -260,6 +260,10 @@ func (c *Container) Sanitize(driver string) *Container {
 			c.ID = strings.ReplaceAll(c.ID, " ", "-")
 		}
 
+		if strings.Contains(c.ID, "/") {
+			c.ID = strings.ReplaceAll(c.ID, "/", "-")
+		}
+
 		return container
 	// sanitize container for Kubernetes
 	case constants.DriverKubernetes:
@@ -273,6 +277,10 @@ func (c *Container) Sanitize(driver string) *Container {
 
 		if strings.Contains(c.ID, ".") {
 			container.ID = strings.ReplaceAll(c.ID, ".", "-")
+		}
+
+		if strings.Contains(c.ID, "/") {
+			c.ID = strings.ReplaceAll(c.ID, "/", "-")
 		}
 
 		return container

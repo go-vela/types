@@ -157,13 +157,13 @@ func (h *Hook) Validate() error {
 	// ensure that all Hook string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	h.SourceID = sql.NullString{String: sanitize(h.SourceID.String), Valid: true}
-	h.Host = sql.NullString{String: sanitize(h.Host.String), Valid: true}
-	h.Event = sql.NullString{String: sanitize(h.Event.String), Valid: true}
-	h.Branch = sql.NullString{String: sanitize(h.Branch.String), Valid: true}
-	h.Error = sql.NullString{String: sanitize(h.Error.String), Valid: true}
-	h.Status = sql.NullString{String: sanitize(h.Status.String), Valid: true}
-	h.Link = sql.NullString{String: sanitize(h.Link.String), Valid: true}
+	h.SourceID = sql.NullString{String: sanitize(h.SourceID.String), Valid: h.SourceID.Valid}
+	h.Host = sql.NullString{String: sanitize(h.Host.String), Valid: h.Host.Valid}
+	h.Event = sql.NullString{String: sanitize(h.Event.String), Valid: h.Event.Valid}
+	h.Branch = sql.NullString{String: sanitize(h.Branch.String), Valid: h.Branch.Valid}
+	h.Error = sql.NullString{String: sanitize(h.Error.String), Valid: h.Error.Valid}
+	h.Status = sql.NullString{String: sanitize(h.Status.String), Valid: h.Status.Valid}
+	h.Link = sql.NullString{String: sanitize(h.Link.String), Valid: h.Link.Valid}
 
 	return nil
 }

@@ -214,11 +214,11 @@ func (s *Secret) Validate() error {
 	// ensure that all Secret string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	s.Org = sql.NullString{String: sanitize(s.Org.String), Valid: true}
-	s.Repo = sql.NullString{String: sanitize(s.Repo.String), Valid: true}
-	s.Team = sql.NullString{String: sanitize(s.Team.String), Valid: true}
-	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: true}
-	s.Type = sql.NullString{String: sanitize(s.Type.String), Valid: true}
+	s.Org = sql.NullString{String: sanitize(s.Org.String), Valid: s.Org.Valid}
+	s.Repo = sql.NullString{String: sanitize(s.Repo.String), Valid: s.Repo.Valid}
+	s.Team = sql.NullString{String: sanitize(s.Team.String), Valid: s.Team.Valid}
+	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: s.Name.Valid}
+	s.Type = sql.NullString{String: sanitize(s.Type.String), Valid: s.Type.Valid}
 
 	// ensure that all Images are sanitized
 	// to avoid unsafe HTML content

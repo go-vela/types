@@ -123,6 +123,16 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_DEPLOYMENT"] = target
 		envs["BUILD_TARGET"] = target
 
+		// handle when deployment event is for a tag
+		if strings.HasPrefix(b.GetRef(), "refs/tags/") {
+			// capture the tag reference
+			tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
+
+			// add the tag reference to the list
+			envs["BUILD_TAG"] = tag
+			envs["VELA_BUILD_TAG"] = tag
+		}
+
 		// add payload data to the list
 		for key, value := range b.GetDeployPayload() {
 			envs[fmt.Sprintf("DEPLOYMENT_PARAMETER_%s", strings.ToUpper(key))] = value

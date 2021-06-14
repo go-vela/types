@@ -257,7 +257,7 @@ func (u *User) Validate() error {
 	// ensure that all User string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	u.Name = sql.NullString{String: sanitize(u.Name.String), Valid: true}
+	u.Name = sql.NullString{String: sanitize(u.Name.String), Valid: u.Name.Valid}
 
 	// ensure that all Favorites are sanitized
 	// to avoid unsafe HTML content

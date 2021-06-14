@@ -102,8 +102,8 @@ func (w *Worker) Validate() error {
 	// ensure that all Worker string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	w.Hostname = sql.NullString{String: sanitize(w.Hostname.String), Valid: true}
-	w.Address = sql.NullString{String: sanitize(w.Address.String), Valid: true}
+	w.Hostname = sql.NullString{String: sanitize(w.Hostname.String), Valid: w.Hostname.Valid}
+	w.Address = sql.NullString{String: sanitize(w.Address.String), Valid: w.Address.Valid}
 
 	// ensure that all Routes are sanitized
 	// to avoid unsafe HTML content

@@ -203,14 +203,15 @@ func (s *Step) Validate() error {
 	// ensure that all Step string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: true}
-	s.Image = sql.NullString{String: sanitize(s.Image.String), Valid: true}
-	s.Stage = sql.NullString{String: sanitize(s.Stage.String), Valid: true}
-	s.Status = sql.NullString{String: sanitize(s.Status.String), Valid: true}
-	s.Error = sql.NullString{String: sanitize(s.Error.String), Valid: true}
-	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: true}
-	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: true}
-	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: true}
+	s.Name = sql.NullString{String: sanitize(s.Name.String), Valid: s.Name.Valid}
+	s.Image = sql.NullString{String: sanitize(s.Image.String), Valid: s.Image.Valid}
+	s.Stage = sql.NullString{String: sanitize(s.Stage.String), Valid: s.Stage.Valid}
+	s.Status = sql.NullString{String: sanitize(s.Status.String), Valid: s.Status.Valid}
+	s.Error = sql.NullString{String: sanitize(s.Error.String), Valid: s.Error.Valid}
+	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: s.Host.Valid}
+	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: s.Runtime.Valid}
+	// nolint: lll // ignore long line length
+	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: s.Distribution.Valid}
 
 	return nil
 }

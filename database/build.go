@@ -287,26 +287,27 @@ func (b *Build) Validate() error {
 	// ensure that all Build string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
-	b.Event = sql.NullString{String: sanitize(b.Event.String), Valid: true}
-	b.Status = sql.NullString{String: sanitize(b.Status.String), Valid: true}
-	b.Error = sql.NullString{String: sanitize(b.Error.String), Valid: true}
-	b.Deploy = sql.NullString{String: sanitize(b.Deploy.String), Valid: true}
-	b.Clone = sql.NullString{String: sanitize(b.Clone.String), Valid: true}
-	b.Source = sql.NullString{String: sanitize(b.Source.String), Valid: true}
-	b.Title = sql.NullString{String: sanitize(b.Title.String), Valid: true}
-	b.Message = sql.NullString{String: sanitize(b.Message.String), Valid: true}
-	b.Commit = sql.NullString{String: sanitize(b.Commit.String), Valid: true}
-	b.Sender = sql.NullString{String: sanitize(b.Sender.String), Valid: true}
-	b.Author = sql.NullString{String: sanitize(b.Author.String), Valid: true}
-	b.Email = sql.NullString{String: sanitize(b.Email.String), Valid: true}
-	b.Link = sql.NullString{String: sanitize(b.Link.String), Valid: true}
-	b.Branch = sql.NullString{String: sanitize(b.Branch.String), Valid: true}
-	b.Ref = sql.NullString{String: sanitize(b.Ref.String), Valid: true}
-	b.BaseRef = sql.NullString{String: sanitize(b.BaseRef.String), Valid: true}
-	b.HeadRef = sql.NullString{String: sanitize(b.HeadRef.String), Valid: true}
-	b.Host = sql.NullString{String: sanitize(b.Host.String), Valid: true}
-	b.Runtime = sql.NullString{String: sanitize(b.Runtime.String), Valid: true}
-	b.Distribution = sql.NullString{String: sanitize(b.Distribution.String), Valid: true}
+	b.Event = sql.NullString{String: sanitize(b.Event.String), Valid: b.Event.Valid}
+	b.Status = sql.NullString{String: sanitize(b.Status.String), Valid: b.Status.Valid}
+	b.Error = sql.NullString{String: sanitize(b.Error.String), Valid: b.Error.Valid}
+	b.Deploy = sql.NullString{String: sanitize(b.Deploy.String), Valid: b.Deploy.Valid}
+	b.Clone = sql.NullString{String: sanitize(b.Clone.String), Valid: b.Clone.Valid}
+	b.Source = sql.NullString{String: sanitize(b.Source.String), Valid: b.Source.Valid}
+	b.Title = sql.NullString{String: sanitize(b.Title.String), Valid: b.Title.Valid}
+	b.Message = sql.NullString{String: sanitize(b.Message.String), Valid: b.Message.Valid}
+	b.Commit = sql.NullString{String: sanitize(b.Commit.String), Valid: b.Commit.Valid}
+	b.Sender = sql.NullString{String: sanitize(b.Sender.String), Valid: b.Sender.Valid}
+	b.Author = sql.NullString{String: sanitize(b.Author.String), Valid: b.Author.Valid}
+	b.Email = sql.NullString{String: sanitize(b.Email.String), Valid: b.Email.Valid}
+	b.Link = sql.NullString{String: sanitize(b.Link.String), Valid: b.Link.Valid}
+	b.Branch = sql.NullString{String: sanitize(b.Branch.String), Valid: b.Branch.Valid}
+	b.Ref = sql.NullString{String: sanitize(b.Ref.String), Valid: b.Ref.Valid}
+	b.BaseRef = sql.NullString{String: sanitize(b.BaseRef.String), Valid: b.BaseRef.Valid}
+	b.HeadRef = sql.NullString{String: sanitize(b.HeadRef.String), Valid: b.HeadRef.Valid}
+	b.Host = sql.NullString{String: sanitize(b.Host.String), Valid: b.Host.Valid}
+	b.Runtime = sql.NullString{String: sanitize(b.Runtime.String), Valid: b.Runtime.Valid}
+	// nolint: lll // ignore long line length
+	b.Distribution = sql.NullString{String: sanitize(b.Distribution.String), Valid: b.Distribution.Valid}
 
 	return nil
 }

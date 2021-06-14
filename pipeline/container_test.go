@@ -907,7 +907,7 @@ func testContainers() *ContainerSlice {
 			Pull:        "always",
 		},
 		{
-			ID:          "step_github octocat._1_echo",
+			ID:          "step_github/octocat._1_echo",
 			Commands:    []string{"echo hello"},
 			Directory:   "/home/github/octocat",
 			Environment: map[string]string{"FOO": "bar"},

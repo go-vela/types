@@ -4,11 +4,7 @@
 
 package yaml
 
-import (
-	"fmt"
-
-	"github.com/go-vela/types/pipeline"
-)
+import "github.com/go-vela/types/pipeline"
 
 type (
 	// Metadata is the yaml representation of
@@ -73,10 +69,9 @@ func (m *Metadata) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	// overwrite existing metadata environment details
-	m = (*Metadata)(metadata)
-
-	fmt.Println("m ENV: ", m.Environment)
-	fmt.Println("m CLONE", *m.Clone)
+	m.Template = metadata.Template
+	m.Clone = metadata.Clone
+	m.Environment = metadata.Environment
 
 	return nil
 }

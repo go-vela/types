@@ -5,7 +5,6 @@
 package yaml
 
 import (
-	"fmt"
 	"io/ioutil"
 	"reflect"
 	"testing"
@@ -25,7 +24,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
 				},
 				Environment: raw.StringSliceMap{
 					"HELLO": "Hello, Global Message",
@@ -227,7 +228,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
 				},
 				Stages: StageSlice{
 					{
@@ -343,7 +346,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
 				},
 				Steps: StepSlice{
 					{
@@ -448,8 +453,6 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 		}
 
 		err = yaml.Unmarshal(b, got)
-
-		fmt.Println("GOT: ", got.Environment)
 
 		if err != nil {
 			t.Errorf("UnmarshalYAML returned err: %v", err)

@@ -26,7 +26,7 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 			metadata: &Metadata{
 				Template:    false,
 				Clone:       &fBool,
-				Environment: nil,
+				Environment: []string{"steps", "services", "secrets"},
 			},
 			want: &pipeline.Metadata{
 				Template:    false,
@@ -119,8 +119,9 @@ func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 		{
 			file: "testdata/metadata.yml",
 			want: &Metadata{
-				Template: false,
-				Clone:    nil,
+				Template:    false,
+				Clone:       nil,
+				Environment: []string{"steps", "services", "secrets"},
 			},
 		},
 	}

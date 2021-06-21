@@ -5,6 +5,7 @@
 package yaml
 
 import (
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"testing"
@@ -25,6 +26,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 				Version: "1",
 				Metadata: Metadata{
 					Template: false,
+				},
+				Environment: raw.StringSliceMap{
+					"HELLO": "Hello, Global Message",
 				},
 				Worker: Worker{
 					Flavor:   "16cpu8gb",
@@ -444,6 +448,8 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 		}
 
 		err = yaml.Unmarshal(b, got)
+
+		fmt.Println("GOT: ", got.Environment)
 
 		if err != nil {
 			t.Errorf("UnmarshalYAML returned err: %v", err)

@@ -18,7 +18,7 @@ type (
 
 	// helper type that allows the unmarshaler interface
 	// to add default values back into metadata. Using the
-	// Metadata type directly will result in a reflection error
+	// Metadata type directly will result in a reflection error.
 	_metadata Metadata
 )
 

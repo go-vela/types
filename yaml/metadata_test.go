@@ -113,15 +113,25 @@ func TestYaml_Metadata_HasEnvironment(t *testing.T) {
 func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		file string
-		want *Metadata
+		failure bool
+		file    string
+		want    *Metadata
 	}{
 		{
-			file: "testdata/metadata.yml",
+			failure: false,
+			file:    "testdata/metadata.yml",
 			want: &Metadata{
 				Template:    false,
 				Clone:       nil,
 				Environment: []string{"steps", "services", "secrets"},
+			},
+		},
+		{
+			file: "testdata/metadata_env.yml",
+			want: &Metadata{
+				Template:    false,
+				Clone:       nil,
+				Environment: []string{"steps"},
 			},
 		},
 	}
@@ -136,7 +146,6 @@ func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 		}
 
 		err = yaml.Unmarshal(b, got)
-
 		if err != nil {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}

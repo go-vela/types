@@ -45,6 +45,11 @@ func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {
 			file:    "testdata/invalid.json",
 			want:    nil,
 		},
+		{
+			failure: true,
+			file:    "testdata/invalid_2.json",
+			want:    nil,
+		},
 	}
 
 	// run tests
@@ -108,6 +113,11 @@ func TestRaw_StringSliceMap_UnmarshalYAML(t *testing.T) {
 		{
 			failure: true,
 			file:    "testdata/invalid.yml",
+			want:    nil,
+		},
+		{
+			failure: true,
+			file:    "testdata/invalid_2.yml",
 			want:    nil,
 		},
 	}

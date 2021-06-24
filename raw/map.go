@@ -52,7 +52,11 @@ func (s *StringSliceMap) UnmarshalJSON(b []byte) error {
 		// iterate through each element in the json slice
 		for _, v := range jsonSlice {
 			// split each slice element into key/value pairs
-			kvPair := strings.SplitN(v, "=", 2)
+			kvPair := strings.SplitN(v, "=", 2) // nolint:gomnd // accepting magic number
+
+			if len(kvPair) != 2 { // nolint:gomnd // accepting magic number
+				return errors.New("unable to unmarshal into StringSliceMap")
+			}
 
 			// append each key/value pair to our target map
 			targetMap[kvPair[0]] = kvPair[1]
@@ -99,7 +103,11 @@ func (s *StringSliceMap) UnmarshalYAML(unmarshal func(interface{}) error) error 
 		// iterate through each element in the yaml slice
 		for _, v := range yamlSlice {
 			// split each slice element into key/value pairs
-			kvPair := strings.SplitN(v, "=", 2)
+			kvPair := strings.SplitN(v, "=", 2) // nolint:gomnd // accepting magic number
+
+			if len(kvPair) != 2 { // nolint:gomnd // accepting magic number
+				return errors.New("unable to unmarshal into StringSliceMap")
+			}
 
 			// append each key/value pair to our target map
 			targetMap[kvPair[0]] = kvPair[1]

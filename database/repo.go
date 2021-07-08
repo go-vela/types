@@ -60,6 +60,7 @@ type Repo struct {
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
+	PipelineType sql.NullString `sql:"pipeline_type"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -175,6 +176,11 @@ func (r *Repo) Nullify() *Repo {
 		r.Visibility.Valid = false
 	}
 
+	// // check if the PipelineType field should be false
+	// if len(r.PipelineType.String) == 0 {
+	// 	r.PipelineType.Valid = false
+	// }
+
 	return r
 }
 
@@ -203,6 +209,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
+	repo.SetPipelineType(r.PipelineType.String)
 
 	return repo
 }
@@ -250,6 +257,7 @@ func (r *Repo) Validate() error {
 	r.Clone = sql.NullString{String: sanitize(r.Clone.String), Valid: r.Clone.Valid}
 	r.Branch = sql.NullString{String: sanitize(r.Branch.String), Valid: r.Branch.Valid}
 	r.Visibility = sql.NullString{String: sanitize(r.Visibility.String), Valid: r.Visibility.Valid}
+	r.PipelineType = sql.NullString{String: sanitize(r.PipelineType.String), Valid: r.PipelineType.Valid}
 
 	return nil
 }
@@ -278,6 +286,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
+		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 	}
 
 	return repo.Nullify()

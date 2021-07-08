@@ -6,6 +6,7 @@ require (
 	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 	github.com/drone/envsubst v1.0.3
 	github.com/ghodss/yaml v1.0.0
+	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/lib/pq v1.10.2
 	github.com/microcosm-cc/bluemonday v1.0.15

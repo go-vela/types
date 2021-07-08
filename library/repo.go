@@ -30,6 +30,7 @@ type Repo struct {
 	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
 	AllowTag     *bool   `json:"allow_tag,omitempty"`
 	AllowComment *bool   `json:"allow_comment,omitempty"`
+	PipelineType *string `json:"pipeline_type,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -52,6 +53,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
 		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
 		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
+		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
@@ -333,6 +335,19 @@ func (r *Repo) GetAllowComment() bool {
 	return *r.AllowComment
 }
 
+// GetPipelineType returns the PipelineType field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetPipelineType() string {
+	// return zero value if Repo type or PipelineType field is nil
+	if r == nil || r.PipelineType == nil {
+		return ""
+	}
+
+	return *r.PipelineType
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -593,6 +608,19 @@ func (r *Repo) SetAllowComment(v bool) {
 	r.AllowComment = &v
 }
 
+// SetPipelineType sets the PipelineType field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetPipelineType(v string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.PipelineType = &v
+}
+
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -615,6 +643,7 @@ func (r *Repo) String() string {
   Trusted: %t,
   UserID: %d
   Visibility: %s,
+	PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -635,5 +664,6 @@ func (r *Repo) String() string {
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
+		r.GetPipelineType(),
 	)
 }

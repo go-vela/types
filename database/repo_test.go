@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestDatabase_Repo_Decrypt(t *testing.T) {
@@ -106,7 +105,7 @@ func TestDatabase_Repo_Encrypt(t *testing.T) {
 
 func TestDatabase_Repo_Nullify(t *testing.T) {
 	// setup types
-	// var r *Repo
+	var r *Repo
 
 	want := &Repo{
 		ID:           sql.NullInt64{Int64: 0, Valid: false},
@@ -132,23 +131,19 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 			repo: testRepo(),
 			want: testRepo(),
 		},
-		// {
-		// 	repo: r,
-		// 	want: nil,
-		// },
-		// {
-		// 	repo: new(Repo),
-		// 	want: want,
-		// },
+		{
+			repo: r,
+			want: nil,
+		},
+		{
+			repo: new(Repo),
+			want: want,
+		},
 	}
 
 	// run tests
 	for _, test := range tests {
 		got := test.repo.Nullify()
-
-		if diff := cmp.Diff(want, got); diff != "" {
-			t.Errorf("MakeGatewayInfo() mismatch (-want +got):\n%s", diff)
-		}
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Nullify is %v, want %v", got, test.want)
@@ -180,7 +175,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
-	want.SetPipelineType("master")
+	want.SetPipelineType("yaml")
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -310,7 +305,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
-	r.SetPipelineType("")
+	r.SetPipelineType("yaml")
 
 	want := testRepo()
 

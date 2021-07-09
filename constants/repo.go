@@ -12,9 +12,9 @@ const (
 
 	// PipelineTypeGo defines the pipeline type for allowing users
 	// in Vela to control their pipeline being compiled as Go templates.
-	PipelineTypeGo = "yaml"
+	PipelineTypeGo = "go"
 
 	// PipelineTypeStarlark defines the pipeline type for allowing users
 	// in Vela to control their pipeline being compiled as Starlark templates.
-	PipelineTypeStarlark = "yaml"
+	PipelineTypeStarlark = "starlark"
 )

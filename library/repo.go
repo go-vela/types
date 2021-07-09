@@ -643,7 +643,7 @@ func (r *Repo) String() string {
   Trusted: %t,
   UserID: %d
   Visibility: %s,
-	PipelineType: %s,
+  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),

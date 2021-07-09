@@ -176,10 +176,10 @@ func (r *Repo) Nullify() *Repo {
 		r.Visibility.Valid = false
 	}
 
-	// // check if the PipelineType field should be false
-	// if len(r.PipelineType.String) == 0 {
-	// 	r.PipelineType.Valid = false
-	// }
+	// check if the PipelineType field should be false
+	if len(r.PipelineType.String) == 0 {
+		r.PipelineType.Valid = false
+	}
 
 	return r
 }

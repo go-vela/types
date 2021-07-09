@@ -305,7 +305,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Trusted: %t,
   UserID: %d
   Visibility: %s,
-	PipelineType: %s,
+  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),

@@ -17,11 +17,6 @@ type (
 		Clone       *bool    `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-clone-tag"`
 		Environment []string `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"default=true,description=Controls which containers processes can have global env injected.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-environment-tag"`
 	}
-
-	// helper type that allows the unmarshaler interface
-	// to add default values back into metadata. Using the
-	// Metadata type directly will result in a reflection error.
-	_metadata Metadata
 )
 
 // ToPipeline converts the Metadata type
@@ -56,7 +51,11 @@ func (m *Metadata) HasEnvironment(container string) bool {
 // UnmarshalYAML implements the Unmarshaler interface for the Metadata type.
 func (m *Metadata) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// metadata we try unmarshalling to
-	metadata := new(_metadata)
+	metadata := new(struct {
+		Template    bool
+		Clone       *bool
+		Environment []string
+	})
 
 	// attempt to unmarshal as a metadata type
 	err := unmarshal(metadata)

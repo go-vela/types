@@ -4,6 +4,9 @@ version: "1"
 metadata:
   template: false
 
+environment:
+  HELLO: "Hello, Global Message"  
+
 templates:
   - name: docker_publish
     source: github.com/go-vela/atlas/stable/docker_publish

@@ -205,8 +205,9 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 
 func testBuildStages() *Build {
 	return &Build{
-		Version: "1",
-		ID:      "github octocat._1",
+		Version:     "1",
+		ID:          "github octocat._1",
+		Environment: map[string]string{"HELLO": "Hello, Global Message"},
 		Services: ContainerSlice{
 			{
 				ID:          "service_github octocat._1_postgres",
@@ -287,8 +288,9 @@ func testBuildStages() *Build {
 
 func testBuildSteps() *Build {
 	return &Build{
-		Version: "1",
-		ID:      "github octocat._1",
+		Version:     "1",
+		ID:          "github octocat._1",
+		Environment: map[string]string{"HELLO": "Hello, Global Message"},
 		Services: ContainerSlice{
 			{
 				ID:          "service_github octocat._1_postgres",

@@ -24,7 +24,12 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
+				},
+				Environment: raw.StringSliceMap{
+					"HELLO": "Hello, Global Message",
 				},
 				Worker: Worker{
 					Flavor:   "16cpu8gb",
@@ -223,7 +228,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
 				},
 				Stages: StageSlice{
 					{
@@ -339,7 +346,9 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			want: &Build{
 				Version: "1",
 				Metadata: Metadata{
-					Template: false,
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
 				},
 				Steps: StepSlice{
 					{

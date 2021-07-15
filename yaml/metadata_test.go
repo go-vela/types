@@ -24,32 +24,38 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 	}{
 		{
 			metadata: &Metadata{
-				Template: false,
-				Clone:    &fBool,
+				Template:    false,
+				Clone:       &fBool,
+				Environment: []string{"steps", "services", "secrets"},
 			},
 			want: &pipeline.Metadata{
-				Template: false,
-				Clone:    false,
+				Template:    false,
+				Clone:       false,
+				Environment: []string{"steps", "services", "secrets"},
 			},
 		},
 		{
 			metadata: &Metadata{
-				Template: false,
-				Clone:    &tBool,
+				Template:    false,
+				Clone:       &tBool,
+				Environment: []string{"steps", "services"},
 			},
 			want: &pipeline.Metadata{
-				Template: false,
-				Clone:    true,
+				Template:    false,
+				Clone:       true,
+				Environment: []string{"steps", "services"},
 			},
 		},
 		{
 			metadata: &Metadata{
-				Template: false,
-				Clone:    nil,
+				Template:    false,
+				Clone:       nil,
+				Environment: []string{"steps"},
 			},
 			want: &pipeline.Metadata{
-				Template: false,
-				Clone:    true,
+				Template:    false,
+				Clone:       true,
+				Environment: []string{"steps"},
 			},
 		},
 	}
@@ -64,17 +70,68 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 	}
 }
 
+func TestYaml_Metadata_HasEnvironment(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		metadata  *Metadata
+		container string
+		want      bool
+	}{
+		{
+			metadata: &Metadata{
+				Environment: []string{"steps", "services", "secrets"},
+			},
+			container: "steps",
+			want:      true,
+		},
+		{
+			metadata: &Metadata{
+				Environment: []string{"services", "secrets"},
+			},
+			container: "services",
+			want:      true,
+		},
+		{
+			metadata: &Metadata{
+				Environment: []string{"steps", "services", "secrets"},
+			},
+			container: "notacontainer",
+			want:      false,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.metadata.HasEnvironment(test.container)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipeline is %v, want %v", got, test.want)
+		}
+	}
+}
+
 func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		file string
-		want *Metadata
+		failure bool
+		file    string
+		want    *Metadata
 	}{
 		{
-			file: "testdata/metadata.yml",
+			failure: false,
+			file:    "testdata/metadata.yml",
 			want: &Metadata{
-				Template: false,
-				Clone:    nil,
+				Template:    false,
+				Clone:       nil,
+				Environment: []string{"steps", "services", "secrets"},
+			},
+		},
+		{
+			file: "testdata/metadata_env.yml",
+			want: &Metadata{
+				Template:    false,
+				Clone:       nil,
+				Environment: []string{"steps"},
 			},
 		},
 	}
@@ -89,7 +146,6 @@ func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 		}
 
 		err = yaml.Unmarshal(b, got)
-
 		if err != nil {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}

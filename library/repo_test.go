@@ -29,6 +29,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_TIMEOUT":        "30",
 		"VELA_REPO_TRUSTED":        "false",
 		"VELA_REPO_VISIBILITY":     "public",
+		"VELA_REPO_PIPELINE_TYPE":  "",
 		"REPOSITORY_ACTIVE":        "true",
 		"REPOSITORY_ALLOW_COMMENT": "false",
 		"REPOSITORY_ALLOW_DEPLOY":  "false",
@@ -148,6 +149,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
 			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
+
+		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
+			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
+		}
 	}
 }
 
@@ -192,6 +197,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
+		test.repo.SetPipelineType(test.want.GetPipelineType())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -268,6 +274,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
 			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
+
+		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
+			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
+		}
 	}
 }
 
@@ -295,6 +305,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Trusted: %t,
   UserID: %d
   Visibility: %s,
+  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -315,6 +326,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
+		r.GetPipelineType(),
 	)
 
 	// run test
@@ -348,6 +360,7 @@ func testRepo() *Repo {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
+	r.SetPipelineType("")
 
 	return r
 }

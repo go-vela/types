@@ -108,17 +108,18 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 	var r *Repo
 
 	want := &Repo{
-		ID:         sql.NullInt64{Int64: 0, Valid: false},
-		UserID:     sql.NullInt64{Int64: 0, Valid: false},
-		Hash:       sql.NullString{String: "", Valid: false},
-		Org:        sql.NullString{String: "", Valid: false},
-		Name:       sql.NullString{String: "", Valid: false},
-		FullName:   sql.NullString{String: "", Valid: false},
-		Link:       sql.NullString{String: "", Valid: false},
-		Clone:      sql.NullString{String: "", Valid: false},
-		Branch:     sql.NullString{String: "", Valid: false},
-		Timeout:    sql.NullInt64{Int64: 0, Valid: false},
-		Visibility: sql.NullString{String: "", Valid: false},
+		ID:           sql.NullInt64{Int64: 0, Valid: false},
+		UserID:       sql.NullInt64{Int64: 0, Valid: false},
+		Hash:         sql.NullString{String: "", Valid: false},
+		Org:          sql.NullString{String: "", Valid: false},
+		Name:         sql.NullString{String: "", Valid: false},
+		FullName:     sql.NullString{String: "", Valid: false},
+		Link:         sql.NullString{String: "", Valid: false},
+		Clone:        sql.NullString{String: "", Valid: false},
+		Branch:       sql.NullString{String: "", Valid: false},
+		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
+		Visibility:   sql.NullString{String: "", Valid: false},
+		PipelineType: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -174,6 +175,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
+	want.SetPipelineType("yaml")
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -303,6 +305,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
+	r.SetPipelineType("yaml")
 
 	want := testRepo()
 
@@ -338,5 +341,6 @@ func testRepo() *Repo {
 		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
+		PipelineType: sql.NullString{String: "yaml", Valid: true},
 	}
 }

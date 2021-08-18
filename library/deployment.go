@@ -24,6 +24,7 @@ type Deployment struct {
 	Target      *string             `json:"target,omitempty"`
 	Description *string             `json:"description,omitempty"`
 	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
+	Builds		*[]Build			`json:"builds,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -156,6 +157,18 @@ func (d *Deployment) GetPayload() map[string]string {
 	return *d.Payload
 }
 
+// GetBuilds returns the Builds field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetBuilds() []Build {
+	if d == nil || d.Builds == nil {
+		return []Build{}
+	}
+
+	return *d.Builds
+}
+
 // SetID sets the ID field.
 //
 // When the provided Deployment type is nil, it
@@ -286,6 +299,19 @@ func (d *Deployment) SetPayload(v raw.StringSliceMap) {
 	d.Payload = &v
 }
 
+// SetBuilds sets the Builds field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetBuilds(b []Build) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.Builds = &b
+}
+
 // String implements the Stringer interface for the Deployment type.
 func (d *Deployment) String() string {
 	return fmt.Sprintf(`{
@@ -299,6 +325,7 @@ func (d *Deployment) String() string {
   URL: %s,
   User: %s,
   Payload: %s,
+  Builds: %d,
 }`,
 		d.GetCommit(),
 		d.GetDescription(),
@@ -310,5 +337,6 @@ func (d *Deployment) String() string {
 		d.GetURL(),
 		d.GetUser(),
 		d.GetPayload(),
+		len(d.GetBuilds()),
 	)
 }

@@ -24,7 +24,7 @@ type Deployment struct {
 	Target      *string             `json:"target,omitempty"`
 	Description *string             `json:"description,omitempty"`
 	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
-	Builds		*[]Build			`json:"builds,omitempty"`
+	Builds      *[]Build            `json:"builds,omitempty"`
 }
 
 // GetID returns the ID field.

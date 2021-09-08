@@ -124,7 +124,7 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 
 	// check if the org provided matches what we expect
 	if !strings.EqualFold(parts[0], org) {
-		return "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, parts[0])
 	}
 
 	return parts[0], parts[1], nil
@@ -154,12 +154,12 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 
 		// check if the org provided matches what we expect
 		if !strings.EqualFold(parts[0], org) {
-			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, org)
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, parts[0])
 		}
 
 		// check if the repo provided matches what we expect
 		if !strings.EqualFold(parts[1], repo) {
-			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidRepo, repo)
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidRepo, parts[1])
 		}
 
 		return parts[0], parts[1], parts[2], nil

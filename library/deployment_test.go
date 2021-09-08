@@ -159,6 +159,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
   URL: %s,
   User: %s,
   Payload: %s,
+  Builds: %d,
 }`,
 		d.GetCommit(),
 		d.GetDescription(),
@@ -170,6 +171,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
 		d.GetURL(),
 		d.GetUser(),
 		d.GetPayload(),
+		len(d.GetBuilds()),
 	)
 
 	// run test

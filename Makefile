@@ -141,4 +141,6 @@ bump-deps-full: check
 schema:
 	@echo
 	@echo "### Creating schema"
+	@go get github.com/alecthomas/jsonschema
+	@go get github.com/iancoleman/orderedmap
 	@go run cmd/schema/main.go > schema.json

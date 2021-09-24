@@ -50,7 +50,7 @@ type (
 		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
 		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
-		User        string            `json:"user,omitempty" yaml:"user,omitempty"`
+		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
 	}
 )
 

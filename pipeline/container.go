@@ -50,6 +50,7 @@ type (
 		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
 		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
+		User        string            `json:"user,omitempty" yaml:"user,omitempty"`
 	}
 )
 
@@ -126,7 +127,8 @@ func (c *Container) Empty() bool {
 		reflect.DeepEqual(c.Ruleset, Ruleset{}) &&
 		len(c.Secrets) == 0 &&
 		len(c.Ulimits) == 0 &&
-		len(c.Volumes) == 0 {
+		len(c.Volumes) == 0 &&
+		len(c.User) == 0 {
 		return true
 	}
 

@@ -36,7 +36,7 @@ type (
 		Parameters  map[string]interface{} `yaml:"parameters,omitempty"  json:"parameters,omitempty" jsonschema:"description=Extra configuration variables for a plugin.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-parameters-tag"`
 		Detach      bool                   `yaml:"detach,omitempty"      json:"detach,omitempty" jsonschema:"description=Run the container in a detached (headless) state.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-detach-tag"`
 		Privileged  bool                   `yaml:"privileged,omitempty"  json:"privileged,omitempty" jsonschema:"description=Run the container with extra privileges.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-privileged-tag"`
-		User        string                 `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Run the container with a non root user.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-tag"`
+		User        string                 `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Set the user for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-tag"`
 	}
 )
 

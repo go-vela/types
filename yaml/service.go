@@ -51,6 +51,7 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 			Ports:       service.Ports,
 			Pull:        service.Pull,
 			Ulimits:     *service.Ulimits.ToPipeline(),
+			User:        service.User,
 		})
 	}
 

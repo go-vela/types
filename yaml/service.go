@@ -29,6 +29,7 @@ type (
 		Ports       raw.StringSlice    `yaml:"ports,omitempty"       json:"ports,omitempty" jsonschema:"description=List of ports to map for the container in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/services/#the-ports-tag"`
 		Pull        string             `yaml:"pull,omitempty"        json:"pull,omitempty" jsonschema:"enum=always,enum=not_present,enum=on_start,enum=never,default=not_present,description=Declaration to configure if and when the Docker image is pulled.\nReference: https://go-vela.github.io/docs/reference/yaml/services/#the-pul-tag"`
 		Ulimits     UlimitSlice        `yaml:"ulimits,omitempty"     json:"ulimits,omitempty" jsonschema:"description=Set the user limits for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/services/#the-ulimits-tag"`
+		User        string             `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Set the user for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-tag"`
 	}
 )
 
@@ -50,6 +51,7 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 			Ports:       service.Ports,
 			Pull:        service.Pull,
 			Ulimits:     *service.Ulimits.ToPipeline(),
+			User:        service.User,
 		})
 	}
 

@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
 	"reflect"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/drone/envsubst"
 	"github.com/go-vela/types/constants"
@@ -53,6 +55,18 @@ type (
 		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
 	}
 )
+
+func dnsSafeRandomString(n int) string {
+	var letter = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+
+	b := make([]rune, n)
+	for i := range b {
+		// nolint:gosec // accepting weak RNG for test
+		b[i] = letter[rand.Intn(len(letter))]
+	}
+
+	return string(b)
+}
 
 // Purge removes the Containers that have a ruleset
 // that do not match the provided ruledata.
@@ -218,7 +232,7 @@ func (c *Container) Execute(r *RuleData) bool {
 
 // MergeEnv takes a list of environment variables and attempts
 // to set them in the container environment. If the environment
-// variable already exists in the container, than this will
+// variable already exists in the container, then this will
 // overwrite the existing environment variable.
 func (c *Container) MergeEnv(environment map[string]string) error {
 	// check if the container is empty
@@ -283,6 +297,13 @@ func (c *Container) Sanitize(driver string) *Container {
 
 		if strings.Contains(c.ID, "/") {
 			c.ID = strings.ReplaceAll(c.ID, "/", "-")
+		}
+
+		// Kubernetes requires DNS compatible names (lowercase, <= 63 chars)
+		container.ID = strings.ToLower(c.ID)
+		if utf8.RuneCountInString(c.ID) > 63 {
+			rs := []rune(c.ID)
+			container.ID = fmt.Sprintf("%s-%s", string(rs[:56]), dnsSafeRandomString(6))
 		}
 
 		return container

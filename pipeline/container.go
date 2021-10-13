@@ -56,18 +56,6 @@ type (
 	}
 )
 
-func dnsSafeRandomString(n int) string {
-	var letter = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
-
-	b := make([]rune, n)
-	for i := range b {
-		// nolint:gosec // accepting weak RNG for test
-		b[i] = letter[rand.Intn(len(letter))]
-	}
-
-	return string(b)
-}
-
 // Purge removes the Containers that have a ruleset
 // that do not match the provided ruledata.
 func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
@@ -372,4 +360,20 @@ func (c *Container) Substitute() error {
 	}
 
 	return nil
+}
+
+// dnsSafeRandomString creates a lowercase alphanumeric string of length n.
+// Some kubernetes IDs must be dns-safe, so the character set and length is limited.
+// If an ID is too long, use this to generate a random suffix for a truncated ID.
+func dnsSafeRandomString(n int) string {
+	// this function is based on randomString in database/build_test.go
+	var letter = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+
+	b := make([]rune, n)
+	for i := range b {
+		// nolint:gosec // this is not about security. Just a random string.
+		b[i] = letter[rand.Intn(len(letter))]
+	}
+
+	return string(b)
 }

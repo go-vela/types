@@ -26,4 +26,7 @@ const (
 
 	// StatusSuccess defines the status type for build and step success statuses.
 	StatusSuccess = "success"
+
+	// StatusSkipped defines the status type for build and step skipped statuses.
+	StatusSkipped = "skipped"
 )

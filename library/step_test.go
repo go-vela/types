@@ -274,6 +274,69 @@ func TestLibrary_Step_String(t *testing.T) {
 
 func TestLibrary_StepFromContainer(t *testing.T) {
 	// setup types
+	s := new(Step)
+
+	// add dummy values for values managed by StepFromContainer
+	s.SetName("clone")
+	s.SetNumber(1)
+	s.SetImage("target/vela-git:v0.3.0")
+	s.SetStage("clone")
+	s.SetHost("example.company.com")
+	s.SetRuntime("docker")
+	s.SetDistribution("linux")
+	s.SetStatus("pending")
+
+	tests := []struct {
+		container *pipeline.Container
+		build     *Build
+		want      *Step
+	}{
+		{
+			container: nil,
+			build:     nil,
+			want:      nil,
+		},
+		{
+			container: new(pipeline.Container),
+			build:     nil,
+			want:      nil,
+		},
+		{
+			container: nil,
+			build:     testBuild(),
+			want:      nil,
+		},
+		{
+			container: new(pipeline.Container),
+			build:     testBuild(),
+			want:      nil,
+		},
+		{
+			container: &pipeline.Container{
+				Name:   "clone",
+				Number: 1,
+				Image:  "target/vela-git:v0.3.0",
+				Environment: map[string]string{
+					"VELA_STEP_STAGE": "clone",
+				},
+			},
+			build: testBuild(),
+			want:  s,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := StepFromContainer(test.container, test.build)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
+		}
+	}
+}
+
+func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
+	// setup types
 	s := testStep()
 
 	// modify fields that aren't set
@@ -318,10 +381,10 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := StepFromContainer(test.container)
+		got := StepFromContainerEnvironment(test.container)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
+			t.Errorf("StepFromContainerEnvironment is %v, want %v", got, test.want)
 		}
 	}
 }

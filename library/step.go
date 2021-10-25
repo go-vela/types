@@ -506,51 +506,38 @@ func (s *Step) String() string {
 	)
 }
 
-// StepFromContainer converts the pipeline
-// Container type to a library Step type
-// before the Container's environment is fully populated.
-func StepFromContainer(ctn *pipeline.Container, build *Build) *Step {
-	// check if container is nil or uninitialized
-	if ctn == nil || ctn.Name == "" {
-		return nil
+// InitFrom initializes some Step type fields based on a Container and a Build.
+func (s *Step) InitFrom(ctn *pipeline.Container, build *Build) {
+	if ctn != nil && ctn.Name != "" {
+		// set values from the container
+		s.SetName(ctn.Name)
+		s.SetNumber(ctn.Number)
+		s.SetImage(ctn.Image)
+
+		// check if the VELA_STEP_STAGE environment variable exists
+		value, ok := ctn.Environment["VELA_STEP_STAGE"]
+		if ok {
+			// set the Stage field to the value from environment variable
+			s.SetStage(value)
+		}
 	}
 
-	// create new step type we want to return
-	s := new(Step)
-
-	// set values from the container
-	s.SetName(ctn.Name)
-	s.SetNumber(ctn.Number)
-	s.SetImage(ctn.Image)
-
-	// check if the VELA_STEP_STAGE environment variable exists
-	value, ok := ctn.Environment["VELA_STEP_STAGE"]
-	if ok {
-		// set the Stage field to the value from environment variable
-		s.SetStage(value)
+	if build != nil {
+		// set values from the build
+		s.SetHost(build.GetHost())
+		s.SetRuntime(build.GetRuntime())
+		s.SetDistribution(build.GetDistribution())
 	}
-
-	// check if build is nil
-	if build == nil {
-		return s
-	}
-
-	// set values from the build
-	s.SetHost(build.GetHost())
-	s.SetRuntime(build.GetRuntime())
-	s.SetDistribution(build.GetDistribution())
 
 	// default status to Pending
 	s.SetStatus(constants.StatusPending)
-
-	return s
 }
 
-// StepFromContainerEnvironment converts the pipeline
+// StepFromContainer converts the pipeline
 // Container type to a library Step type using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
-func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {
+func StepFromContainer(ctn *pipeline.Container) *Step {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {
 		return nil

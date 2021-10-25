@@ -272,7 +272,13 @@ func TestLibrary_Step_String(t *testing.T) {
 	}
 }
 
-func TestLibrary_StepFromContainer(t *testing.T) {
+func TestLibrary_Step_InitFrom(t *testing.T) {
+	// some strings used in the tests (not const, as we need the address)
+	defaultStatus := "pending"
+	exampleHost := "example.company.com"
+	exampleRuntime := "docker"
+	exampleDistribution := "linux"
+
 	// setup types
 	s := new(Step)
 
@@ -281,10 +287,10 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 	s.SetNumber(1)
 	s.SetImage("target/vela-git:v0.3.0")
 	s.SetStage("clone")
-	s.SetHost("example.company.com")
-	s.SetRuntime("docker")
-	s.SetDistribution("linux")
-	s.SetStatus("pending")
+	s.SetHost(exampleHost)
+	s.SetRuntime(exampleRuntime)
+	s.SetDistribution(exampleDistribution)
+	s.SetStatus(defaultStatus)
 
 	tests := []struct {
 		container *pipeline.Container
@@ -294,22 +300,32 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 		{
 			container: nil,
 			build:     nil,
-			want:      nil,
+			want:      &Step{Status: &defaultStatus},
 		},
 		{
 			container: new(pipeline.Container),
 			build:     nil,
-			want:      nil,
+			want:      &Step{Status: &defaultStatus},
 		},
 		{
 			container: nil,
 			build:     testBuild(),
-			want:      nil,
+			want: &Step{
+				Status:       &defaultStatus,
+				Host:         &exampleHost,
+				Runtime:      &exampleRuntime,
+				Distribution: &exampleDistribution,
+			},
 		},
 		{
 			container: new(pipeline.Container),
 			build:     testBuild(),
-			want:      nil,
+			want: &Step{
+				Status:       &defaultStatus,
+				Host:         &exampleHost,
+				Runtime:      &exampleRuntime,
+				Distribution: &exampleDistribution,
+			},
 		},
 		{
 			container: &pipeline.Container{
@@ -327,15 +343,16 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := StepFromContainer(test.container, test.build)
+		step := new(Step)
+		step.InitFrom(test.container, test.build)
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
+		if !reflect.DeepEqual(step, test.want) {
+			t.Errorf("Step.InitFrom made %v, want %v", step, test.want)
 		}
 	}
 }
 
-func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
+func TestLibrary_StepFromContainer(t *testing.T) {
 	// setup types
 	s := testStep()
 
@@ -381,10 +398,10 @@ func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := StepFromContainerEnvironment(test.container)
+		got := StepFromContainer(test.container)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("StepFromContainerEnvironment is %v, want %v", got, test.want)
+			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
 		}
 	}
 }

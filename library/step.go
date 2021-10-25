@@ -6,9 +6,9 @@ package library
 
 import (
 	"fmt"
-	"github.com/go-vela/types/constants"
 	"strconv"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 

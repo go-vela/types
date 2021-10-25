@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
 	"reflect"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/drone/envsubst"
 	"github.com/go-vela/types/constants"
@@ -218,7 +220,7 @@ func (c *Container) Execute(r *RuleData) bool {
 
 // MergeEnv takes a list of environment variables and attempts
 // to set them in the container environment. If the environment
-// variable already exists in the container, than this will
+// variable already exists in the container, then this will
 // overwrite the existing environment variable.
 func (c *Container) MergeEnv(environment map[string]string) error {
 	// check if the container is empty
@@ -283,6 +285,19 @@ func (c *Container) Sanitize(driver string) *Container {
 
 		if strings.Contains(c.ID, "/") {
 			c.ID = strings.ReplaceAll(c.ID, "/", "-")
+		}
+
+		// Kubernetes requires DNS compatible names (lowercase, <= 63 chars)
+		container.ID = strings.ToLower(c.ID)
+		const dnsMaxLength = 63
+		if utf8.RuneCountInString(c.ID) > dnsMaxLength {
+			rs := []rune(c.ID)
+			const randomSuffixLength = 6
+			container.ID = fmt.Sprintf(
+				"%s-%s",
+				string(rs[:dnsMaxLength-1-randomSuffixLength]),
+				dnsSafeRandomString(randomSuffixLength),
+			)
 		}
 
 		return container
@@ -351,4 +366,20 @@ func (c *Container) Substitute() error {
 	}
 
 	return nil
+}
+
+// dnsSafeRandomString creates a lowercase alphanumeric string of length n.
+// Some kubernetes IDs must be dns-safe, so the character set and length is limited.
+// If an ID is too long, use this to generate a random suffix for a truncated ID.
+func dnsSafeRandomString(n int) string {
+	// this function is based on randomString in database/build_test.go
+	var letter = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+
+	b := make([]rune, n)
+	for i := range b {
+		// nolint:gosec // this is not about security. Just a random string.
+		b[i] = letter[rand.Intn(len(letter))]
+	}
+
+	return string(b)
 }

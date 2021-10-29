@@ -26,6 +26,10 @@ type Secret struct {
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
+	CreateTime   *string   `json:"create_time,omitempty"`
+	CreatedBy    *string   `json:"created_by,omitempty"`
+	UpdateTime   *string   `json:"update_time,omitempty"`
+	LastBuildID  *int64    `json:"last_build,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -46,6 +50,10 @@ func (s *Secret) Sanitize() *Secret {
 		Images:       s.Images,
 		Events:       s.Events,
 		AllowCommand: s.AllowCommand,
+		CreateTime:   s.CreateTime,
+		CreatedBy:    s.CreatedBy,
+		UpdateTime:   s.UpdateTime,
+		LastBuildID:  s.LastBuildID,
 	}
 }
 
@@ -227,6 +235,58 @@ func (s *Secret) GetAllowCommand() bool {
 	return *s.AllowCommand
 }
 
+// GetCreateTime returns the CreateTime field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetCreateTime() string {
+	// return zero value if Secret type or CreateTime field is nil
+	if s == nil || s.CreateTime == nil {
+		return ""
+	}
+
+	return *s.CreateTime
+}
+
+// GetCreatedBy returns the CreatedBy field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetCreatedBy() string {
+	// return zero value if Secret type or CreatedBy field is nil
+	if s == nil || s.CreatedBy == nil {
+		return ""
+	}
+
+	return *s.CreatedBy
+}
+
+// GetUpdateTime returns the UpdateTime field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetUpdateTime() string {
+	// return zero value if Secret type or UpdateTime field is nil
+	if s == nil || s.UpdateTime == nil {
+		return ""
+	}
+
+	return *s.UpdateTime
+}
+
+// GetLastBuild returns the LastBuild field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetLastBuildID() int64 {
+	// return zero value if Secret type or LastBuild field is nil
+	if s == nil || s.LastBuildID == nil {
+		return 0
+	}
+
+	return *s.LastBuildID
+}
+
 // SetID sets the ID field.
 //
 // When the provided Secret type is nil, it
@@ -357,6 +417,58 @@ func (s *Secret) SetAllowCommand(v bool) {
 	s.AllowCommand = &v
 }
 
+// SetCreateTime sets the CreateTime field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetCreateTime(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.CreateTime = &v
+}
+
+// SetCreatedBy sets the CreatedBy field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetCreatedBy(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.CreatedBy = &v
+}
+
+// SetUpdateTime sets the UpdateTime field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetUpdateTime(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.UpdateTime = &v
+}
+
+// SetLastBuild sets the LastBuild field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetLastBuildID(v int64) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.LastBuildID = &v
+}
+
 // String implements the Stringer interface for the Secret type.
 func (s *Secret) String() string {
 	return fmt.Sprintf(`{
@@ -370,6 +482,10 @@ func (s *Secret) String() string {
 	Team: %s,
 	Type: %s,
 	Value: %s,
+	CreateTime: %s,
+	CreatedBy: %s,
+	UpdateTime: %s,
+	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -381,6 +497,10 @@ func (s *Secret) String() string {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
+		s.GetCreateTime(),
+		s.GetCreatedBy(),
+		s.GetUpdateTime(),
+		s.GetLastBuildID(),
 	)
 }
 

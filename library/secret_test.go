@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -257,6 +258,18 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+		if test.secret.GetCreateTime() != test.want.GetCreateTime() {
+			t.Errorf("GetCreateTime is %v, want %v", test.secret.GetCreateTime(), test.want.GetCreateTime())
+		}
+		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("GetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
+		}
+		if test.secret.GetUpdateTime() != test.want.GetUpdateTime() {
+			t.Errorf("GetUpdateTime is %v, want %v", test.secret.GetUpdateTime(), test.want.GetUpdateTime())
+		}
+		if test.secret.GetLastBuildID() != test.want.GetLastBuildID() {
+			t.Errorf("GetLastBuild is %v, want %v", test.secret.GetLastBuildID(), test.want.GetLastBuildID())
+		}
 	}
 }
 
@@ -340,6 +353,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 	Team: %s,
 	Type: %s,
 	Value: %s,
+	CreateTime: %s,
+	CreatedBy: %s,
+	UpdateTime: %s,
+	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -351,6 +368,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
+		s.GetCreateTime(),
+		s.GetCreatedBy(),
+		s.GetUpdateTime(),
+		s.GetLastBuildID(),
 	)
 
 	// run test
@@ -364,6 +385,9 @@ func TestLibrary_Secret_String(t *testing.T) {
 // testSecret is a test helper function to create a Secret
 // type with all fields set to a fake value.
 func testSecret() *Secret {
+	currentTime := time.Now()
+	tsCreate := currentTime.Format(time.UnixDate)
+	tsUpdate := currentTime.Add(time.Hour * 1).Format(time.UnixDate)
 	s := new(Secret)
 
 	s.SetID(1)
@@ -376,6 +400,9 @@ func testSecret() *Secret {
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
-
+	s.SetCreateTime(tsCreate)
+	s.SetCreatedBy("SomeUser")
+	s.SetUpdateTime(tsUpdate)
+	s.SetLastBuildID(1)
 	return s
 }

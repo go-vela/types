@@ -26,9 +26,10 @@ type Secret struct {
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
-	CreateTime   *string   `json:"create_time,omitempty"`
+	CreatedAt    *string   `json:"created_at,omitempty"`
 	CreatedBy    *string   `json:"created_by,omitempty"`
-	UpdateTime   *string   `json:"update_time,omitempty"`
+	UpdatedAt    *string   `json:"updated_at,omitempty"`
+	UpdatedBy    *string   `json:"updated_by,omitempty"`
 	LastBuildID  *int64    `json:"last_build,omitempty"`
 }
 
@@ -50,9 +51,10 @@ func (s *Secret) Sanitize() *Secret {
 		Images:       s.Images,
 		Events:       s.Events,
 		AllowCommand: s.AllowCommand,
-		CreateTime:   s.CreateTime,
+		CreatedAt:    s.CreatedAt,
 		CreatedBy:    s.CreatedBy,
-		UpdateTime:   s.UpdateTime,
+		UpdatedAt:    s.UpdatedAt,
+		UpdatedBy:    s.UpdatedBy,
 		LastBuildID:  s.LastBuildID,
 	}
 }
@@ -235,17 +237,17 @@ func (s *Secret) GetAllowCommand() bool {
 	return *s.AllowCommand
 }
 
-// GetCreateTime returns the CreateTime field.
+// GetCreatedAt returns the CreatedAt field.
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetCreateTime() string {
-	// return zero value if Secret type or CreateTime field is nil
-	if s == nil || s.CreateTime == nil {
+func (s *Secret) GetCreatedAt() string {
+	// return zero value if Secret type or CreatedAt field is nil
+	if s == nil || s.CreatedAt == nil {
 		return ""
 	}
 
-	return *s.CreateTime
+	return *s.CreatedAt
 }
 
 // GetCreatedBy returns the CreatedBy field.
@@ -261,17 +263,30 @@ func (s *Secret) GetCreatedBy() string {
 	return *s.CreatedBy
 }
 
-// GetUpdateTime returns the UpdateTime field.
+// GetUpdateAt returns the UpdateAt field.
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetUpdateTime() string {
-	// return zero value if Secret type or UpdateTime field is nil
-	if s == nil || s.UpdateTime == nil {
+func (s *Secret) GetUpdatedAt() string {
+	// return zero value if Secret type or UpdateAt field is nil
+	if s == nil || s.UpdatedAt == nil {
 		return ""
 	}
 
-	return *s.UpdateTime
+	return *s.UpdatedAt
+}
+
+// GetUpdatedBy returns the UpdatedBy field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetUpdatedBy() string {
+	// return zero value if Secret type or UpdatedBy field is nil
+	if s == nil || s.UpdatedBy == nil {
+		return ""
+	}
+
+	return *s.UpdatedBy
 }
 
 // GetLastBuild returns the LastBuild field.
@@ -417,17 +432,17 @@ func (s *Secret) SetAllowCommand(v bool) {
 	s.AllowCommand = &v
 }
 
-// SetCreateTime sets the CreateTime field.
+// SetCreatedAt sets the CreatedAt field.
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetCreateTime(v string) {
+func (s *Secret) SetCreatedAt(v string) {
 	// return if Secret type is nil
 	if s == nil {
 		return
 	}
 
-	s.CreateTime = &v
+	s.CreatedAt = &v
 }
 
 // SetCreatedBy sets the CreatedBy field.
@@ -443,17 +458,30 @@ func (s *Secret) SetCreatedBy(v string) {
 	s.CreatedBy = &v
 }
 
-// SetUpdateTime sets the UpdateTime field.
+// SetUpdatedAt sets the UpdatedAt field.
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetUpdateTime(v string) {
+func (s *Secret) SetUpdatedAt(v string) {
 	// return if Secret type is nil
 	if s == nil {
 		return
 	}
 
-	s.UpdateTime = &v
+	s.UpdatedAt = &v
+}
+
+// SetUpdatedBy sets the UpdatedBy field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetUpdatedBy(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.UpdatedBy = &v
 }
 
 // SetLastBuild sets the LastBuild field.
@@ -482,9 +510,10 @@ func (s *Secret) String() string {
 	Team: %s,
 	Type: %s,
 	Value: %s,
-	CreateTime: %s,
+	CreatedAt: %s,
 	CreatedBy: %s,
-	UpdateTime: %s,
+	UpdatedAt: %s,
+	UpdatedBy: %s,
 	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
@@ -497,9 +526,10 @@ func (s *Secret) String() string {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
-		s.GetCreateTime(),
+		s.GetCreatedAt(),
 		s.GetCreatedBy(),
-		s.GetUpdateTime(),
+		s.GetUpdatedAt(),
+		s.GetUpdatedBy(),
 		s.GetLastBuildID(),
 	)
 }

@@ -258,14 +258,17 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
-		if test.secret.GetCreateTime() != test.want.GetCreateTime() {
-			t.Errorf("GetCreateTime is %v, want %v", test.secret.GetCreateTime(), test.want.GetCreateTime())
+		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("GetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
 		}
 		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
 			t.Errorf("GetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
 		}
-		if test.secret.GetUpdateTime() != test.want.GetUpdateTime() {
-			t.Errorf("GetUpdateTime is %v, want %v", test.secret.GetUpdateTime(), test.want.GetUpdateTime())
+		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
+			t.Errorf("GetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
+		}
+		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
+			t.Errorf("GetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
 		}
 		if test.secret.GetLastBuildID() != test.want.GetLastBuildID() {
 			t.Errorf("GetLastBuild is %v, want %v", test.secret.GetLastBuildID(), test.want.GetLastBuildID())
@@ -304,6 +307,11 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetImages(test.want.GetImages())
 		test.secret.SetEvents(test.want.GetEvents())
 		test.secret.SetAllowCommand(test.want.GetAllowCommand())
+		test.secret.SetCreatedAt(test.want.GetCreatedAt())
+		test.secret.SetCreatedBy(test.want.GetCreatedBy())
+		test.secret.SetUpdatedAt(test.want.GetUpdatedAt())
+		test.secret.SetUpdatedBy(test.want.GetUpdatedBy())
+		test.secret.SetLastBuildID(test.want.GetLastBuildID())
 
 		if test.secret.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.secret.GetID(), test.want.GetID())
@@ -335,6 +343,21 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("SetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("SetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
+		}
+		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
+			t.Errorf("SetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
+		}
+		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
+			t.Errorf("SetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
+		}
+		if test.secret.GetLastBuildID() != test.want.GetLastBuildID() {
+			t.Errorf("SetLastBuildID is %v, want %v", test.secret.GetLastBuildID(), test.want.GetLastBuildID())
+		}
 	}
 }
 
@@ -353,9 +376,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 	Team: %s,
 	Type: %s,
 	Value: %s,
-	CreateTime: %s,
+	CreatedAt: %s,
 	CreatedBy: %s,
-	UpdateTime: %s,
+	UpdatedAt: %s,
+	UpdatedBy: %s,
 	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
@@ -368,9 +392,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
-		s.GetCreateTime(),
+		s.GetCreatedAt(),
 		s.GetCreatedBy(),
-		s.GetUpdateTime(),
+		s.GetUpdatedAt(),
+		s.GetUpdatedBy(),
 		s.GetLastBuildID(),
 	)
 
@@ -400,9 +425,10 @@ func testSecret() *Secret {
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
-	s.SetCreateTime(tsCreate)
+	s.SetCreatedAt(tsCreate)
 	s.SetCreatedBy("SomeUser")
-	s.SetUpdateTime(tsUpdate)
+	s.SetUpdatedAt(tsUpdate)
+	s.SetUpdatedBy("SomeOtherUser")
 	s.SetLastBuildID(1)
 	return s
 }

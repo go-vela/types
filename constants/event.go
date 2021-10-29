@@ -20,7 +20,4 @@ const (
 
 	// EventComment defines the event type for comments added to a pull request.
 	EventComment = "comment"
-
-	// EventRepository defines the event type for repository actions such as delete and rename.
-	EventRepository = "repository"
 )

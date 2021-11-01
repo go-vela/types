@@ -27,9 +27,9 @@ type Secret struct {
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
 	CreatedAt    *string   `json:"created_at,omitempty"`
-	CreatedBy    *string   `json:"created_by,omitempty"`
+	CreatedBy    *int64    `json:"created_by,omitempty"`
 	UpdatedAt    *string   `json:"updated_at,omitempty"`
-	UpdatedBy    *string   `json:"updated_by,omitempty"`
+	UpdatedBy    *int64    `json:"updated_by,omitempty"`
 	LastBuildID  *int64    `json:"last_build,omitempty"`
 }
 
@@ -254,10 +254,10 @@ func (s *Secret) GetCreatedAt() string {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetCreatedBy() string {
+func (s *Secret) GetCreatedBy() int64 {
 	// return zero value if Secret type or CreatedBy field is nil
 	if s == nil || s.CreatedBy == nil {
-		return ""
+		return 0
 	}
 
 	return *s.CreatedBy
@@ -280,10 +280,10 @@ func (s *Secret) GetUpdatedAt() string {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetUpdatedBy() string {
+func (s *Secret) GetUpdatedBy() int64 {
 	// return zero value if Secret type or UpdatedBy field is nil
 	if s == nil || s.UpdatedBy == nil {
-		return ""
+		return 0
 	}
 
 	return *s.UpdatedBy
@@ -449,7 +449,7 @@ func (s *Secret) SetCreatedAt(v string) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetCreatedBy(v string) {
+func (s *Secret) SetCreatedBy(v int64) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -475,7 +475,7 @@ func (s *Secret) SetUpdatedAt(v string) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetUpdatedBy(v string) {
+func (s *Secret) SetUpdatedBy(v int64) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -511,9 +511,9 @@ func (s *Secret) String() string {
 	Type: %s,
 	Value: %s,
 	CreatedAt: %s,
-	CreatedBy: %s,
+	CreatedBy: %d,
 	UpdatedAt: %s,
-	UpdatedBy: %s,
+	UpdatedBy: %d,
 	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),

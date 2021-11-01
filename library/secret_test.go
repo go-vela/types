@@ -377,9 +377,9 @@ func TestLibrary_Secret_String(t *testing.T) {
 	Type: %s,
 	Value: %s,
 	CreatedAt: %s,
-	CreatedBy: %s,
+	CreatedBy: %d,
 	UpdatedAt: %s,
-	UpdatedBy: %s,
+	UpdatedBy: %d,
 	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
@@ -426,9 +426,9 @@ func testSecret() *Secret {
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
 	s.SetCreatedAt(tsCreate)
-	s.SetCreatedBy("SomeUser")
+	s.SetCreatedBy(12345)
 	s.SetUpdatedAt(tsUpdate)
-	s.SetUpdatedBy("SomeOtherUser")
+	s.SetUpdatedBy(54321)
 	s.SetLastBuildID(1)
 	return s
 }

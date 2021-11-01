@@ -54,6 +54,11 @@ type Secret struct {
 	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
 	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
+	CreatedAt    sql.NullString `sql:"created_at"`
+	CreatedBy    sql.NullInt64  `sql:"created_by"`
+	UpdatedAt    sql.NullString `sql:"updated_at"`
+	UpdatedBy    sql.NullInt64  `sql:"updated_by"`
+	LastBuildID  sql.NullInt64  `sql:"last_build_id"`
 }
 
 // Decrypt will manipulate the existing secret value by
@@ -149,6 +154,31 @@ func (s *Secret) Nullify() *Secret {
 		s.Type.Valid = false
 	}
 
+	// check if the CreatedAt field should be false
+	if len(s.CreatedAt.String) == 0 {
+		s.CreatedAt.Valid = false
+	}
+
+	// check if the CreatedBy field should be false
+	if s.CreatedBy.Int64 == 0 {
+		s.CreatedBy.Valid = false
+	}
+
+	// check if the UpdatedAt field should be false
+	if len(s.UpdatedAt.String) == 0 {
+		s.UpdatedAt.Valid = false
+	}
+
+	// check if the UpdatedBy field should be false
+	if s.UpdatedBy.Int64 == 0 {
+		s.UpdatedBy.Valid = false
+	}
+
+	// check if the LastBuildID field should be false
+	if s.LastBuildID.Int64 == 0 {
+		s.LastBuildID.Valid = false
+	}
+
 	return s
 }
 
@@ -167,6 +197,11 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetImages(s.Images)
 	secret.SetEvents(s.Events)
 	secret.SetAllowCommand(s.AllowCommand.Bool)
+	secret.SetCreatedAt(s.CreatedAt.String)
+	secret.SetCreatedBy(s.CreatedBy.Int64)
+	secret.SetUpdatedAt(s.UpdatedAt.String)
+	secret.SetUpdatedBy(s.UpdatedBy.Int64)
+	secret.SetLastBuildID(s.LastBuildID.Int64)
 
 	return secret
 }
@@ -249,6 +284,11 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Images:       pq.StringArray(s.GetImages()),
 		Events:       pq.StringArray(s.GetEvents()),
 		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
+		CreatedAt:    sql.NullString{String: s.GetCreatedAt(), Valid: true},
+		CreatedBy:    sql.NullInt64{Int64: s.GetCreatedBy(), Valid: true},
+		UpdatedAt:    sql.NullString{String: s.GetUpdatedAt(), Valid: true},
+		UpdatedBy:    sql.NullInt64{Int64: s.GetUpdatedBy(), Valid: true},
+		LastBuildID:  sql.NullInt64{Int64: s.GetLastBuildID(), Valid: true},
 	}
 
 	return secret.Nullify()

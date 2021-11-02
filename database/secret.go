@@ -54,9 +54,9 @@ type Secret struct {
 	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
 	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
-	CreatedAt    sql.NullString `sql:"created_at"`
+	CreatedAt    sql.NullInt64  `sql:"created_at"`
 	CreatedBy    sql.NullInt64  `sql:"created_by"`
-	UpdatedAt    sql.NullString `sql:"updated_at"`
+	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
 	UpdatedBy    sql.NullInt64  `sql:"updated_by"`
 	LastBuildID  sql.NullInt64  `sql:"last_build_id"`
 }
@@ -155,7 +155,7 @@ func (s *Secret) Nullify() *Secret {
 	}
 
 	// check if the CreatedAt field should be false
-	if len(s.CreatedAt.String) == 0 {
+	if s.CreatedAt.Int64 == 0 {
 		s.CreatedAt.Valid = false
 	}
 
@@ -165,7 +165,7 @@ func (s *Secret) Nullify() *Secret {
 	}
 
 	// check if the UpdatedAt field should be false
-	if len(s.UpdatedAt.String) == 0 {
+	if s.UpdatedAt.Int64 == 0 {
 		s.UpdatedAt.Valid = false
 	}
 
@@ -197,9 +197,9 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetImages(s.Images)
 	secret.SetEvents(s.Events)
 	secret.SetAllowCommand(s.AllowCommand.Bool)
-	secret.SetCreatedAt(s.CreatedAt.String)
+	secret.SetCreatedAt(s.CreatedAt.Int64)
 	secret.SetCreatedBy(s.CreatedBy.Int64)
-	secret.SetUpdatedAt(s.UpdatedAt.String)
+	secret.SetUpdatedAt(s.UpdatedAt.Int64)
 	secret.SetUpdatedBy(s.UpdatedBy.Int64)
 	secret.SetLastBuildID(s.LastBuildID.Int64)
 
@@ -284,9 +284,9 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Images:       pq.StringArray(s.GetImages()),
 		Events:       pq.StringArray(s.GetEvents()),
 		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
-		CreatedAt:    sql.NullString{String: s.GetCreatedAt(), Valid: true},
+		CreatedAt:    sql.NullInt64{Int64: s.GetCreatedAt(), Valid: true},
 		CreatedBy:    sql.NullInt64{Int64: s.GetCreatedBy(), Valid: true},
-		UpdatedAt:    sql.NullString{String: s.GetUpdatedAt(), Valid: true},
+		UpdatedAt:    sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
 		UpdatedBy:    sql.NullInt64{Int64: s.GetUpdatedBy(), Valid: true},
 		LastBuildID:  sql.NullInt64{Int64: s.GetLastBuildID(), Valid: true},
 	}

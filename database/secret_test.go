@@ -13,9 +13,11 @@ import (
 	"github.com/go-vela/types/library"
 )
 
-var currentTime time.Time = time.Now()
-var tsCreate string = currentTime.Format(time.UnixDate)
-var tsUpdate string = currentTime.Add(time.Hour * 1).Format(time.UnixDate)
+var (
+	currentTime = time.Now()
+	tsCreate    = currentTime.UTC().Unix()
+	tsUpdate    = currentTime.Add(time.Hour * 1).UTC().Unix()
+)
 
 func TestDatabase_Secret_Decrypt(t *testing.T) {
 	// setup types
@@ -120,9 +122,9 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 		Name:        sql.NullString{String: "", Valid: false},
 		Value:       sql.NullString{String: "", Valid: false},
 		Type:        sql.NullString{String: "", Valid: false},
-		CreatedAt:   sql.NullString{String: "", Valid: false},
+		CreatedAt:   sql.NullInt64{Int64: 0, Valid: false},
 		CreatedBy:   sql.NullInt64{Int64: 0, Valid: false},
-		UpdatedAt:   sql.NullString{String: "", Valid: false},
+		UpdatedAt:   sql.NullInt64{Int64: 0, Valid: false},
 		UpdatedBy:   sql.NullInt64{Int64: 0, Valid: false},
 		LastBuildID: sql.NullInt64{Int64: 0, Valid: false},
 	}
@@ -324,9 +326,9 @@ func testSecret() *Secret {
 		Images:       []string{"alpine"},
 		Events:       []string{"push", "tag", "deployment"},
 		AllowCommand: sql.NullBool{Bool: true, Valid: true},
-		CreatedAt:    sql.NullString{String: tsCreate, Valid: true},
+		CreatedAt:    sql.NullInt64{Int64: tsCreate, Valid: true},
 		CreatedBy:    sql.NullInt64{Int64: 1234, Valid: true},
-		UpdatedAt:    sql.NullString{String: tsUpdate, Valid: true},
+		UpdatedAt:    sql.NullInt64{Int64: tsUpdate, Valid: true},
 		UpdatedBy:    sql.NullInt64{Int64: 4321, Valid: true},
 		LastBuildID:  sql.NullInt64{Int64: 1, Valid: true},
 	}

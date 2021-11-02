@@ -26,9 +26,9 @@ type Secret struct {
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
-	CreatedAt    *string   `json:"created_at,omitempty"`
+	CreatedAt    *int64    `json:"created_at,omitempty"`
 	CreatedBy    *int64    `json:"created_by,omitempty"`
-	UpdatedAt    *string   `json:"updated_at,omitempty"`
+	UpdatedAt    *int64    `json:"updated_at,omitempty"`
 	UpdatedBy    *int64    `json:"updated_by,omitempty"`
 	LastBuildID  *int64    `json:"last_build,omitempty"`
 }
@@ -241,10 +241,10 @@ func (s *Secret) GetAllowCommand() bool {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetCreatedAt() string {
+func (s *Secret) GetCreatedAt() int64 {
 	// return zero value if Secret type or CreatedAt field is nil
 	if s == nil || s.CreatedAt == nil {
-		return ""
+		return 0
 	}
 
 	return *s.CreatedAt
@@ -267,10 +267,10 @@ func (s *Secret) GetCreatedBy() int64 {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetUpdatedAt() string {
+func (s *Secret) GetUpdatedAt() int64 {
 	// return zero value if Secret type or UpdateAt field is nil
 	if s == nil || s.UpdatedAt == nil {
-		return ""
+		return 0
 	}
 
 	return *s.UpdatedAt
@@ -436,7 +436,7 @@ func (s *Secret) SetAllowCommand(v bool) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetCreatedAt(v string) {
+func (s *Secret) SetCreatedAt(v int64) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -462,7 +462,7 @@ func (s *Secret) SetCreatedBy(v int64) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetUpdatedAt(v string) {
+func (s *Secret) SetUpdatedAt(v int64) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -510,9 +510,9 @@ func (s *Secret) String() string {
 	Team: %s,
 	Type: %s,
 	Value: %s,
-	CreatedAt: %s,
+	CreatedAt: %d,
 	CreatedBy: %d,
-	UpdatedAt: %s,
+	UpdatedAt: %d,
 	UpdatedBy: %d,
 	LastBuildID: %d,
 }`,

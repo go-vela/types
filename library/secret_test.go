@@ -376,9 +376,9 @@ func TestLibrary_Secret_String(t *testing.T) {
 	Team: %s,
 	Type: %s,
 	Value: %s,
-	CreatedAt: %s,
+	CreatedAt: %d,
 	CreatedBy: %d,
-	UpdatedAt: %s,
+	UpdatedAt: %d,
 	UpdatedBy: %d,
 	LastBuildID: %d,
 }`,
@@ -411,8 +411,8 @@ func TestLibrary_Secret_String(t *testing.T) {
 // type with all fields set to a fake value.
 func testSecret() *Secret {
 	currentTime := time.Now()
-	tsCreate := currentTime.Format(time.UnixDate)
-	tsUpdate := currentTime.Add(time.Hour * 1).Format(time.UnixDate)
+	tsCreate := currentTime.UTC().Unix()
+	tsUpdate := currentTime.Add(time.Hour * 1).UTC().Unix()
 	s := new(Secret)
 
 	s.SetID(1)

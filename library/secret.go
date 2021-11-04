@@ -30,7 +30,6 @@ type Secret struct {
 	CreatedBy    *int64    `json:"created_by,omitempty"`
 	UpdatedAt    *int64    `json:"updated_at,omitempty"`
 	UpdatedBy    *int64    `json:"updated_by,omitempty"`
-	LastBuildID  *int64    `json:"last_build,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -55,7 +54,6 @@ func (s *Secret) Sanitize() *Secret {
 		CreatedBy:    s.CreatedBy,
 		UpdatedAt:    s.UpdatedAt,
 		UpdatedBy:    s.UpdatedBy,
-		LastBuildID:  s.LastBuildID,
 	}
 }
 
@@ -289,19 +287,6 @@ func (s *Secret) GetUpdatedBy() int64 {
 	return *s.UpdatedBy
 }
 
-// GetLastBuild returns the LastBuild field.
-//
-// When the provided Secret type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (s *Secret) GetLastBuildID() int64 {
-	// return zero value if Secret type or LastBuild field is nil
-	if s == nil || s.LastBuildID == nil {
-		return 0
-	}
-
-	return *s.LastBuildID
-}
-
 // SetID sets the ID field.
 //
 // When the provided Secret type is nil, it
@@ -484,19 +469,6 @@ func (s *Secret) SetUpdatedBy(v int64) {
 	s.UpdatedBy = &v
 }
 
-// SetLastBuild sets the LastBuild field.
-//
-// When the provided Secret type is nil, it
-// will set nothing and immediately return.
-func (s *Secret) SetLastBuildID(v int64) {
-	// return if Secret type is nil
-	if s == nil {
-		return
-	}
-
-	s.LastBuildID = &v
-}
-
 // String implements the Stringer interface for the Secret type.
 func (s *Secret) String() string {
 	return fmt.Sprintf(`{
@@ -514,7 +486,6 @@ func (s *Secret) String() string {
 	CreatedBy: %d,
 	UpdatedAt: %d,
 	UpdatedBy: %d,
-	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -530,7 +501,6 @@ func (s *Secret) String() string {
 		s.GetCreatedBy(),
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
-		s.GetLastBuildID(),
 	)
 }
 

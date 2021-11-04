@@ -115,18 +115,17 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 	var s *Secret
 
 	want := &Secret{
-		ID:          sql.NullInt64{Int64: 0, Valid: false},
-		Org:         sql.NullString{String: "", Valid: false},
-		Repo:        sql.NullString{String: "", Valid: false},
-		Team:        sql.NullString{String: "", Valid: false},
-		Name:        sql.NullString{String: "", Valid: false},
-		Value:       sql.NullString{String: "", Valid: false},
-		Type:        sql.NullString{String: "", Valid: false},
-		CreatedAt:   sql.NullInt64{Int64: 0, Valid: false},
-		CreatedBy:   sql.NullInt64{Int64: 0, Valid: false},
-		UpdatedAt:   sql.NullInt64{Int64: 0, Valid: false},
-		UpdatedBy:   sql.NullInt64{Int64: 0, Valid: false},
-		LastBuildID: sql.NullInt64{Int64: 0, Valid: false},
+		ID:        sql.NullInt64{Int64: 0, Valid: false},
+		Org:       sql.NullString{String: "", Valid: false},
+		Repo:      sql.NullString{String: "", Valid: false},
+		Team:      sql.NullString{String: "", Valid: false},
+		Name:      sql.NullString{String: "", Valid: false},
+		Value:     sql.NullString{String: "", Valid: false},
+		Type:      sql.NullString{String: "", Valid: false},
+		CreatedAt: sql.NullInt64{Int64: 0, Valid: false},
+		CreatedBy: sql.NullInt64{Int64: 0, Valid: false},
+		UpdatedAt: sql.NullInt64{Int64: 0, Valid: false},
+		UpdatedBy: sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -176,7 +175,6 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetCreatedBy(1234)
 	want.SetUpdatedAt(tsUpdate)
 	want.SetUpdatedBy(4321)
-	want.SetLastBuildID(1)
 
 	// run test
 	got := testSecret().ToLibrary()
@@ -300,7 +298,6 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetCreatedBy(1234)
 	s.SetUpdatedAt(tsUpdate)
 	s.SetUpdatedBy(4321)
-	s.SetLastBuildID(1)
 
 	want := testSecret()
 
@@ -330,6 +327,5 @@ func testSecret() *Secret {
 		CreatedBy:    sql.NullInt64{Int64: 1234, Valid: true},
 		UpdatedAt:    sql.NullInt64{Int64: tsUpdate, Valid: true},
 		UpdatedBy:    sql.NullInt64{Int64: 4321, Valid: true},
-		LastBuildID:  sql.NullInt64{Int64: 1, Valid: true},
 	}
 }

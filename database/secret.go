@@ -58,7 +58,6 @@ type Secret struct {
 	CreatedBy    sql.NullInt64  `sql:"created_by"`
 	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
 	UpdatedBy    sql.NullInt64  `sql:"updated_by"`
-	LastBuildID  sql.NullInt64  `sql:"last_build_id"`
 }
 
 // Decrypt will manipulate the existing secret value by
@@ -174,11 +173,6 @@ func (s *Secret) Nullify() *Secret {
 		s.UpdatedBy.Valid = false
 	}
 
-	// check if the LastBuildID field should be false
-	if s.LastBuildID.Int64 == 0 {
-		s.LastBuildID.Valid = false
-	}
-
 	return s
 }
 
@@ -201,7 +195,6 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetCreatedBy(s.CreatedBy.Int64)
 	secret.SetUpdatedAt(s.UpdatedAt.Int64)
 	secret.SetUpdatedBy(s.UpdatedBy.Int64)
-	secret.SetLastBuildID(s.LastBuildID.Int64)
 
 	return secret
 }
@@ -288,7 +281,6 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		CreatedBy:    sql.NullInt64{Int64: s.GetCreatedBy(), Valid: true},
 		UpdatedAt:    sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
 		UpdatedBy:    sql.NullInt64{Int64: s.GetUpdatedBy(), Valid: true},
-		LastBuildID:  sql.NullInt64{Int64: s.GetLastBuildID(), Valid: true},
 	}
 
 	return secret.Nullify()

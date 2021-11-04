@@ -270,9 +270,6 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
 			t.Errorf("GetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
 		}
-		if test.secret.GetLastBuildID() != test.want.GetLastBuildID() {
-			t.Errorf("GetLastBuild is %v, want %v", test.secret.GetLastBuildID(), test.want.GetLastBuildID())
-		}
 	}
 }
 
@@ -311,7 +308,6 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetCreatedBy(test.want.GetCreatedBy())
 		test.secret.SetUpdatedAt(test.want.GetUpdatedAt())
 		test.secret.SetUpdatedBy(test.want.GetUpdatedBy())
-		test.secret.SetLastBuildID(test.want.GetLastBuildID())
 
 		if test.secret.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.secret.GetID(), test.want.GetID())
@@ -355,9 +351,6 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
 			t.Errorf("SetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
 		}
-		if test.secret.GetLastBuildID() != test.want.GetLastBuildID() {
-			t.Errorf("SetLastBuildID is %v, want %v", test.secret.GetLastBuildID(), test.want.GetLastBuildID())
-		}
 	}
 }
 
@@ -380,7 +373,6 @@ func TestLibrary_Secret_String(t *testing.T) {
 	CreatedBy: %d,
 	UpdatedAt: %d,
 	UpdatedBy: %d,
-	LastBuildID: %d,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -396,7 +388,6 @@ func TestLibrary_Secret_String(t *testing.T) {
 		s.GetCreatedBy(),
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
-		s.GetLastBuildID(),
 	)
 
 	// run test
@@ -429,6 +420,5 @@ func testSecret() *Secret {
 	s.SetCreatedBy(12345)
 	s.SetUpdatedAt(tsUpdate)
 	s.SetUpdatedBy(54321)
-	s.SetLastBuildID(1)
 	return s
 }

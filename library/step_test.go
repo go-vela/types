@@ -352,7 +352,7 @@ func TestLibrary_Step_InitFrom(t *testing.T) {
 	}
 }
 
-func TestLibrary_StepFromContainer(t *testing.T) {
+func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 	// setup types
 	s := testStep()
 
@@ -398,10 +398,10 @@ func TestLibrary_StepFromContainer(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := StepFromContainer(test.container)
+		got := StepFromContainerEnvironment(test.container)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("StepFromContainer is %v, want %v", got, test.want)
+			t.Errorf("StepFromContainerEnvironment is %v, want %v", got, test.want)
 		}
 	}
 }

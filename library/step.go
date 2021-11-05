@@ -533,11 +533,11 @@ func (s *Step) InitFrom(ctn *pipeline.Container, build *Build) {
 	s.SetStatus(constants.StatusPending)
 }
 
-// StepFromContainer converts the pipeline
+// StepFromContainerEnvironment converts the pipeline
 // Container type to a library Step type using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
-func StepFromContainer(ctn *pipeline.Container) *Step {
+func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {
 		return nil

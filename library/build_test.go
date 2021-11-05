@@ -212,59 +212,61 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _deployTag,
 			want: map[string]string{
-				"VELA_BUILD_AUTHOR":        "OctoKitty",
-				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
-				"VELA_BUILD_BASE_REF":      "",
-				"VELA_BUILD_BRANCH":        "master",
-				"VELA_BUILD_CHANNEL":       "TODO",
-				"VELA_BUILD_CLONE":         "https://github.com/github/octocat.git",
-				"VELA_BUILD_COMMIT":        "48afb5bdc41ad69bf22588491333f7cf71135163",
-				"VELA_BUILD_CREATED":       "1563474076",
-				"VELA_BUILD_DISTRIBUTION":  "linux",
-				"VELA_BUILD_ENQUEUED":      "1563474077",
-				"VELA_BUILD_EVENT":         "deployment",
-				"VELA_BUILD_HOST":          "example.company.com",
-				"VELA_BUILD_LINK":          "https://example.company.com/github/octocat/1",
-				"VELA_BUILD_MESSAGE":       "First commit...",
-				"VELA_BUILD_NUMBER":        "1",
-				"VELA_BUILD_PARENT":        "1",
-				"VELA_BUILD_REF":           "refs/tags/v0.1.0",
-				"VELA_BUILD_RUNTIME":       "docker",
-				"VELA_BUILD_SENDER":        "OctoKitty",
-				"VELA_BUILD_STARTED":       "1563474078",
-				"VELA_BUILD_SOURCE":        "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
-				"VELA_BUILD_STATUS":        "running",
-				"VELA_BUILD_TAG":           "v0.1.0",
-				"VELA_BUILD_TARGET":        "production",
-				"VELA_BUILD_TITLE":         "push received from https://github.com/github/octocat",
-				"VELA_BUILD_WORKSPACE":     "TODO",
-				"VELA_DEPLOYMENT":          "production",
-				"BUILD_AUTHOR":             "OctoKitty",
-				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
-				"BUILD_BASE_REF":           "",
-				"BUILD_BRANCH":             "master",
-				"BUILD_CHANNEL":            "TODO",
-				"BUILD_CLONE":              "https://github.com/github/octocat.git",
-				"BUILD_COMMIT":             "48afb5bdc41ad69bf22588491333f7cf71135163",
-				"BUILD_CREATED":            "1563474076",
-				"BUILD_ENQUEUED":           "1563474077",
-				"BUILD_EVENT":              "deployment",
-				"BUILD_HOST":               "example.company.com",
-				"BUILD_LINK":               "https://example.company.com/github/octocat/1",
-				"BUILD_MESSAGE":            "First commit...",
-				"BUILD_NUMBER":             "1",
-				"BUILD_PARENT":             "1",
-				"BUILD_REF":                "refs/tags/v0.1.0",
-				"BUILD_SENDER":             "OctoKitty",
-				"BUILD_STARTED":            "1563474078",
-				"BUILD_SOURCE":             "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
-				"BUILD_STATUS":             "running",
-				"BUILD_TAG":                "v0.1.0",
-				"BUILD_TARGET":             "production",
-				"BUILD_TITLE":              "push received from https://github.com/github/octocat",
-				"BUILD_WORKSPACE":          "TODO",
-				"DEPLOYMENT_PARAMETER_FOO": "test1",
-				"DEPLOYMENT_PARAMETER_BAR": "test2",
+				"VELA_BUILD_AUTHOR":           "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL":     "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":         "",
+				"VELA_BUILD_BRANCH":           "master",
+				"VELA_BUILD_CHANNEL":          "TODO",
+				"VELA_BUILD_CLONE":            "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":           "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":          "1563474076",
+				"VELA_BUILD_DISTRIBUTION":     "linux",
+				"VELA_BUILD_ENQUEUED":         "1563474077",
+				"VELA_BUILD_EVENT":            "deployment",
+				"VELA_BUILD_HOST":             "example.company.com",
+				"VELA_BUILD_LINK":             "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":          "First commit...",
+				"VELA_BUILD_NUMBER":           "1",
+				"VELA_BUILD_PARENT":           "1",
+				"VELA_BUILD_REF":              "refs/tags/v0.1.0",
+				"VELA_BUILD_RUNTIME":          "docker",
+				"VELA_BUILD_SENDER":           "OctoKitty",
+				"VELA_BUILD_STARTED":          "1563474078",
+				"VELA_BUILD_SOURCE":           "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":           "running",
+				"VELA_BUILD_TAG":              "v0.1.0",
+				"VELA_BUILD_TAG_AUTHOR":       "OctoKitty2",
+				"VELA_BUILD_TAG_AUTHOR_EMAIL": "OctoKitty2@github.com",
+				"VELA_BUILD_TARGET":           "production",
+				"VELA_BUILD_TITLE":            "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":        "TODO",
+				"VELA_DEPLOYMENT":             "production",
+				"BUILD_AUTHOR":                "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":          "OctoKitty@github.com",
+				"BUILD_BASE_REF":              "",
+				"BUILD_BRANCH":                "master",
+				"BUILD_CHANNEL":               "TODO",
+				"BUILD_CLONE":                 "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":                "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":               "1563474076",
+				"BUILD_ENQUEUED":              "1563474077",
+				"BUILD_EVENT":                 "deployment",
+				"BUILD_HOST":                  "example.company.com",
+				"BUILD_LINK":                  "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":               "First commit...",
+				"BUILD_NUMBER":                "1",
+				"BUILD_PARENT":                "1",
+				"BUILD_REF":                   "refs/tags/v0.1.0",
+				"BUILD_SENDER":                "OctoKitty",
+				"BUILD_STARTED":               "1563474078",
+				"BUILD_SOURCE":                "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":                "running",
+				"BUILD_TAG":                   "v0.1.0",
+				"BUILD_TARGET":                "production",
+				"BUILD_TITLE":                 "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":             "TODO",
+				"DEPLOYMENT_PARAMETER_FOO":    "test1",
+				"DEPLOYMENT_PARAMETER_BAR":    "test2",
 			},
 		},
 		{
@@ -326,54 +328,56 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _tag,
 			want: map[string]string{
-				"VELA_BUILD_AUTHOR":       "OctoKitty",
-				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
-				"VELA_BUILD_BASE_REF":     "",
-				"VELA_BUILD_BRANCH":       "master",
-				"VELA_BUILD_CHANNEL":      "TODO",
-				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
-				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
-				"VELA_BUILD_CREATED":      "1563474076",
-				"VELA_BUILD_DISTRIBUTION": "linux",
-				"VELA_BUILD_ENQUEUED":     "1563474077",
-				"VELA_BUILD_EVENT":        "tag",
-				"VELA_BUILD_HOST":         "example.company.com",
-				"VELA_BUILD_LINK":         "https://example.company.com/github/octocat/1",
-				"VELA_BUILD_MESSAGE":      "First commit...",
-				"VELA_BUILD_NUMBER":       "1",
-				"VELA_BUILD_PARENT":       "1",
-				"VELA_BUILD_REF":          "refs/tags/v0.1.0",
-				"VELA_BUILD_RUNTIME":      "docker",
-				"VELA_BUILD_SENDER":       "OctoKitty",
-				"VELA_BUILD_STARTED":      "1563474078",
-				"VELA_BUILD_SOURCE":       "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
-				"VELA_BUILD_STATUS":       "running",
-				"VELA_BUILD_TAG":          "v0.1.0",
-				"VELA_BUILD_TITLE":        "push received from https://github.com/github/octocat",
-				"VELA_BUILD_WORKSPACE":    "TODO",
-				"BUILD_AUTHOR":            "OctoKitty",
-				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
-				"BUILD_BASE_REF":          "",
-				"BUILD_BRANCH":            "master",
-				"BUILD_CHANNEL":           "TODO",
-				"BUILD_CLONE":             "https://github.com/github/octocat.git",
-				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
-				"BUILD_CREATED":           "1563474076",
-				"BUILD_ENQUEUED":          "1563474077",
-				"BUILD_EVENT":             "tag",
-				"BUILD_HOST":              "example.company.com",
-				"BUILD_LINK":              "https://example.company.com/github/octocat/1",
-				"BUILD_MESSAGE":           "First commit...",
-				"BUILD_NUMBER":            "1",
-				"BUILD_PARENT":            "1",
-				"BUILD_REF":               "refs/tags/v0.1.0",
-				"BUILD_SENDER":            "OctoKitty",
-				"BUILD_STARTED":           "1563474078",
-				"BUILD_SOURCE":            "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
-				"BUILD_STATUS":            "running",
-				"BUILD_TAG":               "v0.1.0",
-				"BUILD_TITLE":             "push received from https://github.com/github/octocat",
-				"BUILD_WORKSPACE":         "TODO",
+				"VELA_BUILD_AUTHOR":           "OctoKitty",
+				"VELA_BUILD_AUTHOR_EMAIL":     "OctoKitty@github.com",
+				"VELA_BUILD_BASE_REF":         "",
+				"VELA_BUILD_BRANCH":           "master",
+				"VELA_BUILD_CHANNEL":          "TODO",
+				"VELA_BUILD_CLONE":            "https://github.com/github/octocat.git",
+				"VELA_BUILD_COMMIT":           "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_CREATED":          "1563474076",
+				"VELA_BUILD_DISTRIBUTION":     "linux",
+				"VELA_BUILD_ENQUEUED":         "1563474077",
+				"VELA_BUILD_EVENT":            "tag",
+				"VELA_BUILD_HOST":             "example.company.com",
+				"VELA_BUILD_LINK":             "https://example.company.com/github/octocat/1",
+				"VELA_BUILD_MESSAGE":          "First commit...",
+				"VELA_BUILD_NUMBER":           "1",
+				"VELA_BUILD_PARENT":           "1",
+				"VELA_BUILD_REF":              "refs/tags/v0.1.0",
+				"VELA_BUILD_RUNTIME":          "docker",
+				"VELA_BUILD_SENDER":           "OctoKitty",
+				"VELA_BUILD_STARTED":          "1563474078",
+				"VELA_BUILD_SOURCE":           "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"VELA_BUILD_STATUS":           "running",
+				"VELA_BUILD_TAG":              "v0.1.0",
+				"VELA_BUILD_TAG_AUTHOR":       "OctoKitty2",
+				"VELA_BUILD_TAG_AUTHOR_EMAIL": "OctoKitty2@github.com",
+				"VELA_BUILD_TITLE":            "push received from https://github.com/github/octocat",
+				"VELA_BUILD_WORKSPACE":        "TODO",
+				"BUILD_AUTHOR":                "OctoKitty",
+				"BUILD_AUTHOR_EMAIL":          "OctoKitty@github.com",
+				"BUILD_BASE_REF":              "",
+				"BUILD_BRANCH":                "master",
+				"BUILD_CHANNEL":               "TODO",
+				"BUILD_CLONE":                 "https://github.com/github/octocat.git",
+				"BUILD_COMMIT":                "48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_CREATED":               "1563474076",
+				"BUILD_ENQUEUED":              "1563474077",
+				"BUILD_EVENT":                 "tag",
+				"BUILD_HOST":                  "example.company.com",
+				"BUILD_LINK":                  "https://example.company.com/github/octocat/1",
+				"BUILD_MESSAGE":               "First commit...",
+				"BUILD_NUMBER":                "1",
+				"BUILD_PARENT":                "1",
+				"BUILD_REF":                   "refs/tags/v0.1.0",
+				"BUILD_SENDER":                "OctoKitty",
+				"BUILD_STARTED":               "1563474078",
+				"BUILD_SOURCE":                "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
+				"BUILD_STATUS":                "running",
+				"BUILD_TAG":                   "v0.1.0",
+				"BUILD_TITLE":                 "push received from https://github.com/github/octocat",
+				"BUILD_WORKSPACE":             "TODO",
 			},
 		},
 	}
@@ -521,6 +525,14 @@ func TestLibrary_Build_Getters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("GetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetPusherName() != test.want.GetPusherName() {
+			t.Errorf("GetPusherName is %v, want %v", test.build.GetPusherName(), test.want.GetPusherName())
+		}
+
+		if test.build.GetPusherEmail() != test.want.GetPusherEmail() {
+			t.Errorf("GetPusherEmail is %v, want %v", test.build.GetPusherEmail(), test.want.GetPusherEmail())
+		}
 	}
 }
 
@@ -574,6 +586,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetHost(test.want.GetHost())
 		test.build.SetRuntime(test.want.GetRuntime())
 		test.build.SetDistribution(test.want.GetDistribution())
+		test.build.SetPusherName(test.want.GetPusherName())
+		test.build.SetPusherEmail(test.want.GetPusherEmail())
 
 		if test.build.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.build.GetID(), test.want.GetID())
@@ -690,6 +704,14 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("SetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetPusherName() != test.want.GetPusherName() {
+			t.Errorf("GetPusherName is %v, want %v", test.build.GetPusherName(), test.want.GetPusherName())
+		}
+
+		if test.build.GetPusherEmail() != test.want.GetPusherEmail() {
+			t.Errorf("GetPusherEmail is %v, want %v", test.build.GetPusherEmail(), test.want.GetPusherEmail())
+		}
 	}
 }
 
@@ -719,6 +741,8 @@ func TestLibrary_Build_String(t *testing.T) {
   Message: %s,
   Number: %d,
   Parent: %d,
+  PusherName: %s,
+  PusherEmail: %s,
   Ref: %s,
   RepoID: %d,
   Runtime: %s,
@@ -749,6 +773,8 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetMessage(),
 		b.GetNumber(),
 		b.GetParent(),
+		b.GetPusherName(),
+		b.GetPusherEmail(),
 		b.GetRef(),
 		b.GetRepoID(),
 		b.GetRuntime(),
@@ -801,6 +827,8 @@ func testBuild() *Build {
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
+	b.SetPusherName("OctoKitty2")
+	b.SetPusherEmail("OctoKitty2@github.com")
 
 	return b
 }

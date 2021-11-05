@@ -45,6 +45,8 @@ type Build struct {
 	Host          *string             `json:"host,omitempty"`
 	Runtime       *string             `json:"runtime,omitempty"`
 	Distribution  *string             `json:"distribution,omitempty"`
+	PusherName    *string             `json:"pusher_name,omitempty"`
+	PusherEmail   *string             `json:"pusher_email,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -117,7 +119,6 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 	if strings.EqualFold(b.GetEvent(), constants.EventDeploy) {
 		// capture the deployment target
 		target := ToString(b.GetDeploy())
-
 		// add the deployment target to the list
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
@@ -131,6 +132,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 			// add the tag reference to the list
 			envs["BUILD_TAG"] = tag
 			envs["VELA_BUILD_TAG"] = tag
+			envs["VELA_BUILD_TAG_AUTHOR"] = b.GetPusherName()
+			envs["VELA_BUILD_TAG_AUTHOR_EMAIL"] = b.GetPusherEmail()
 		}
 
 		// add payload data to the list
@@ -160,6 +163,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		// add the tag reference to the list
 		envs["BUILD_TAG"] = tag
 		envs["VELA_BUILD_TAG"] = tag
+		envs["VELA_BUILD_TAG_AUTHOR"] = b.GetPusherName()
+		envs["VELA_BUILD_TAG_AUTHOR_EMAIL"] = b.GetPusherEmail()
 	}
 
 	return envs
@@ -542,6 +547,22 @@ func (b *Build) GetDistribution() string {
 	return *b.Distribution
 }
 
+func (b *Build) GetPusherName() string {
+	if b == nil || b.PusherName == nil {
+		return ""
+	}
+
+	return *b.PusherName
+}
+
+func (b *Build) GetPusherEmail() string {
+	if b == nil || b.PusherEmail == nil {
+		return ""
+	}
+
+	return *b.PusherEmail
+}
+
 // SetID sets the ID field.
 //
 // When the provided Build type is nil, it
@@ -919,6 +940,22 @@ func (b *Build) SetDistribution(v string) {
 	b.Distribution = &v
 }
 
+func (b *Build) SetPusherName(v string) {
+	if b == nil {
+		return
+	}
+
+	b.PusherName = &v
+}
+
+func (b *Build) SetPusherEmail(v string) {
+	if b == nil {
+		return
+	}
+
+	b.PusherEmail = &v
+}
+
 // String implements the Stringer interface for the Build type.
 // nolint:dupl // this is duplicated in the test
 func (b *Build) String() string {
@@ -944,6 +981,8 @@ func (b *Build) String() string {
   Message: %s,
   Number: %d,
   Parent: %d,
+  PusherName: %s,
+  PusherEmail: %s,
   Ref: %s,
   RepoID: %d,
   Runtime: %s,
@@ -974,6 +1013,8 @@ func (b *Build) String() string {
 		b.GetMessage(),
 		b.GetNumber(),
 		b.GetParent(),
+		b.GetPusherName(),
+		b.GetPusherEmail(),
 		b.GetRef(),
 		b.GetRepoID(),
 		b.GetRuntime(),

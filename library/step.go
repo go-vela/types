@@ -506,8 +506,24 @@ func (s *Step) String() string {
 	)
 }
 
-// InitFrom initializes some Step type fields based on a Container and a Build.
-func (s *Step) InitFrom(ctn *pipeline.Container, build *Build) {
+// StepFromBuildContainer creates new Step type based on
+// a Build and one of its Containers.
+func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
+	// create new step type we want to return
+	s := new(Step)
+
+	// default status to Pending
+	s.SetStatus(constants.StatusPending)
+
+	// copy fields from build
+	if build != nil {
+		// set values from the build
+		s.SetHost(build.GetHost())
+		s.SetRuntime(build.GetRuntime())
+		s.SetDistribution(build.GetDistribution())
+	}
+
+	// copy fields from container
 	if ctn != nil && ctn.Name != "" {
 		// set values from the container
 		s.SetName(ctn.Name)
@@ -521,16 +537,7 @@ func (s *Step) InitFrom(ctn *pipeline.Container, build *Build) {
 			s.SetStage(value)
 		}
 	}
-
-	if build != nil {
-		// set values from the build
-		s.SetHost(build.GetHost())
-		s.SetRuntime(build.GetRuntime())
-		s.SetDistribution(build.GetDistribution())
-	}
-
-	// default status to Pending
-	s.SetStatus(constants.StatusPending)
+	return s
 }
 
 // StepFromContainerEnvironment converts the pipeline

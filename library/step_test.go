@@ -272,7 +272,7 @@ func TestLibrary_Step_String(t *testing.T) {
 	}
 }
 
-func TestLibrary_Step_InitFrom(t *testing.T) {
+func TestLibrary_Step_StepFromBuildContainer(t *testing.T) {
 	// some strings used in the tests (not const, as we need the address)
 	defaultStatus := "pending"
 	exampleHost := "example.company.com"
@@ -343,11 +343,10 @@ func TestLibrary_Step_InitFrom(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		step := new(Step)
-		step.InitFrom(test.container, test.build)
+		step := StepFromBuildContainer(test.build, test.container)
 
 		if !reflect.DeepEqual(step, test.want) {
-			t.Errorf("Step.InitFrom made %v, want %v", step, test.want)
+			t.Errorf("Step.StepFromBuildContainer made %v, want %v", step, test.want)
 		}
 	}
 }

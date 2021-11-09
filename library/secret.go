@@ -261,12 +261,12 @@ func (s *Secret) GetCreatedBy() int64 {
 	return *s.CreatedBy
 }
 
-// GetUpdateAt returns the UpdateAt field.
+// GetUpdatedAt returns the UpdatedAt field.
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (s *Secret) GetUpdatedAt() int64 {
-	// return zero value if Secret type or UpdateAt field is nil
+	// return zero value if Secret type or UpdatedAt field is nil
 	if s == nil || s.UpdatedAt == nil {
 		return 0
 	}

@@ -55,9 +55,9 @@ type Secret struct {
 	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
 	CreatedAt    sql.NullInt64  `sql:"created_at"`
-	CreatedBy    sql.NullInt64  `sql:"created_by"`
+	CreatedBy    sql.NullString `sql:"created_by"`
 	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
-	UpdatedBy    sql.NullInt64  `sql:"updated_by"`
+	UpdatedBy    sql.NullString `sql:"updated_by"`
 }
 
 // Decrypt will manipulate the existing secret value by
@@ -159,7 +159,7 @@ func (s *Secret) Nullify() *Secret {
 	}
 
 	// check if the CreatedBy field should be false
-	if s.CreatedBy.Int64 == 0 {
+	if len(s.CreatedBy.String) == 0 {
 		s.CreatedBy.Valid = false
 	}
 
@@ -169,7 +169,7 @@ func (s *Secret) Nullify() *Secret {
 	}
 
 	// check if the UpdatedBy field should be false
-	if s.UpdatedBy.Int64 == 0 {
+	if len(s.UpdatedBy.String) == 0 {
 		s.UpdatedBy.Valid = false
 	}
 
@@ -192,9 +192,9 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetEvents(s.Events)
 	secret.SetAllowCommand(s.AllowCommand.Bool)
 	secret.SetCreatedAt(s.CreatedAt.Int64)
-	secret.SetCreatedBy(s.CreatedBy.Int64)
+	secret.SetCreatedBy(s.CreatedBy.String)
 	secret.SetUpdatedAt(s.UpdatedAt.Int64)
-	secret.SetUpdatedBy(s.UpdatedBy.Int64)
+	secret.SetUpdatedBy(s.UpdatedBy.String)
 
 	return secret
 }
@@ -278,9 +278,9 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Events:       pq.StringArray(s.GetEvents()),
 		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
 		CreatedAt:    sql.NullInt64{Int64: s.GetCreatedAt(), Valid: true},
-		CreatedBy:    sql.NullInt64{Int64: s.GetCreatedBy(), Valid: true},
+		CreatedBy:    sql.NullString{String: s.GetCreatedBy(), Valid: true},
 		UpdatedAt:    sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
-		UpdatedBy:    sql.NullInt64{Int64: s.GetUpdatedBy(), Valid: true},
+		UpdatedBy:    sql.NullString{String: s.GetUpdatedBy(), Valid: true},
 	}
 
 	return secret.Nullify()

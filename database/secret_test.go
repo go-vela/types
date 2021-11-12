@@ -123,9 +123,9 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 		Value:     sql.NullString{String: "", Valid: false},
 		Type:      sql.NullString{String: "", Valid: false},
 		CreatedAt: sql.NullInt64{Int64: 0, Valid: false},
-		CreatedBy: sql.NullInt64{Int64: 0, Valid: false},
+		CreatedBy: sql.NullString{String: "", Valid: false},
 		UpdatedAt: sql.NullInt64{Int64: 0, Valid: false},
-		UpdatedBy: sql.NullInt64{Int64: 0, Valid: false},
+		UpdatedBy: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -172,9 +172,9 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetEvents([]string{"push", "tag", "deployment"})
 	want.SetAllowCommand(true)
 	want.SetCreatedAt(tsCreate)
-	want.SetCreatedBy(1234)
+	want.SetCreatedBy("octocat")
 	want.SetUpdatedAt(tsUpdate)
-	want.SetUpdatedBy(4321)
+	want.SetUpdatedBy("octocat2")
 
 	// run test
 	got := testSecret().ToLibrary()
@@ -295,9 +295,9 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
 	s.SetCreatedAt(tsCreate)
-	s.SetCreatedBy(1234)
+	s.SetCreatedBy("octocat")
 	s.SetUpdatedAt(tsUpdate)
-	s.SetUpdatedBy(4321)
+	s.SetUpdatedBy("octocat2")
 
 	want := testSecret()
 
@@ -324,8 +324,8 @@ func testSecret() *Secret {
 		Events:       []string{"push", "tag", "deployment"},
 		AllowCommand: sql.NullBool{Bool: true, Valid: true},
 		CreatedAt:    sql.NullInt64{Int64: tsCreate, Valid: true},
-		CreatedBy:    sql.NullInt64{Int64: 1234, Valid: true},
+		CreatedBy:    sql.NullString{String: "octocat", Valid: true},
 		UpdatedAt:    sql.NullInt64{Int64: tsUpdate, Valid: true},
-		UpdatedBy:    sql.NullInt64{Int64: 4321, Valid: true},
+		UpdatedBy:    sql.NullString{String: "octocat2", Valid: true},
 	}
 }

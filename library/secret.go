@@ -27,9 +27,9 @@ type Secret struct {
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
 	CreatedAt    *int64    `json:"created_at,omitempty"`
-	CreatedBy    *int64    `json:"created_by,omitempty"`
+	CreatedBy    *string   `json:"created_by,omitempty"`
 	UpdatedAt    *int64    `json:"updated_at,omitempty"`
-	UpdatedBy    *int64    `json:"updated_by,omitempty"`
+	UpdatedBy    *string   `json:"updated_by,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -252,10 +252,10 @@ func (s *Secret) GetCreatedAt() int64 {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetCreatedBy() int64 {
+func (s *Secret) GetCreatedBy() string {
 	// return zero value if Secret type or CreatedBy field is nil
 	if s == nil || s.CreatedBy == nil {
-		return 0
+		return ""
 	}
 
 	return *s.CreatedBy
@@ -278,10 +278,10 @@ func (s *Secret) GetUpdatedAt() int64 {
 //
 // When the provided Secret type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Secret) GetUpdatedBy() int64 {
+func (s *Secret) GetUpdatedBy() string {
 	// return zero value if Secret type or UpdatedBy field is nil
 	if s == nil || s.UpdatedBy == nil {
-		return 0
+		return ""
 	}
 
 	return *s.UpdatedBy
@@ -434,7 +434,7 @@ func (s *Secret) SetCreatedAt(v int64) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetCreatedBy(v int64) {
+func (s *Secret) SetCreatedBy(v string) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -460,7 +460,7 @@ func (s *Secret) SetUpdatedAt(v int64) {
 //
 // When the provided Secret type is nil, it
 // will set nothing and immediately return.
-func (s *Secret) SetUpdatedBy(v int64) {
+func (s *Secret) SetUpdatedBy(v string) {
 	// return if Secret type is nil
 	if s == nil {
 		return
@@ -483,9 +483,9 @@ func (s *Secret) String() string {
 	Type: %s,
 	Value: %s,
 	CreatedAt: %d,
-	CreatedBy: %d,
+	CreatedBy: %s,
 	UpdatedAt: %d,
-	UpdatedBy: %d,
+	UpdatedBy: %s,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),

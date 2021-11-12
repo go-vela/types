@@ -27,6 +27,8 @@ const versionFormat = `{
 // Version represents application information that
 // follows semantic version guidelines from
 // https://semver.org/.
+//
+// swagger:model Version
 type Version struct {
 	// Canonical represents a canonical semantic version for the application.
 	Canonical string `json:"canonical"`

@@ -104,7 +104,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 
 	// check if the Build event is comment
 	if strings.EqualFold(b.GetEvent(), constants.EventComment) {
-		// capture the pull request number
+		// capture the pull request number - :org/:repo/pull/number
+		// nolint: gomnd // ignore magic number
 		number := ToString(strings.SplitN(b.GetRef(), "/", 4)[2])
 
 		// add the pull request number to the list
@@ -125,7 +126,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 
 		// handle when deployment event is for a tag
 		if strings.HasPrefix(b.GetRef(), "refs/tags/") {
-			// capture the tag reference
+			// capture the tag reference - refs/tags/:tag
+			// nolint: gomnd // ignore magic number
 			tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
 
 			// add the tag reference to the list
@@ -141,7 +143,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 
 	// check if the Build event is pull_request
 	if strings.EqualFold(b.GetEvent(), constants.EventPull) {
-		// capture the pull request number
+		// capture the pull request number - :org/:repo/pull/number
+		// nolint: gomnd // ignore magic number
 		number := ToString(strings.SplitN(b.GetRef(), "/", 4)[2])
 
 		// add the pull request number to the list
@@ -155,6 +158,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 	// check if the Build event is tag
 	if strings.EqualFold(b.GetEvent(), constants.EventTag) {
 		// capture the tag reference
+		// nolint: gomnd // ignore magic number
 		tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
 
 		// add the tag reference to the list

@@ -535,6 +535,7 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	value, ok = ctn.Environment["VELA_SERVICE_CREATED"]
 	if ok {
 		// parse the environment variable value into an int64
+		// nolint: gomnd // ignore magic number
 		i, err := strconv.ParseInt(value, 10, 64)
 		if err == nil {
 			// set the Created field to the parsed int64
@@ -546,6 +547,7 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	value, ok = ctn.Environment["VELA_SERVICE_EXIT_CODE"]
 	if ok {
 		// parse the environment variable value into an int
+		// nolint: gomnd // ignore magic number
 		i, err := strconv.ParseInt(value, 10, 0)
 		if err == nil {
 			// set the ExitCode field to the parsed int
@@ -557,6 +559,7 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	value, ok = ctn.Environment["VELA_SERVICE_FINISHED"]
 	if ok {
 		// parse the environment variable value into an int64
+		// nolint: gomnd // ignore magic number
 		i, err := strconv.ParseInt(value, 10, 64)
 		if err == nil {
 			// set the Finished field to the parsed int64
@@ -568,6 +571,7 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	value, ok = ctn.Environment["VELA_SERVICE_NUMBER"]
 	if ok {
 		// parse the environment variable value into an int
+		// nolint: gomnd // ignore magic number
 		i, err := strconv.ParseInt(value, 10, 0)
 		if err == nil {
 			// set the Number field to the parsed int
@@ -579,6 +583,7 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	value, ok = ctn.Environment["VELA_SERVICE_STARTED"]
 	if ok {
 		// parse the environment variable value into an int64
+		// nolint: gomnd // ignore magic number
 		i, err := strconv.ParseInt(value, 10, 64)
 		if err == nil {
 			// set the Started field to the parsed int64

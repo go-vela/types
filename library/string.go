@@ -24,8 +24,10 @@ func ToString(v interface{}) string {
 	case []byte:
 		return base64.StdEncoding.EncodeToString(v)
 	case float32:
+		// nolint: gomnd // ignore magic number
 		return strconv.FormatFloat(float64(v), 'g', -1, 32)
 	case float64:
+		// nolint: gomnd // ignore magic number
 		return strconv.FormatFloat(v, 'g', -1, 64)
 	case int:
 		return strconv.Itoa(v)

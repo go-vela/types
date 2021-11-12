@@ -114,6 +114,7 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 	}
 
 	// split the full path into parts
+	// nolint: gomnd // ignore magic number
 	parts := strings.SplitN(path, "/", 2)
 
 	// secret is invalid
@@ -144,6 +145,7 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	// check if a path was provided for explicit definition
 	if strings.Contains(path, "/") {
 		// split the full path into parts
+		// nolint: gomnd // ignore magic number
 		parts := strings.SplitN(path, "/", 3)
 
 		// secret is invalid
@@ -190,6 +192,7 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 	}
 
 	// split the full path into parts
+	// nolint: gomnd // ignore magic number
 	parts := strings.SplitN(path, "/", 3)
 
 	// secret is invalid

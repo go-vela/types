@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
 )
@@ -70,7 +71,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			switch {
 			case len(limitParts) == 1:
 				// capture value for soft and hard limit
-				value, err := strconv.ParseInt(limitParts[0], 10, 64)
+				value, err := strconv.ParseInt(limitParts[0], constants.BaseValue, constants.LongInt)
 				if err != nil {
 					return err
 				}
@@ -85,13 +86,13 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				continue
 			case len(limitParts) == 2: // nolint:gomnd // accepting magic number
 				// capture value for soft limit
-				firstValue, err := strconv.ParseInt(limitParts[0], 10, 64)
+				firstValue, err := strconv.ParseInt(limitParts[0], constants.BaseValue, constants.LongInt)
 				if err != nil {
 					return err
 				}
 
 				// capture value for hard limit
-				secondValue, err := strconv.ParseInt(limitParts[1], 10, 64)
+				secondValue, err := strconv.ParseInt(limitParts[1], constants.BaseValue, constants.LongInt)
 				if err != nil {
 					return err
 				}

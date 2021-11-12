@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -534,9 +535,8 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	// check if the VELA_SERVICE_CREATED environment variable exists
 	value, ok = ctn.Environment["VELA_SERVICE_CREATED"]
 	if ok {
-		// parse the environment variable value into an int64
-		// nolint: gomnd // ignore magic number
-		i, err := strconv.ParseInt(value, 10, 64)
+		// parse the environment variable value into an int64.
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Created field to the parsed int64
 			s.SetCreated(i)
@@ -546,9 +546,8 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	// check if the VELA_SERVICE_EXIT_CODE environment variable exists
 	value, ok = ctn.Environment["VELA_SERVICE_EXIT_CODE"]
 	if ok {
-		// parse the environment variable value into an int
-		// nolint: gomnd // ignore magic number
-		i, err := strconv.ParseInt(value, 10, 0)
+		// parse the environment variable value into an int.
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.RegInt)
 		if err == nil {
 			// set the ExitCode field to the parsed int
 			s.SetExitCode(int(i))
@@ -558,9 +557,8 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	// check if the VELA_SERVICE_FINISHED environment variable exists
 	value, ok = ctn.Environment["VELA_SERVICE_FINISHED"]
 	if ok {
-		// parse the environment variable value into an int64
-		// nolint: gomnd // ignore magic number
-		i, err := strconv.ParseInt(value, 10, 64)
+		// parse the environment variable value into an int64.
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Finished field to the parsed int64
 			s.SetFinished(i)
@@ -570,9 +568,8 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	// check if the VELA_SERVICE_NUMBER environment variable exists
 	value, ok = ctn.Environment["VELA_SERVICE_NUMBER"]
 	if ok {
-		// parse the environment variable value into an int
-		// nolint: gomnd // ignore magic number
-		i, err := strconv.ParseInt(value, 10, 0)
+		// parse the environment variable value into an int.
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.RegInt)
 		if err == nil {
 			// set the Number field to the parsed int
 			s.SetNumber(int(i))
@@ -582,9 +579,8 @@ func ServiceFromContainer(ctn *pipeline.Container) *Service {
 	// check if the VELA_SERVICE_STARTED environment variable exists
 	value, ok = ctn.Environment["VELA_SERVICE_STARTED"]
 	if ok {
-		// parse the environment variable value into an int64
-		// nolint: gomnd // ignore magic number
-		i, err := strconv.ParseInt(value, 10, 64)
+		// parse the environment variable value into an int64.
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Started field to the parsed int64
 			s.SetStarted(i)

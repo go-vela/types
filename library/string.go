@@ -11,6 +11,7 @@ import (
 
 	"github.com/buildkite/yaml"
 	json "github.com/ghodss/yaml"
+	"github.com/go-vela/types/constants"
 )
 
 // ToString is a helper function to convert
@@ -24,31 +25,29 @@ func ToString(v interface{}) string {
 	case []byte:
 		return base64.StdEncoding.EncodeToString(v)
 	case float32:
-		// nolint: gomnd // ignore magic number
-		return strconv.FormatFloat(float64(v), 'g', -1, 32)
+		return strconv.FormatFloat(float64(v), 'g', -1, constants.RegFloat)
 	case float64:
-		// nolint: gomnd // ignore magic number
-		return strconv.FormatFloat(v, 'g', -1, 64)
+		return strconv.FormatFloat(v, 'g', -1, constants.LongFloat)
 	case int:
 		return strconv.Itoa(v)
 	case int8:
-		return strconv.FormatInt(int64(v), 10)
+		return strconv.FormatInt(int64(v), constants.BaseValue)
 	case int16:
-		return strconv.FormatInt(int64(v), 10)
+		return strconv.FormatInt(int64(v), constants.BaseValue)
 	case int32:
-		return strconv.FormatInt(int64(v), 10)
+		return strconv.FormatInt(int64(v), constants.BaseValue)
 	case int64:
-		return strconv.FormatInt(v, 10)
+		return strconv.FormatInt(v, constants.BaseValue)
 	case uint:
-		return strconv.FormatUint(uint64(v), 10)
+		return strconv.FormatUint(uint64(v), constants.BaseValue)
 	case uint8:
-		return strconv.FormatUint(uint64(v), 10)
+		return strconv.FormatUint(uint64(v), constants.BaseValue)
 	case uint16:
-		return strconv.FormatUint(uint64(v), 10)
+		return strconv.FormatUint(uint64(v), constants.BaseValue)
 	case uint32:
-		return strconv.FormatUint(uint64(v), 10)
+		return strconv.FormatUint(uint64(v), constants.BaseValue)
 	case uint64:
-		return strconv.FormatUint(v, 10)
+		return strconv.FormatUint(v, constants.BaseValue)
 	case []interface{}:
 		return unmarshalSlice(v)
 	default:

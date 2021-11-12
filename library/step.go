@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -571,7 +572,7 @@ func StepFromContainer(ctn *pipeline.Container) *Step {
 	value, ok = ctn.Environment["VELA_STEP_CREATED"]
 	if ok {
 		// parse the environment variable value into an int64
-		i, err := strconv.ParseInt(value, 10, 64)
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Created field to the parsed int64
 			s.SetCreated(i)
@@ -582,7 +583,7 @@ func StepFromContainer(ctn *pipeline.Container) *Step {
 	value, ok = ctn.Environment["VELA_STEP_EXIT_CODE"]
 	if ok {
 		// parse the environment variable value into an int
-		i, err := strconv.ParseInt(value, 10, 0)
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.RegInt)
 		if err == nil {
 			// set the ExitCode field to the parsed int
 			s.SetExitCode(int(i))
@@ -593,7 +594,7 @@ func StepFromContainer(ctn *pipeline.Container) *Step {
 	value, ok = ctn.Environment["VELA_STEP_FINISHED"]
 	if ok {
 		// parse the environment variable value into an int64
-		i, err := strconv.ParseInt(value, 10, 64)
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Finished field to the parsed int64
 			s.SetFinished(i)
@@ -604,7 +605,7 @@ func StepFromContainer(ctn *pipeline.Container) *Step {
 	value, ok = ctn.Environment["VELA_STEP_NUMBER"]
 	if ok {
 		// parse the environment variable value into an int
-		i, err := strconv.ParseInt(value, 10, 0)
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.RegInt)
 		if err == nil {
 			// set the Number field to the parsed int
 			s.SetNumber(int(i))
@@ -615,7 +616,7 @@ func StepFromContainer(ctn *pipeline.Container) *Step {
 	value, ok = ctn.Environment["VELA_STEP_STARTED"]
 	if ok {
 		// parse the environment variable value into an int64
-		i, err := strconv.ParseInt(value, 10, 64)
+		i, err := strconv.ParseInt(value, constants.BaseValue, constants.LongInt)
 		if err == nil {
 			// set the Started field to the parsed int64
 			s.SetStarted(i)

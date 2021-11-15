@@ -131,6 +131,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 			// add the tag reference to the list
 			envs["BUILD_TAG"] = tag
 			envs["VELA_BUILD_TAG"] = tag
+			envs["VELA_BUILD_TAG_AUTHOR"] = b.GetSender()
 		}
 
 		// add payload data to the list
@@ -160,6 +161,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		// add the tag reference to the list
 		envs["BUILD_TAG"] = tag
 		envs["VELA_BUILD_TAG"] = tag
+		envs["VELA_BUILD_TAG_AUTHOR"] = b.GetSender()
 	}
 
 	return envs

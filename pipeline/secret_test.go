@@ -65,6 +65,16 @@ func TestPipeline_Secret_ParseOrg_success(t *testing.T) {
 			},
 			org: "octocat",
 		},
+		{ // success with multilevel & special characters
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/👋/🧪/🔑",
+				Engine: "native",
+				Type:   "org",
+			},
+			org: "octocat",
+		},
 	}
 
 	// run tests
@@ -119,12 +129,23 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
-				Key:    "octocat/foo/bar",
+				Key:    "octocat/",
 				Engine: "native",
 				Type:   "org",
 			},
 			org:     "octocat",
 			wantErr: ErrInvalidPath,
+		},
+		{ // failure with bad name
+			secret: &Secret{
+				Name:   "=",
+				Value:  "bar",
+				Key:    "octocat/foo/bar",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidName,
 		},
 		{ // failure with bad engine
 			secret: &Secret{
@@ -168,6 +189,17 @@ func TestPipeline_Secret_ParseRepo_success(t *testing.T) {
 			},
 			org:  "octocat",
 			repo: "helloworld",
+		},
+		{ // success with multilevel & special characters
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/👋/🧪/🔑",
+				Engine: "native",
+				Type:   "repo",
+			},
+			org:  "octocat",
+			repo: "👋",
 		},
 	}
 
@@ -244,13 +276,37 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
+				Key:    "octocat/helloworld",
+				Engine: "native",
+				Type:   "org",
+			},
+			repo:    "helloworld",
+			org:     "octocat",
+			wantErr: ErrInvalidPath,
+		},
+		{ // failure with bad key
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/helloworld/",
+				Engine: "native",
+				Type:   "org",
+			},
+			repo:    "helloworld",
+			org:     "octocat",
+			wantErr: ErrInvalidPath,
+		},
+		{ // failure with bad name
+			secret: &Secret{
+				Name:   "=",
+				Value:  "bar",
 				Key:    "octocat/helloworld/foo/bar",
 				Engine: "native",
 				Type:   "repo",
 			},
 			org:     "octocat",
 			repo:    "helloworld",
-			wantErr: ErrInvalidPath,
+			wantErr: ErrInvalidName,
 		},
 		{ // failure with bad engine
 			secret: &Secret{
@@ -300,6 +356,16 @@ func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 				Name:   "foo",
 				Value:  "bar",
 				Key:    "octocat/helloworld/foo",
+				Engine: "native",
+				Type:   "repo",
+			},
+			org: "octocat",
+		},
+		{ // success with multilevel & special characters
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/👋/🧪/🔑",
 				Engine: "native",
 				Type:   "repo",
 			},
@@ -358,6 +424,39 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 			},
 			org:     "octocat",
 			wantErr: ErrInvalidEngine,
+		},
+		{ // failure with bad path
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/foo",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidPath,
+		},
+		{ // failure with bad path
+			secret: &Secret{
+				Name:   "foo",
+				Value:  "bar",
+				Key:    "octocat/foo/",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidPath,
+		},
+		{ // failure with bad name
+			secret: &Secret{
+				Name:   "=",
+				Value:  "bar",
+				Key:    "octocat/foo/bar",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidName,
 		},
 	}
 

@@ -64,6 +64,9 @@ var (
 	// ErrInvalidPath defines the error type when the
 	// path provided for a type (org, repo, shared) is invalid.
 	ErrInvalidPath = errors.New("invalid secret path")
+	// ErrInvalidName defines the error type when the name
+	// contains restricted characters.
+	ErrInvalidName = errors.New("invalid secret name (contains restricted characters)")
 )
 
 // Purge removes the secrets that have a ruleset
@@ -108,10 +111,15 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 		return "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
 	}
 
-	// split the full path into parts
-	parts := strings.Split(path, "/")
+	// check if a path was provided
+	if !strings.Contains(path, "/") {
+		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
 
-	// secret if splits into correct parts
+	// split the full path into parts
+	parts := strings.SplitN(path, "/", 2)
+
+	// secret is invalid
 	// nolint:gomnd // accepting magic number
 	if len(parts) != 2 {
 		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
@@ -120,6 +128,16 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 	// check if the org provided matches what we expect
 	if !strings.EqualFold(parts[0], org) {
 		return "", "", fmt.Errorf("%w: %s ", ErrInvalidOrg, parts[0])
+	}
+
+	// check if path segments empty
+	if len(parts[1]) == 0 {
+		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
+
+	// secret names can't contain restricted characters.
+	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
+		return "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
 	}
 
 	return parts[0], parts[1], nil
@@ -137,7 +155,7 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	}
 
 	// split the full path into parts
-	parts := strings.Split(path, "/")
+	parts := strings.SplitN(path, "/", 3)
 
 	// secret is invalid
 	// nolint:gomnd // accepting magic number
@@ -155,6 +173,16 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidRepo, parts[1])
 	}
 
+	// check if path segments empty
+	if len(parts[2]) == 0 {
+		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
+
+	// Environmental variables can't contain certain restricted characters.
+	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
+		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
+	}
+
 	return parts[0], parts[1], parts[2], nil
 }
 
@@ -169,13 +197,28 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 		return "", "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
 	}
 
+	// check if a path was provided
+	if !strings.Contains(path, "/") {
+		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
+
 	// split the full path into parts
-	parts := strings.Split(path, "/")
+	parts := strings.SplitN(path, "/", 3)
 
 	// secret is invalid
 	// nolint:gomnd // accepting magic number
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
+
+	// check if path segments empty
+	if len(parts[1]) == 0 || len(parts[2]) == 0 {
+		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+	}
+
+	// secret names can't contain restricted characters.
+	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
+		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
 	}
 
 	return parts[0], parts[1], parts[2], nil

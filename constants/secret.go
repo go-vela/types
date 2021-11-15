@@ -17,4 +17,7 @@ const (
 
 	// SecretMask defines the secret mask to be used in place of secret values returned to users.
 	SecretMask = "[secure]"
+
+	// SecretRestrictedCharacters defines the set of characters that a secret name cannot contain.
+	SecretRestrictedCharacters = "=\x11"
 )

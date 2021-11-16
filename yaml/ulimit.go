@@ -59,7 +59,6 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		for _, ulimit := range *stringSlice {
 			// split each slice element into key/value pairs
 			parts := strings.Split(ulimit, "=")
-			// nolint:gomnd // accepting magic number
 			if len(parts) != 2 {
 				return fmt.Errorf("ulimit %s must contain 1 `=` (equal)", ulimit)
 			}
@@ -83,7 +82,7 @@ func (u *UlimitSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				})
 
 				continue
-			case len(limitParts) == 2: // nolint:gomnd // accepting magic number
+			case len(limitParts) == 2:
 				// capture value for soft limit
 				firstValue, err := strconv.ParseInt(limitParts[0], 10, 64)
 				if err != nil {

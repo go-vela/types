@@ -81,7 +81,6 @@ linters:
     - gofmt
     - goimports
     - golint
-    - gomnd
     - goprintffuncname
     - gosec
     - gosimple # enabled by default
@@ -114,6 +113,7 @@ linters:
   # - gocritic
   # - godox
   # - goerr113
+  # - gomnd
   # - interfacer
   # - nestif
   # - noctx

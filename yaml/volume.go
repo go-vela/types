@@ -69,7 +69,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				})
 
 				continue
-			case len(parts) == 2: // nolint:gomnd // accepting magic number
+			case len(parts) == 2:
 				// append the element to the volume slice
 				*v = append(*v, &Volume{
 					Source:      parts[0],
@@ -78,7 +78,7 @@ func (v *VolumeSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				})
 
 				continue
-			case len(parts) == 3: // nolint:gomnd // accepting magic number
+			case len(parts) == 3:
 				// append the element to the volume slice
 				*v = append(*v, &Volume{
 					Source:      parts[0],

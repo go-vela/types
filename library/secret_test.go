@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -257,6 +258,18 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("GetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("GetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
+		}
+		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
+			t.Errorf("GetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
+		}
+		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
+			t.Errorf("GetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
+		}
 	}
 }
 
@@ -291,6 +304,10 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetImages(test.want.GetImages())
 		test.secret.SetEvents(test.want.GetEvents())
 		test.secret.SetAllowCommand(test.want.GetAllowCommand())
+		test.secret.SetCreatedAt(test.want.GetCreatedAt())
+		test.secret.SetCreatedBy(test.want.GetCreatedBy())
+		test.secret.SetUpdatedAt(test.want.GetUpdatedAt())
+		test.secret.SetUpdatedBy(test.want.GetUpdatedBy())
 
 		if test.secret.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.secret.GetID(), test.want.GetID())
@@ -322,6 +339,18 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("SetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("SetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
+		}
+		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
+			t.Errorf("SetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
+		}
+		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
+			t.Errorf("SetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
+		}
 	}
 }
 
@@ -340,6 +369,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 	Team: %s,
 	Type: %s,
 	Value: %s,
+	CreatedAt: %d,
+	CreatedBy: %s,
+	UpdatedAt: %d,
+	UpdatedBy: %s,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -351,6 +384,10 @@ func TestLibrary_Secret_String(t *testing.T) {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
+		s.GetCreatedAt(),
+		s.GetCreatedBy(),
+		s.GetUpdatedAt(),
+		s.GetUpdatedBy(),
 	)
 
 	// run test
@@ -364,6 +401,9 @@ func TestLibrary_Secret_String(t *testing.T) {
 // testSecret is a test helper function to create a Secret
 // type with all fields set to a fake value.
 func testSecret() *Secret {
+	currentTime := time.Now()
+	tsCreate := currentTime.UTC().Unix()
+	tsUpdate := currentTime.Add(time.Hour * 1).UTC().Unix()
 	s := new(Secret)
 
 	s.SetID(1)
@@ -376,6 +416,9 @@ func testSecret() *Secret {
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
-
+	s.SetCreatedAt(tsCreate)
+	s.SetCreatedBy("octocat")
+	s.SetUpdatedAt(tsUpdate)
+	s.SetUpdatedBy("octocat2")
 	return s
 }

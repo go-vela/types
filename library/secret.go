@@ -26,6 +26,10 @@ type Secret struct {
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
+	CreatedAt    *int64    `json:"created_at,omitempty"`
+	CreatedBy    *string   `json:"created_by,omitempty"`
+	UpdatedAt    *int64    `json:"updated_at,omitempty"`
+	UpdatedBy    *string   `json:"updated_by,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -46,6 +50,10 @@ func (s *Secret) Sanitize() *Secret {
 		Images:       s.Images,
 		Events:       s.Events,
 		AllowCommand: s.AllowCommand,
+		CreatedAt:    s.CreatedAt,
+		CreatedBy:    s.CreatedBy,
+		UpdatedAt:    s.UpdatedAt,
+		UpdatedBy:    s.UpdatedBy,
 	}
 }
 
@@ -227,6 +235,58 @@ func (s *Secret) GetAllowCommand() bool {
 	return *s.AllowCommand
 }
 
+// GetCreatedAt returns the CreatedAt field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetCreatedAt() int64 {
+	// return zero value if Secret type or CreatedAt field is nil
+	if s == nil || s.CreatedAt == nil {
+		return 0
+	}
+
+	return *s.CreatedAt
+}
+
+// GetCreatedBy returns the CreatedBy field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetCreatedBy() string {
+	// return zero value if Secret type or CreatedBy field is nil
+	if s == nil || s.CreatedBy == nil {
+		return ""
+	}
+
+	return *s.CreatedBy
+}
+
+// GetUpdatedAt returns the UpdatedAt field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetUpdatedAt() int64 {
+	// return zero value if Secret type or UpdatedAt field is nil
+	if s == nil || s.UpdatedAt == nil {
+		return 0
+	}
+
+	return *s.UpdatedAt
+}
+
+// GetUpdatedBy returns the UpdatedBy field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetUpdatedBy() string {
+	// return zero value if Secret type or UpdatedBy field is nil
+	if s == nil || s.UpdatedBy == nil {
+		return ""
+	}
+
+	return *s.UpdatedBy
+}
+
 // SetID sets the ID field.
 //
 // When the provided Secret type is nil, it
@@ -357,6 +417,58 @@ func (s *Secret) SetAllowCommand(v bool) {
 	s.AllowCommand = &v
 }
 
+// SetCreatedAt sets the CreatedAt field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetCreatedAt(v int64) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.CreatedAt = &v
+}
+
+// SetCreatedBy sets the CreatedBy field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetCreatedBy(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.CreatedBy = &v
+}
+
+// SetUpdatedAt sets the UpdatedAt field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetUpdatedAt(v int64) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.UpdatedAt = &v
+}
+
+// SetUpdatedBy sets the UpdatedBy field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetUpdatedBy(v string) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.UpdatedBy = &v
+}
+
 // String implements the Stringer interface for the Secret type.
 func (s *Secret) String() string {
 	return fmt.Sprintf(`{
@@ -370,6 +482,10 @@ func (s *Secret) String() string {
 	Team: %s,
 	Type: %s,
 	Value: %s,
+	CreatedAt: %d,
+	CreatedBy: %s,
+	UpdatedAt: %d,
+	UpdatedBy: %s,
 }`,
 		s.GetAllowCommand(),
 		s.GetEvents(),
@@ -381,6 +497,10 @@ func (s *Secret) String() string {
 		s.GetTeam(),
 		s.GetType(),
 		s.GetValue(),
+		s.GetCreatedAt(),
+		s.GetCreatedBy(),
+		s.GetUpdatedAt(),
+		s.GetUpdatedBy(),
 	)
 }
 

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -505,11 +506,45 @@ func (s *Step) String() string {
 	)
 }
 
-// StepFromContainer converts the pipeline
-// Container type to a library Step type.
+// StepFromBuildContainer creates new Step type based on
+// a Build and one of its Containers.
+func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
+	// create new step type we want to return
+	s := new(Step)
+
+	// default status to Pending
+	s.SetStatus(constants.StatusPending)
+
+	// copy fields from build
+	if build != nil {
+		// set values from the build
+		s.SetHost(build.GetHost())
+		s.SetRuntime(build.GetRuntime())
+		s.SetDistribution(build.GetDistribution())
+	}
+
+	// copy fields from container
+	if ctn != nil && ctn.Name != "" {
+		// set values from the container
+		s.SetName(ctn.Name)
+		s.SetNumber(ctn.Number)
+		s.SetImage(ctn.Image)
+
+		// check if the VELA_STEP_STAGE environment variable exists
+		value, ok := ctn.Environment["VELA_STEP_STAGE"]
+		if ok {
+			// set the Stage field to the value from environment variable
+			s.SetStage(value)
+		}
+	}
+	return s
+}
+
+// StepFromContainerEnvironment converts the pipeline
+// Container type to a library Step type using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
-func StepFromContainer(ctn *pipeline.Container) *Step {
+func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {
 		return nil

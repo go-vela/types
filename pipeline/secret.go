@@ -120,7 +120,6 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 	parts := strings.SplitN(path, "/", 2)
 
 	// secret is invalid
-	// nolint:gomnd // accepting magic number
 	if len(parts) != 2 {
 		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}
@@ -158,7 +157,6 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	parts := strings.SplitN(path, "/", 3)
 
 	// secret is invalid
-	// nolint:gomnd // accepting magic number
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}
@@ -206,7 +204,6 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 	parts := strings.SplitN(path, "/", 3)
 
 	// secret is invalid
-	// nolint:gomnd // accepting magic number
 	if len(parts) != 3 {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}

@@ -8,8 +8,15 @@ import (
 	"database/sql"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/library"
+)
+
+var (
+	currentTime = time.Now()
+	tsCreate    = currentTime.UTC().Unix()
+	tsUpdate    = currentTime.Add(time.Hour * 1).UTC().Unix()
 )
 
 func TestDatabase_Secret_Decrypt(t *testing.T) {
@@ -108,13 +115,17 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 	var s *Secret
 
 	want := &Secret{
-		ID:    sql.NullInt64{Int64: 0, Valid: false},
-		Org:   sql.NullString{String: "", Valid: false},
-		Repo:  sql.NullString{String: "", Valid: false},
-		Team:  sql.NullString{String: "", Valid: false},
-		Name:  sql.NullString{String: "", Valid: false},
-		Value: sql.NullString{String: "", Valid: false},
-		Type:  sql.NullString{String: "", Valid: false},
+		ID:        sql.NullInt64{Int64: 0, Valid: false},
+		Org:       sql.NullString{String: "", Valid: false},
+		Repo:      sql.NullString{String: "", Valid: false},
+		Team:      sql.NullString{String: "", Valid: false},
+		Name:      sql.NullString{String: "", Valid: false},
+		Value:     sql.NullString{String: "", Valid: false},
+		Type:      sql.NullString{String: "", Valid: false},
+		CreatedAt: sql.NullInt64{Int64: 0, Valid: false},
+		CreatedBy: sql.NullString{String: "", Valid: false},
+		UpdatedAt: sql.NullInt64{Int64: 0, Valid: false},
+		UpdatedBy: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -160,6 +171,10 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetImages([]string{"alpine"})
 	want.SetEvents([]string{"push", "tag", "deployment"})
 	want.SetAllowCommand(true)
+	want.SetCreatedAt(tsCreate)
+	want.SetCreatedBy("octocat")
+	want.SetUpdatedAt(tsUpdate)
+	want.SetUpdatedBy("octocat2")
 
 	// run test
 	got := testSecret().ToLibrary()
@@ -279,6 +294,10 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowCommand(true)
+	s.SetCreatedAt(tsCreate)
+	s.SetCreatedBy("octocat")
+	s.SetUpdatedAt(tsUpdate)
+	s.SetUpdatedBy("octocat2")
 
 	want := testSecret()
 
@@ -304,5 +323,9 @@ func testSecret() *Secret {
 		Images:       []string{"alpine"},
 		Events:       []string{"push", "tag", "deployment"},
 		AllowCommand: sql.NullBool{Bool: true, Valid: true},
+		CreatedAt:    sql.NullInt64{Int64: tsCreate, Valid: true},
+		CreatedBy:    sql.NullString{String: "octocat", Valid: true},
+		UpdatedAt:    sql.NullInt64{Int64: tsUpdate, Valid: true},
+		UpdatedBy:    sql.NullString{String: "octocat2", Valid: true},
 	}
 }

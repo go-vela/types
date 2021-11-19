@@ -136,6 +136,16 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 			org:     "octocat",
 			wantErr: ErrInvalidPath,
 		},
+		{ // failure with missing name
+			secret: &Secret{
+				Value:  "bar",
+				Key:    "octocat/foo/bar",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidName,
+		},
 		{ // failure with bad name
 			secret: &Secret{
 				Name:   "This is a null char \u0000",
@@ -296,6 +306,17 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 			org:     "octocat",
 			wantErr: ErrInvalidPath,
 		},
+		{ // failure with missing name
+			secret: &Secret{
+				Value:  "bar",
+				Key:    "octocat/helloworld/foo/bar",
+				Engine: "native",
+				Type:   "repo",
+			},
+			org:     "octocat",
+			repo:    "helloworld",
+			wantErr: ErrInvalidName,
+		},
 		{ // failure with bad name
 			secret: &Secret{
 				Name:   "SOME=PASSWORD",
@@ -446,6 +467,16 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 			},
 			org:     "octocat",
 			wantErr: ErrInvalidPath,
+		},
+		{ // failure with missing name
+			secret: &Secret{
+				Value:  "bar",
+				Key:    "octocat/foo/bar",
+				Engine: "native",
+				Type:   "org",
+			},
+			org:     "octocat",
+			wantErr: ErrInvalidName,
 		},
 		{ // failure with bad name
 			secret: &Secret{

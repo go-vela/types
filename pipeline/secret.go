@@ -65,8 +65,8 @@ var (
 	// path provided for a type (org, repo, shared) is invalid.
 	ErrInvalidPath = errors.New("invalid secret path")
 	// ErrInvalidName defines the error type when the name
-	// contains restricted characters.
-	ErrInvalidName = errors.New("invalid secret name (contains restricted characters)")
+	// contains restricted characters or is empty.
+	ErrInvalidName = errors.New("invalid secret name")
 )
 
 // Purge removes the secrets that have a ruleset
@@ -134,9 +134,14 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}
 
-	// secret names can't contain restricted characters.
+	// secret names can't be empty.
+	if len(s.Name) == 0 {
+		return "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
+	}
+
+	// environmental variables can't contain certain restricted characters.
 	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
+		return "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
 	}
 
 	return parts[0], parts[1], nil
@@ -176,9 +181,14 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}
 
-	// Environmental variables can't contain certain restricted characters.
+	// secret names can't be empty.
+	if len(s.Name) == 0 {
+		return "", "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
+	}
+
+	// environmental variables can't contain certain restricted characters.
 	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
+		return "", "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
 	}
 
 	return parts[0], parts[1], parts[2], nil
@@ -213,9 +223,14 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
 	}
 
-	// secret names can't contain restricted characters.
+	// secret names can't be empty.
+	if len(s.Name) == 0 {
+		return "", "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
+	}
+
+	// environmental variables can't contain certain restricted characters.
 	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidName, s.Name)
+		return "", "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
 	}
 
 	return parts[0], parts[1], parts[2], nil

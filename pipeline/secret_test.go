@@ -138,7 +138,7 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 		},
 		{ // failure with bad name
 			secret: &Secret{
-				Name:   "=",
+				Name:   "This is a null char \u0000",
 				Value:  "bar",
 				Key:    "octocat/foo/bar",
 				Engine: "native",
@@ -298,7 +298,7 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 		},
 		{ // failure with bad name
 			secret: &Secret{
-				Name:   "=",
+				Name:   "SOME=PASSWORD",
 				Value:  "bar",
 				Key:    "octocat/helloworld/foo/bar",
 				Engine: "native",

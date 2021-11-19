@@ -19,5 +19,5 @@ const (
 	SecretMask = "[secure]"
 
 	// SecretRestrictedCharacters defines the set of characters that a secret name cannot contain.
-	SecretRestrictedCharacters = "=\x11"
+	SecretRestrictedCharacters = "=\x00"
 )

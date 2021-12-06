@@ -222,6 +222,11 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 			file:    "testdata/step_malformed.yml",
 			want:    nil,
 		},
+		{
+			failure: true,
+			file:    "testdata/step_nil.yml",
+			want:    nil,
+		},
 	}
 
 	// run tests

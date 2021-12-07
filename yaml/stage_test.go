@@ -403,3 +403,56 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 		}
 	}
 }
+
+func TestYaml_Stage_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		stage       *Stage
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			stage: &Stage{
+				Environment: map[string]string{"FOO": "bar"},
+				Name:        "testStage",
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       &Stage{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage: &Stage{
+				Environment: map[string]string{"FOO": "bar"},
+				Name:        "testStage",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.stage.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}

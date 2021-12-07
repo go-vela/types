@@ -5,6 +5,8 @@
 package pipeline
 
 import (
+	"fmt"
+
 	"github.com/go-vela/types/constants"
 )
 
@@ -20,10 +22,11 @@ type (
 	//
 	// swagger:model PipelineStage
 	Stage struct {
-		Done  chan error     `json:"-"               yaml:"-"`
-		Name  string         `json:"name,omitempty"  yaml:"name,omitempty"`
-		Needs []string       `json:"needs,omitempty" yaml:"needs,omitempty"`
-		Steps ContainerSlice `json:"steps,omitempty" yaml:"steps,omitempty"`
+		Done        chan error        `json:"-"               yaml:"-"`
+		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
+		Name        string            `json:"name,omitempty"  yaml:"name,omitempty"`
+		Needs       []string          `json:"needs,omitempty" yaml:"needs,omitempty"`
+		Steps       ContainerSlice    `json:"steps,omitempty" yaml:"steps,omitempty"`
 	}
 )
 
@@ -104,4 +107,52 @@ func (s *StageSlice) Sanitize(driver string) *StageSlice {
 		// log here?
 		return nil
 	}
+}
+
+// Empty returns true if the provided stage is empty.
+func (s *Stage) Empty() bool {
+	// return true if the container is nil
+	if s == nil {
+		return true
+	}
+
+	// return true if every stage field is empty
+	if len(s.Name) == 0 &&
+		len(s.Needs) == 0 &&
+		len(s.Steps) == 0 &&
+		len(s.Environment) == 0 {
+		return true
+	}
+
+	// return false if any of the ruletype is provided
+	return false
+}
+
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the stage environment. If the environment
+// variable already exists in the stage, then this will
+// overwrite the existing environment variable.
+func (s *Stage) MergeEnv(environment map[string]string) error {
+	// check if the container is empty
+	if s.Empty() {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for container %s", s.Name)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the container environment variable
+		s.Environment[key] = value
+	}
+
+	return nil
 }

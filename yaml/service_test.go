@@ -91,6 +91,11 @@ func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
 			file:    "testdata/invalid.yml",
 			want:    nil,
 		},
+		{
+			failure: true,
+			file:    "testdata/service_nil.yml",
+			want:    nil,
+		},
 	}
 
 	// run tests

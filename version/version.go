@@ -6,6 +6,11 @@ package version
 
 import (
 	"fmt"
+	"runtime"
+
+	"github.com/Masterminds/semver/v3"
+
+	"github.com/sirupsen/logrus"
 )
 
 const versionFormat = `{
@@ -23,6 +28,23 @@ const versionFormat = `{
     OperatingSystem: %s,
   }
 }`
+
+var (
+	// Arch represents the architecture information for the package.
+	Arch = runtime.GOARCH
+	// Commit represents the git commit information for the package.
+	Commit string
+	// Compiler represents the compiler information for the package.
+	Compiler = runtime.Compiler
+	// Date represents the build date information for the package.
+	Date string
+	// Go represents the golang version information for the package.
+	Go = runtime.Version()
+	// OS represents the operating system information for the package.
+	OS = runtime.GOOS
+	// Tag represents the git tag information for the package.
+	Tag string
+)
 
 // Version represents application information that
 // follows semantic version guidelines from
@@ -70,4 +92,35 @@ func (v *Version) String() string {
 		v.Metadata.GoVersion,
 		v.Metadata.OperatingSystem,
 	)
+}
+
+func New() *Version {
+	// check if a semantic tag was provided
+	if len(Tag) == 0 {
+		logrus.Warningf("no semantic tag provided - defaulting to v0.0.0")
+
+		// set a fallback default for the tag
+		Tag = "v0.0.0"
+	}
+
+	v, err := semver.NewVersion(Tag)
+	if err != nil {
+		fmt.Println(fmt.Errorf("unable to parse semantic version for %s: %v", Tag, err))
+	}
+
+	return &Version{
+		Canonical:  Tag,
+		Major:      v.Major(),
+		Minor:      v.Minor(),
+		Patch:      v.Patch(),
+		PreRelease: v.Prerelease(),
+		Metadata: Metadata{
+			Architecture:    Arch,
+			BuildDate:       Date,
+			Compiler:        Compiler,
+			GitCommit:       Commit,
+			GoVersion:       Go,
+			OperatingSystem: OS,
+		},
+	}
 }

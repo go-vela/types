@@ -72,6 +72,11 @@ func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// iterate through each element in the service slice
 	for _, service := range *serviceSlice {
+		// handle nil service to avoid panic
+		if service == nil {
+			return fmt.Errorf("invalid service with nil content found")
+		}
+
 		// implicitly set `pull` field if empty
 		if len(service.Pull) == 0 {
 			service.Pull = constants.PullNotPresent

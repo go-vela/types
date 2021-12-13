@@ -83,6 +83,11 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// iterate through each element in the step slice
 	for _, step := range *stepSlice {
+		// handle nil step to avoid panic
+		if step == nil {
+			return fmt.Errorf("invalid step with nil content found")
+		}
+
 		// implicitly set `pull` field if empty
 		if len(step.Pull) == 0 {
 			step.Pull = constants.PullNotPresent

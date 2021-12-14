@@ -10,27 +10,28 @@ import "fmt"
 //
 // swagger:model Repo
 type Repo struct {
-	ID           *int64  `json:"id,omitempty"`
-	UserID       *int64  `json:"user_id,omitempty"`
-	Hash         *string `json:"-"`
-	Org          *string `json:"org,omitempty"`
-	Name         *string `json:"name,omitempty"`
-	FullName     *string `json:"full_name,omitempty"`
-	Link         *string `json:"link,omitempty"`
-	Clone        *string `json:"clone,omitempty"`
-	Branch       *string `json:"branch,omitempty"`
-	Timeout      *int64  `json:"timeout,omitempty"`
-	Counter      *int    `json:"counter,omitempty"`
-	Visibility   *string `json:"visibility,omitempty"`
-	Private      *bool   `json:"private,omitempty"`
-	Trusted      *bool   `json:"trusted,omitempty"`
-	Active       *bool   `json:"active,omitempty"`
-	AllowPull    *bool   `json:"allow_pull,omitempty"`
-	AllowPush    *bool   `json:"allow_push,omitempty"`
-	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
-	AllowTag     *bool   `json:"allow_tag,omitempty"`
-	AllowComment *bool   `json:"allow_comment,omitempty"`
-	PipelineType *string `json:"pipeline_type,omitempty"`
+	ID           *int64    `json:"id,omitempty"`
+	UserID       *int64    `json:"user_id,omitempty"`
+	Hash         *string   `json:"-"`
+	Org          *string   `json:"org,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	FullName     *string   `json:"full_name,omitempty"`
+	Link         *string   `json:"link,omitempty"`
+	Clone        *string   `json:"clone,omitempty"`
+	Branch       *string   `json:"branch,omitempty"`
+	Timeout      *int64    `json:"timeout,omitempty"`
+	Counter      *int      `json:"counter,omitempty"`
+	Visibility   *string   `json:"visibility,omitempty"`
+	Private      *bool     `json:"private,omitempty"`
+	Trusted      *bool     `json:"trusted,omitempty"`
+	Active       *bool     `json:"active,omitempty"`
+	AllowPull    *bool     `json:"allow_pull,omitempty"`
+	AllowPush    *bool     `json:"allow_push,omitempty"`
+	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
+	AllowTag     *bool     `json:"allow_tag,omitempty"`
+	AllowComment *bool     `json:"allow_comment,omitempty"`
+	PipelineType *string   `json:"pipeline_type,omitempty"`
+	NameHistory  *[]string `json:"name_history", omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -348,6 +349,14 @@ func (r *Repo) GetPipelineType() string {
 	return *r.PipelineType
 }
 
+func (r *Repo) GetNameHistory() []string {
+	if r == nil || r.NameHistory == nil {
+		return []string{}
+	}
+
+	return *r.NameHistory
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -621,6 +630,15 @@ func (r *Repo) SetPipelineType(v string) {
 	r.PipelineType = &v
 }
 
+func (r *Repo) SetNameHistory(v []string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.NameHistory = &v
+}
+
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -644,6 +662,7 @@ func (r *Repo) String() string {
   UserID: %d
   Visibility: %s,
   PipelineType: %s,
+  NameHistory: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -665,5 +684,6 @@ func (r *Repo) String() string {
 		r.GetUserID(),
 		r.GetVisibility(),
 		r.GetPipelineType(),
+		r.GetNameHistory(),
 	)
 }

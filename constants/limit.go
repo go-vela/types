@@ -17,4 +17,7 @@ const (
 
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.
 	FavoritesMaxSize = 5000
+
+	// RepoNameHistoryMax defines the maximum size in characters for repo name history.
+	RepoNameHistoryMax = 5000
 )

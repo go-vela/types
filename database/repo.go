@@ -9,7 +9,9 @@ import (
 	"encoding/base64"
 	"errors"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
+	"github.com/lib/pq"
 )
 
 var (
@@ -36,6 +38,10 @@ var (
 	// ErrEmptyRepoVisibility defines the error type when a
 	// Repo type has an empty Visibility field provided.
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
+
+	// ErrExceededNameHistoryLimit defines the error type when a
+	// Repo type has exceeded the limit for the NameHistory field.
+	ErrExceededNameHistoryLimit = errors.New("name history exceeded limit")
 )
 
 // Repo is the database representation of a repo.
@@ -61,6 +67,7 @@ type Repo struct {
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
+	NameHistory  pq.StringArray `sql:"name_history" gorm:"type:varchar(5000)"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -210,6 +217,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
 	repo.SetPipelineType(r.PipelineType.String)
+	repo.SetNameHistory(r.NameHistory)
 
 	return repo
 }
@@ -245,6 +253,17 @@ func (r *Repo) Validate() error {
 	// verify the Visibility field is populated
 	if len(r.Visibility.String) == 0 {
 		return ErrEmptyRepoVisibility
+	}
+
+	// calculate total size of name history
+	total := 0
+	for _, n := range r.NameHistory {
+		total += len(n)
+	}
+
+	// verify the Favorites field is within the database constraints
+	if total > constants.RepoNameHistoryMax {
+		return ErrExceededNameHistoryLimit
 	}
 
 	// ensure that all Repo string fields
@@ -288,6 +307,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
+		NameHistory:  pq.StringArray(r.GetNameHistory()),
 	}
 
 	return repo.Nullify()

@@ -153,6 +153,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetNameHistory(), test.want.GetNameHistory()) {
+			t.Errorf("GetNameHistory is %v, want %v", test.repo.GetNameHistory(), test.want.GetNameHistory())
+		}
 	}
 }
 
@@ -198,6 +202,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
+		test.repo.SetNameHistory(test.want.GetNameHistory())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -278,6 +283,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetNameHistory(), test.want.GetNameHistory()) {
+			t.Errorf("SetNameHistory is %v, want %v", test.repo.GetNameHistory(), test.want.GetNameHistory())
+		}
 	}
 }
 
@@ -306,6 +315,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   UserID: %d
   Visibility: %s,
   PipelineType: %s,
+  NameHistory: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -327,6 +337,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetUserID(),
 		r.GetVisibility(),
 		r.GetPipelineType(),
+		r.GetNameHistory(),
 	)
 
 	// run test
@@ -361,6 +372,7 @@ func testRepo() *Repo {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
+	r.SetNameHistory([]string{})
 
 	return r
 }

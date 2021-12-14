@@ -31,7 +31,7 @@ type Repo struct {
 	AllowTag     *bool     `json:"allow_tag,omitempty"`
 	AllowComment *bool     `json:"allow_comment,omitempty"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
-	NameHistory  *[]string `json:"name_history", omitempty"`
+	NameHistory  *[]string `json:"name_history,omitempty"`
 }
 
 // Environment returns a list of environment variables

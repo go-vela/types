@@ -4,7 +4,9 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Repo is the library representation of a repo.
 //
@@ -19,6 +21,7 @@ type Repo struct {
 	Link         *string `json:"link,omitempty"`
 	Clone        *string `json:"clone,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
+	Limit        *int    `json:"limit,omitempty"`
 	Timeout      *int64  `json:"timeout,omitempty"`
 	Counter      *int    `json:"counter,omitempty"`
 	Visibility   *string `json:"visibility,omitempty"`
@@ -46,6 +49,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_CLONE":         ToString(r.GetClone()),
 		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
+		"VELA_REPO_LIMIT":         ToString(r.GetLimit()),
 		"VELA_REPO_LINK":          ToString(r.GetLink()),
 		"VELA_REPO_NAME":          ToString(r.GetName()),
 		"VELA_REPO_ORG":           ToString(r.GetOrg()),
@@ -190,6 +194,19 @@ func (r *Repo) GetBranch() string {
 	}
 
 	return *r.Branch
+}
+
+// GetLimit returns the Limit field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetLimit() int {
+	// return zero value if Repo type or Limit field is nil
+	if r == nil || r.Limit == nil {
+		return 0
+	}
+
+	return *r.Limit
 }
 
 // GetTimeout returns the Timeout field.
@@ -465,6 +482,19 @@ func (r *Repo) SetBranch(v string) {
 	r.Branch = &v
 }
 
+// SetLimit sets the Limit field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetLimit(v int) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.Limit = &v
+}
+
 // SetTimeout sets the Timeout field.
 //
 // When the provided Repo type is nil, it
@@ -632,18 +662,19 @@ func (r *Repo) String() string {
   AllowTag: %t,
   Branch: %s,
   Clone: %s,
+  Counter: %d,
   FullName: %s,
   ID: %d,
+  Limit: %d,
   Link: %s,
   Name: %s,
   Org: %s,
+  PipelineType: %s,
   Private: %t,
   Timeout: %d,
-  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
-  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -653,17 +684,18 @@ func (r *Repo) String() string {
 		r.GetAllowTag(),
 		r.GetBranch(),
 		r.GetClone(),
+		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
+		r.GetLimit(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),
+		r.GetPipelineType(),
 		r.GetPrivate(),
 		r.GetTimeout(),
-		r.GetCounter(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
-		r.GetPipelineType(),
 	)
 }

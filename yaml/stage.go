@@ -23,9 +23,9 @@ type (
 	// nolint:lll // jsonschema will cause long lines
 	Stage struct {
 		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-environment-tag"`
-		Name        string             `yaml:"name,omitempty"  json:"name,omitempty"  jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
-		Needs       raw.StringSlice    `yaml:"needs,omitempty,flow" json:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
-		Steps       StepSlice          `yaml:"steps,omitempty" json:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-steps-tag"`
+		Name        string             `yaml:"name,omitempty"        json:"name,omitempty"        jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
+		Needs       raw.StringSlice    `yaml:"needs,omitempty,flow"  json:"needs,omitempty"       jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
+		Steps       StepSlice          `yaml:"steps,omitempty"       json:"steps,omitempty"       jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-steps-tag"`
 	}
 )
 
@@ -128,7 +128,7 @@ func (s StageSlice) MarshalYAML() (interface{}, error) {
 // variable already exists in the stage, than this will
 // overwrite the existing environment variable.
 func (s *Stage) MergeEnv(environment map[string]string) error {
-	// check if the step container is empty
+	// check if the stage is empty
 	if s == nil || s.Environment == nil {
 		// TODO: evaluate if we should error here
 		//
@@ -140,12 +140,12 @@ func (s *Stage) MergeEnv(environment map[string]string) error {
 
 	// check if the environment provided is empty
 	if environment == nil {
-		return fmt.Errorf("empty environment provided for step %s", s.Name)
+		return fmt.Errorf("empty environment provided for stage %s", s.Name)
 	}
 
 	// iterate through all environment variables provided
 	for key, value := range environment {
-		// set or update the step environment variable
+		// set or update the stage environment variable
 		s.Environment[key] = value
 	}
 

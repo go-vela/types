@@ -22,11 +22,11 @@ type (
 	//
 	// swagger:model PipelineStage
 	Stage struct {
-		Done        chan error        `json:"-"               yaml:"-"`
+		Done        chan error        `json:"-"                     yaml:"-"`
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
-		Name        string            `json:"name,omitempty"  yaml:"name,omitempty"`
-		Needs       []string          `json:"needs,omitempty" yaml:"needs,omitempty"`
-		Steps       ContainerSlice    `json:"steps,omitempty" yaml:"steps,omitempty"`
+		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
+		Needs       []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
+		Steps       ContainerSlice    `json:"steps,omitempty"       yaml:"steps,omitempty"`
 	}
 )
 
@@ -111,7 +111,7 @@ func (s *StageSlice) Sanitize(driver string) *StageSlice {
 
 // Empty returns true if the provided stage is empty.
 func (s *Stage) Empty() bool {
-	// return true if the container is nil
+	// return true if the stage is nil
 	if s == nil {
 		return true
 	}
@@ -124,7 +124,7 @@ func (s *Stage) Empty() bool {
 		return true
 	}
 
-	// return false if any of the ruletype is provided
+	// return false if any of the stage fields are not empty
 	return false
 }
 
@@ -133,7 +133,7 @@ func (s *Stage) Empty() bool {
 // variable already exists in the stage, then this will
 // overwrite the existing environment variable.
 func (s *Stage) MergeEnv(environment map[string]string) error {
-	// check if the container is empty
+	// check if the stage is empty
 	if s.Empty() {
 		// TODO: evaluate if we should error here
 		//
@@ -145,12 +145,12 @@ func (s *Stage) MergeEnv(environment map[string]string) error {
 
 	// check if the environment provided is empty
 	if environment == nil {
-		return fmt.Errorf("empty environment provided for container %s", s.Name)
+		return fmt.Errorf("empty environment provided for stage %s", s.Name)
 	}
 
 	// iterate through all environment variables provided
 	for key, value := range environment {
-		// set or update the container environment variable
+		// set or update the stage environment variable
 		s.Environment[key] = value
 	}
 

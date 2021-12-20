@@ -6,6 +6,15 @@ package constants
 
 // Limits and constraints.
 const (
+	// BuildLimitMin defines the minimum value for repo concurrent build limit.
+	BuildLimitMin = 1
+
+	// BuildLimitMax defines the maximum value for repo concurrent build limit.
+	BuildLimitMax = 30
+
+	// BuildLimitDefault defines the default value for repo concurrent build limit.
+	BuildLimitDefault = 10
+
 	// BuildTimeoutMin defines the minimum value in minutes for repo build timeout.
 	BuildTimeoutMin = 1
 

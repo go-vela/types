@@ -17,4 +17,7 @@ const (
 
 	// SecretMask defines the secret mask to be used in place of secret values returned to users.
 	SecretMask = "[secure]"
+
+	// SecretLogMask defines the secret mask to be used when distributing logs that contain secrets.
+	SecretLogMask = "***"
 )

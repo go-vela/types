@@ -348,6 +348,58 @@ func TestLibrary_Repo_String(t *testing.T) {
 	}
 }
 
+func TestLibrary_Repo_truncateNameHistory(t *testing.T) {
+	longHistory := []string{"repo1", "repo2", "repo3", "repo4", "repo5", "repo6"}
+	total := 0
+	for _, n := range longHistory {
+		total += len(n)
+	}
+	// setup tests
+	tests := []struct {
+		max   int
+		input []string
+		want  []string
+	}{
+		{
+			max:   3,
+			input: longHistory,
+			want:  []string{},
+		},
+		{
+			max:   8,
+			input: longHistory,
+			want:  longHistory[5:],
+		},
+		{
+			max:   10,
+			input: longHistory,
+			want:  longHistory[4:],
+		},
+		{
+			max:   16,
+			input: longHistory,
+			want:  longHistory[3:],
+		},
+		{
+			max:   23,
+			input: longHistory,
+			want:  longHistory[2:],
+		},
+		{
+			max:   28,
+			input: longHistory,
+			want:  longHistory[1:],
+		},
+	}
+	for _, test := range tests {
+		got := truncateNameHistory(longHistory, total, test.max)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("NameHistory is %v, want %v", got, test.want)
+		}
+	}
+}
+
 // testRepo is a test helper function to create a Repo
 // type with all fields set to a fake value.
 func testRepo() *Repo {

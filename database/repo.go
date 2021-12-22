@@ -9,7 +9,6 @@ import (
 	"encoding/base64"
 	"errors"
 
-	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 	"github.com/lib/pq"
 )
@@ -253,17 +252,6 @@ func (r *Repo) Validate() error {
 	// verify the Visibility field is populated
 	if len(r.Visibility.String) == 0 {
 		return ErrEmptyRepoVisibility
-	}
-
-	// calculate total size of name history
-	total := 0
-	for _, n := range r.NameHistory {
-		total += len(n)
-	}
-
-	// verify the Favorites field is within the database constraints
-	if total > constants.RepoNameHistoryMax {
-		return ErrExceededNameHistoryLimit
 	}
 
 	// ensure that all Repo string fields

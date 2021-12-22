@@ -4,7 +4,11 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-vela/types/constants"
+)
 
 // Repo is the library representation of a repo.
 //
@@ -349,7 +353,12 @@ func (r *Repo) GetPipelineType() string {
 	return *r.PipelineType
 }
 
+// GetNameHistory returns the NameHistory field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
 func (r *Repo) GetNameHistory() []string {
+	// return zero value if Repo type or NameHsitory field is nil
 	if r == nil || r.NameHistory == nil {
 		return []string{}
 	}
@@ -635,7 +644,13 @@ func (r *Repo) SetNameHistory(v []string) {
 	if r == nil {
 		return
 	}
-
+	total := 0
+	for _, n := range v {
+		total += len(n)
+	}
+	if total > constants.RepoNameHistoryMax {
+		v = truncateNameHistory(v, total, constants.RepoNameHistoryMax)
+	}
 	r.NameHistory = &v
 }
 
@@ -686,4 +701,20 @@ func (r *Repo) String() string {
 		r.GetPipelineType(),
 		r.GetNameHistory(),
 	)
+}
+
+// truncateNameHistory is a helper function that ensures the max
+// length of a NameHistory log is not passed. It will dispose of the
+// oldest names in the history until there is enough room to set
+// the new history.
+func truncateNameHistory(log []string, size int, want int) []string {
+	count := 0
+	for _, name := range log {
+		size = size - len(name)
+		count++
+		if size <= want {
+			break
+		}
+	}
+	return log[count:]
 }

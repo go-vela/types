@@ -21,7 +21,7 @@ type Repo struct {
 	Link         *string `json:"link,omitempty"`
 	Clone        *string `json:"clone,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
-	BuildLimit   *int    `json:"build_limit,omitempty"`
+	BuildLimit   *int64  `json:"build_limit,omitempty"`
 	Timeout      *int64  `json:"timeout,omitempty"`
 	Counter      *int    `json:"counter,omitempty"`
 	Visibility   *string `json:"visibility,omitempty"`
@@ -200,7 +200,7 @@ func (r *Repo) GetBranch() string {
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (r *Repo) GetBuildLimit() int {
+func (r *Repo) GetBuildLimit() int64 {
 	// return zero value if Repo type or BuildLimit field is nil
 	if r == nil || r.BuildLimit == nil {
 		return 0
@@ -486,7 +486,7 @@ func (r *Repo) SetBranch(v string) {
 //
 // When the provided Repo type is nil, it
 // will set nothing and immediately return.
-func (r *Repo) SetBuildLimit(v int) {
+func (r *Repo) SetBuildLimit(v int64) {
 	// return if Repo type is nil
 	if r == nil {
 		return

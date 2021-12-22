@@ -332,7 +332,7 @@ func testRepo() *Repo {
 		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
 		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Branch:       sql.NullString{String: "master", Valid: true},
-		BuildLimit:   sql.NullInt32{Int32: 10, Valid: true},
+		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
 		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
 		Counter:      sql.NullInt32{Int32: 0, Valid: true},
 		Visibility:   sql.NullString{String: "public", Valid: true},

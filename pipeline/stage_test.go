@@ -104,10 +104,64 @@ func TestPipeline_StageSlice_Sanitize(t *testing.T) {
 	}
 }
 
+func TestPipeline_Stage_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		stage       *Stage
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			stage: &Stage{
+				Name:        "testStage",
+				Environment: map[string]string{"FOO": "bar"},
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       &Stage{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage: &Stage{
+				Environment: map[string]string{"FOO": "bar"},
+				Name:        "testStage",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.stage.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
+		}
+	}
+}
+
 func testStages() *StageSlice {
 	return &StageSlice{
 		{
-			Name: "init",
+			Name:        "init",
+			Environment: map[string]string{"FOO": "bar"},
 			Steps: ContainerSlice{
 				{
 					ID:          "github octocat._1_init_init",
@@ -121,8 +175,9 @@ func testStages() *StageSlice {
 			},
 		},
 		{
-			Name:  "clone",
-			Needs: []string{"init"},
+			Name:        "clone",
+			Needs:       []string{"init"},
+			Environment: map[string]string{"FOO": "bar"},
 			Steps: ContainerSlice{
 				{
 					ID:          "github octocat._1_clone_clone",
@@ -136,8 +191,9 @@ func testStages() *StageSlice {
 			},
 		},
 		{
-			Name:  "echo",
-			Needs: []string{"clone"},
+			Name:        "echo",
+			Needs:       []string{"clone"},
+			Environment: map[string]string{"FOO": "bar"},
 			Steps: ContainerSlice{
 				{
 					ID:          "github octocat._1_echo_echo",

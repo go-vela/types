@@ -112,7 +112,7 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		}
 
 		if test.repo.GetBuildLimit() != test.want.GetBuildLimit() {
-			t.Errorf("GetTimeout is %v, want %v", test.repo.GetBuildLimit(), test.want.GetBuildLimit())
+			t.Errorf("GetBuildLimit is %v, want %v", test.repo.GetBuildLimit(), test.want.GetBuildLimit())
 		}
 
 		if test.repo.GetTimeout() != test.want.GetTimeout() {

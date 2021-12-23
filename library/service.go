@@ -36,17 +36,16 @@ type Service struct {
 // Duration calculates and returns the total amount of
 // time the service ran for in a human-readable format.
 func (s *Service) Duration() string {
-	// capture finished unix timestamp from the service
-	finished := time.Unix(s.GetFinished(), 0)
-	// capture started unix timestamp from the service
-	started := time.Unix(s.GetStarted(), 0)
-
 	// check if the service doesn't have a started or finished timestamp
 	if s.GetStarted() == 0 || s.GetFinished() == 0 {
 		// return zero value for time.Duration (0s)
 		return new(time.Duration).String()
 	}
 
+	// capture finished unix timestamp from the service
+	finished := time.Unix(s.GetFinished(), 0)
+	// capture started unix timestamp from the service
+	started := time.Unix(s.GetStarted(), 0)
 	// calculate the duration by subtracting the service
 	// started time from the service finished time
 	duration := finished.Sub(started)

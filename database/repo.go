@@ -36,10 +36,6 @@ var (
 	// ErrEmptyRepoVisibility defines the error type when a
 	// Repo type has an empty Visibility field provided.
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
-
-	// ErrExceededPreviousNameLimit defines the error type when a
-	// Repo type has exceeded the limit for the PreviousName field.
-	ErrExceededPreviousNameLimit = errors.New("name history exceeded limit")
 )
 
 // Repo is the database representation of a repo.
@@ -65,7 +61,7 @@ type Repo struct {
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
-	PreviousName sql.NullString `sql:"name_history"`
+	PreviousName sql.NullString `sql:"previous_name"`
 }
 
 // Decrypt will manipulate the existing repo hash by

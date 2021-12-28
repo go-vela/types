@@ -33,7 +33,7 @@ type Repo struct {
 	AllowTag     *bool   `json:"allow_tag,omitempty"`
 	AllowComment *bool   `json:"allow_comment,omitempty"`
 	PipelineType *string `json:"pipeline_type,omitempty"`
-	PreviousName *string `json:"name_history,omitempty"`
+	PreviousName *string `json:"previous_name,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -356,7 +356,7 @@ func (r *Repo) GetPipelineType() string {
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (r *Repo) GetPreviousName() string {
-	// return zero value if Repo type or NameHsitory field is nil
+	// return zero value if Repo type or PreviousName field is nil
 	if r == nil || r.PreviousName == nil {
 		return ""
 	}
@@ -637,11 +637,16 @@ func (r *Repo) SetPipelineType(v string) {
 	r.PipelineType = &v
 }
 
+// SetPreviousName sets the PreviousName field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
 func (r *Repo) SetPreviousName(v string) {
 	// return if Repo type is nil
 	if r == nil {
 		return
 	}
+
 	r.PreviousName = &v
 }
 

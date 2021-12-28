@@ -38,7 +38,7 @@ type Step struct {
 // Duration calculates and returns the total amount of
 // time the step ran for in a human-readable format.
 func (s *Step) Duration() string {
-	// check if the service doesn't have a started or finished timestamp
+	// check if the step doesn't have a started or finished timestamp
 	if s.GetStarted() == 0 || s.GetFinished() == 0 {
 		// return zero value for time.Duration (0s)
 		return new(time.Duration).String()

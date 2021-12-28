@@ -6,36 +6,34 @@ package library
 
 import (
 	"fmt"
-
-	"github.com/go-vela/types/constants"
 )
 
 // Repo is the library representation of a repo.
 //
 // swagger:model Repo
 type Repo struct {
-	ID           *int64    `json:"id,omitempty"`
-	UserID       *int64    `json:"user_id,omitempty"`
-	Hash         *string   `json:"-"`
-	Org          *string   `json:"org,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	FullName     *string   `json:"full_name,omitempty"`
-	Link         *string   `json:"link,omitempty"`
-	Clone        *string   `json:"clone,omitempty"`
-	Branch       *string   `json:"branch,omitempty"`
-	Timeout      *int64    `json:"timeout,omitempty"`
-	Counter      *int      `json:"counter,omitempty"`
-	Visibility   *string   `json:"visibility,omitempty"`
-	Private      *bool     `json:"private,omitempty"`
-	Trusted      *bool     `json:"trusted,omitempty"`
-	Active       *bool     `json:"active,omitempty"`
-	AllowPull    *bool     `json:"allow_pull,omitempty"`
-	AllowPush    *bool     `json:"allow_push,omitempty"`
-	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
-	AllowTag     *bool     `json:"allow_tag,omitempty"`
-	AllowComment *bool     `json:"allow_comment,omitempty"`
-	PipelineType *string   `json:"pipeline_type,omitempty"`
-	NameHistory  *[]string `json:"name_history,omitempty"`
+	ID           *int64  `json:"id,omitempty"`
+	UserID       *int64  `json:"user_id,omitempty"`
+	Hash         *string `json:"-"`
+	Org          *string `json:"org,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	FullName     *string `json:"full_name,omitempty"`
+	Link         *string `json:"link,omitempty"`
+	Clone        *string `json:"clone,omitempty"`
+	Branch       *string `json:"branch,omitempty"`
+	Timeout      *int64  `json:"timeout,omitempty"`
+	Counter      *int    `json:"counter,omitempty"`
+	Visibility   *string `json:"visibility,omitempty"`
+	Private      *bool   `json:"private,omitempty"`
+	Trusted      *bool   `json:"trusted,omitempty"`
+	Active       *bool   `json:"active,omitempty"`
+	AllowPull    *bool   `json:"allow_pull,omitempty"`
+	AllowPush    *bool   `json:"allow_push,omitempty"`
+	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
+	AllowTag     *bool   `json:"allow_tag,omitempty"`
+	AllowComment *bool   `json:"allow_comment,omitempty"`
+	PipelineType *string `json:"pipeline_type,omitempty"`
+	PreviousName *string `json:"name_history,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -353,17 +351,17 @@ func (r *Repo) GetPipelineType() string {
 	return *r.PipelineType
 }
 
-// GetNameHistory returns the NameHistory field.
+// GetPreviousName returns the PreviousName field.
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (r *Repo) GetNameHistory() []string {
+func (r *Repo) GetPreviousName() string {
 	// return zero value if Repo type or NameHsitory field is nil
-	if r == nil || r.NameHistory == nil {
-		return []string{}
+	if r == nil || r.PreviousName == nil {
+		return ""
 	}
 
-	return *r.NameHistory
+	return *r.PreviousName
 }
 
 // SetID sets the ID field.
@@ -639,19 +637,12 @@ func (r *Repo) SetPipelineType(v string) {
 	r.PipelineType = &v
 }
 
-func (r *Repo) SetNameHistory(v []string) {
+func (r *Repo) SetPreviousName(v string) {
 	// return if Repo type is nil
 	if r == nil {
 		return
 	}
-	total := 0
-	for _, n := range v {
-		total += len(n)
-	}
-	if total > constants.RepoNameHistoryMax {
-		v = truncateNameHistory(v, total, constants.RepoNameHistoryMax)
-	}
-	r.NameHistory = &v
+	r.PreviousName = &v
 }
 
 // String implements the Stringer interface for the Repo type.
@@ -677,7 +668,7 @@ func (r *Repo) String() string {
   UserID: %d
   Visibility: %s,
   PipelineType: %s,
-  NameHistory: %s,
+  PreviousName: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -699,22 +690,6 @@ func (r *Repo) String() string {
 		r.GetUserID(),
 		r.GetVisibility(),
 		r.GetPipelineType(),
-		r.GetNameHistory(),
+		r.GetPreviousName(),
 	)
-}
-
-// truncateNameHistory is a helper function that ensures the max
-// length of a NameHistory log is not passed. It will dispose of the
-// oldest names in the history until there is enough room to set
-// the new history.
-func truncateNameHistory(log []string, size int, want int) []string {
-	count := 0
-	for _, name := range log {
-		size = size - len(name)
-		count++
-		if size <= want {
-			break
-		}
-	}
-	return log[count:]
 }

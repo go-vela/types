@@ -10,7 +10,6 @@ import (
 	"errors"
 
 	"github.com/go-vela/types/library"
-	"github.com/lib/pq"
 )
 
 var (
@@ -38,9 +37,9 @@ var (
 	// Repo type has an empty Visibility field provided.
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
 
-	// ErrExceededNameHistoryLimit defines the error type when a
-	// Repo type has exceeded the limit for the NameHistory field.
-	ErrExceededNameHistoryLimit = errors.New("name history exceeded limit")
+	// ErrExceededPreviousNameLimit defines the error type when a
+	// Repo type has exceeded the limit for the PreviousName field.
+	ErrExceededPreviousNameLimit = errors.New("name history exceeded limit")
 )
 
 // Repo is the database representation of a repo.
@@ -66,7 +65,7 @@ type Repo struct {
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
-	NameHistory  pq.StringArray `sql:"name_history" gorm:"type:varchar(5000)"`
+	PreviousName sql.NullString `sql:"name_history"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -187,6 +186,11 @@ func (r *Repo) Nullify() *Repo {
 		r.PipelineType.Valid = false
 	}
 
+	// check if the PreviousName field should be false
+	if len(r.PreviousName.String) == 0 {
+		r.PreviousName.Valid = false
+	}
+
 	return r
 }
 
@@ -216,7 +220,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
 	repo.SetPipelineType(r.PipelineType.String)
-	repo.SetNameHistory(r.NameHistory)
+	repo.SetPreviousName(r.PreviousName.String)
 
 	return repo
 }
@@ -295,7 +299,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
-		NameHistory:  pq.StringArray(r.GetNameHistory()),
+		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
 	}
 
 	return repo.Nullify()

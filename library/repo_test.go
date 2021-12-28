@@ -154,8 +154,8 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
 
-		if !reflect.DeepEqual(test.repo.GetNameHistory(), test.want.GetNameHistory()) {
-			t.Errorf("GetNameHistory is %v, want %v", test.repo.GetNameHistory(), test.want.GetNameHistory())
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("GetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
 	}
 }
@@ -202,7 +202,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
-		test.repo.SetNameHistory(test.want.GetNameHistory())
+		test.repo.SetPreviousName(test.want.GetPreviousName())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -284,8 +284,8 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
 
-		if !reflect.DeepEqual(test.repo.GetNameHistory(), test.want.GetNameHistory()) {
-			t.Errorf("SetNameHistory is %v, want %v", test.repo.GetNameHistory(), test.want.GetNameHistory())
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("SetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
 	}
 }
@@ -315,7 +315,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   UserID: %d
   Visibility: %s,
   PipelineType: %s,
-  NameHistory: %s,
+  PreviousName: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -337,7 +337,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetUserID(),
 		r.GetVisibility(),
 		r.GetPipelineType(),
-		r.GetNameHistory(),
+		r.GetPreviousName(),
 	)
 
 	// run test
@@ -345,58 +345,6 @@ func TestLibrary_Repo_String(t *testing.T) {
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
-	}
-}
-
-func TestLibrary_Repo_truncateNameHistory(t *testing.T) {
-	longHistory := []string{"repo1", "repo2", "repo3", "repo4", "repo5", "repo6"}
-	total := 0
-	for _, n := range longHistory {
-		total += len(n)
-	}
-	// setup tests
-	tests := []struct {
-		max   int
-		input []string
-		want  []string
-	}{
-		{
-			max:   3,
-			input: longHistory,
-			want:  []string{},
-		},
-		{
-			max:   8,
-			input: longHistory,
-			want:  longHistory[5:],
-		},
-		{
-			max:   10,
-			input: longHistory,
-			want:  longHistory[4:],
-		},
-		{
-			max:   16,
-			input: longHistory,
-			want:  longHistory[3:],
-		},
-		{
-			max:   23,
-			input: longHistory,
-			want:  longHistory[2:],
-		},
-		{
-			max:   28,
-			input: longHistory,
-			want:  longHistory[1:],
-		},
-	}
-	for _, test := range tests {
-		got := truncateNameHistory(longHistory, total, test.max)
-
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("NameHistory is %v, want %v", got, test.want)
-		}
 	}
 }
 
@@ -424,7 +372,7 @@ func testRepo() *Repo {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
-	r.SetNameHistory([]string{})
+	r.SetPreviousName("")
 
 	return r
 }

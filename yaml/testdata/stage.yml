@@ -1,5 +1,7 @@
 ---
 dependencies:
+  environment:
+      STAGE_ENV_VAR: stage
   steps:
     - name: install
       commands:
@@ -12,6 +14,9 @@ dependencies:
 
 test:
   needs: [ dependencies ]
+  environment:
+      STAGE_ENV_VAR: stage
+      SECOND_STAGE_ENV: stage2
   steps:
     - name: test
       commands:
@@ -24,6 +29,8 @@ test:
 
 build:
   needs: [ dependencies ]
+  environment:
+      STAGE_ENV_VAR: stage
   steps:
     - name: build
       commands:

@@ -23,8 +23,8 @@ func TestVersion_Version_Meta(t *testing.T) {
 			BuildDate:       "1970-1-1T00:00:00Z",
 			Compiler:        "gc",
 			GitCommit:       "abcdef123456789",
-			GoVersion:       "1.16.0",
-			OperatingSystem: "llinux",
+			GoVersion:       "1.17.0",
+			OperatingSystem: "linux",
 		},
 	}
 
@@ -51,8 +51,8 @@ func TestVersion_Version_Semantic(t *testing.T) {
 			BuildDate:       "1970-1-1T00:00:00Z",
 			Compiler:        "gc",
 			GitCommit:       "abcdef123456789",
-			GoVersion:       "1.16.0",
-			OperatingSystem: "llinux",
+			GoVersion:       "1.17.0",
+			OperatingSystem: "linux",
 		},
 	}
 
@@ -79,8 +79,8 @@ func TestVersion_Version_String(t *testing.T) {
 			BuildDate:       "1970-1-1T00:00:00Z",
 			Compiler:        "gc",
 			GitCommit:       "abcdef123456789",
-			GoVersion:       "1.16.0",
-			OperatingSystem: "llinux",
+			GoVersion:       "1.17.0",
+			OperatingSystem: "linux",
 		},
 	}
 

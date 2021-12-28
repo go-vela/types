@@ -31,8 +31,9 @@ type Webhook struct {
 // associated with the given hook to determine
 // whether the hook should be skipped.
 func (w *Webhook) ShouldSkip() (bool, string) {
-	// push event
-	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) {
+	// push or tag event
+	// nolint: lll // ignore long line length due to if logic
+	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) || strings.EqualFold(constants.EventTag, w.Build.GetEvent()) {
 		// the head commit will return null in the hook
 		// payload from the scm when the event is
 		// associated with a branch/tag delete

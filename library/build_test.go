@@ -12,6 +12,32 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
+func TestLibrary_Build_Duration(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		build *Build
+		want  string
+	}{
+		{
+			build: testBuild(),
+			want:  "1s",
+		},
+		{
+			build: new(Build),
+			want:  "0s",
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.build.Duration()
+
+		if got != test.want {
+			t.Errorf("Duration is %v, want %v", got, test.want)
+		}
+	}
+}
+
 func TestLibrary_Build_Environment(t *testing.T) {
 	// setup types
 	_comment := testBuild()

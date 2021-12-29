@@ -158,6 +158,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("GetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
+		}
 	}
 }
 
@@ -204,6 +208,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
+		test.repo.SetPreviousName(test.want.GetPreviousName())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -288,6 +293,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("SetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
+		}
 	}
 }
 
@@ -312,6 +321,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Name: %s,
   Org: %s,
   PipelineType: %s,
+  PreviousName: %s,
   Private: %t,
   Timeout: %d,
   Trusted: %t,
@@ -334,6 +344,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetName(),
 		r.GetOrg(),
 		r.GetPipelineType(),
+    r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
 		r.GetTrusted(),
@@ -374,6 +385,7 @@ func testRepo() *Repo {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
+	r.SetPreviousName("")
 
 	return r
 }

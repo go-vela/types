@@ -20,4 +20,10 @@ const (
 
 	// EventComment defines the event type for comments added to a pull request.
 	EventComment = "comment"
+
+	// EventRepositoryRename defines the event type for a repo being renamed.
+	EventRepositoryRename = "repositoryRename"
+
+	// EventRepository defines the general event type for repo management.
+	EventRepository = "repository"
 )

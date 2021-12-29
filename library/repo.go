@@ -720,7 +720,7 @@ func (r *Repo) String() string {
 		r.GetName(),
 		r.GetOrg(),
 		r.GetPipelineType(),
-    r.GetPreviousName(),
+		r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
 		r.GetTrusted(),

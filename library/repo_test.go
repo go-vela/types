@@ -344,7 +344,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetName(),
 		r.GetOrg(),
 		r.GetPipelineType(),
-    r.GetPreviousName(),
+		r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
 		r.GetTrusted(),

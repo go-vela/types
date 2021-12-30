@@ -176,6 +176,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
+	want.SetPreviousName("oldName")
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -306,6 +307,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
+	r.SetPreviousName("oldName")
 
 	want := testRepo()
 
@@ -342,5 +344,6 @@ func testRepo() *Repo {
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
+		PreviousName: sql.NullString{String: "oldName", Valid: true},
 	}
 }

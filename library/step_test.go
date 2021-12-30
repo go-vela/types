@@ -12,6 +12,32 @@ import (
 	"github.com/go-vela/types/pipeline"
 )
 
+func TestLibrary_Step_Duration(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		step *Step
+		want string
+	}{
+		{
+			step: testStep(),
+			want: "1s",
+		},
+		{
+			step: new(Step),
+			want: "0s",
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.step.Duration()
+
+		if got != test.want {
+			t.Errorf("Duration is %v, want %v", got, test.want)
+		}
+	}
+}
+
 func TestLibrary_Step_Environment(t *testing.T) {
 	// setup types
 	want := map[string]string{
@@ -381,6 +407,7 @@ func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 					"VELA_STEP_CREATED":      "1563474076",
 					"VELA_STEP_DISTRIBUTION": "linux",
 					"VELA_STEP_EXIT_CODE":    "0",
+					"VELA_STEP_FINISHED":     "1563474079",
 					"VELA_STEP_HOST":         "example.company.com",
 					"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 					"VELA_STEP_NAME":         "clone",
@@ -420,6 +447,7 @@ func testStep() *Step {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

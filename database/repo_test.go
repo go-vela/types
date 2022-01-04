@@ -164,6 +164,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetLink("https://github.com/github/octocat")
 	want.SetClone("https://github.com/github/octocat.git")
 	want.SetBranch("master")
+	want.SetBuildLimit(10)
 	want.SetTimeout(30)
 	want.SetCounter(0)
 	want.SetVisibility("public")
@@ -295,6 +296,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
 	r.SetBranch("master")
+	r.SetBuildLimit(10)
 	r.SetTimeout(30)
 	r.SetCounter(0)
 	r.SetVisibility("public")
@@ -332,6 +334,7 @@ func testRepo() *Repo {
 		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
 		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Branch:       sql.NullString{String: "master", Valid: true},
+		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
 		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
 		Counter:      sql.NullInt32{Int32: 0, Valid: true},
 		Visibility:   sql.NullString{String: "public", Valid: true},

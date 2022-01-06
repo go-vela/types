@@ -49,8 +49,7 @@ func (l *Log) MaskData(secrets []string) {
 	// convert data to string
 	strData := string(l.GetData())
 	for _, secret := range secrets {
-		sanitize := regexp.MustCompile(`[-[\]{}()*+?.,\\^$|#\s]`)
-		secret = sanitize.ReplaceAllString(secret, "\\$0")
+		secret = regexp.QuoteMeta(secret)
 		re := regexp.MustCompile((`(\s|^|"|:|'|\.|,)` + secret + `(\s|$|"|:|'|\.|,)`))
 		matches := re.FindAllString(strData, -1)
 		for _, match := range matches {

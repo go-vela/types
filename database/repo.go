@@ -49,6 +49,7 @@ type Repo struct {
 	Link         sql.NullString `sql:"link"`
 	Clone        sql.NullString `sql:"clone"`
 	Branch       sql.NullString `sql:"branch"`
+	BuildLimit   sql.NullInt64  `sql:"build_limit"`
 	Timeout      sql.NullInt64  `sql:"timeout"`
 	Counter      sql.NullInt32  `sql:"counter"`
 	Visibility   sql.NullString `sql:"visibility"`
@@ -167,6 +168,11 @@ func (r *Repo) Nullify() *Repo {
 		r.Branch.Valid = false
 	}
 
+	// check if the BuildLimit field should be false
+	if r.BuildLimit.Int64 == 0 {
+		r.BuildLimit.Valid = false
+	}
+
 	// check if the Timeout field should be false
 	if r.Timeout.Int64 == 0 {
 		r.Timeout.Valid = false
@@ -204,6 +210,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetLink(r.Link.String)
 	repo.SetClone(r.Clone.String)
 	repo.SetBranch(r.Branch.String)
+	repo.SetBuildLimit(r.BuildLimit.Int64)
 	repo.SetTimeout(r.Timeout.Int64)
 	repo.SetCounter(int(r.Counter.Int32))
 	repo.SetVisibility(r.Visibility.String)
@@ -283,6 +290,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		Link:         sql.NullString{String: r.GetLink(), Valid: true},
 		Clone:        sql.NullString{String: r.GetClone(), Valid: true},
 		Branch:       sql.NullString{String: r.GetBranch(), Valid: true},
+		BuildLimit:   sql.NullInt64{Int64: r.GetBuildLimit(), Valid: true},
 		Timeout:      sql.NullInt64{Int64: r.GetTimeout(), Valid: true},
 		Counter:      sql.NullInt32{Int32: int32(r.GetCounter()), Valid: true},
 		Visibility:   sql.NullString{String: r.GetVisibility(), Valid: true},

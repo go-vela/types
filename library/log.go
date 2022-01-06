@@ -49,15 +49,37 @@ func (l *Log) MaskData(secrets []string) {
 	// convert data to string
 	strData := string(l.GetData())
 	for _, secret := range secrets {
-		secret = regexp.QuoteMeta(secret)
-		re := regexp.MustCompile((`(\s|^|"|:|'|\.|,)` + secret + `(\s|$|"|:|'|\.|,)`))
+		// escape regexp meta characters if they exist within value of secret
+		sanitizedStr := regexp.QuoteMeta(secret)
+
+		// find matches in logs for secrets surrounded by whitespace, start of string,
+		// quotation, colon, period, comma, and end of string.
+		// this prevents partial masking of secrets that contain a substring of another
+		// secret.
+		re := regexp.MustCompile((`(\s|^|"|:|'|\.|,)` + sanitizedStr + `(\s|$|"|:|'|\.|,)`))
 		matches := re.FindAllString(strData, -1)
+
+		// take all matches and mask them
 		for _, match := range matches {
-			mask := string(match[0]) + constants.SecretLogMask + string(match[len(match)-1])
+			// construct mask
+			mask := ""
+
+			// if secret was logged as the very first or last thing in the log, don't add
+			// boundary mask values.
+			if match[0] != secret[0] {
+				mask += string(match[0])
+			}
+			mask += constants.SecretLogMask
+			if match[len(match)-1] != secret[len(secret)-1] {
+				mask += string(match[len(match)-1])
+			}
+
+			// replace log with new mask
 			strData = strings.Replace(strData, match, mask, 1)
 		}
-		strData = re.ReplaceAllString(strData, constants.SecretLogMask)
 	}
+
+	// update data field to masked logs
 	l.SetData([]byte(strData))
 }
 

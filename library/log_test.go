@@ -48,8 +48,8 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 
 	// set up test logs
 	s1 := "$ echo $NO_SECRET\nnosecret\n"
-	s2 := "$ echo $SECRET\n((%.YY245***pP.><@@}}\n"
-	s2Masked := "$ echo $SECRET\n***\n"
+	s2 := "((%.YY245***pP.><@@}}"
+	s2Masked := "***"
 	s3 := "$ echo $SECRET1\n((%.YY245***pP.><@@}}\n$ echo $SECRET2\nlittlesecret\n"
 	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
 
@@ -86,7 +86,7 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 		l.MaskData(test.secrets)
 		got := l.GetData()
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("maskSecrets is %v, want %v", string(got), string(test.want))
+			t.Errorf("MaskData is %v, want %v", string(got), string(test.want))
 		}
 	}
 }

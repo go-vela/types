@@ -4,7 +4,13 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+	"strings"
+
+	"github.com/go-vela/types/constants"
+)
 
 // Log is the library representation of a log for a step in a build.
 //
@@ -34,6 +40,26 @@ func (l *Log) AppendData(data []byte) {
 
 	// add the data to the Data field
 	l.SetData(append(l.GetData(), data...))
+}
+
+// MaskData reads through the log data and masks
+// all values provided in the string slice. If the
+// log is empty, we do nothing.
+func (l *Log) MaskData(secrets []string) {
+	// convert data to string
+	strData := string(l.GetData())
+	for _, secret := range secrets {
+		sanitize := regexp.MustCompile(`[-[\]{}()*+?.,\\^$|#\s]`)
+		secret = sanitize.ReplaceAllString(secret, "\\$0")
+		re := regexp.MustCompile((`(\s|^|"|:|'|\.|,)` + secret + `(\s|$|"|:|'|\.|,)`))
+		matches := re.FindAllString(strData, -1)
+		for _, match := range matches {
+			mask := string(match[0]) + constants.SecretLogMask + string(match[len(match)-1])
+			strData = strings.Replace(strData, match, mask, 1)
+		}
+		strData = re.ReplaceAllString(strData, constants.SecretLogMask)
+	}
+	l.SetData([]byte(strData))
 }
 
 // GetID returns the ID field.

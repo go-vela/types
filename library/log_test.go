@@ -42,6 +42,55 @@ func TestLibrary_Log_AppendData(t *testing.T) {
 	}
 }
 
+func TestLibrary_Log_MaskData(t *testing.T) {
+	// set up test secrets
+	sVals := []string{"secret", "((%.YY245***pP.><@@}}", "littlesecret", "extrasecret"}
+
+	// set up test logs
+	s1 := "$ echo $NO_SECRET\nnosecret\n"
+	s2 := "$ echo $SECRET\n((%.YY245***pP.><@@}}\n"
+	s2Masked := "$ echo $SECRET\n***\n"
+	s3 := "$ echo $SECRET1\n((%.YY245***pP.><@@}}\n$ echo $SECRET2\nlittlesecret\n"
+	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
+
+	tests := []struct {
+		want    []byte
+		log     []byte
+		secrets []string
+	}{
+		{ // no secrets in log
+			want:    []byte(s1),
+			log:     []byte(s1),
+			secrets: sVals,
+		},
+		{ // one secret in log
+			want:    []byte(s2Masked),
+			log:     []byte(s2),
+			secrets: sVals,
+		},
+		{ // multiple secrets in log
+			want:    []byte(s3Masked),
+			log:     []byte(s3),
+			secrets: sVals,
+		},
+		{ // empty secrets slice
+			want:    []byte(s3),
+			log:     []byte(s3),
+			secrets: []string{},
+		},
+	}
+	// run tests
+	l := testLog()
+	for _, test := range tests {
+		l.SetData(test.log)
+		l.MaskData(test.secrets)
+		got := l.GetData()
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("maskSecrets is %v, want %v", string(got), string(test.want))
+		}
+	}
+}
+
 func TestLibrary_Log_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {

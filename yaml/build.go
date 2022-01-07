@@ -5,6 +5,7 @@
 package yaml
 
 import (
+	"github.com/go-vela/types/library"
 	"github.com/go-vela/types/raw"
 )
 
@@ -20,4 +21,19 @@ type Build struct {
 	Stages      StageSlice         `yaml:"stages,omitempty"    json:"stages,omitempty" jsonschema:"oneof_required=stages,description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/"`
 	Steps       StepSlice          `yaml:"steps,omitempty"     json:"steps,omitempty" jsonschema:"oneof_required=steps,description=Provide sequential execution instructions.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/"`
 	Templates   TemplateSlice      `yaml:"templates,omitempty" json:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/"`
+}
+
+// ToLibrary converts the Build type to a library Pipeline type.
+func (b *Build) ToLibrary() *library.Pipeline {
+	pipeline := new(library.Pipeline)
+
+	pipeline.SetFlavor(b.Worker.Flavor)
+	pipeline.SetPlatform(b.Worker.Platform)
+	pipeline.SetVersion(b.Version)
+	pipeline.SetServices(len(b.Services) > 0)
+	pipeline.SetStages(len(b.Stages) > 0)
+	pipeline.SetSteps(len(b.Steps) > 0)
+	pipeline.SetTemplates(len(b.Templates) > 0)
+
+	return pipeline
 }

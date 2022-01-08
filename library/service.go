@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/go-vela/types/constants"
-
 	"github.com/go-vela/types/pipeline"
 )
 

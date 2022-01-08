@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-vela/types/constants"
+
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -498,11 +500,38 @@ func (s *Service) String() string {
 	)
 }
 
-// ServiceFromContainer converts the pipeline
-// Container type to a library Service type.
+// ServiceFromBuildContainer creates a new Service based on a Build and pipeline Container.
+func ServiceFromBuildContainer(build *Build, ctn *pipeline.Container) *Service {
+	// create new service type we want to return
+	s := new(Service)
+
+	// default status to Pending
+	s.SetStatus(constants.StatusPending)
+
+	// copy fields from build
+	if build != nil {
+		// set values from the build
+		s.SetHost(build.GetHost())
+		s.SetRuntime(build.GetRuntime())
+		s.SetDistribution(build.GetDistribution())
+	}
+
+	// copy fields from container
+	if ctn != nil && ctn.Name != "" {
+		// set values from the container
+		s.SetName(ctn.Name)
+		s.SetNumber(ctn.Number)
+		s.SetImage(ctn.Image)
+	}
+
+	return s
+}
+
+// ServiceFromContainerEnvironment converts the pipeline Container
+// to a library Service using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
-func ServiceFromContainer(ctn *pipeline.Container) *Service {
+func ServiceFromContainerEnvironment(ctn *pipeline.Container) *Service {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {
 		return nil

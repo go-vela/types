@@ -5,14 +5,10 @@
 package database
 
 import (
-	"bytes"
-	"compress/zlib"
 	"database/sql"
 	"errors"
-	"io/ioutil"
 
 	"github.com/go-vela/types/library"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -42,57 +38,27 @@ type Log struct {
 // Compress will manipulate the existing data for the
 // log entry by compressing that data. This produces
 // a significantly smaller amount of data that is
-// required to store in the system.
+// stored in the system.
 func (l *Log) Compress(level int) error {
-	// create new buffer for storing compressed log data
-	b := new(bytes.Buffer)
-
-	// create new writer for writing compressed log data
-	w, err := zlib.NewWriterLevel(b, level)
+	// compress the database log data
+	data, err := compress(level, l.Data)
 	if err != nil {
 		return err
-	}
-
-	// write compressed log data to buffer
-	_, err = w.Write(l.Data)
-	if err != nil {
-		return err
-	}
-
-	// close the writer
-	//
-	// compressed bytes are not flushed until the
-	// writer is closed or explicitly flushed
-	err = w.Close()
-	if err != nil {
-		logrus.Errorf("unable to close compression buffer: %v", err)
 	}
 
 	// overwrite database log data with compressed log data
-	l.Data = b.Bytes()
+	l.Data = data
 
 	return nil
 }
 
 // Decompress will manipulate the existing data for the
 // log entry by decompressing that data. This allows us
-// to have a significantly smaller amount of data that is
-// stored in the system.
+// to have a significantly smaller amount of data that
+// is stored in the system.
 func (l *Log) Decompress() error {
-	// create new buffer from the compressed log data
-	b := bytes.NewBuffer(l.Data)
-
-	// create new reader for reading the compressed log data
-	r, err := zlib.NewReader(b)
-	if err != nil {
-		return err
-	}
-
-	// defer closing the reader
-	defer r.Close()
-
-	// capture decompressed log data from the compressed log data
-	data, err := ioutil.ReadAll(r)
+	// decompress the database log data
+	data, err := decompress(l.Data)
 	if err != nil {
 		return err
 	}

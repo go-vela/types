@@ -528,8 +528,7 @@ func (s *Step) String() string {
 	)
 }
 
-// StepFromBuildContainer creates new Step type based on
-// a Build and one of its Containers.
+// StepFromBuildContainer creates a new Step based on a Build and pipeline Container.
 func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 	// create new step type we want to return
 	s := new(Step)
@@ -559,11 +558,12 @@ func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 			s.SetStage(value)
 		}
 	}
+
 	return s
 }
 
-// StepFromContainerEnvironment converts the pipeline
-// Container type to a library Step type using the container's Environment.
+// StepFromContainerEnvironment converts the pipeline Container
+// to a library Step using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
 func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {

@@ -16,64 +16,88 @@ import (
 func TestDatabase_Pipeline_Compress(t *testing.T) {
 	// setup tests
 	tests := []struct {
+		name     string
 		failure  bool
 		level    int
 		pipeline *Pipeline
+		want     []byte
 	}{
 		{
+			name:     "compression level -1",
 			failure:  false,
 			level:    constants.CompressionNegOne,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 0",
 			failure:  false,
 			level:    constants.CompressionZero,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 1",
 			failure:  false,
 			level:    constants.CompressionOne,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 2",
 			failure:  false,
 			level:    constants.CompressionTwo,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 3",
 			failure:  false,
 			level:    constants.CompressionThree,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 4",
 			failure:  false,
 			level:    constants.CompressionFour,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 5",
 			failure:  false,
 			level:    constants.CompressionFive,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 6",
 			failure:  false,
 			level:    constants.CompressionSix,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 7",
 			failure:  false,
 			level:    constants.CompressionSeven,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 8",
 			failure:  false,
 			level:    constants.CompressionEight,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 		{
+			name:     "compression level 9",
 			failure:  false,
 			level:    constants.CompressionNine,
-			pipeline: testPipeline(),
+			pipeline: &Pipeline{Data: []byte("foo")},
+			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
 		},
 	}
 
@@ -83,38 +107,95 @@ func TestDatabase_Pipeline_Compress(t *testing.T) {
 
 		if test.failure {
 			if err == nil {
-				t.Errorf("Compress should have returned err")
+				t.Errorf("Compress for %s should have returned err", test.name)
 			}
 
 			continue
 		}
 
 		if err != nil {
-			t.Errorf("Compress returned err: %v", err)
+			t.Errorf("Compress for %s returned err: %v", test.name, err)
+		}
+
+		if !reflect.DeepEqual(test.pipeline.Data, test.want) {
+			t.Errorf("Compress for %s is %v, want %v", test.name, string(test.pipeline.Data), string(test.want))
 		}
 	}
 }
 
 func TestDatabase_Pipeline_Decompress(t *testing.T) {
-	// setup types
-	p := testPipeline()
-	err := p.Compress(constants.CompressionThree)
-	if err != nil {
-		t.Errorf("unable to compress log: %v", err)
-	}
-
 	// setup tests
 	tests := []struct {
+		name     string
 		failure  bool
 		pipeline *Pipeline
+		want     []byte
 	}{
 		{
+			name:     "compression level -1",
 			failure:  false,
-			pipeline: p,
+			pipeline: &Pipeline{Data: []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
 		},
 		{
-			failure:  true,
-			pipeline: testPipeline(),
+			name:     "compression level 0",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 1",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 2",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 3",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 4",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 5",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 6",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 7",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 8",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
+		},
+		{
+			name:     "compression level 9",
+			failure:  false,
+			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
+			want:     []byte("foo"),
 		},
 	}
 
@@ -124,14 +205,18 @@ func TestDatabase_Pipeline_Decompress(t *testing.T) {
 
 		if test.failure {
 			if err == nil {
-				t.Errorf("Decompress should have returned err")
+				t.Errorf("Decompress for %s should have returned err", test.name)
 			}
 
 			continue
 		}
 
 		if err != nil {
-			t.Errorf("Decompress returned err: %v", err)
+			t.Errorf("Decompress for %s returned err: %v", test.name, err)
+		}
+
+		if !reflect.DeepEqual(test.pipeline.Data, test.want) {
+			t.Errorf("Decompress for %s is %v, want %v", test.name, string(test.pipeline.Data), string(test.want))
 		}
 	}
 }

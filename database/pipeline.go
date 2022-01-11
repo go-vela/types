@@ -16,6 +16,10 @@ import (
 )
 
 var (
+	// ErrEmptyPipelineNumber defines the error type when a
+	// Pipeline type has an empty Number field provided.
+	ErrEmptyPipelineNumber = errors.New("empty pipeline number provided")
+
 	// ErrEmptyPipelineRef defines the error type when a
 	// Pipeline type has an empty Ref field provided.
 	ErrEmptyPipelineRef = errors.New("empty pipeline ref provided")
@@ -33,6 +37,7 @@ var (
 type Pipeline struct {
 	ID        sql.NullInt64  `sql:"id"`
 	RepoID    sql.NullInt64  `sql:"repo_id"`
+	Number    sql.NullInt32  `sql:"number"`
 	Flavor    sql.NullString `sql:"flavor"`
 	Platform  sql.NullString `sql:"platform"`
 	Ref       sql.NullString `sql:"ref"`
@@ -129,6 +134,11 @@ func (p *Pipeline) Nullify() *Pipeline {
 		p.RepoID.Valid = false
 	}
 
+	// check if the Number field should be false
+	if p.Number.Int32 == 0 {
+		p.Number.Valid = false
+	}
+
 	// check if the Flavor field should be false
 	if len(p.Flavor.String) == 0 {
 		p.Flavor.Valid = false
@@ -159,6 +169,7 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 
 	pipeline.SetID(p.ID.Int64)
 	pipeline.SetRepoID(p.RepoID.Int64)
+	pipeline.SetNumber(int(p.Number.Int32))
 	pipeline.SetFlavor(p.Flavor.String)
 	pipeline.SetPlatform(p.Platform.String)
 	pipeline.SetRef(p.Ref.String)
@@ -175,6 +186,11 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 // Validate verifies the necessary fields for
 // the Pipeline type are populated correctly.
 func (p *Pipeline) Validate() error {
+	// verify the Number field is populated
+	if p.Number.Int32 <= 0 {
+		return ErrEmptyPipelineNumber
+	}
+
 	// verify the Ref field is populated
 	if len(p.Ref.String) == 0 {
 		return ErrEmptyPipelineRef
@@ -207,6 +223,7 @@ func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 	pipeline := &Pipeline{
 		ID:        sql.NullInt64{Int64: p.GetID(), Valid: true},
 		RepoID:    sql.NullInt64{Int64: p.GetRepoID(), Valid: true},
+		Number:    sql.NullInt32{Int32: int32(p.GetNumber()), Valid: true},
 		Flavor:    sql.NullString{String: p.GetFlavor(), Valid: true},
 		Platform:  sql.NullString{String: p.GetPlatform(), Valid: true},
 		Ref:       sql.NullString{String: p.GetRef(), Valid: true},

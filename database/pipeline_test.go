@@ -143,6 +143,7 @@ func TestDatabase_Pipeline_Nullify(t *testing.T) {
 	want := &Pipeline{
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
+		Number:   sql.NullInt32{Int32: 0, Valid: false},
 		Flavor:   sql.NullString{String: "", Valid: false},
 		Platform: sql.NullString{String: "", Valid: false},
 		Ref:      sql.NullString{String: "", Valid: false},
@@ -184,6 +185,7 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 
 	want.SetID(1)
 	want.SetRepoID(1)
+	want.SetNumber(1)
 	want.SetFlavor("large")
 	want.SetPlatform("docker")
 	want.SetRef("refs/heads/master")
@@ -212,11 +214,21 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure:  false,
 			pipeline: testPipeline(),
 		},
+		{ // no number set for pipeline
+			failure: true,
+			pipeline: &Pipeline{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Version: sql.NullString{String: "1", Valid: true},
+			},
+		},
 		{ // no ref set for pipeline
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
 		},
@@ -224,6 +236,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
 				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
@@ -232,6 +245,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure: true,
 			pipeline: &Pipeline{
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt32{Int32: 1, Valid: true},
 				Ref:    sql.NullString{String: "refs/heads/master", Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
 			},
@@ -262,6 +276,7 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 
 	p.SetID(1)
 	p.SetRepoID(1)
+	p.SetNumber(1)
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")
@@ -288,6 +303,7 @@ func testPipeline() *Pipeline {
 	return &Pipeline{
 		ID:        sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
+		Number:    sql.NullInt32{Int32: 1, Valid: true},
 		Flavor:    sql.NullString{String: "large", Valid: true},
 		Platform:  sql.NullString{String: "docker", Valid: true},
 		Ref:       sql.NullString{String: "refs/heads/master", Valid: true},

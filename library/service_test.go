@@ -8,11 +8,16 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/pipeline"
 )
 
 func TestLibrary_Service_Duration(t *testing.T) {
+	// setup types
+	unfinished := testService()
+	unfinished.SetFinished(0)
+
 	// setup tests
 	tests := []struct {
 		service *Service
@@ -23,8 +28,12 @@ func TestLibrary_Service_Duration(t *testing.T) {
 			want:    "1s",
 		},
 		{
+			service: unfinished,
+			want:    time.Since(time.Unix(unfinished.GetStarted(), 0)).Round(time.Second).String(),
+		},
+		{
 			service: new(Service),
-			want:    "0s",
+			want:    "...",
 		},
 	}
 

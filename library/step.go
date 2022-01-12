@@ -40,7 +40,6 @@ type Step struct {
 func (s *Step) Duration() string {
 	// check if the step doesn't have a started timestamp
 	if s.GetStarted() == 0 {
-		// nolint: goconst // ignore making a constant
 		return "..."
 	}
 

@@ -38,7 +38,6 @@ type Service struct {
 func (s *Service) Duration() string {
 	// check if the service doesn't have a started timestamp
 	if s.GetStarted() == 0 {
-		// nolint: goconst // ignore making a constant
 		return "..."
 	}
 

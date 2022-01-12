@@ -41,6 +41,7 @@ type Pipeline struct {
 	Flavor    sql.NullString `sql:"flavor"`
 	Platform  sql.NullString `sql:"platform"`
 	Ref       sql.NullString `sql:"ref"`
+	Type      sql.NullString `sql:"type"`
 	Version   sql.NullString `sql:"version"`
 	Services  sql.NullBool   `sql:"services"`
 	Stages    sql.NullBool   `sql:"stages"`
@@ -154,6 +155,11 @@ func (p *Pipeline) Nullify() *Pipeline {
 		p.Ref.Valid = false
 	}
 
+	// check if the Type field should be false
+	if len(p.Type.String) == 0 {
+		p.Type.Valid = false
+	}
+
 	// check if the Version field should be false
 	if len(p.Version.String) == 0 {
 		p.Version.Valid = false
@@ -173,6 +179,7 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 	pipeline.SetFlavor(p.Flavor.String)
 	pipeline.SetPlatform(p.Platform.String)
 	pipeline.SetRef(p.Ref.String)
+	pipeline.SetType(p.Type.String)
 	pipeline.SetVersion(p.Version.String)
 	pipeline.SetServices(p.Services.Bool)
 	pipeline.SetStages(p.Stages.Bool)
@@ -227,6 +234,7 @@ func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 		Flavor:    sql.NullString{String: p.GetFlavor(), Valid: true},
 		Platform:  sql.NullString{String: p.GetPlatform(), Valid: true},
 		Ref:       sql.NullString{String: p.GetRef(), Valid: true},
+		Type:      sql.NullString{String: p.GetType(), Valid: true},
 		Version:   sql.NullString{String: p.GetVersion(), Valid: true},
 		Services:  sql.NullBool{Bool: p.GetServices(), Valid: true},
 		Stages:    sql.NullBool{Bool: p.GetStages(), Valid: true},

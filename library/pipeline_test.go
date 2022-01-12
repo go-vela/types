@@ -52,6 +52,10 @@ func TestLibrary_Pipeline_Getters(t *testing.T) {
 			t.Errorf("GetRef is %v, want %v", test.pipeline.GetRef(), test.want.GetRef())
 		}
 
+		if test.pipeline.GetType() != test.want.GetType() {
+			t.Errorf("GetType is %v, want %v", test.pipeline.GetType(), test.want.GetType())
+		}
+
 		if test.pipeline.GetVersion() != test.want.GetVersion() {
 			t.Errorf("GetVersion is %v, want %v", test.pipeline.GetVersion(), test.want.GetVersion())
 		}
@@ -105,6 +109,7 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 		test.pipeline.SetFlavor(test.want.GetFlavor())
 		test.pipeline.SetPlatform(test.want.GetPlatform())
 		test.pipeline.SetRef(test.want.GetRef())
+		test.pipeline.SetType(test.want.GetType())
 		test.pipeline.SetVersion(test.want.GetVersion())
 		test.pipeline.SetServices(test.want.GetServices())
 		test.pipeline.SetStages(test.want.GetStages())
@@ -134,6 +139,10 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 
 		if test.pipeline.GetRef() != test.want.GetRef() {
 			t.Errorf("SetRef is %v, want %v", test.pipeline.GetRef(), test.want.GetRef())
+		}
+
+		if test.pipeline.GetType() != test.want.GetType() {
+			t.Errorf("SetType is %v, want %v", test.pipeline.GetType(), test.want.GetType())
 		}
 
 		if test.pipeline.GetVersion() != test.want.GetVersion() {
@@ -178,6 +187,7 @@ func TestLibrary_Pipeline_String(t *testing.T) {
   Stages: %t,
   Steps: %t,
   Templates: %t,
+  Type: %s,
   Version: %s,
 }`,
 		p.GetData(),
@@ -191,6 +201,7 @@ func TestLibrary_Pipeline_String(t *testing.T) {
 		p.GetStages(),
 		p.GetSteps(),
 		p.GetTemplates(),
+		p.GetType(),
 		p.GetVersion(),
 	)
 
@@ -213,6 +224,7 @@ func testPipeline() *Pipeline {
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")
+	p.SetRef("yaml")
 	p.SetVersion("1")
 	p.SetServices(true)
 	p.SetStages(false)

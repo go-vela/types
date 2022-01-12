@@ -147,6 +147,7 @@ func TestDatabase_Pipeline_Nullify(t *testing.T) {
 		Flavor:   sql.NullString{String: "", Valid: false},
 		Platform: sql.NullString{String: "", Valid: false},
 		Ref:      sql.NullString{String: "", Valid: false},
+		Type:     sql.NullString{String: "", Valid: false},
 		Version:  sql.NullString{String: "", Valid: false},
 	}
 
@@ -189,6 +190,7 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 	want.SetFlavor("large")
 	want.SetPlatform("docker")
 	want.SetRef("refs/heads/master")
+	want.SetType(constants.PipelineTypeYAML)
 	want.SetVersion("1")
 	want.SetServices(true)
 	want.SetStages(false)
@@ -280,6 +282,7 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")
+	p.SetType(constants.PipelineTypeYAML)
 	p.SetVersion("1")
 	p.SetServices(true)
 	p.SetStages(false)
@@ -307,6 +310,7 @@ func testPipeline() *Pipeline {
 		Flavor:    sql.NullString{String: "large", Valid: true},
 		Platform:  sql.NullString{String: "docker", Valid: true},
 		Ref:       sql.NullString{String: "refs/heads/master", Valid: true},
+		Type:      sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 		Version:   sql.NullString{String: "1", Valid: true},
 		Services:  sql.NullBool{Bool: true, Valid: true},
 		Stages:    sql.NullBool{Bool: false, Valid: true},

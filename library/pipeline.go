@@ -16,6 +16,7 @@ type Pipeline struct {
 	Flavor    *string `json:"flavor,omitempty"`
 	Platform  *string `json:"platform,omitempty"`
 	Ref       *string `json:"ref,omitempty"`
+	Type      *string `json:"type,omitempty"`
 	Version   *string `json:"version,omitempty"`
 	Services  *bool   `json:"services,omitempty"`
 	Stages    *bool   `json:"stages,omitempty"`
@@ -101,6 +102,19 @@ func (p *Pipeline) GetRef() string {
 	}
 
 	return *p.Ref
+}
+
+// GetType returns the Type field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetType() string {
+	// return zero value if Pipeline type or Type field is nil
+	if p == nil || p.Type == nil {
+		return ""
+	}
+
+	return *p.Type
 }
 
 // GetVersion returns the Version field.
@@ -259,6 +273,19 @@ func (p *Pipeline) SetRef(v string) {
 	p.Ref = &v
 }
 
+// SetType sets the Type field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetType(v string) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Type = &v
+}
+
 // SetVersion sets the Version field.
 //
 // When the provided Pipeline type is nil, it
@@ -351,6 +378,7 @@ func (p *Pipeline) String() string {
   Stages: %t,
   Steps: %t,
   Templates: %t,
+  Type: %s,
   Version: %s,
 }`,
 		p.GetData(),
@@ -364,6 +392,7 @@ func (p *Pipeline) String() string {
 		p.GetStages(),
 		p.GetSteps(),
 		p.GetTemplates(),
+		p.GetType(),
 		p.GetVersion(),
 	)
 }

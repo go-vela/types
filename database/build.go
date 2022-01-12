@@ -85,7 +85,8 @@ func (b *Build) Crop() *Build {
 // When a field within the Build type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-// nolint:funlen // long function due to number of fields
+//
+// nolint:gocyclo,funlen // ignore cyclomatic complexity and length due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil

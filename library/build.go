@@ -53,6 +53,7 @@ type Build struct {
 func (b *Build) Duration() string {
 	// check if the build doesn't have a started timestamp
 	if b.GetStarted() == 0 {
+		// nolint: goconst // ignore making a constant
 		return "..."
 	}
 

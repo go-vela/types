@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -164,6 +164,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetLink("https://github.com/github/octocat")
 	want.SetClone("https://github.com/github/octocat.git")
 	want.SetBranch("master")
+	want.SetBuildLimit(10)
 	want.SetTimeout(30)
 	want.SetCounter(0)
 	want.SetVisibility("public")
@@ -176,6 +177,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
+	want.SetPreviousName("oldName")
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -294,6 +296,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
 	r.SetBranch("master")
+	r.SetBuildLimit(10)
 	r.SetTimeout(30)
 	r.SetCounter(0)
 	r.SetVisibility("public")
@@ -306,6 +309,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
+	r.SetPreviousName("oldName")
 
 	want := testRepo()
 
@@ -330,6 +334,7 @@ func testRepo() *Repo {
 		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
 		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Branch:       sql.NullString{String: "master", Valid: true},
+		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
 		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
 		Counter:      sql.NullInt32{Int32: 0, Valid: true},
 		Visibility:   sql.NullString{String: "public", Valid: true},
@@ -342,5 +347,6 @@ func testRepo() *Repo {
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
+		PreviousName: sql.NullString{String: "oldName", Valid: true},
 	}
 }

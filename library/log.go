@@ -1,10 +1,15 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+
+	"github.com/go-vela/types/constants"
+)
 
 // Log is the library representation of a log for a step in a build.
 //
@@ -34,6 +39,35 @@ func (l *Log) AppendData(data []byte) {
 
 	// add the data to the Data field
 	l.SetData(append(l.GetData(), data...))
+}
+
+// MaskData reads through the log data and masks
+// all values provided in the string slice. If the
+// log is empty, we do nothing.
+func (l *Log) MaskData(secrets []string) {
+	data := l.GetData()
+	for _, secret := range secrets {
+		// escape regexp meta characters if they exist within value of secret
+		//
+		// https://pkg.go.dev/regexp#QuoteMeta
+		escaped := regexp.QuoteMeta(secret)
+
+		// create regexp to match secrets in the log data surrounded by regexp metacharacters
+		//
+		// https://pkg.go.dev/regexp#MustCompile
+		re := regexp.MustCompile((`(\s|^|"|:|'|\.|,)` + escaped + `(\s|$|"|:|'|\.|,)`))
+
+		// create a mask for the secret
+		mask := fmt.Sprintf("$1%s$2", constants.SecretLogMask)
+
+		// replace all regexp matches of secret with mask
+		//
+		// https://pkg.go.dev/regexp#Regexp.ReplaceAll
+		data = re.ReplaceAll(data, []byte(mask))
+	}
+
+	// update data field to masked logs
+	l.SetData(data)
 }
 
 // GetID returns the ID field.

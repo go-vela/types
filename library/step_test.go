@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -11,6 +11,32 @@ import (
 
 	"github.com/go-vela/types/pipeline"
 )
+
+func TestLibrary_Step_Duration(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		step *Step
+		want string
+	}{
+		{
+			step: testStep(),
+			want: "1s",
+		},
+		{
+			step: new(Step),
+			want: "0s",
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.step.Duration()
+
+		if got != test.want {
+			t.Errorf("Duration is %v, want %v", got, test.want)
+		}
+	}
+}
 
 func TestLibrary_Step_Environment(t *testing.T) {
 	// setup types
@@ -272,66 +298,67 @@ func TestLibrary_Step_String(t *testing.T) {
 	}
 }
 
-func TestLibrary_Step_StepFromBuildContainer(t *testing.T) {
-	// some strings used in the tests (not const, as we need the address)
-	defaultStatus := "pending"
-	exampleHost := "example.company.com"
-	exampleRuntime := "docker"
-	exampleDistribution := "linux"
-
+func TestLibrary_StepFromBuildContainer(t *testing.T) {
 	// setup types
-	s := new(Step)
-
-	// add dummy values for values managed by StepFromContainer
-	s.SetName("clone")
-	s.SetNumber(1)
-	s.SetImage("target/vela-git:v0.3.0")
+	s := testStep()
 	s.SetStage("clone")
-	s.SetHost(exampleHost)
-	s.SetRuntime(exampleRuntime)
-	s.SetDistribution(exampleDistribution)
-	s.SetStatus(defaultStatus)
+	s.SetStatus("pending")
+
+	// modify fields that aren't set
+	s.ID = nil
+	s.BuildID = nil
+	s.RepoID = nil
+	s.ExitCode = nil
+	s.Created = nil
+	s.Started = nil
+	s.Finished = nil
 
 	tests := []struct {
+		name      string
 		container *pipeline.Container
 		build     *Build
 		want      *Step
 	}{
 		{
+			name:      "nil container with nil build",
 			container: nil,
 			build:     nil,
-			want:      &Step{Status: &defaultStatus},
+			want:      &Step{Status: s.Status},
 		},
 		{
+			name:      "empty container with nil build",
 			container: new(pipeline.Container),
 			build:     nil,
-			want:      &Step{Status: &defaultStatus},
+			want:      &Step{Status: s.Status},
 		},
 		{
+			name:      "nil container with build",
 			container: nil,
 			build:     testBuild(),
 			want: &Step{
-				Status:       &defaultStatus,
-				Host:         &exampleHost,
-				Runtime:      &exampleRuntime,
-				Distribution: &exampleDistribution,
+				Status:       s.Status,
+				Host:         s.Host,
+				Runtime:      s.Runtime,
+				Distribution: s.Distribution,
 			},
 		},
 		{
+			name:      "empty container with build",
 			container: new(pipeline.Container),
 			build:     testBuild(),
 			want: &Step{
-				Status:       &defaultStatus,
-				Host:         &exampleHost,
-				Runtime:      &exampleRuntime,
-				Distribution: &exampleDistribution,
+				Status:       s.Status,
+				Host:         s.Host,
+				Runtime:      s.Runtime,
+				Distribution: s.Distribution,
 			},
 		},
 		{
+			name: "container with build",
 			container: &pipeline.Container{
-				Name:   "clone",
-				Number: 1,
-				Image:  "target/vela-git:v0.3.0",
+				Name:   s.GetName(),
+				Number: s.GetNumber(),
+				Image:  s.GetImage(),
 				Environment: map[string]string{
 					"VELA_STEP_STAGE": "clone",
 				},
@@ -343,10 +370,10 @@ func TestLibrary_Step_StepFromBuildContainer(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		step := StepFromBuildContainer(test.build, test.container)
+		got := StepFromBuildContainer(test.build, test.container)
 
-		if !reflect.DeepEqual(step, test.want) {
-			t.Errorf("Step.StepFromBuildContainer made %v, want %v", step, test.want)
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("StepFromBuildContainer for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }
@@ -354,33 +381,37 @@ func TestLibrary_Step_StepFromBuildContainer(t *testing.T) {
 func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 	// setup types
 	s := testStep()
+	s.SetStage("clone")
 
-	// modify fields that aren't set
-	// via environment variables
+	// modify fields that aren't set via environment variables
 	s.ID = nil
 	s.BuildID = nil
 	s.RepoID = nil
-	s.SetStage("clone")
 
 	// setup tests
 	tests := []struct {
+		name      string
 		container *pipeline.Container
 		want      *Step
 	}{
 		{
+			name:      "nil container",
 			container: nil,
 			want:      nil,
 		},
 		{
+			name:      "empty container",
 			container: new(pipeline.Container),
 			want:      nil,
 		},
 		{
+			name: "container",
 			container: &pipeline.Container{
 				Environment: map[string]string{
 					"VELA_STEP_CREATED":      "1563474076",
 					"VELA_STEP_DISTRIBUTION": "linux",
 					"VELA_STEP_EXIT_CODE":    "0",
+					"VELA_STEP_FINISHED":     "1563474079",
 					"VELA_STEP_HOST":         "example.company.com",
 					"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 					"VELA_STEP_NAME":         "clone",
@@ -400,7 +431,7 @@ func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 		got := StepFromContainerEnvironment(test.container)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("StepFromContainerEnvironment is %v, want %v", got, test.want)
+			t.Errorf("StepFromContainerEnvironment for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }
@@ -420,6 +451,7 @@ func testStep() *Step {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

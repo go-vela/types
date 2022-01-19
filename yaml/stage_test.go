@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -190,6 +190,9 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 				{
 					Name:  "dependencies",
 					Needs: []string{"clone"},
+					Environment: map[string]string{
+						"STAGE_ENV_VAR": "stage",
+					},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew downloadDependencies"},
@@ -206,6 +209,10 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 				{
 					Name:  "test",
 					Needs: []string{"dependencies", "clone"},
+					Environment: map[string]string{
+						"STAGE_ENV_VAR":    "stage",
+						"SECOND_STAGE_ENV": "stage2",
+					},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -222,6 +229,9 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 				{
 					Name:  "build",
 					Needs: []string{"dependencies", "clone"},
+					Environment: map[string]string{
+						"STAGE_ENV_VAR": "stage",
+					},
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},
@@ -400,6 +410,59 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 
 		if !reflect.DeepEqual(got2, test.want) {
 			t.Errorf("MarshalYAML is %v, want %v", got2, test.want)
+		}
+	}
+}
+
+func TestYaml_Stage_MergeEnv(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		stage       *Stage
+		environment map[string]string
+		failure     bool
+	}{
+		{
+			stage: &Stage{
+				Environment: map[string]string{"FOO": "bar"},
+				Name:        "testStage",
+			},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       &Stage{},
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage:       nil,
+			environment: map[string]string{"BAR": "baz"},
+			failure:     false,
+		},
+		{
+			stage: &Stage{
+				Environment: map[string]string{"FOO": "bar"},
+				Name:        "testStage",
+			},
+			environment: nil,
+			failure:     true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.stage.MergeEnv(test.environment)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("MergeEnv should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("MergeEnv returned err: %v", err)
 		}
 	}
 }

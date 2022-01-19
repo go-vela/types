@@ -1,10 +1,12 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Repo is the library representation of a repo.
 //
@@ -19,6 +21,7 @@ type Repo struct {
 	Link         *string `json:"link,omitempty"`
 	Clone        *string `json:"clone,omitempty"`
 	Branch       *string `json:"branch,omitempty"`
+	BuildLimit   *int64  `json:"build_limit,omitempty"`
 	Timeout      *int64  `json:"timeout,omitempty"`
 	Counter      *int    `json:"counter,omitempty"`
 	Visibility   *string `json:"visibility,omitempty"`
@@ -31,6 +34,7 @@ type Repo struct {
 	AllowTag     *bool   `json:"allow_tag,omitempty"`
 	AllowComment *bool   `json:"allow_comment,omitempty"`
 	PipelineType *string `json:"pipeline_type,omitempty"`
+	PreviousName *string `json:"previous_name,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -44,6 +48,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
 		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
+		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
 		"VELA_REPO_CLONE":         ToString(r.GetClone()),
 		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
 		"VELA_REPO_LINK":          ToString(r.GetLink()),
@@ -190,6 +195,19 @@ func (r *Repo) GetBranch() string {
 	}
 
 	return *r.Branch
+}
+
+// GetBuildLimit returns the BuildLimit field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetBuildLimit() int64 {
+	// return zero value if Repo type or BuildLimit field is nil
+	if r == nil || r.BuildLimit == nil {
+		return 0
+	}
+
+	return *r.BuildLimit
 }
 
 // GetTimeout returns the Timeout field.
@@ -348,6 +366,19 @@ func (r *Repo) GetPipelineType() string {
 	return *r.PipelineType
 }
 
+// GetPreviousName returns the PreviousName field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetPreviousName() string {
+	// return zero value if Repo type or PreviousName field is nil
+	if r == nil || r.PreviousName == nil {
+		return ""
+	}
+
+	return *r.PreviousName
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -463,6 +494,19 @@ func (r *Repo) SetBranch(v string) {
 	}
 
 	r.Branch = &v
+}
+
+// SetBuildLimit sets the BuildLimit field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetBuildLimit(v int64) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.BuildLimit = &v
 }
 
 // SetTimeout sets the Timeout field.
@@ -621,6 +665,19 @@ func (r *Repo) SetPipelineType(v string) {
 	r.PipelineType = &v
 }
 
+// SetPreviousName sets the PreviousName field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetPreviousName(v string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.PreviousName = &v
+}
+
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -631,19 +688,21 @@ func (r *Repo) String() string {
   AllowPush: %t,
   AllowTag: %t,
   Branch: %s,
+  BuildLimit: %d,
   Clone: %s,
+  Counter: %d,
   FullName: %s,
   ID: %d,
   Link: %s,
   Name: %s,
   Org: %s,
+  PipelineType: %s,
+  PreviousName: %s,
   Private: %t,
   Timeout: %d,
-  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
-  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -652,18 +711,20 @@ func (r *Repo) String() string {
 		r.GetAllowPush(),
 		r.GetAllowTag(),
 		r.GetBranch(),
+		r.GetBuildLimit(),
 		r.GetClone(),
+		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),
+		r.GetPipelineType(),
+		r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
-		r.GetCounter(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
-		r.GetPipelineType(),
 	)
 }

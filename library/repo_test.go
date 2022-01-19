@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -20,6 +20,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
 		"VELA_REPO_BRANCH":         "master",
+		"VELA_REPO_BUILD_LIMIT":    "10",
 		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
 		"VELA_REPO_FULL_NAME":      "github/octocat",
 		"VELA_REPO_LINK":           "https://github.com/github/octocat",
@@ -110,6 +111,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
 		}
 
+		if test.repo.GetBuildLimit() != test.want.GetBuildLimit() {
+			t.Errorf("GetBuildLimit is %v, want %v", test.repo.GetBuildLimit(), test.want.GetBuildLimit())
+		}
+
 		if test.repo.GetTimeout() != test.want.GetTimeout() {
 			t.Errorf("GetTimeout is %v, want %v", test.repo.GetTimeout(), test.want.GetTimeout())
 		}
@@ -153,6 +158,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("GetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
+		}
 	}
 }
 
@@ -186,6 +195,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetLink(test.want.GetLink())
 		test.repo.SetClone(test.want.GetClone())
 		test.repo.SetBranch(test.want.GetBranch())
+		test.repo.SetBuildLimit(test.want.GetBuildLimit())
 		test.repo.SetTimeout(test.want.GetTimeout())
 		test.repo.SetCounter(test.want.GetCounter())
 		test.repo.SetVisibility(test.want.GetVisibility())
@@ -198,6 +208,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
+		test.repo.SetPreviousName(test.want.GetPreviousName())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -233,6 +244,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 
 		if test.repo.GetBranch() != test.want.GetBranch() {
 			t.Errorf("SetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
+		}
+
+		if test.repo.GetBuildLimit() != test.want.GetBuildLimit() {
+			t.Errorf("SetBuildLimit is %v, want %v", test.repo.GetBuildLimit(), test.want.GetBuildLimit())
 		}
 
 		if test.repo.GetTimeout() != test.want.GetTimeout() {
@@ -278,6 +293,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
+
+		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
+			t.Errorf("SetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
+		}
 	}
 }
 
@@ -293,19 +312,21 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowPush: %t,
   AllowTag: %t,
   Branch: %s,
+  BuildLimit: %d,
   Clone: %s,
+  Counter: %d,
   FullName: %s,
   ID: %d,
   Link: %s,
   Name: %s,
   Org: %s,
+  PipelineType: %s,
+  PreviousName: %s,
   Private: %t,
   Timeout: %d,
-  Counter: %d,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
-  PipelineType: %s,
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
@@ -314,19 +335,21 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowPush(),
 		r.GetAllowTag(),
 		r.GetBranch(),
+		r.GetBuildLimit(),
 		r.GetClone(),
+		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),
+		r.GetPipelineType(),
+		r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
-		r.GetCounter(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
-		r.GetPipelineType(),
 	)
 
 	// run test
@@ -349,6 +372,7 @@ func testRepo() *Repo {
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
 	r.SetBranch("master")
+	r.SetBuildLimit(10)
 	r.SetTimeout(30)
 	r.SetCounter(0)
 	r.SetVisibility("public")
@@ -361,6 +385,7 @@ func testRepo() *Repo {
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
+	r.SetPreviousName("")
 
 	return r
 }

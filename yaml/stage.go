@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -22,9 +22,10 @@ type (
 	// of a stage in a pipeline.
 	// nolint:lll // jsonschema will cause long lines
 	Stage struct {
-		Name  string          `yaml:"name,omitempty"  json:"name,omitempty"  jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
-		Needs raw.StringSlice `yaml:"needs,omitempty,flow" json:"needs,omitempty" jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
-		Steps StepSlice       `yaml:"steps,omitempty" json:"steps,omitempty" jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-steps-tag"`
+		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-environment-tag"`
+		Name        string             `yaml:"name,omitempty"        json:"name,omitempty"        jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
+		Needs       raw.StringSlice    `yaml:"needs,omitempty,flow"  json:"needs,omitempty"       jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
+		Steps       StepSlice          `yaml:"steps,omitempty"       json:"steps,omitempty"       jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-steps-tag"`
 	}
 )
 
@@ -38,10 +39,11 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 	for _, stage := range *s {
 		// append the element to the pipeline stage slice
 		*stageSlice = append(*stageSlice, &pipeline.Stage{
-			Done:  make(chan error, 1),
-			Name:  stage.Name,
-			Needs: stage.Needs,
-			Steps: *stage.Steps.ToPipeline(),
+			Done:        make(chan error, 1),
+			Environment: stage.Environment,
+			Name:        stage.Name,
+			Needs:       stage.Needs,
+			Steps:       *stage.Steps.ToPipeline(),
 		})
 	}
 
@@ -119,4 +121,33 @@ func (s StageSlice) MarshalYAML() (interface{}, error) {
 	}
 
 	return output, nil
+}
+
+// MergeEnv takes a list of environment variables and attempts
+// to set them in the stage environment. If the environment
+// variable already exists in the stage, than this will
+// overwrite the existing environment variable.
+func (s *Stage) MergeEnv(environment map[string]string) error {
+	// check if the stage is empty
+	if s == nil || s.Environment == nil {
+		// TODO: evaluate if we should error here
+		//
+		// immediately return and do nothing
+		//
+		// treated as a no-op
+		return nil
+	}
+
+	// check if the environment provided is empty
+	if environment == nil {
+		return fmt.Errorf("empty environment provided for stage %s", s.Name)
+	}
+
+	// iterate through all environment variables provided
+	for key, value := range environment {
+		// set or update the stage environment variable
+		s.Environment[key] = value
+	}
+
+	return nil
 }

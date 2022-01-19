@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -11,6 +11,32 @@ import (
 
 	"github.com/go-vela/types/pipeline"
 )
+
+func TestLibrary_Service_Duration(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		service *Service
+		want    string
+	}{
+		{
+			service: testService(),
+			want:    "1s",
+		},
+		{
+			service: new(Service),
+			want:    "0s",
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := test.service.Duration()
+
+		if got != test.want {
+			t.Errorf("Duration is %v, want %v", got, test.want)
+		}
+	}
+}
 
 func TestLibrary_Service_Environment(t *testing.T) {
 	// setup types
@@ -260,35 +286,115 @@ func TestLibrary_Service_String(t *testing.T) {
 	}
 }
 
-func TestLibrary_ServiceFromContainer(t *testing.T) {
+func TestLibrary_ServiceFromBuildContainer(t *testing.T) {
+	// setup types
+	s := testService()
+	s.SetStatus("pending")
+
+	// modify fields that aren't set
+	s.ID = nil
+	s.BuildID = nil
+	s.RepoID = nil
+	s.ExitCode = nil
+	s.Created = nil
+	s.Started = nil
+	s.Finished = nil
+
+	tests := []struct {
+		name      string
+		container *pipeline.Container
+		build     *Build
+		want      *Service
+	}{
+		{
+			name:      "nil container with nil build",
+			container: nil,
+			build:     nil,
+			want:      &Service{Status: s.Status},
+		},
+		{
+			name:      "empty container with nil build",
+			container: new(pipeline.Container),
+			build:     nil,
+			want:      &Service{Status: s.Status},
+		},
+		{
+			name:      "nil container with build",
+			container: nil,
+			build:     testBuild(),
+			want: &Service{
+				Status:       s.Status,
+				Host:         s.Host,
+				Runtime:      s.Runtime,
+				Distribution: s.Distribution,
+			},
+		},
+		{
+			name:      "empty container with build",
+			container: new(pipeline.Container),
+			build:     testBuild(),
+			want: &Service{
+				Status:       s.Status,
+				Host:         s.Host,
+				Runtime:      s.Runtime,
+				Distribution: s.Distribution,
+			},
+		},
+		{
+			name: "container with build",
+			container: &pipeline.Container{
+				Name:   s.GetName(),
+				Number: s.GetNumber(),
+				Image:  s.GetImage(),
+			},
+			build: testBuild(),
+			want:  s,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := ServiceFromBuildContainer(test.build, test.container)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ServiceFromBuildContainer for %s is %v, want %v", test.name, got, test.want)
+		}
+	}
+}
+
+func TestLibrary_ServiceFromContainerEnvironment(t *testing.T) {
 	// setup types
 	s := testService()
 
-	// modify fields that aren't set
-	// via environment variables
+	// modify fields that aren't set via environment variables
 	s.ID = nil
 	s.BuildID = nil
 	s.RepoID = nil
 
 	// setup tests
 	tests := []struct {
+		name      string
 		container *pipeline.Container
 		want      *Service
 	}{
 		{
+			name:      "nil container",
 			container: nil,
 			want:      nil,
 		},
 		{
+			name:      "empty container",
 			container: new(pipeline.Container),
 			want:      nil,
 		},
 		{
+			name: "container",
 			container: &pipeline.Container{
 				Environment: map[string]string{
 					"VELA_SERVICE_CREATED":      "1563474076",
 					"VELA_SERVICE_DISTRIBUTION": "linux",
 					"VELA_SERVICE_EXIT_CODE":    "0",
+					"VELA_SERVICE_FINISHED":     "1563474079",
 					"VELA_SERVICE_HOST":         "example.company.com",
 					"VELA_SERVICE_IMAGE":        "postgres:12-alpine",
 					"VELA_SERVICE_NAME":         "postgres",
@@ -304,10 +410,10 @@ func TestLibrary_ServiceFromContainer(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := ServiceFromContainer(test.container)
+		got := ServiceFromContainerEnvironment(test.container)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("ServiceFromContainer is %v, want %v", got, test.want)
+			t.Errorf("ServiceFromContainerEnvironment for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }
@@ -327,6 +433,7 @@ func testService() *Service {
 	s.SetExitCode(0)
 	s.SetCreated(1563474076)
 	s.SetStarted(1563474078)
+	s.SetFinished(1563474079)
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")

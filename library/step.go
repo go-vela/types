@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -7,6 +7,7 @@ package library
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
@@ -32,6 +33,27 @@ type Step struct {
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
+}
+
+// Duration calculates and returns the total amount of
+// time the step ran for in a human-readable format.
+func (s *Step) Duration() string {
+	// check if the step doesn't have a started or finished timestamp
+	if s.GetStarted() == 0 || s.GetFinished() == 0 {
+		// return zero value for time.Duration (0s)
+		return new(time.Duration).String()
+	}
+
+	// capture finished unix timestamp from the step
+	finished := time.Unix(s.GetFinished(), 0)
+	// capture started unix timestamp from the step
+	started := time.Unix(s.GetStarted(), 0)
+	// calculate the duration by subtracting the step
+	// started time from the step finished time
+	duration := finished.Sub(started)
+
+	// return duration in a human-readable form
+	return duration.String()
 }
 
 // Environment returns a list of environment variables
@@ -506,8 +528,7 @@ func (s *Step) String() string {
 	)
 }
 
-// StepFromBuildContainer creates new Step type based on
-// a Build and one of its Containers.
+// StepFromBuildContainer creates a new Step based on a Build and pipeline Container.
 func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 	// create new step type we want to return
 	s := new(Step)
@@ -537,11 +558,12 @@ func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 			s.SetStage(value)
 		}
 	}
+
 	return s
 }
 
-// StepFromContainerEnvironment converts the pipeline
-// Container type to a library Step type using the container's Environment.
+// StepFromContainerEnvironment converts the pipeline Container
+// to a library Step using the container's Environment.
 //
 // nolint: funlen // ignore function length due to comments and conditionals
 func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {

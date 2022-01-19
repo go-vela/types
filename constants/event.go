@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -20,4 +20,10 @@ const (
 
 	// EventComment defines the event type for comments added to a pull request.
 	EventComment = "comment"
+
+	// EventRepositoryRename defines the event type for a repo being renamed.
+	EventRepositoryRename = "repositoryRename"
+
+	// EventRepository defines the general event type for repo management.
+	EventRepository = "repository"
 )

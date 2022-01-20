@@ -38,21 +38,30 @@ type Step struct {
 // Duration calculates and returns the total amount of
 // time the step ran for in a human-readable format.
 func (s *Step) Duration() string {
-	// check if the step doesn't have a started or finished timestamp
-	if s.GetStarted() == 0 || s.GetFinished() == 0 {
-		// return zero value for time.Duration (0s)
-		return new(time.Duration).String()
+	// check if the step doesn't have a started timestamp
+	if s.GetStarted() == 0 {
+		return "..."
+	}
+
+	// capture started unix timestamp from the step
+	started := time.Unix(s.GetStarted(), 0)
+
+	// check if the step doesn't have a finished timestamp
+	if s.GetFinished() == 0 {
+		// return the duration in a human-readable form by
+		// subtracting the step started time from the
+		// current time rounded to the nearest second
+		return time.Since(started).Round(time.Second).String()
 	}
 
 	// capture finished unix timestamp from the step
 	finished := time.Unix(s.GetFinished(), 0)
-	// capture started unix timestamp from the step
-	started := time.Unix(s.GetStarted(), 0)
+
 	// calculate the duration by subtracting the step
 	// started time from the step finished time
 	duration := finished.Sub(started)
 
-	// return duration in a human-readable form
+	// return the duration in a human-readable form
 	return duration.String()
 }
 

@@ -52,21 +52,31 @@ type Build struct {
 // Duration calculates and returns the total amount of
 // time the build ran for in a human-readable format.
 func (b *Build) Duration() string {
-	// check if the build doesn't have a started or finished timestamp
-	if b.GetStarted() == 0 || b.GetFinished() == 0 {
-		// return zero value for time.Duration (0s)
-		return new(time.Duration).String()
+	// check if the build doesn't have a started timestamp
+	if b.GetStarted() == 0 {
+		// nolint: goconst // ignore making a constant
+		return "..."
+	}
+
+	// capture started unix timestamp from the build
+	started := time.Unix(b.GetStarted(), 0)
+
+	// check if the build doesn't have a finished timestamp
+	if b.GetFinished() == 0 {
+		// return the duration in a human-readable form by
+		// subtracting the build started time from the
+		// current time rounded to the nearest second
+		return time.Since(started).Round(time.Second).String()
 	}
 
 	// capture finished unix timestamp from the build
 	finished := time.Unix(b.GetFinished(), 0)
-	// capture started unix timestamp from the build
-	started := time.Unix(b.GetStarted(), 0)
+
 	// calculate the duration by subtracting the build
 	// started time from the build finished time
 	duration := finished.Sub(started)
 
-	// return duration in a human-readable form
+	// return the duration in a human-readable form
 	return duration.String()
 }
 

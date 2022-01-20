@@ -8,11 +8,16 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/pipeline"
 )
 
 func TestLibrary_Step_Duration(t *testing.T) {
+	// setup types
+	unfinished := testStep()
+	unfinished.SetFinished(0)
+
 	// setup tests
 	tests := []struct {
 		step *Step
@@ -23,8 +28,12 @@ func TestLibrary_Step_Duration(t *testing.T) {
 			want: "1s",
 		},
 		{
+			step: unfinished,
+			want: time.Since(time.Unix(unfinished.GetStarted(), 0)).Round(time.Second).String(),
+		},
+		{
 			step: new(Step),
-			want: "0s",
+			want: "...",
 		},
 	}
 

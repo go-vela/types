@@ -8,11 +8,16 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/raw"
 )
 
 func TestLibrary_Build_Duration(t *testing.T) {
+	// setup types
+	unfinished := testBuild()
+	unfinished.SetFinished(0)
+
 	// setup tests
 	tests := []struct {
 		build *Build
@@ -23,8 +28,12 @@ func TestLibrary_Build_Duration(t *testing.T) {
 			want:  "1s",
 		},
 		{
+			build: unfinished,
+			want:  time.Since(time.Unix(unfinished.GetStarted(), 0)).Round(time.Second).String(),
+		},
+		{
 			build: new(Build),
-			want:  "0s",
+			want:  "...",
 		},
 	}
 

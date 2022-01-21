@@ -5,7 +5,7 @@ metadata:
   template: false
 
 environment:
-  HELLO: "Hello, Global Message"  
+  HELLO: "Hello, Global Message"
 
 templates:
   - name: docker_publish
@@ -14,7 +14,7 @@ templates:
 
 worker:
   flavor: 16cpu8gb
-  platform: gcp    
+  platform: gcp
 
 services:
   - name: postgres
@@ -138,3 +138,10 @@ secrets:
     key: org/team/docker/password
     engine: vault
     type: shared
+
+  - origin:
+      image: target/vela-vault:latest
+      pull: always
+      parameters:
+        addr: vault.example.com
+      secrets: [ docker_username, docker_password ]

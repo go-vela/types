@@ -192,6 +192,8 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 	want.SetRef("refs/heads/master")
 	want.SetType(constants.PipelineTypeYAML)
 	want.SetVersion("1")
+	want.SetExternalSecrets(false)
+	want.SetInternalSecrets(false)
 	want.SetServices(true)
 	want.SetStages(false)
 	want.SetSteps(true)
@@ -284,6 +286,8 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 	p.SetRef("refs/heads/master")
 	p.SetType(constants.PipelineTypeYAML)
 	p.SetVersion("1")
+	p.SetExternalSecrets(false)
+	p.SetInternalSecrets(false)
 	p.SetServices(true)
 	p.SetStages(false)
 	p.SetSteps(true)
@@ -304,19 +308,21 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testPipeline() *Pipeline {
 	return &Pipeline{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		Number:    sql.NullInt32{Int32: 1, Valid: true},
-		Flavor:    sql.NullString{String: "large", Valid: true},
-		Platform:  sql.NullString{String: "docker", Valid: true},
-		Ref:       sql.NullString{String: "refs/heads/master", Valid: true},
-		Type:      sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
-		Version:   sql.NullString{String: "1", Valid: true},
-		Services:  sql.NullBool{Bool: true, Valid: true},
-		Stages:    sql.NullBool{Bool: false, Valid: true},
-		Steps:     sql.NullBool{Bool: true, Valid: true},
-		Templates: sql.NullBool{Bool: false, Valid: true},
-		Data:      testPipelineData(),
+		ID:              sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:          sql.NullInt64{Int64: 1, Valid: true},
+		Number:          sql.NullInt32{Int32: 1, Valid: true},
+		Flavor:          sql.NullString{String: "large", Valid: true},
+		Platform:        sql.NullString{String: "docker", Valid: true},
+		Ref:             sql.NullString{String: "refs/heads/master", Valid: true},
+		Type:            sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
+		Version:         sql.NullString{String: "1", Valid: true},
+		ExternalSecrets: sql.NullBool{Bool: false, Valid: true},
+		InternalSecrets: sql.NullBool{Bool: false, Valid: true},
+		Services:        sql.NullBool{Bool: true, Valid: true},
+		Stages:          sql.NullBool{Bool: false, Valid: true},
+		Steps:           sql.NullBool{Bool: true, Valid: true},
+		Templates:       sql.NullBool{Bool: false, Valid: true},
+		Data:            testPipelineData(),
 	}
 }
 

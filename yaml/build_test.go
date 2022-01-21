@@ -19,6 +19,8 @@ func TestYaml_Build_ToLibrary(t *testing.T) {
 	build.SetFlavor("16cpu8gb")
 	build.SetPlatform("gcp")
 	build.SetVersion("1")
+	build.SetExternalSecrets(true)
+	build.SetInternalSecrets(true)
 	build.SetServices(true)
 	build.SetStages(false)
 	build.SetSteps(true)
@@ -286,6 +288,25 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Key:    "org/team/docker/password",
 						Engine: "vault",
 						Type:   "shared",
+					},
+					{
+						Origin: Origin{
+							Image: "target/vela-vault:latest",
+							Parameters: map[string]interface{}{
+								"addr": "vault.example.com",
+							},
+							Pull: "always",
+							Secrets: StepSecretSlice{
+								{
+									Source: "docker_username",
+									Target: "docker_username",
+								},
+								{
+									Source: "docker_password",
+									Target: "docker_password",
+								},
+							},
+						},
 					},
 				},
 				Templates: TemplateSlice{

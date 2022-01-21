@@ -35,5 +35,32 @@ func (b *Build) ToLibrary() *library.Pipeline {
 	pipeline.SetSteps(len(b.Steps) > 0)
 	pipeline.SetTemplates(len(b.Templates) > 0)
 
+	// check if secrets were provided for the build
+	if len(b.Secrets) > 0 {
+		external := false
+		internal := false
+
+		// iterate through all secrets in the build
+		for _, secret := range b.Secrets {
+			// check if external and internal secrets have been found
+			if external && internal {
+				// exit the loop since external and internal secrets have been found
+				break
+			}
+
+			// check if the secret origin is empty
+			if secret.Origin.Empty() {
+				// origin was empty so internal secrets were found
+				internal = true
+			} else {
+				// origin was not empty so external secrets were found
+				external = true
+			}
+		}
+
+		pipeline.SetExternalSecrets(external)
+		pipeline.SetInternalSecrets(internal)
+	}
+
 	return pipeline
 }

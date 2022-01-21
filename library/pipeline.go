@@ -4,24 +4,28 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Pipeline is the library representation of a Pipeline.
 //
 // swagger:model Pipeline
 type Pipeline struct {
-	ID        *int64  `json:"id,omitempty"`
-	RepoID    *int64  `json:"repo_id,omitempty"`
-	Number    *int    `json:"number,omitempty"`
-	Flavor    *string `json:"flavor,omitempty"`
-	Platform  *string `json:"platform,omitempty"`
-	Ref       *string `json:"ref,omitempty"`
-	Type      *string `json:"type,omitempty"`
-	Version   *string `json:"version,omitempty"`
-	Services  *bool   `json:"services,omitempty"`
-	Stages    *bool   `json:"stages,omitempty"`
-	Steps     *bool   `json:"steps,omitempty"`
-	Templates *bool   `json:"templates,omitempty"`
+	ID              *int64  `json:"id,omitempty"`
+	RepoID          *int64  `json:"repo_id,omitempty"`
+	Number          *int    `json:"number,omitempty"`
+	Flavor          *string `json:"flavor,omitempty"`
+	Platform        *string `json:"platform,omitempty"`
+	Ref             *string `json:"ref,omitempty"`
+	Type            *string `json:"type,omitempty"`
+	Version         *string `json:"version,omitempty"`
+	ExternalSecrets *bool   `json:"external_secrets,omitempty"`
+	InternalSecrets *bool   `json:"internal_secrets,omitempty"`
+	Services        *bool   `json:"services,omitempty"`
+	Stages          *bool   `json:"stages,omitempty"`
+	Steps           *bool   `json:"steps,omitempty"`
+	Templates       *bool   `json:"templates,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }
@@ -128,6 +132,32 @@ func (p *Pipeline) GetVersion() string {
 	}
 
 	return *p.Version
+}
+
+// GetExternalSecrets returns the ExternalSecrets field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetExternalSecrets() bool {
+	// return zero value if Pipeline type or ExternalSecrets field is nil
+	if p == nil || p.ExternalSecrets == nil {
+		return false
+	}
+
+	return *p.ExternalSecrets
+}
+
+// GetInternalSecrets returns the InternalSecrets field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetInternalSecrets() bool {
+	// return zero value if Pipeline type or InternalSecrets field is nil
+	if p == nil || p.InternalSecrets == nil {
+		return false
+	}
+
+	return *p.InternalSecrets
 }
 
 // GetServices returns the Services field.
@@ -299,6 +329,32 @@ func (p *Pipeline) SetVersion(v string) {
 	p.Version = &v
 }
 
+// SetExternalSecrets sets the ExternalSecrets field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetExternalSecrets(v bool) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.ExternalSecrets = &v
+}
+
+// SetInternalSecrets sets the InternalSecrets field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetInternalSecrets(v bool) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.InternalSecrets = &v
+}
+
 // SetServices sets the Services field.
 //
 // When the provided Pipeline type is nil, it
@@ -374,6 +430,8 @@ func (p *Pipeline) String() string {
   Platform: %s,
   Ref: %s,
   RepoID: %d,
+  ExternalSecrets: %t,
+  InternalSecrets: %t,
   Services: %t,
   Stages: %t,
   Steps: %t,
@@ -388,6 +446,8 @@ func (p *Pipeline) String() string {
 		p.GetPlatform(),
 		p.GetRef(),
 		p.GetRepoID(),
+		p.GetExternalSecrets(),
+		p.GetInternalSecrets(),
 		p.GetServices(),
 		p.GetStages(),
 		p.GetSteps(),

@@ -35,19 +35,21 @@ var (
 
 // Pipeline is the database representation of a pipeline.
 type Pipeline struct {
-	ID        sql.NullInt64  `sql:"id"`
-	RepoID    sql.NullInt64  `sql:"repo_id"`
-	Number    sql.NullInt32  `sql:"number"`
-	Flavor    sql.NullString `sql:"flavor"`
-	Platform  sql.NullString `sql:"platform"`
-	Ref       sql.NullString `sql:"ref"`
-	Type      sql.NullString `sql:"type"`
-	Version   sql.NullString `sql:"version"`
-	Services  sql.NullBool   `sql:"services"`
-	Stages    sql.NullBool   `sql:"stages"`
-	Steps     sql.NullBool   `sql:"steps"`
-	Templates sql.NullBool   `sql:"templates"`
-	Data      []byte         `sql:"data"`
+	ID              sql.NullInt64  `sql:"id"`
+	RepoID          sql.NullInt64  `sql:"repo_id"`
+	Number          sql.NullInt32  `sql:"number"`
+	Flavor          sql.NullString `sql:"flavor"`
+	Platform        sql.NullString `sql:"platform"`
+	Ref             sql.NullString `sql:"ref"`
+	Type            sql.NullString `sql:"type"`
+	Version         sql.NullString `sql:"version"`
+	ExternalSecrets sql.NullBool   `sql:"external_secrets"`
+	InternalSecrets sql.NullBool   `sql:"internal_secrets"`
+	Services        sql.NullBool   `sql:"services"`
+	Stages          sql.NullBool   `sql:"stages"`
+	Steps           sql.NullBool   `sql:"steps"`
+	Templates       sql.NullBool   `sql:"templates"`
+	Data            []byte         `sql:"data"`
 }
 
 // Compress will manipulate the existing data for the
@@ -181,6 +183,8 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 	pipeline.SetRef(p.Ref.String)
 	pipeline.SetType(p.Type.String)
 	pipeline.SetVersion(p.Version.String)
+	pipeline.SetExternalSecrets(p.ExternalSecrets.Bool)
+	pipeline.SetInternalSecrets(p.InternalSecrets.Bool)
 	pipeline.SetServices(p.Services.Bool)
 	pipeline.SetStages(p.Stages.Bool)
 	pipeline.SetSteps(p.Steps.Bool)
@@ -228,19 +232,21 @@ func (p *Pipeline) Validate() error {
 // to a database Pipeline type.
 func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 	pipeline := &Pipeline{
-		ID:        sql.NullInt64{Int64: p.GetID(), Valid: true},
-		RepoID:    sql.NullInt64{Int64: p.GetRepoID(), Valid: true},
-		Number:    sql.NullInt32{Int32: int32(p.GetNumber()), Valid: true},
-		Flavor:    sql.NullString{String: p.GetFlavor(), Valid: true},
-		Platform:  sql.NullString{String: p.GetPlatform(), Valid: true},
-		Ref:       sql.NullString{String: p.GetRef(), Valid: true},
-		Type:      sql.NullString{String: p.GetType(), Valid: true},
-		Version:   sql.NullString{String: p.GetVersion(), Valid: true},
-		Services:  sql.NullBool{Bool: p.GetServices(), Valid: true},
-		Stages:    sql.NullBool{Bool: p.GetStages(), Valid: true},
-		Steps:     sql.NullBool{Bool: p.GetSteps(), Valid: true},
-		Templates: sql.NullBool{Bool: p.GetTemplates(), Valid: true},
-		Data:      p.GetData(),
+		ID:              sql.NullInt64{Int64: p.GetID(), Valid: true},
+		RepoID:          sql.NullInt64{Int64: p.GetRepoID(), Valid: true},
+		Number:          sql.NullInt32{Int32: int32(p.GetNumber()), Valid: true},
+		Flavor:          sql.NullString{String: p.GetFlavor(), Valid: true},
+		Platform:        sql.NullString{String: p.GetPlatform(), Valid: true},
+		Ref:             sql.NullString{String: p.GetRef(), Valid: true},
+		Type:            sql.NullString{String: p.GetType(), Valid: true},
+		Version:         sql.NullString{String: p.GetVersion(), Valid: true},
+		ExternalSecrets: sql.NullBool{Bool: p.GetExternalSecrets(), Valid: true},
+		InternalSecrets: sql.NullBool{Bool: p.GetInternalSecrets(), Valid: true},
+		Services:        sql.NullBool{Bool: p.GetServices(), Valid: true},
+		Stages:          sql.NullBool{Bool: p.GetStages(), Valid: true},
+		Steps:           sql.NullBool{Bool: p.GetSteps(), Valid: true},
+		Templates:       sql.NullBool{Bool: p.GetTemplates(), Valid: true},
+		Data:            p.GetData(),
 	}
 
 	return pipeline.Nullify()

@@ -60,6 +60,14 @@ func TestLibrary_Pipeline_Getters(t *testing.T) {
 			t.Errorf("GetVersion is %v, want %v", test.pipeline.GetVersion(), test.want.GetVersion())
 		}
 
+		if test.pipeline.GetExternalSecrets() != test.want.GetExternalSecrets() {
+			t.Errorf("GetExternalSecrets is %v, want %v", test.pipeline.GetExternalSecrets(), test.want.GetExternalSecrets())
+		}
+
+		if test.pipeline.GetInternalSecrets() != test.want.GetInternalSecrets() {
+			t.Errorf("GetInternalSecrets is %v, want %v", test.pipeline.GetInternalSecrets(), test.want.GetInternalSecrets())
+		}
+
 		if test.pipeline.GetServices() != test.want.GetServices() {
 			t.Errorf("GetServices is %v, want %v", test.pipeline.GetServices(), test.want.GetServices())
 		}
@@ -111,6 +119,8 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 		test.pipeline.SetRef(test.want.GetRef())
 		test.pipeline.SetType(test.want.GetType())
 		test.pipeline.SetVersion(test.want.GetVersion())
+		test.pipeline.SetExternalSecrets(test.want.GetExternalSecrets())
+		test.pipeline.SetInternalSecrets(test.want.GetInternalSecrets())
 		test.pipeline.SetServices(test.want.GetServices())
 		test.pipeline.SetStages(test.want.GetStages())
 		test.pipeline.SetSteps(test.want.GetSteps())
@@ -149,6 +159,14 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 			t.Errorf("SetVersion is %v, want %v", test.pipeline.GetVersion(), test.want.GetVersion())
 		}
 
+		if test.pipeline.GetExternalSecrets() != test.want.GetExternalSecrets() {
+			t.Errorf("SetExternalSecrets is %v, want %v", test.pipeline.GetExternalSecrets(), test.want.GetExternalSecrets())
+		}
+
+		if test.pipeline.GetInternalSecrets() != test.want.GetInternalSecrets() {
+			t.Errorf("SetInternalSecrets is %v, want %v", test.pipeline.GetInternalSecrets(), test.want.GetInternalSecrets())
+		}
+
 		if test.pipeline.GetServices() != test.want.GetServices() {
 			t.Errorf("SetServices is %v, want %v", test.pipeline.GetServices(), test.want.GetServices())
 		}
@@ -183,6 +201,8 @@ func TestLibrary_Pipeline_String(t *testing.T) {
   Platform: %s,
   Ref: %s,
   RepoID: %d,
+  ExternalSecrets: %t,
+  InternalSecrets: %t,
   Services: %t,
   Stages: %t,
   Steps: %t,
@@ -197,6 +217,8 @@ func TestLibrary_Pipeline_String(t *testing.T) {
 		p.GetPlatform(),
 		p.GetRef(),
 		p.GetRepoID(),
+		p.GetExternalSecrets(),
+		p.GetInternalSecrets(),
 		p.GetServices(),
 		p.GetStages(),
 		p.GetSteps(),
@@ -226,6 +248,8 @@ func testPipeline() *Pipeline {
 	p.SetRef("refs/heads/master")
 	p.SetRef("yaml")
 	p.SetVersion("1")
+	p.SetExternalSecrets(false)
+	p.SetInternalSecrets(false)
 	p.SetServices(true)
 	p.SetStages(false)
 	p.SetSteps(true)

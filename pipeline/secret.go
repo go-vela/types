@@ -64,9 +64,6 @@ var (
 	// ErrInvalidPath defines the error type when the
 	// path provided for a type (org, repo, shared) is invalid.
 	ErrInvalidPath = errors.New("invalid secret path")
-	// ErrInvalidName defines the error type when the name
-	// contains restricted characters or is empty.
-	ErrInvalidName = errors.New("invalid secret name")
 )
 
 // Purge removes the secrets that have a ruleset
@@ -108,12 +105,12 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
+		return "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
-		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// split the full path into parts
@@ -121,27 +118,12 @@ func (s *Secret) ParseOrg(org string) (string, string, error) {
 
 	// secret is invalid
 	if len(parts) != 2 {
-		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// check if the org provided matches what we expect
 	if !strings.EqualFold(parts[0], org) {
-		return "", "", fmt.Errorf("%w: %s ", ErrInvalidOrg, parts[0])
-	}
-
-	// check if path segments empty
-	if len(parts[1]) == 0 {
-		return "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
-	}
-
-	// secret names can't be empty.
-	if len(s.Name) == 0 {
-		return "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
-	}
-
-	// environmental variables can't contain certain restricted characters.
-	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
+		return "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, parts[0])
 	}
 
 	return parts[0], parts[1], nil
@@ -155,43 +137,38 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return "", "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
+		return "", "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
-	// split the full path into parts
-	parts := strings.SplitN(path, "/", 3)
+	// check if a path was provided for explicit definition
+	if strings.Contains(path, "/") {
+		// split the full path into parts
+		parts := strings.SplitN(path, "/", 3)
 
-	// secret is invalid
-	if len(parts) != 3 {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+		// secret is invalid
+		if len(parts) != 3 {
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
+		}
+
+		// check if the org provided matches what we expect
+		if !strings.EqualFold(parts[0], org) {
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidOrg, parts[0])
+		}
+
+		// check if the repo provided matches what we expect
+		if !strings.EqualFold(parts[1], repo) {
+			return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidRepo, parts[1])
+		}
+
+		return parts[0], parts[1], parts[2], nil
 	}
 
-	// check if the org provided matches what we expect
-	if !strings.EqualFold(parts[0], org) {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidOrg, parts[0])
+	// check if name equals key for implicit definition
+	if !strings.EqualFold(s.Name, s.Key) {
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
-	// check if the repo provided matches what we expect
-	if !strings.EqualFold(parts[1], repo) {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidRepo, parts[1])
-	}
-
-	// check if path segments empty
-	if len(parts[2]) == 0 {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
-	}
-
-	// secret names can't be empty.
-	if len(s.Name) == 0 {
-		return "", "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
-	}
-
-	// environmental variables can't contain certain restricted characters.
-	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
-	}
-
-	return parts[0], parts[1], parts[2], nil
+	return org, repo, s.Name, nil
 }
 
 // ParseShared returns the parts (org, team, key) of the secret path
@@ -202,12 +179,12 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 	// check if the secret is not a native or vault type
 	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
 		!strings.EqualFold(s.Engine, constants.DriverVault) {
-		return "", "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
+		return "", "", "", fmt.Errorf("%s: %s", ErrInvalidEngine, s.Engine)
 	}
 
 	// check if a path was provided
 	if !strings.Contains(path, "/") {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	// split the full path into parts
@@ -215,22 +192,7 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 
 	// secret is invalid
 	if len(parts) != 3 {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
-	}
-
-	// check if path segments empty
-	if len(parts[1]) == 0 || len(parts[2]) == 0 {
-		return "", "", "", fmt.Errorf("%w: %s ", ErrInvalidPath, path)
-	}
-
-	// secret names can't be empty.
-	if len(s.Name) == 0 {
-		return "", "", "", fmt.Errorf("%w: %s missing name", ErrInvalidName, s.Key)
-	}
-
-	// environmental variables can't contain certain restricted characters.
-	if strings.ContainsAny(s.Name, constants.SecretRestrictedCharacters) {
-		return "", "", "", fmt.Errorf("%w (contains restricted characters): %s ", ErrInvalidName, s.Name)
+		return "", "", "", fmt.Errorf("%s: %s ", ErrInvalidPath, path)
 	}
 
 	return parts[0], parts[1], parts[2], nil

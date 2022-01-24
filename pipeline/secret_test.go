@@ -5,7 +5,6 @@
 package pipeline
 
 import (
-	"errors"
 	"reflect"
 	"strings"
 	"testing"
@@ -65,16 +64,6 @@ func TestPipeline_Secret_ParseOrg_success(t *testing.T) {
 			},
 			org: "octocat",
 		},
-		{ // success with multilevel & special characters
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/👋/🧪/🔑",
-				Engine: "native",
-				Type:   "org",
-			},
-			org: "octocat",
-		},
 	}
 
 	// run tests
@@ -99,9 +88,8 @@ func TestPipeline_Secret_ParseOrg_success(t *testing.T) {
 func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		secret  *Secret
-		org     string
-		wantErr error
+		secret *Secret
+		org    string
 	}{
 		{ // failure with bad org
 			secret: &Secret{
@@ -111,8 +99,7 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "org",
 			},
-			org:     "wrongorg",
-			wantErr: ErrInvalidOrg,
+			org: "wrongorg",
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -122,60 +109,23 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "org",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with bad key
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with missing name
-			secret: &Secret{
-				Value:  "bar",
-				Key:    "octocat/foo/bar",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidName,
-		},
-		{ // failure with bad name
-			secret: &Secret{
-				Name:   "This is a null char \u0000",
-				Value:  "bar",
-				Key:    "octocat/foo/bar",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidName,
+			org: "octocat",
 		},
 		{ // failure with bad engine
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
-				Key:    "octocat/foo",
+				Key:    "octocat",
 				Engine: "invalid",
 				Type:   "org",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidEngine,
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 		_, _, err := test.secret.ParseOrg(test.org)
-		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
-			t.Errorf("ParseOrg should have failed with error '%s' but got '%s'", test.wantErr, err)
-		}
 		if err == nil {
 			t.Errorf("ParseOrg should have failed")
 		}
@@ -200,16 +150,16 @@ func TestPipeline_Secret_ParseRepo_success(t *testing.T) {
 			org:  "octocat",
 			repo: "helloworld",
 		},
-		{ // success with multilevel & special characters
+		{ // success with implicit
 			secret: &Secret{
 				Name:   "foo",
 				Value:  "bar",
-				Key:    "octocat/👋/🧪/🔑",
+				Key:    "foo",
 				Engine: "native",
 				Type:   "repo",
 			},
 			org:  "octocat",
-			repo: "👋",
+			repo: "helloworld",
 		},
 	}
 
@@ -242,10 +192,10 @@ func TestPipeline_Secret_ParseRepo_success(t *testing.T) {
 func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		secret  *Secret
-		org     string
-		repo    string
-		wantErr error
+		secret *Secret
+		org    string
+		repo   string
+		want   error
 	}{
 		{ // failure with bad org
 			secret: &Secret{
@@ -255,9 +205,8 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:     "wrongorg",
-			repo:    "helloworld",
-			wantErr: ErrInvalidOrg,
+			org:  "wrongorg",
+			repo: "helloworld",
 		},
 		{ // failure with bad repo
 			secret: &Secret{
@@ -267,9 +216,8 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:     "octocat",
-			repo:    "badrepo",
-			wantErr: ErrInvalidRepo,
+			org:  "octocat",
+			repo: "badrepo",
 		},
 		{ // failure with bad key
 			secret: &Secret{
@@ -279,55 +227,7 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with bad key
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/helloworld",
-				Engine: "native",
-				Type:   "org",
-			},
-			repo:    "helloworld",
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with bad key
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/helloworld/",
-				Engine: "native",
-				Type:   "org",
-			},
-			repo:    "helloworld",
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with missing name
-			secret: &Secret{
-				Value:  "bar",
-				Key:    "octocat/helloworld/foo/bar",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org:     "octocat",
-			repo:    "helloworld",
-			wantErr: ErrInvalidName,
-		},
-		{ // failure with bad name
-			secret: &Secret{
-				Name:   "SOME=PASSWORD",
-				Value:  "bar",
-				Key:    "octocat/helloworld/foo/bar",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org:     "octocat",
-			repo:    "helloworld",
-			wantErr: ErrInvalidName,
+			org: "octocat",
 		},
 		{ // failure with bad engine
 			secret: &Secret{
@@ -337,29 +237,13 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 				Engine: "invalid",
 				Type:   "org",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidEngine,
-		},
-		{ // failure with deprecated implicit syntax
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "foo",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org:     "octocat",
-			repo:    "helloworld",
-			wantErr: ErrInvalidPath,
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 		_, _, _, err := test.secret.ParseRepo(test.org, test.repo)
-		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
-			t.Errorf("ParseRepo should have failed with error '%s' but got '%s'", test.wantErr, err)
-		}
 		if err == nil {
 			t.Errorf("ParseRepo should have failed")
 		}
@@ -377,16 +261,6 @@ func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 				Name:   "foo",
 				Value:  "bar",
 				Key:    "octocat/helloworld/foo",
-				Engine: "native",
-				Type:   "repo",
-			},
-			org: "octocat",
-		},
-		{ // success with multilevel & special characters
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/👋/🧪/🔑",
 				Engine: "native",
 				Type:   "repo",
 			},
@@ -420,9 +294,8 @@ func TestPipeline_Secret_ParseShared_success(t *testing.T) {
 func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		secret  *Secret
-		org     string
-		wantErr error
+		secret *Secret
+		org    string
 	}{
 		{ // failure with bad key
 			secret: &Secret{
@@ -432,8 +305,7 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 				Engine: "native",
 				Type:   "repo",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
+			org: "octocat",
 		},
 		{ // failure with bad engine
 			secret: &Secret{
@@ -443,60 +315,13 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 				Engine: "invalid",
 				Type:   "org",
 			},
-			org:     "octocat",
-			wantErr: ErrInvalidEngine,
-		},
-		{ // failure with bad path
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/foo",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with bad path
-			secret: &Secret{
-				Name:   "foo",
-				Value:  "bar",
-				Key:    "octocat/foo/",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidPath,
-		},
-		{ // failure with missing name
-			secret: &Secret{
-				Value:  "bar",
-				Key:    "octocat/foo/bar",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidName,
-		},
-		{ // failure with bad name
-			secret: &Secret{
-				Name:   "=",
-				Value:  "bar",
-				Key:    "octocat/foo/bar",
-				Engine: "native",
-				Type:   "org",
-			},
-			org:     "octocat",
-			wantErr: ErrInvalidName,
+			org: "octocat",
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
 		_, _, _, err := test.secret.ParseShared()
-		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
-			t.Errorf("ParseShared should have failed with error '%s' but got '%s'", test.wantErr, err)
-		}
 		if err == nil {
 			t.Errorf("ParseShared should have failed")
 		}

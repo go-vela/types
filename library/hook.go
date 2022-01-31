@@ -4,7 +4,11 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-vela/types/constants"
+)
 
 // Hook is the library representation of a webhook for a repo.
 //
@@ -306,6 +310,9 @@ func (h *Hook) SetError(v string) {
 		return
 	}
 
+	if len(v) > constants.ErrorLimit {
+		v = v[:constants.ErrorLimit]
+	}
 	h.Error = &v
 }
 

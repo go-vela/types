@@ -662,6 +662,9 @@ func (b *Build) SetError(v string) {
 		return
 	}
 
+	if len(v) > constants.ErrorLimit {
+		v = v[:constants.ErrorLimit]
+	}
 	b.Error = &v
 }
 

@@ -377,6 +377,9 @@ func (s *Service) SetError(v string) {
 		return
 	}
 
+	if len(v) > constants.ErrorLimit {
+		v = v[:constants.ErrorLimit]
+	}
 	s.Error = &v
 }
 

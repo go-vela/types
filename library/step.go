@@ -405,8 +405,8 @@ func (s *Step) SetError(v string) {
 	}
 
 	if len(v) > constants.ErrorLimit {
-		front := constants.ErrorLimit - 250
-		end := len(v) - 250
+		front := constants.ErrorLimit - (constants.ErrorLimit / 2)
+		end := len(v) - (constants.ErrorLimit / 2)
 		v = v[:front] + v[end:]
 	}
 	s.Error = &v

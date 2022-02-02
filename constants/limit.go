@@ -24,9 +24,6 @@ const (
 	// BuildTimeoutDefault defines the default value in minutes for repo build timeout.
 	BuildTimeoutDefault = 30
 
-	// ErrorLimit defines the maximum size in characters for resource error fields.
-	ErrorLimit = 500
-
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.
 	FavoritesMaxSize = 5000
 )

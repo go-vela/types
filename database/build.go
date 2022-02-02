@@ -27,6 +27,8 @@ const (
 	maxTitleLength = 1000
 	// Maximum message field length.
 	maxMessageLength = 2000
+	// Maximum error field length.
+	maxErrorLength = 500
 )
 
 // Build is the database representation of a build for a pipeline.
@@ -75,6 +77,13 @@ func (b *Build) Crop() *Build {
 		b.Message = sql.NullString{String: b.Message.String[:maxMessageLength], Valid: true}
 	}
 
+	// trim the Error field to 500 characters — 250 from each end to maximize usefulness.
+	if len(b.Error.String) > maxErrorLength {
+		front := maxErrorLength - (maxErrorLength / 2)
+		end := len(b.Error.String) - (maxErrorLength / 2)
+		str := b.Error.String[:front] + b.Error.String[end:]
+		b.Error = sql.NullString{String: str, Valid: true}
+	}
 	return b
 }
 

@@ -13,40 +13,41 @@ import (
 func TestLibrary_Repo_Environment(t *testing.T) {
 	// setup types
 	want := map[string]string{
-		"VELA_REPO_ACTIVE":         "true",
-		"VELA_REPO_ALLOW_COMMENT":  "false",
-		"VELA_REPO_ALLOW_DEPLOY":   "false",
-		"VELA_REPO_ALLOW_PULL":     "false",
-		"VELA_REPO_ALLOW_PUSH":     "true",
-		"VELA_REPO_ALLOW_TAG":      "false",
-		"VELA_REPO_BRANCH":         "master",
-		"VELA_REPO_BUILD_LIMIT":    "10",
-		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
-		"VELA_REPO_FULL_NAME":      "github/octocat",
-		"VELA_REPO_LINK":           "https://github.com/github/octocat",
-		"VELA_REPO_NAME":           "octocat",
-		"VELA_REPO_ORG":            "github",
-		"VELA_REPO_PRIVATE":        "false",
-		"VELA_REPO_TIMEOUT":        "30",
-		"VELA_REPO_TRUSTED":        "false",
-		"VELA_REPO_VISIBILITY":     "public",
-		"VELA_REPO_PIPELINE_TYPE":  "",
-		"REPOSITORY_ACTIVE":        "true",
-		"REPOSITORY_ALLOW_COMMENT": "false",
-		"REPOSITORY_ALLOW_DEPLOY":  "false",
-		"REPOSITORY_ALLOW_PULL":    "false",
-		"REPOSITORY_ALLOW_PUSH":    "true",
-		"REPOSITORY_ALLOW_TAG":     "false",
-		"REPOSITORY_BRANCH":        "master",
-		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
-		"REPOSITORY_FULL_NAME":     "github/octocat",
-		"REPOSITORY_LINK":          "https://github.com/github/octocat",
-		"REPOSITORY_NAME":          "octocat",
-		"REPOSITORY_ORG":           "github",
-		"REPOSITORY_PRIVATE":       "false",
-		"REPOSITORY_TIMEOUT":       "30",
-		"REPOSITORY_TRUSTED":       "false",
-		"REPOSITORY_VISIBILITY":    "public",
+		"VELA_REPO_ACTIVE":          "true",
+		"VELA_REPO_ALLOW_COMMENT":   "false",
+		"VELA_REPO_ALLOW_DEPLOY":    "false",
+		"VELA_REPO_ALLOW_PULL":      "false",
+		"VELA_REPO_ALLOW_PULL_EDIT": "false",
+		"VELA_REPO_ALLOW_PUSH":      "true",
+		"VELA_REPO_ALLOW_TAG":       "false",
+		"VELA_REPO_BRANCH":          "master",
+		"VELA_REPO_BUILD_LIMIT":     "10",
+		"VELA_REPO_CLONE":           "https://github.com/github/octocat.git",
+		"VELA_REPO_FULL_NAME":       "github/octocat",
+		"VELA_REPO_LINK":            "https://github.com/github/octocat",
+		"VELA_REPO_NAME":            "octocat",
+		"VELA_REPO_ORG":             "github",
+		"VELA_REPO_PRIVATE":         "false",
+		"VELA_REPO_TIMEOUT":         "30",
+		"VELA_REPO_TRUSTED":         "false",
+		"VELA_REPO_VISIBILITY":      "public",
+		"VELA_REPO_PIPELINE_TYPE":   "",
+		"REPOSITORY_ACTIVE":         "true",
+		"REPOSITORY_ALLOW_COMMENT":  "false",
+		"REPOSITORY_ALLOW_DEPLOY":   "false",
+		"REPOSITORY_ALLOW_PULL":     "false",
+		"REPOSITORY_ALLOW_PUSH":     "true",
+		"REPOSITORY_ALLOW_TAG":      "false",
+		"REPOSITORY_BRANCH":         "master",
+		"REPOSITORY_CLONE":          "https://github.com/github/octocat.git",
+		"REPOSITORY_FULL_NAME":      "github/octocat",
+		"REPOSITORY_LINK":           "https://github.com/github/octocat",
+		"REPOSITORY_NAME":           "octocat",
+		"REPOSITORY_ORG":            "github",
+		"REPOSITORY_PRIVATE":        "false",
+		"REPOSITORY_TIMEOUT":        "30",
+		"REPOSITORY_TRUSTED":        "false",
+		"REPOSITORY_VISIBILITY":     "public",
 	}
 
 	// run test
@@ -137,6 +138,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 
 		if test.repo.GetAllowPull() != test.want.GetAllowPull() {
 			t.Errorf("GetAllowPull is %v, want %v", test.repo.GetAllowPull(), test.want.GetAllowPull())
+		}
+
+		if test.repo.GetAllowPullEdit() != test.want.GetAllowPullEdit() {
+			t.Errorf("GetAllowPullEdit is %v, want %v", test.repo.GetAllowPullEdit(), test.want.GetAllowPullEdit())
 		}
 
 		if test.repo.GetAllowPush() != test.want.GetAllowPush() {
@@ -274,6 +279,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowPull is %v, want %v", test.repo.GetAllowPull(), test.want.GetAllowPull())
 		}
 
+		if test.repo.GetAllowPullEdit() != test.want.GetAllowPullEdit() {
+			t.Errorf("SetAllowPullEdit is %v, want %v", test.repo.GetAllowPullEdit(), test.want.GetAllowPullEdit())
+		}
+
 		if test.repo.GetAllowPush() != test.want.GetAllowPush() {
 			t.Errorf("SetAllowPush is %v, want %v", test.repo.GetAllowPush(), test.want.GetAllowPush())
 		}
@@ -309,6 +318,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowComment: %t,
   AllowDeploy: %t,
   AllowPull: %t,
+  AllowPullEdit: %t,
   AllowPush: %t,
   AllowTag: %t,
   Branch: %s,
@@ -332,6 +342,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowComment(),
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
+		r.GetAllowPullEdit(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
 		r.GetBranch(),
@@ -380,6 +391,7 @@ func testRepo() *Repo {
 	r.SetTrusted(false)
 	r.SetActive(true)
 	r.SetAllowPull(false)
+	r.SetAllowPullEdit(false)
 	r.SetAllowPush(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)

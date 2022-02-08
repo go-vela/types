@@ -74,21 +74,21 @@ linters:
     - golint
     - goprintffuncname
     - gosec
-    - gosimple # enabled by default
-    - govet # enabled by default
-    - ineffassign # enabled by default
+    - gosimple            # enabled by default
+    - govet               # enabled by default
+    - ineffassign         # enabled by default
     - maligned
     - misspell
     - nakedret
     - nolintlint
-    - staticcheck # enabled by default
-    - structcheck      # enabled by default
+    - staticcheck         # enabled by default
+    - structcheck         # enabled by default
     - stylecheck
-    - typecheck       # enabled by default
+    - typecheck           # enabled by default
     - unconvert
     - unparam
-    - unused          # enabled by default
-    - varcheck        # enabled by default
+    - unused              # enabled by default
+    - varcheck            # enabled by default
     - whitespace
 
   # static list of linters we know golangci can run but we've
@@ -103,8 +103,8 @@ linters:
   # - gocritic
   # - godox
   # - goerr113
-  # - gomnd
-  # - lll
+  # - gomnd               - get too many false-positives
+  # - lll                 - not too concerned about line length 
   # - interfacer
   # - nestif
   # - noctx

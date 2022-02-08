@@ -29,7 +29,7 @@ linters-settings:
   # https://github.com/ultraware/funlen
   funlen:
     lines: 140
-    statements: 50
+    statements: 70
     exclude:
       - "^\/\/"
 

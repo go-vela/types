@@ -28,19 +28,14 @@ linters-settings:
 
   # https://github.com/ultraware/funlen
   funlen:
-    lines: 100
+    lines: 140
     statements: 50
+    exclude:
+      - "^\/\/"
 
   # https://github.com/golang/lint
   golint:
     min-confidence: 0
-
-  # https://github.com/tommy-muehle/go-mnd
-  gomnd:
-    settings:
-      mnd:
-        # don't include the "operation" and "assign"
-        checks: [argument,case,condition,return]
 
   # https://github.com/mdempsky/maligned
   maligned:
@@ -87,13 +82,13 @@ linters:
     - nakedret
     - nolintlint
     - staticcheck # enabled by default
-    - structcheck # enabled by default
+    - structcheck      # enabled by default
     - stylecheck
-    - typecheck # enabled by default
+    - typecheck       # enabled by default
     - unconvert
     - unparam
-    - unused # enabled by default
-    - varcheck # enabled by default
+    - unused          # enabled by default
+    - varcheck        # enabled by default
     - whitespace
 
   # static list of linters we know golangci can run but we've
@@ -131,5 +126,3 @@ issues:
         - funlen
         - goconst
         - gocyclo
-        - gomnd
-        - lll

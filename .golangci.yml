@@ -62,9 +62,9 @@ linters:
   # enable a specific set of linters to run
   enable:
     - bodyclose
-    - deadcode # enabled by default
+    - deadcode            # enabled by default
     - dupl
-    - errcheck # enabled by default
+    - errcheck            # enabled by default
     - funlen
     - goconst
     - gocyclo

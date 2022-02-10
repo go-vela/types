@@ -31,7 +31,7 @@ linters-settings:
     lines: 140
     statements: 70
     exclude:
-      - "^\/\/"
+      - "^\\/\\/"
 
   # https://github.com/golang/lint
   golint:

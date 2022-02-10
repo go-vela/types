@@ -18,7 +18,7 @@ func TestDatabase_Build_Crop(t *testing.T) {
 	// setup types
 	title := randomString(1001)
 	message := randomString(2001)
-	err := randomString(510)
+	err := randomString(1001)
 
 	b := testBuild()
 	b.Title = sql.NullString{String: title, Valid: true}
@@ -28,7 +28,7 @@ func TestDatabase_Build_Crop(t *testing.T) {
 	want := testBuild()
 	want.Title = sql.NullString{String: title[:1000], Valid: true}
 	want.Message = sql.NullString{String: message[:2000], Valid: true}
-	want.Error = sql.NullString{String: (err[:250] + err[260:]), Valid: true}
+	want.Error = sql.NullString{String: err[:1000], Valid: true}
 
 	// run test
 	got := b.Crop()

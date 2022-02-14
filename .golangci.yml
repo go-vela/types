@@ -37,9 +37,11 @@ linters-settings:
   golint:
     min-confidence: 0
 
-  # https://github.com/mdempsky/maligned
-  maligned:
+  # https://pkg.go.dev/cmd/vet
+  govet:
     suggest-new: true
+    enable:
+      - fieldalignment
 
   # https://github.com/client9/misspell
   misspell:

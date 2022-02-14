@@ -310,10 +310,10 @@ func TestLibrary_ServiceFromBuildContainer(t *testing.T) {
 	s.Finished = nil
 
 	tests := []struct {
-		name      string
 		container *pipeline.Container
 		build     *Build
 		want      *Service
+		name      string
 	}{
 		{
 			name:      "nil container with nil build",
@@ -382,9 +382,9 @@ func TestLibrary_ServiceFromContainerEnvironment(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		name      string
 		container *pipeline.Container
 		want      *Service
+		name      string
 	}{
 		{
 			name:      "nil container",

@@ -50,9 +50,9 @@ func TestYaml_UlimitSlice_ToPipeline(t *testing.T) {
 func TestYaml_UlimitSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
-		file    string
 		want    *UlimitSlice
+		file    string
+		failure bool
 	}{
 		{
 			failure: false,

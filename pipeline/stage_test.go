@@ -63,9 +63,9 @@ func TestPipeline_StageSlice_Sanitize(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		driver string
 		stages *StageSlice
 		want   *StageSlice
+		driver string
 	}{
 		{
 			driver: constants.DriverDocker,

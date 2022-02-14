@@ -179,9 +179,9 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
-		file    string
 		want    *StageSlice
+		file    string
+		failure bool
 	}{
 		{
 			failure: false,
@@ -301,9 +301,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
-		file    string
 		want    *StageSlice
+		file    string
+		failure bool
 	}{
 		{
 			failure: false,

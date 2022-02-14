@@ -20,11 +20,11 @@ var (
 // the required data when processing webhook event
 // a for a source provider event.
 type Webhook struct {
-	Comment  string
-	PRNumber int
 	Hook     *library.Hook
 	Repo     *library.Repo
 	Build    *library.Build
+	Comment  string
+	PRNumber int
 }
 
 // ShouldSkip uses the build information

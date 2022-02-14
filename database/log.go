@@ -31,12 +31,12 @@ var (
 
 // Log is the database representation of a log for a step in a build.
 type Log struct {
+	Data      []byte        `sql:"data"`
 	ID        sql.NullInt64 `sql:"id"`
 	BuildID   sql.NullInt64 `sql:"build_id"`
 	RepoID    sql.NullInt64 `sql:"repo_id"`
 	ServiceID sql.NullInt64 `sql:"service_id"`
 	StepID    sql.NullInt64 `sql:"step_id"`
-	Data      []byte        `sql:"data"`
 }
 
 // Compress will manipulate the existing data for the

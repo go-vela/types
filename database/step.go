@@ -35,22 +35,22 @@ var (
 
 // Step is the database representation of a step in a build.
 type Step struct {
-	ID           sql.NullInt64  `sql:"id"`
-	BuildID      sql.NullInt64  `sql:"build_id"`
-	RepoID       sql.NullInt64  `sql:"repo_id"`
-	Number       sql.NullInt32  `sql:"number"`
 	Name         sql.NullString `sql:"name"`
 	Image        sql.NullString `sql:"image"`
 	Stage        sql.NullString `sql:"stage"`
 	Status       sql.NullString `sql:"status"`
 	Error        sql.NullString `sql:"error"`
-	ExitCode     sql.NullInt32  `sql:"exit_code"`
-	Created      sql.NullInt64  `sql:"created"`
-	Started      sql.NullInt64  `sql:"started"`
-	Finished     sql.NullInt64  `sql:"finished"`
 	Host         sql.NullString `sql:"host"`
 	Runtime      sql.NullString `sql:"runtime"`
 	Distribution sql.NullString `sql:"distribution"`
+	ID           sql.NullInt64  `sql:"id"`
+	BuildID      sql.NullInt64  `sql:"build_id"`
+	RepoID       sql.NullInt64  `sql:"repo_id"`
+	Created      sql.NullInt64  `sql:"created"`
+	Started      sql.NullInt64  `sql:"started"`
+	Finished     sql.NullInt64  `sql:"finished"`
+	Number       sql.NullInt32  `sql:"number"`
+	ExitCode     sql.NullInt32  `sql:"exit_code"`
 }
 
 // Nullify ensures the valid flag for

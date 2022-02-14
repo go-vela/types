@@ -44,20 +44,20 @@ var (
 
 // Secret is the database representation of a secret.
 type Secret struct {
-	ID           sql.NullInt64  `sql:"id"`
+	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
+	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	Org          sql.NullString `sql:"org"`
 	Repo         sql.NullString `sql:"repo"`
 	Team         sql.NullString `sql:"team"`
 	Name         sql.NullString `sql:"name"`
 	Value        sql.NullString `sql:"value"`
 	Type         sql.NullString `sql:"type"`
-	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
-	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
-	AllowCommand sql.NullBool   `sql:"allow_command"`
-	CreatedAt    sql.NullInt64  `sql:"created_at"`
 	CreatedBy    sql.NullString `sql:"created_by"`
-	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
 	UpdatedBy    sql.NullString `sql:"updated_by"`
+	ID           sql.NullInt64  `sql:"id"`
+	CreatedAt    sql.NullInt64  `sql:"created_at"`
+	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
+	AllowCommand sql.NullBool   `sql:"allow_command"`
 }
 
 // Decrypt will manipulate the existing secret value by

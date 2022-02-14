@@ -96,8 +96,8 @@ func TestDatabase_Step_ToLibrary(t *testing.T) {
 func TestDatabase_Step_Validate(t *testing.T) {
 	// setup types
 	tests := []struct {
-		failure bool
 		step    *Step
+		failure bool
 	}{
 		{
 			failure: false,

@@ -146,8 +146,8 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 func TestDatabase_Build_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
 		build   *Build
+		failure bool
 	}{
 		{
 			failure: false,

@@ -15,9 +15,9 @@ import (
 func TestRaw_StringSlice_UnmarshalJSON(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
-		file    string
 		want    *StringSlice
+		file    string
+		failure bool
 	}{
 		{
 			failure: false,
@@ -80,9 +80,9 @@ func TestRaw_StringSlice_UnmarshalJSON(t *testing.T) {
 func TestRaw_StringSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
-		file    string
 		want    *StringSlice
+		file    string
+		failure bool
 	}{
 		{
 			failure: false,

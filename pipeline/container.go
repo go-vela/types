@@ -31,28 +31,27 @@ type (
 	// of a Container in a pipeline.
 	//
 	// swagger:model PipelineContainer
-	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	Container struct {
-		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
-		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
-		Detach      bool              `json:"detach,omitempty"      yaml:"detach,omitempty"`
-		Directory   string            `json:"directory,omitempty"   yaml:"directory,omitempty"`
-		Entrypoint  []string          `json:"entrypoint,omitempty"  yaml:"entrypoint,omitempty"`
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
-		ExitCode    int               `json:"exit_code,omitempty"   yaml:"exit_code,omitempty"`
-		Image       string            `json:"image,omitempty"       yaml:"image,omitempty"`
-		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
+		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
+		Entrypoint  []string          `json:"entrypoint,omitempty"  yaml:"entrypoint,omitempty"`
 		Needs       []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
 		Networks    []string          `json:"networks,omitempty"    yaml:"networks,omitempty"`
-		Number      int               `json:"number,omitempty"      yaml:"number,omitempty"`
 		Ports       []string          `json:"ports,omitempty"       yaml:"ports,omitempty"`
-		Privileged  bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
-		Pull        string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
-		Ruleset     Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
 		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
 		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
+		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
+		Directory   string            `json:"directory,omitempty"   yaml:"directory,omitempty"`
 		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
+		Image       string            `json:"image,omitempty"       yaml:"image,omitempty"`
+		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
+		Pull        string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
+		Ruleset     Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
+		ExitCode    int               `json:"exit_code,omitempty"   yaml:"exit_code,omitempty"`
+		Number      int               `json:"number,omitempty"      yaml:"number,omitempty"`
+		Privileged  bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
+		Detach      bool              `json:"detach,omitempty"      yaml:"detach,omitempty"`
 	}
 )
 

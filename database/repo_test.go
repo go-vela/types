@@ -24,9 +24,9 @@ func TestDatabase_Repo_Decrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
 		key     string
 		repo    Repo
+		failure bool
 	}{
 		{
 			failure: false,
@@ -69,9 +69,9 @@ func TestDatabase_Repo_Encrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
-		key     string
 		repo    *Repo
+		key     string
+		failure bool
 	}{
 		{
 			failure: false,
@@ -190,8 +190,8 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 func TestDatabase_Repo_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
 		repo    *Repo
+		failure bool
 	}{
 		{
 			failure: false,

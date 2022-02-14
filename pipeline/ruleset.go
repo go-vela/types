@@ -18,10 +18,10 @@ type (
 	//
 	// swagger:model PipelineRuleset
 	Ruleset struct {
-		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
-		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
 		Matcher  string `json:"matcher,omitempty"  yaml:"matcher,omitempty"`
 		Operator string `json:"operator,omitempty" yaml:"operator,omitempty"`
+		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
+		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
 		Continue bool   `json:"continue,omitempty" yaml:"continue,omitempty"`
 	}
 
@@ -52,11 +52,11 @@ type (
 		Branch  string   `json:"branch,omitempty"  yaml:"branch,omitempty"`
 		Comment string   `json:"comment,omitempty" yaml:"comment,omitempty"`
 		Event   string   `json:"event,omitempty"   yaml:"event,omitempty"`
-		Path    []string `json:"path,omitempty"    yaml:"path,omitempty"`
 		Repo    string   `json:"repo,omitempty"    yaml:"repo,omitempty"`
 		Status  string   `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag     string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target  string   `json:"target,omitempty"  yaml:"target,omitempty"`
+		Path    []string `json:"path,omitempty"    yaml:"path,omitempty"`
 	}
 )
 

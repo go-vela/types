@@ -40,8 +40,6 @@ var (
 
 // Repo is the database representation of a repo.
 type Repo struct {
-	ID           sql.NullInt64  `sql:"id"`
-	UserID       sql.NullInt64  `sql:"user_id"`
 	Hash         sql.NullString `sql:"hash"`
 	Org          sql.NullString `sql:"org"`
 	Name         sql.NullString `sql:"name"`
@@ -49,10 +47,14 @@ type Repo struct {
 	Link         sql.NullString `sql:"link"`
 	Clone        sql.NullString `sql:"clone"`
 	Branch       sql.NullString `sql:"branch"`
+	PipelineType sql.NullString `sql:"pipeline_type"`
+	PreviousName sql.NullString `sql:"previous_name"`
+	Visibility   sql.NullString `sql:"visibility"`
+	ID           sql.NullInt64  `sql:"id"`
+	UserID       sql.NullInt64  `sql:"user_id"`
 	BuildLimit   sql.NullInt64  `sql:"build_limit"`
 	Timeout      sql.NullInt64  `sql:"timeout"`
 	Counter      sql.NullInt32  `sql:"counter"`
-	Visibility   sql.NullString `sql:"visibility"`
 	Private      sql.NullBool   `sql:"private"`
 	Trusted      sql.NullBool   `sql:"trusted"`
 	Active       sql.NullBool   `sql:"active"`
@@ -61,8 +63,6 @@ type Repo struct {
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
-	PipelineType sql.NullString `sql:"pipeline_type"`
-	PreviousName sql.NullString `sql:"previous_name"`
 }
 
 // Decrypt will manipulate the existing repo hash by

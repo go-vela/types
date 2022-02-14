@@ -124,9 +124,9 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		driver   string
 		pipeline *Build
 		want     *Build
+		driver   string
 	}{
 		{
 			driver:   constants.DriverDocker,

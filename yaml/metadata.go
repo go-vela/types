@@ -11,11 +11,10 @@ import (
 type (
 	// Metadata is the yaml representation of
 	// the metadata block for a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Metadata struct {
-		Template    bool     `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-tag"`
 		Clone       *bool    `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-clone-tag"`
 		Environment []string `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Controls which containers processes can have global env injected.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-environment-tag"`
+		Template    bool     `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-tag"`
 	}
 )
 
@@ -52,9 +51,9 @@ func (m *Metadata) HasEnvironment(container string) bool {
 func (m *Metadata) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// metadata we try unmarshalling to
 	metadata := new(struct {
-		Template    bool
 		Clone       *bool
 		Environment []string
+		Template    bool
 	})
 
 	// attempt to unmarshal as a metadata type

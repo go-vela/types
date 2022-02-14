@@ -77,8 +77,8 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 func TestDatabase_Worker_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
 		worker  *Worker
+		failure bool
 	}{
 		{
 			failure: false,

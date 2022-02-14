@@ -16,9 +16,9 @@ import (
 func TestDatabase_Log_Compress(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
-		level   int
 		log     *Log
+		level   int
+		failure bool
 	}{
 		{
 			failure: false,
@@ -106,8 +106,8 @@ func TestDatabase_Log_Decompress(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
 		log     *Log
+		failure bool
 	}{
 		{
 			failure: false,
@@ -200,8 +200,8 @@ func TestDatabase_Log_ToLibrary(t *testing.T) {
 func TestDatabase_Log_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		failure bool
 		log     *Log
+		failure bool
 	}{
 		{
 			failure: false,

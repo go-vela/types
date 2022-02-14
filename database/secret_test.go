@@ -31,9 +31,9 @@ func TestDatabase_Secret_Decrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
 		key     string
 		secret  Secret
+		failure bool
 	}{
 		{
 			failure: false,
@@ -76,9 +76,9 @@ func TestDatabase_Secret_Encrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		failure bool
-		key     string
 		secret  *Secret
+		key     string
+		failure bool
 	}{
 		{
 			failure: false,
@@ -187,8 +187,8 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 func TestDatabase_Secret_Validate(t *testing.T) {
 	// setup types
 	tests := []struct {
-		failure bool
 		secret  *Secret
+		failure bool
 	}{
 		{
 			failure: false,

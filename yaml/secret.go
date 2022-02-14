@@ -257,6 +257,7 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
+
 		return nil
 	}
 

@@ -391,6 +391,7 @@ func (s *Step) SetStatus(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Status = &v
 }
 

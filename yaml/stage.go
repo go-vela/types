@@ -89,6 +89,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 						return needs
 					}
 				}
+
 				return append(needs, "clone")
 			}(stage.Needs)
 		}

@@ -289,10 +289,12 @@ func (c *Container) Sanitize(driver string) *Container {
 
 		// Kubernetes requires DNS compatible names (lowercase, <= 63 chars)
 		container.ID = strings.ToLower(c.ID)
+
 		const dnsMaxLength = 63
 		if utf8.RuneCountInString(c.ID) > dnsMaxLength {
-			rs := []rune(c.ID)
 			const randomSuffixLength = 6
+
+			rs := []rune(c.ID)
 			container.ID = fmt.Sprintf(
 				"%s-%s",
 				string(rs[:dnsMaxLength-1-randomSuffixLength]),

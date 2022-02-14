@@ -84,7 +84,6 @@ func (b *Build) Crop() *Build {
 // When a field within the Build type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-// nolint:funlen // long function due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil
@@ -306,7 +305,6 @@ func (b *Build) Validate() error {
 	b.HeadRef = sql.NullString{String: sanitize(b.HeadRef.String), Valid: b.HeadRef.Valid}
 	b.Host = sql.NullString{String: sanitize(b.Host.String), Valid: b.Host.Valid}
 	b.Runtime = sql.NullString{String: sanitize(b.Runtime.String), Valid: b.Runtime.Valid}
-	// nolint: lll // ignore long line length
 	b.Distribution = sql.NullString{String: sanitize(b.Distribution.String), Valid: b.Distribution.Valid}
 
 	return nil

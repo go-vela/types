@@ -28,10 +28,9 @@ linters-settings:
 
   # https://github.com/ultraware/funlen
   funlen:
-    lines: 140
+    # accounting for comments
+    lines: 160
     statements: 70
-    exclude:
-      - "\\/\\/.*"
 
   # https://github.com/golang/lint
   golint:

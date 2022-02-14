@@ -202,7 +202,6 @@ func (s *Service) Validate() error {
 	s.Error = sql.NullString{String: sanitize(s.Error.String), Valid: s.Error.Valid}
 	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: s.Host.Valid}
 	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: s.Runtime.Valid}
-	// nolint: lll // ignore long line length
 	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: s.Distribution.Valid}
 
 	return nil

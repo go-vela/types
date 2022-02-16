@@ -94,10 +94,8 @@ linters:
     - misspell            # finds commonly misspelled English words in comments
     - nakedret            # finds naked returns in functions greater than a specified function length
     - nilerr              # finds the code that returns nil even if it checks that the error is not nil
-    - nilnil              # TRY: checks that there is no simultaneous return of nil error and an invalid value.
     - noctx               # noctx finds sending http request without context.Context
     - nolintlint          # reports ill-formed or insufficient nolint directives
-    - prealloc            # finds slice declarations that could potentially be preallocated
     - revive              # linter for go
     - staticcheck         # applies static analysis checks, go vet on steroids
     - structcheck         # finds unused struct fields
@@ -142,9 +140,11 @@ linters:
   # - lll                 - not too concerned about line length 
   # - interfacer          - archived
   # - nestif              - non-critical
+  # - nilnil              - style preference
   # - nlreturn            - style preference
   # - maligned            - archived, replaced with govet 'fieldalignment'
   # - paralleltest        - false-positives
+  # - prealloc            - don't use
   # - predeclared         - unused
   # - promlinter          - style preference 
   # - rowserrcheck        - unused
@@ -169,3 +169,4 @@ issues:
         - funlen
         - goconst
         - gocyclo
+        - govet

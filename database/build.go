@@ -81,6 +81,7 @@ func (b *Build) Crop() *Build {
 	if len(b.Error.String) > maxErrorLength {
 		b.Error = sql.NullString{String: b.Error.String[:maxErrorLength], Valid: true}
 	}
+
 	return b
 }
 

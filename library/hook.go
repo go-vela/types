@@ -4,7 +4,9 @@
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Hook is the library representation of a webhook for a repo.
 //

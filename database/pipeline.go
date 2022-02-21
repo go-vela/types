@@ -28,6 +28,10 @@ var (
 	// Pipeline type has an empty RepoID field provided.
 	ErrEmptyPipelineRepoID = errors.New("empty pipeline repo_id provided")
 
+	// ErrEmptyPipelineType defines the error type when a
+	// Pipeline type has an empty Type field provided.
+	ErrEmptyPipelineType = errors.New("empty pipeline type provided")
+
 	// ErrEmptyPipelineVersion defines the error type when a
 	// Pipeline type has an empty Version field provided.
 	ErrEmptyPipelineVersion = errors.New("empty pipeline version provided")
@@ -212,6 +216,11 @@ func (p *Pipeline) Validate() error {
 		return ErrEmptyPipelineRepoID
 	}
 
+	// verify the Type field is populated
+	if len(p.Type.String) == 0 {
+		return ErrEmptyPipelineType
+	}
+
 	// verify the Version field is populated
 	if len(p.Version.String) == 0 {
 		return ErrEmptyPipelineVersion
@@ -223,6 +232,7 @@ func (p *Pipeline) Validate() error {
 	p.Flavor = sql.NullString{String: sanitize(p.Flavor.String), Valid: p.Flavor.Valid}
 	p.Platform = sql.NullString{String: sanitize(p.Platform.String), Valid: p.Platform.Valid}
 	p.Ref = sql.NullString{String: sanitize(p.Ref.String), Valid: p.Ref.Valid}
+	p.Type = sql.NullString{String: sanitize(p.Type.String), Valid: p.Type.Valid}
 	p.Version = sql.NullString{String: sanitize(p.Version.String), Valid: p.Version.Valid}
 
 	return nil

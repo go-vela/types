@@ -224,6 +224,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
 		},
@@ -231,12 +232,23 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
-				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
 		},
 		{ // no repo_id set for pipeline
+			failure: true,
+			pipeline: &Pipeline{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
+				Version: sql.NullString{String: "1", Valid: true},
+			},
+		},
+		{ // no type set for pipeline
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
@@ -252,6 +264,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 				Number: sql.NullInt32{Int32: 1, Valid: true},
 				Ref:    sql.NullString{String: "refs/heads/master", Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Type:   sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 			},
 		},
 	}

@@ -31,6 +31,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_TRUSTED":        "false",
 		"VELA_REPO_VISIBILITY":     "public",
 		"VELA_REPO_PIPELINE_TYPE":  "",
+		"VELA_REPO_LAST_UPDATE":    "1563474076",
 		"REPOSITORY_ACTIVE":        "true",
 		"REPOSITORY_ALLOW_COMMENT": "false",
 		"REPOSITORY_ALLOW_DEPLOY":  "false",
@@ -162,6 +163,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
 			t.Errorf("GetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
+
+		if test.repo.GetLastUpdate() != test.want.GetLastUpdate() {
+			t.Errorf("GetLastUpdate is %v, want %v", test.repo.GetLastUpdate(), test.want.GetLastUpdate())
+		}
 	}
 }
 
@@ -209,6 +214,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
+		test.repo.SetLastUpdate(test.want.GetLastUpdate())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -297,6 +303,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
 			t.Errorf("SetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
+
+		if test.repo.GetLastUpdate() != test.want.GetLastUpdate() {
+			t.Errorf("SetLastUpdate is %v, want %v", test.repo.GetLastUpdate(), test.want.GetLastUpdate())
+		}
 	}
 }
 
@@ -317,6 +327,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Counter: %d,
   FullName: %s,
   ID: %d,
+  LastUpdate: %d,
   Link: %s,
   Name: %s,
   Org: %s,
@@ -340,6 +351,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
+		r.GetLastUpdate(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),
@@ -386,6 +398,7 @@ func testRepo() *Repo {
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
 	r.SetPreviousName("")
+	r.SetLastUpdate(1563474076)
 
 	return r
 }

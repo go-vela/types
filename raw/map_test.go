@@ -16,9 +16,9 @@ import (
 func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *StringSliceMap
-		file    string
 		failure bool
+		file    string
+		want    *StringSliceMap
 	}{
 		{
 			failure: false,
@@ -91,9 +91,9 @@ func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {
 func TestRaw_StringSliceMap_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *StringSliceMap
-		file    string
 		failure bool
+		file    string
+		want    *StringSliceMap
 	}{
 		{
 			failure: false,
@@ -153,12 +153,12 @@ func TestRaw_StringSliceMap_UnmarshalYAML(t *testing.T) {
 
 func TestStringSliceMap_Value(t *testing.T) {
 	tests := []struct {
-		want    driver.Value
-		s       StringSliceMap
 		name    string
+		s       StringSliceMap
+		want    driver.Value
 		wantErr bool
 	}{
-		{"{\"foo\":\"test1\"}", StringSliceMap{"foo": "test1"}, "valid", false},
+		{"valid", StringSliceMap{"foo": "test1"}, "{\"foo\":\"test1\"}", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -180,12 +180,12 @@ func TestStringSliceMap_Scan(t *testing.T) {
 	}
 
 	tests := []struct {
-		args    args
-		s       *StringSliceMap
 		name    string
+		s       *StringSliceMap
+		args    args
 		wantErr bool
 	}{
-		{args{value: "{\"foo\":\"test1\"}"}, &StringSliceMap{"foo": "test1"}, "valid", false},
+		{"valid", &StringSliceMap{"foo": "test1"}, args{value: "{\"foo\":\"test1\"}"}, false},
 	}
 
 	for _, tt := range tests {

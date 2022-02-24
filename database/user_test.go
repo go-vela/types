@@ -25,9 +25,9 @@ func TestDatabase_User_Decrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
+		failure bool
 		key     string
 		user    User
-		failure bool
 	}{
 		{
 			failure: false,
@@ -70,9 +70,9 @@ func TestDatabase_User_Encrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		user    *User
-		key     string
 		failure bool
+		key     string
+		user    *User
 	}{
 		{
 			failure: false,
@@ -171,8 +171,8 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 func TestDatabase_User_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		user    *User
 		failure bool
+		user    *User
 	}{
 		{
 			failure: false,

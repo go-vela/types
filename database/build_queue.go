@@ -13,9 +13,9 @@ import (
 // BuildQueue is the database representation of the builds in the queue.
 type BuildQueue struct {
 	Status   sql.NullString `sql:"status"`
-	FullName sql.NullString `sql:"full_name"`
-	Created  sql.NullInt64  `sql:"created"`
 	Number   sql.NullInt32  `sql:"number"`
+	Created  sql.NullInt64  `sql:"created"`
+	FullName sql.NullString `sql:"full_name"`
 }
 
 // ToLibrary converts the BuildQueue type

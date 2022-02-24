@@ -196,9 +196,9 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *SecretSlice
-		file    string
 		failure bool
+		file    string
+		want    *SecretSlice
 	}{
 		{
 			failure: false,
@@ -370,9 +370,9 @@ func TestYaml_StepSecretSlice_ToPipeline(t *testing.T) {
 func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *StepSecretSlice
-		file    string
 		failure bool
+		file    string
+		want    *StepSecretSlice
 	}{
 		{
 			failure: false,

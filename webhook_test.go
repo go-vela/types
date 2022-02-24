@@ -15,78 +15,78 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 	// set up tests
 	tests := []struct {
 		hook       *Webhook
-		wantString string
 		wantBool   bool
+		wantString string
 	}{
 		{
 			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventPush, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventPush, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventPush, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventPush, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventPush, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, false)},
-			skipDeleteEventMsg,
 			true,
+			skipDeleteEventMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, true)},
-			"",
 			false,
+			"",
 		},
 		{
 			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventTag, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventTag, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventTag, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventTag, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag, true)},
-			skipDirectiveMsg,
 			true,
+			skipDirectiveMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, false)},
-			skipDeleteEventMsg,
 			true,
+			skipDeleteEventMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, true)},
-			"",
 			false,
+			"",
 		},
 	}
 

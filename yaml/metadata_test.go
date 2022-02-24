@@ -113,9 +113,9 @@ func TestYaml_Metadata_HasEnvironment(t *testing.T) {
 func TestYaml_Metadata_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *Metadata
-		file    string
 		failure bool
+		file    string
+		want    *Metadata
 	}{
 		{
 			failure: false,

@@ -193,9 +193,9 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		secret *Secret
-		want   error
 		org    string
 		repo   string
+		want   error
 	}{
 		{ // failure with bad org
 			secret: &Secret{

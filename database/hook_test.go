@@ -103,8 +103,8 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 func TestDatabase_Hook_Validate(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		hook    *Hook
 		failure bool
+		hook    *Hook
 	}{
 		{
 			failure: false,

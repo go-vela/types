@@ -10,14 +10,15 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
+// nolint:lll // jsonschema will cause long lines
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.
 	Ruleset struct {
-		Matcher  string `yaml:"matcher,omitempty"  json:"matcher,omitempty" jsonschema:"enum=filepath,enum=regexp,default=filepath,description=Use the defined matching method.\nReference: coming soon"`
-		Operator string `yaml:"operator,omitempty" json:"operator,omitempty" jsonschema:"enum=or,enum=and,default=and,description=Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		If       Rules  `yaml:"if,omitempty"       json:"if,omitempty" jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Unless   Rules  `yaml:"unless,omitempty"   json:"unless,omitempty" jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Matcher  string `yaml:"matcher,omitempty"  json:"matcher,omitempty" jsonschema:"enum=filepath,enum=regexp,default=filepath,description=Use the defined matching method.\nReference: coming soon"`
+		Operator string `yaml:"operator,omitempty" json:"operator,omitempty" jsonschema:"enum=or,enum=and,default=and,description=Whether all rule conditions must be met or just any one of them.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Continue bool   `yaml:"continue,omitempty" json:"continue,omitempty" jsonschema:"default=false,description=Limits the execution of a step to continuing on any failure.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 	}
 
@@ -54,10 +55,10 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	// advanced struct we try unmarshalling to
 	advanced := new(struct {
-		Matcher  string
-		Operator string
 		If       Rules
 		Unless   Rules
+		Matcher  string
+		Operator string
 		Continue bool
 	})
 

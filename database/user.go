@@ -47,12 +47,12 @@ var (
 
 // User is the database representation of a user.
 type User struct {
-	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
+	ID           sql.NullInt64  `sql:"id"`
 	Name         sql.NullString `sql:"name"`
 	RefreshToken sql.NullString `sql:"refresh_token"`
 	Token        sql.NullString `sql:"token"`
 	Hash         sql.NullString `sql:"hash"`
-	ID           sql.NullInt64  `sql:"id"`
+	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
 	Active       sql.NullBool   `sql:"active"`
 	Admin        sql.NullBool   `sql:"admin"`
 }

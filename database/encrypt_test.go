@@ -20,9 +20,9 @@ func TestDatabase_decrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
+		failure bool
 		key     string
 		value   []byte
-		failure bool
 	}{
 		{
 			failure: false,
@@ -66,9 +66,9 @@ func TestDatabase_encrypt(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
+		failure bool
 		key     string
 		value   []byte
-		failure bool
 	}{
 		{
 			failure: false,

@@ -150,9 +150,9 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *StepSlice
-		file    string
 		failure bool
+		file    string
+		want    *StepSlice
 	}{
 		{
 			failure: false,

@@ -420,8 +420,8 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 	// setup types
 	tests := []struct {
 		matcher string
-		pattern string
 		rule    Ruletype
+		pattern string
 		want    bool
 	}{
 		// Empty with filepath matcher
@@ -510,8 +510,8 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 	// setup types
 	tests := []struct {
 		matcher string
-		pattern string
 		rule    Ruletype
+		pattern string
 		want    bool
 	}{
 		// Empty with filepath matcher

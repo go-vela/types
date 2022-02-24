@@ -27,18 +27,18 @@ var (
 
 // Hook is the database representation of a webhook for a repo.
 type Hook struct {
+	ID       sql.NullInt64  `sql:"id"`
+	RepoID   sql.NullInt64  `sql:"repo_id"`
+	BuildID  sql.NullInt64  `sql:"build_id"`
+	Number   sql.NullInt32  `sql:"number"`
 	SourceID sql.NullString `sql:"source_id"`
+	Created  sql.NullInt64  `sql:"created"`
 	Host     sql.NullString `sql:"host"`
 	Event    sql.NullString `sql:"event"`
 	Branch   sql.NullString `sql:"branch"`
 	Error    sql.NullString `sql:"error"`
 	Status   sql.NullString `sql:"status"`
 	Link     sql.NullString `sql:"link"`
-	ID       sql.NullInt64  `sql:"id"`
-	RepoID   sql.NullInt64  `sql:"repo_id"`
-	BuildID  sql.NullInt64  `sql:"build_id"`
-	Created  sql.NullInt64  `sql:"created"`
-	Number   sql.NullInt32  `sql:"number"`
 }
 
 // Nullify ensures the valid flag for

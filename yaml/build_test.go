@@ -16,8 +16,8 @@ import (
 func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want *Build
 		file string
+		want *Build
 	}{
 		{
 			file: "testdata/build.yml",

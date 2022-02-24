@@ -16,9 +16,9 @@ import (
 func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *TemplateSlice
-		file    string
 		failure bool
+		file    string
+		want    *TemplateSlice
 	}{
 		{
 			failure: false,

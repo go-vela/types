@@ -24,13 +24,13 @@ var (
 
 // Worker is the database representation of a worker.
 type Worker struct {
-	Routes        pq.StringArray `sql:"routes" gorm:"type:varchar(1000)"`
+	ID            sql.NullInt64  `sql:"id"`
 	Hostname      sql.NullString `sql:"hostname"`
 	Address       sql.NullString `sql:"address"`
+	Routes        pq.StringArray `sql:"routes" gorm:"type:varchar(1000)"`
+	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit    sql.NullInt64  `sql:"build_limit"`
-	ID            sql.NullInt64  `sql:"id"`
-	Active        sql.NullBool   `sql:"active"`
 }
 
 // Nullify ensures the valid flag for

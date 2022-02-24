@@ -93,8 +93,8 @@ func TestDatabase_Service_ToLibrary(t *testing.T) {
 
 func TestDatabase_Service_Validate(t *testing.T) {
 	tests := []struct {
-		service *Service
 		failure bool
+		service *Service
 	}{
 		{
 			failure: false,

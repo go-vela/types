@@ -24,12 +24,12 @@ type (
 	//
 	// swagger:model PipelineSecret
 	Secret struct {
-		Origin *Container `json:"origin,omitempty" yaml:"origin,omitempty"`
 		Name   string     `json:"name,omitempty"   yaml:"name,omitempty"`
 		Value  string     `json:"value,omitempty"  yaml:"value,omitempty"`
 		Key    string     `json:"key,omitempty"    yaml:"key,omitempty"`
 		Engine string     `json:"engine,omitempty" yaml:"engine,omitempty"`
 		Type   string     `json:"type,omitempty"   yaml:"type,omitempty"`
+		Origin *Container `json:"origin,omitempty" yaml:"origin,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation

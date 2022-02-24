@@ -35,21 +35,21 @@ var (
 
 // Service is the database representation of a service in a build.
 type Service struct {
+	ID           sql.NullInt64  `sql:"id"`
+	BuildID      sql.NullInt64  `sql:"build_id"`
+	RepoID       sql.NullInt64  `sql:"repo_id"`
+	Number       sql.NullInt32  `sql:"number"`
 	Name         sql.NullString `sql:"name"`
 	Image        sql.NullString `sql:"image"`
 	Status       sql.NullString `sql:"status"`
 	Error        sql.NullString `sql:"error"`
-	Host         sql.NullString `sql:"host"`
-	Runtime      sql.NullString `sql:"runtime"`
-	Distribution sql.NullString `sql:"distribution"`
-	ID           sql.NullInt64  `sql:"id"`
-	BuildID      sql.NullInt64  `sql:"build_id"`
-	RepoID       sql.NullInt64  `sql:"repo_id"`
+	ExitCode     sql.NullInt32  `sql:"exit_code"`
 	Created      sql.NullInt64  `sql:"created"`
 	Started      sql.NullInt64  `sql:"started"`
 	Finished     sql.NullInt64  `sql:"finished"`
-	Number       sql.NullInt32  `sql:"number"`
-	ExitCode     sql.NullInt32  `sql:"exit_code"`
+	Host         sql.NullString `sql:"host"`
+	Runtime      sql.NullString `sql:"runtime"`
+	Distribution sql.NullString `sql:"distribution"`
 }
 
 // Nullify ensures the valid flag for

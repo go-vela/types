@@ -50,9 +50,9 @@ func TestYaml_VolumeSlice_ToPipeline(t *testing.T) {
 func TestYaml_VolumeSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *VolumeSlice
-		file    string
 		failure bool
+		file    string
+		want    *VolumeSlice
 	}{
 		{
 			failure: false,

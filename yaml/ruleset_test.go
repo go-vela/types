@@ -86,8 +86,8 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want *Ruleset
 		file string
+		want *Ruleset
 	}{
 		{
 			file: "testdata/ruleset_simple.yml",
@@ -208,9 +208,9 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		want    *Rules
-		file    string
 		failure bool
+		file    string
+		want    *Rules
 	}{
 		{
 			failure: false,

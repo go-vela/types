@@ -14,8 +14,8 @@ type (
 	//
 	// swagger:model PipelinePort
 	Port struct {
-		Protocol string `json:"protocol,omitempty" yaml:"protocol,omitempty"`
 		Port     int    `json:"port,omitempty"     yaml:"port,omitempty"`
 		Host     int    `json:"host,omitempty"     yaml:"host,omitempty"`
+		Protocol string `json:"protocol,omitempty" yaml:"protocol,omitempty"`
 	}
 )

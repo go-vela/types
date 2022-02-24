@@ -58,9 +58,9 @@ func TestYaml_ServiceSlice_ToPipeline(t *testing.T) {
 func TestYaml_ServiceSlice_UnmarshalYAML(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		want    *ServiceSlice
-		file    string
 		failure bool
+		file    string
+		want    *ServiceSlice
 	}{
 		{
 			failure: false,

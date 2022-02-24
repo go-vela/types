@@ -323,10 +323,10 @@ func TestLibrary_StepFromBuildContainer(t *testing.T) {
 	s.Finished = nil
 
 	tests := []struct {
+		name      string
 		container *pipeline.Container
 		build     *Build
 		want      *Step
-		name      string
 	}{
 		{
 			name:      "nil container with nil build",
@@ -399,9 +399,9 @@ func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
+		name      string
 		container *pipeline.Container
 		want      *Step
-		name      string
 	}{
 		{
 			name:      "nil container",

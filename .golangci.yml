@@ -43,10 +43,6 @@ linters-settings:
   golint:
     min-confidence: 0
 
-  # https://github.com/mdempsky/maligned
-  maligned:
-    suggest-new: true
-
   # https://github.com/client9/misspell
   misspell:
     locale: US
@@ -167,4 +163,3 @@ issues:
         - funlen
         - goconst
         - gocyclo
-        - govet

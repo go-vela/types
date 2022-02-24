@@ -103,8 +103,6 @@ linters:
     - whitespace          # detects leading and trailing whitespace
     - wsl                 # forces code to use empty lines
     
-    
-
   # static list of linters we know golangci can run but we've
   # chosen to leave disabled for now
   # - asciicheck          - non-critical

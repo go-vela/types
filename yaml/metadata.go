@@ -67,7 +67,7 @@ func (m *Metadata) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// metadata we try unmarshalling to
 	metadata := new(struct {
 		Template     bool
-		RenderInline bool
+		RenderInline bool `yaml:"render_inline,omitempty" json:"render_inline,omitempty"`
 		Clone        *bool
 		Environment  []string
 	})

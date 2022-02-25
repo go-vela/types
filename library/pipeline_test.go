@@ -40,6 +40,10 @@ func TestLibrary_Pipeline_Getters(t *testing.T) {
 			t.Errorf("GetNumber is %v, want %v", test.pipeline.GetNumber(), test.want.GetNumber())
 		}
 
+		if test.pipeline.GetCommit() != test.want.GetCommit() {
+			t.Errorf("GetCommit is %v, want %v", test.pipeline.GetCommit(), test.want.GetCommit())
+		}
+
 		if test.pipeline.GetFlavor() != test.want.GetFlavor() {
 			t.Errorf("GetFlavor is %v, want %v", test.pipeline.GetFlavor(), test.want.GetFlavor())
 		}
@@ -114,6 +118,7 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 		test.pipeline.SetID(test.want.GetID())
 		test.pipeline.SetRepoID(test.want.GetRepoID())
 		test.pipeline.SetNumber(test.want.GetNumber())
+		test.pipeline.SetCommit(test.want.GetCommit())
 		test.pipeline.SetFlavor(test.want.GetFlavor())
 		test.pipeline.SetPlatform(test.want.GetPlatform())
 		test.pipeline.SetRef(test.want.GetRef())
@@ -137,6 +142,10 @@ func TestLibrary_Pipeline_Setters(t *testing.T) {
 
 		if test.pipeline.GetNumber() != test.want.GetNumber() {
 			t.Errorf("SetNumber is %v, want %v", test.pipeline.GetNumber(), test.want.GetNumber())
+		}
+
+		if test.pipeline.GetCommit() != test.want.GetCommit() {
+			t.Errorf("SetCommit is %v, want %v", test.pipeline.GetCommit(), test.want.GetCommit())
 		}
 
 		if test.pipeline.GetFlavor() != test.want.GetFlavor() {
@@ -194,6 +203,7 @@ func TestLibrary_Pipeline_String(t *testing.T) {
 	p := testPipeline()
 
 	want := fmt.Sprintf(`{
+  Commit: %s,
   Data: %s,
   Flavor: %s,
   ID: %d,
@@ -210,6 +220,7 @@ func TestLibrary_Pipeline_String(t *testing.T) {
   Type: %s,
   Version: %s,
 }`,
+		p.GetCommit(),
 		p.GetData(),
 		p.GetFlavor(),
 		p.GetID(),
@@ -243,6 +254,7 @@ func testPipeline() *Pipeline {
 	p.SetID(1)
 	p.SetRepoID(1)
 	p.SetNumber(1)
+	p.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")

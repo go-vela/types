@@ -187,6 +187,7 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 	want.SetID(1)
 	want.SetRepoID(1)
 	want.SetNumber(1)
+	want.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	want.SetFlavor("large")
 	want.SetPlatform("docker")
 	want.SetRef("refs/heads/master")
@@ -294,6 +295,7 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 	p.SetID(1)
 	p.SetRepoID(1)
 	p.SetNumber(1)
+	p.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")
@@ -324,6 +326,7 @@ func testPipeline() *Pipeline {
 		ID:              sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:          sql.NullInt64{Int64: 1, Valid: true},
 		Number:          sql.NullInt32{Int32: 1, Valid: true},
+		Commit:          sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
 		Flavor:          sql.NullString{String: "large", Valid: true},
 		Platform:        sql.NullString{String: "docker", Valid: true},
 		Ref:             sql.NullString{String: "refs/heads/master", Valid: true},

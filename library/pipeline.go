@@ -15,6 +15,7 @@ type Pipeline struct {
 	ID              *int64  `json:"id,omitempty"`
 	RepoID          *int64  `json:"repo_id,omitempty"`
 	Number          *int    `json:"number,omitempty"`
+	Commit          *string `json:"commit,omitempty"`
 	Flavor          *string `json:"flavor,omitempty"`
 	Platform        *string `json:"platform,omitempty"`
 	Ref             *string `json:"ref,omitempty"`
@@ -67,6 +68,19 @@ func (p *Pipeline) GetNumber() int {
 	}
 
 	return *p.Number
+}
+
+// GetCommit returns the Commit field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetCommit() string {
+	// return zero value if Pipeline type or Commit field is nil
+	if p == nil || p.Commit == nil {
+		return ""
+	}
+
+	return *p.Commit
 }
 
 // GetFlavor returns the Flavor field.
@@ -264,6 +278,19 @@ func (p *Pipeline) SetNumber(v int) {
 	p.Number = &v
 }
 
+// SetCommit sets the Commit field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetCommit(v string) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Commit = &v
+}
+
 // SetFlavor sets the Flavor field.
 //
 // When the provided Pipeline type is nil, it
@@ -423,6 +450,7 @@ func (p *Pipeline) SetData(v []byte) {
 // String implements the Stringer interface for the Pipeline type.
 func (p *Pipeline) String() string {
 	return fmt.Sprintf(`{
+  Commit: %s,
   Data: %s,
   Flavor: %s,
   ID: %d,
@@ -439,6 +467,7 @@ func (p *Pipeline) String() string {
   Type: %s,
   Version: %s,
 }`,
+		p.GetCommit(),
 		p.GetData(),
 		p.GetFlavor(),
 		p.GetID(),

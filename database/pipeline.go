@@ -42,6 +42,7 @@ type Pipeline struct {
 	ID              sql.NullInt64  `sql:"id"`
 	RepoID          sql.NullInt64  `sql:"repo_id"`
 	Number          sql.NullInt32  `sql:"number"`
+	Commit          sql.NullString `sql:"commit"`
 	Flavor          sql.NullString `sql:"flavor"`
 	Platform        sql.NullString `sql:"platform"`
 	Ref             sql.NullString `sql:"ref"`
@@ -146,6 +147,11 @@ func (p *Pipeline) Nullify() *Pipeline {
 		p.Number.Valid = false
 	}
 
+	// check if the Commit field should be false
+	if len(p.Commit.String) == 0 {
+		p.Commit.Valid = false
+	}
+
 	// check if the Flavor field should be false
 	if len(p.Flavor.String) == 0 {
 		p.Flavor.Valid = false
@@ -182,6 +188,7 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 	pipeline.SetID(p.ID.Int64)
 	pipeline.SetRepoID(p.RepoID.Int64)
 	pipeline.SetNumber(int(p.Number.Int32))
+	pipeline.SetCommit(p.Commit.String)
 	pipeline.SetFlavor(p.Flavor.String)
 	pipeline.SetPlatform(p.Platform.String)
 	pipeline.SetRef(p.Ref.String)
@@ -229,6 +236,7 @@ func (p *Pipeline) Validate() error {
 	// ensure that all Pipeline string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
+	p.Commit = sql.NullString{String: sanitize(p.Commit.String), Valid: p.Commit.Valid}
 	p.Flavor = sql.NullString{String: sanitize(p.Flavor.String), Valid: p.Flavor.Valid}
 	p.Platform = sql.NullString{String: sanitize(p.Platform.String), Valid: p.Platform.Valid}
 	p.Ref = sql.NullString{String: sanitize(p.Ref.String), Valid: p.Ref.Valid}
@@ -245,6 +253,7 @@ func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 		ID:              sql.NullInt64{Int64: p.GetID(), Valid: true},
 		RepoID:          sql.NullInt64{Int64: p.GetRepoID(), Valid: true},
 		Number:          sql.NullInt32{Int32: int32(p.GetNumber()), Valid: true},
+		Commit:          sql.NullString{String: p.GetCommit(), Valid: true},
 		Flavor:          sql.NullString{String: p.GetFlavor(), Valid: true},
 		Platform:        sql.NullString{String: p.GetPlatform(), Valid: true},
 		Ref:             sql.NullString{String: p.GetRef(), Valid: true},

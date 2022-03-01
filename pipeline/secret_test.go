@@ -176,6 +176,7 @@ func TestPipeline_Secret_ParseOrg_failure(t *testing.T) {
 		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
 			t.Errorf("ParseOrg should have failed with error '%s' but got '%s'", test.wantErr, err)
 		}
+
 		if err == nil {
 			t.Errorf("ParseOrg should have failed")
 		}
@@ -360,6 +361,7 @@ func TestPipeline_Secret_ParseRepo_failure(t *testing.T) {
 		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
 			t.Errorf("ParseRepo should have failed with error '%s' but got '%s'", test.wantErr, err)
 		}
+
 		if err == nil {
 			t.Errorf("ParseRepo should have failed")
 		}
@@ -497,6 +499,7 @@ func TestPipeline_Secret_ParseShared_failure(t *testing.T) {
 		if test.wantErr != nil && err != nil && !errors.Is(err, test.wantErr) {
 			t.Errorf("ParseShared should have failed with error '%s' but got '%s'", test.wantErr, err)
 		}
+
 		if err == nil {
 			t.Errorf("ParseShared should have failed")
 		}

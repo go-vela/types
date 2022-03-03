@@ -20,6 +20,7 @@ func (s StringSliceMap) Value() (driver.Value, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return string(value), nil
 }
 

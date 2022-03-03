@@ -1,11 +1,11 @@
-// Copyright (c) 2019 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package constants
 
 // Constants for build badges.
-// nolint:lll,godot // due to providing pretty printed svgs
+// nolint:godot // due to providing pretty printed svgs
 const (
 	// Badge for unknown state
 	// <svg xmlns="http://www.w3.org/2000/svg" width="92" height="20">

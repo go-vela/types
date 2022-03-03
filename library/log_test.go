@@ -84,6 +84,7 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 	for _, test := range tests {
 		l.SetData(test.log)
 		l.MaskData(test.secrets)
+
 		got := l.GetData()
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("MaskData is %v, want %v", string(got), string(test.want))

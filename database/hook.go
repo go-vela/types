@@ -23,6 +23,10 @@ var (
 	// ErrEmptyHookSourceID defines the error type when a
 	// Hook type has an empty SourceID field provided.
 	ErrEmptyHookSourceID = errors.New("empty webhook source_id provided")
+
+	// ErrEmptyHookAddress defines the error type when a
+	// Hook type has an empty Address field provided.
+	ErrEmptyHookAddress = errors.New("empty webhook address provided")
 )
 
 // Hook is the database representation of a webhook for a repo.
@@ -39,6 +43,7 @@ type Hook struct {
 	Error    sql.NullString `sql:"error"`
 	Status   sql.NullString `sql:"status"`
 	Link     sql.NullString `sql:"link"`
+	Address  sql.NullInt64  `sql:"address"`
 }
 
 // Nullify ensures the valid flag for
@@ -112,6 +117,11 @@ func (h *Hook) Nullify() *Hook {
 		h.Link.Valid = false
 	}
 
+	// check if the Address field should be false
+	if h.Address.Int64 == 0 {
+		h.Address.Valid = false
+	}
+
 	return h
 }
 
@@ -132,6 +142,7 @@ func (h *Hook) ToLibrary() *library.Hook {
 	hook.SetError(h.Error.String)
 	hook.SetStatus(h.Status.String)
 	hook.SetLink(h.Link.String)
+	hook.SetAddress(h.Address.Int64)
 
 	return hook
 }
@@ -152,6 +163,11 @@ func (h *Hook) Validate() error {
 	// verify the SourceID field is populated
 	if len(h.SourceID.String) <= 0 {
 		return ErrEmptyHookSourceID
+	}
+
+	// verify the Address field is populated
+	if h.Address.Int64 <= 0 {
+		return ErrEmptyHookAddress
 	}
 
 	// ensure that all Hook string fields
@@ -184,6 +200,7 @@ func HookFromLibrary(h *library.Hook) *Hook {
 		Error:    sql.NullString{String: h.GetError(), Valid: true},
 		Status:   sql.NullString{String: h.GetStatus(), Valid: true},
 		Link:     sql.NullString{String: h.GetLink(), Valid: true},
+		Address:  sql.NullInt64{Int64: h.GetAddress(), Valid: true},
 	}
 
 	return hook.Nullify()

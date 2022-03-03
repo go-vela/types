@@ -24,6 +24,7 @@ type Hook struct {
 	Error    *string `json:"error,omitempty"`
 	Status   *string `json:"status,omitempty"`
 	Link     *string `json:"link,omitempty"`
+	Address  *int64  `json:"address,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -182,6 +183,19 @@ func (h *Hook) GetLink() string {
 	return *h.Link
 }
 
+// GetAddress returns the Address field.
+//
+// When the provided Hook type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (h *Hook) GetAddress() int64 {
+	// return zero value if Hook type or Address field is nil
+	if h == nil || h.ID == nil {
+		return 0
+	}
+
+	return *h.Address
+}
+
 // SetID sets the ID field.
 //
 // When the provided Hook type is nil, it
@@ -337,9 +351,23 @@ func (h *Hook) SetLink(v string) {
 	h.Link = &v
 }
 
+// SetAddress sets the Address field.
+//
+// When the provided Hook type is nil, it
+// will set nothing and immediately return.
+func (h *Hook) SetAddress(v int64) {
+	// return if Hook type is nil
+	if h == nil {
+		return
+	}
+
+	h.Address = &v
+}
+
 // String implements the Stringer interface for the Hook type.
 func (h *Hook) String() string {
 	return fmt.Sprintf(`{
+  Address: %d,
   Branch: %s,
   BuildID: %d,
   Created: %d,
@@ -353,6 +381,7 @@ func (h *Hook) String() string {
   SourceID: %s,
   Status: %s,
 }`,
+		h.GetAddress(),
 		h.GetBranch(),
 		h.GetBuildID(),
 		h.GetCreated(),

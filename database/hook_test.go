@@ -30,6 +30,7 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 		Error:    sql.NullString{String: "", Valid: false},
 		Status:   sql.NullString{String: "", Valid: false},
 		Link:     sql.NullString{String: "", Valid: false},
+		Address:  sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -76,6 +77,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 	want.SetError("")
 	want.SetStatus("success")
 	want.SetLink("https://github.com/github/octocat/settings/hooks/1")
+	want.SetAddress(123456)
 
 	h := &Hook{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
@@ -90,6 +92,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 		Error:    sql.NullString{String: "", Valid: true},
 		Status:   sql.NullString{String: "success", Valid: true},
 		Link:     sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		Address:  sql.NullInt64{Int64: 123456, Valid: true},
 	}
 
 	// run test
@@ -116,6 +119,7 @@ func TestDatabase_Hook_Validate(t *testing.T) {
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+				Address:  sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
 		{ // no repo_id set for hook
@@ -124,14 +128,25 @@ func TestDatabase_Hook_Validate(t *testing.T) {
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				Number:   sql.NullInt32{Int32: 1, Valid: true},
 				SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+				Address:  sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
 		{ // no source_id set for hook
 			failure: true,
 			hook: &Hook{
-				ID:     sql.NullInt64{Int64: 1, Valid: true},
-				Number: sql.NullInt32{Int32: 1, Valid: true},
-				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Address: sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
+		{ // no address set for hook
+			failure: true,
+			hook: &Hook{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				SourceID: sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
 			},
 		},
 	}
@@ -169,6 +184,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 		Error:    sql.NullString{String: "", Valid: false},
 		Status:   sql.NullString{String: "success", Valid: true},
 		Link:     sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		Address:  sql.NullInt64{Int64: 123456, Valid: true},
 	}
 
 	h := new(library.Hook)
@@ -184,6 +200,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
+	h.SetAddress(123456)
 
 	// run test
 	got := HookFromLibrary(h)
@@ -209,5 +226,6 @@ func testHook() *Hook {
 		Error:    sql.NullString{String: "", Valid: false},
 		Status:   sql.NullString{String: "success", Valid: true},
 		Link:     sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		Address:  sql.NullInt64{Int64: 123456, Valid: true},
 	}
 }

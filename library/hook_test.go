@@ -76,6 +76,10 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 		if test.hook.GetLink() != test.want.GetLink() {
 			t.Errorf("GetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
 		}
+
+		if test.hook.GetAddress() != test.want.GetAddress() {
+			t.Errorf("GetAddress is %v, want %v", test.hook.GetAddress(), test.want.GetAddress())
+		}
 	}
 }
 
@@ -112,6 +116,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		test.hook.SetError(test.want.GetError())
 		test.hook.SetStatus(test.want.GetStatus())
 		test.hook.SetLink(test.want.GetLink())
+		test.hook.SetAddress(test.want.GetAddress())
 
 		if test.hook.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.hook.GetID(), test.want.GetID())
@@ -160,6 +165,10 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		if test.hook.GetLink() != test.want.GetLink() {
 			t.Errorf("SetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
 		}
+
+		if test.hook.GetAddress() != test.want.GetAddress() {
+			t.Errorf("SetAddress is %v, want %v", test.hook.GetAddress(), test.want.GetAddress())
+		}
 	}
 }
 
@@ -168,6 +177,7 @@ func TestLibrary_Hook_String(t *testing.T) {
 	h := testHook()
 
 	want := fmt.Sprintf(`{
+  Address: %d,
   Branch: %s,
   BuildID: %d,
   Created: %d,
@@ -181,6 +191,7 @@ func TestLibrary_Hook_String(t *testing.T) {
   SourceID: %s,
   Status: %s,
 }`,
+		h.GetAddress(),
 		h.GetBranch(),
 		h.GetBuildID(),
 		h.GetCreated(),
@@ -220,6 +231,7 @@ func testHook() *Hook {
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
+	h.SetAddress(123456)
 
 	return h
 }

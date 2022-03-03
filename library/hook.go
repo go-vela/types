@@ -296,6 +296,7 @@ func (h *Hook) SetEvent(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Event = &v
 }
 

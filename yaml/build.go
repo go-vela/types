@@ -22,7 +22,7 @@ type Build struct {
 	Templates   TemplateSlice      `yaml:"templates,omitempty" json:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/"`
 }
 
-// UnmarshalYAML implements the Unmarshaler interface for the Metadata type.
+// UnmarshalYAML implements the Unmarshaler interface for the Build type.
 func (b *Build) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// build we try unmarshalling to
 	build := new(struct {
@@ -37,16 +37,18 @@ func (b *Build) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		Templates   TemplateSlice
 	})
 
-	// attempt to unmarshal as a metadata type
+	// attempt to unmarshal as a build type
 	err := unmarshal(build)
 	if err != nil {
 		return err
 	}
 
+	// give the documented default value to metadata environment
 	if build.Metadata.Environment == nil {
 		build.Metadata.Environment = []string{"steps", "services", "secrets"}
 	}
 
+	// override the values
 	b.Version = build.Version
 	b.Metadata = build.Metadata
 	b.Environment = build.Environment

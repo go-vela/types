@@ -10,7 +10,6 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
-// nolint:lll // jsonschema will cause long lines
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.

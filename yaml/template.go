@@ -8,7 +8,6 @@ import (
 	"github.com/go-vela/types/library"
 )
 
-// nolint:lll // jsonschema will cause long lines
 type (
 	// TemplateSlice is the yaml representation
 	// of the templates block for a pipeline.

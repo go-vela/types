@@ -83,6 +83,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
+
 	return worker
 }
 

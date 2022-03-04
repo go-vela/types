@@ -15,8 +15,8 @@ import (
 func TestDatabase_Repo_Decrypt(t *testing.T) {
 	// setup types
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
-
 	encrypted := testRepo()
+
 	err := encrypted.Encrypt(key)
 	if err != nil {
 		t.Errorf("unable to encrypt repo: %v", err)

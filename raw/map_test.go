@@ -178,6 +178,7 @@ func TestStringSliceMap_Scan(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
+
 	tests := []struct {
 		name    string
 		s       *StringSliceMap
@@ -186,6 +187,7 @@ func TestStringSliceMap_Scan(t *testing.T) {
 	}{
 		{"valid", &StringSliceMap{"foo": "test1"}, args{value: "{\"foo\":\"test1\"}"}, false},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.s.Scan(tt.args.value); (err != nil) != tt.wantErr {

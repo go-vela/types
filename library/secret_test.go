@@ -231,42 +231,55 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 		if test.secret.GetID() != test.want.GetID() {
 			t.Errorf("GetID is %v, want %v", test.secret.GetID(), test.want.GetID())
 		}
+
 		if test.secret.GetOrg() != test.want.GetOrg() {
 			t.Errorf("GetOrg is %v, want %v", test.secret.GetOrg(), test.want.GetOrg())
 		}
+
 		if test.secret.GetRepo() != test.want.GetRepo() {
 			t.Errorf("GetRepo is %v, want %v", test.secret.GetRepo(), test.want.GetRepo())
 		}
+
 		if test.secret.GetTeam() != test.want.GetTeam() {
 			t.Errorf("GetTeam is %v, want %v", test.secret.GetTeam(), test.want.GetTeam())
 		}
+
 		if test.secret.GetName() != test.want.GetName() {
 			t.Errorf("GetName is %v, want %v", test.secret.GetName(), test.want.GetName())
 		}
+
 		if test.secret.GetValue() != test.want.GetValue() {
 			t.Errorf("GetValue is %v, want %v", test.secret.GetValue(), test.want.GetValue())
 		}
+
 		if test.secret.GetType() != test.want.GetType() {
 			t.Errorf("GetType is %v, want %v", test.secret.GetType(), test.want.GetType())
 		}
+
 		if !reflect.DeepEqual(test.secret.GetImages(), test.want.GetImages()) {
 			t.Errorf("GetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
 		}
+
 		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
 			t.Errorf("GetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
 		}
+
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+
 		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
 			t.Errorf("GetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
 		}
+
 		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
 			t.Errorf("GetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
 		}
+
 		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
 			t.Errorf("GetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
 		}
+
 		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
 			t.Errorf("GetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
 		}
@@ -312,42 +325,55 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		if test.secret.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.secret.GetID(), test.want.GetID())
 		}
+
 		if test.secret.GetOrg() != test.want.GetOrg() {
 			t.Errorf("SetOrg is %v, want %v", test.secret.GetOrg(), test.want.GetOrg())
 		}
+
 		if test.secret.GetRepo() != test.want.GetRepo() {
 			t.Errorf("SetRepo is %v, want %v", test.secret.GetRepo(), test.want.GetRepo())
 		}
+
 		if test.secret.GetTeam() != test.want.GetTeam() {
 			t.Errorf("SetTeam is %v, want %v", test.secret.GetTeam(), test.want.GetTeam())
 		}
+
 		if test.secret.GetName() != test.want.GetName() {
 			t.Errorf("SetName is %v, want %v", test.secret.GetName(), test.want.GetName())
 		}
+
 		if test.secret.GetValue() != test.want.GetValue() {
 			t.Errorf("SetValue is %v, want %v", test.secret.GetValue(), test.want.GetValue())
 		}
+
 		if test.secret.GetType() != test.want.GetType() {
 			t.Errorf("SetType is %v, want %v", test.secret.GetType(), test.want.GetType())
 		}
+
 		if !reflect.DeepEqual(test.secret.GetImages(), test.want.GetImages()) {
 			t.Errorf("SetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
 		}
+
 		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
 			t.Errorf("SetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
 		}
+
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
+
 		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
 			t.Errorf("SetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
 		}
+
 		if test.secret.GetCreatedBy() != test.want.GetCreatedBy() {
 			t.Errorf("SetCreatedBy is %v, want %v", test.secret.GetCreatedBy(), test.want.GetCreatedBy())
 		}
+
 		if test.secret.GetUpdatedAt() != test.want.GetUpdatedAt() {
 			t.Errorf("SetUpdatedAt is %v, want %v", test.secret.GetUpdatedAt(), test.want.GetUpdatedAt())
 		}
+
 		if test.secret.GetUpdatedBy() != test.want.GetUpdatedBy() {
 			t.Errorf("SetUpdatedBy is %v, want %v", test.secret.GetUpdatedBy(), test.want.GetUpdatedBy())
 		}
@@ -420,5 +446,6 @@ func testSecret() *Secret {
 	s.SetCreatedBy("octocat")
 	s.SetUpdatedAt(tsUpdate)
 	s.SetUpdatedBy("octocat2")
+
 	return s
 }

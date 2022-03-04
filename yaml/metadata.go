@@ -11,7 +11,6 @@ import (
 type (
 	// Metadata is the yaml representation of
 	// the metadata block for a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Metadata struct {
 		Template    bool     `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-tag"`
 		Clone       *bool    `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-clone-tag"`

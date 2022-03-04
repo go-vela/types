@@ -98,6 +98,7 @@ func TestDatabase_Log_Compress(t *testing.T) {
 func TestDatabase_Log_Decompress(t *testing.T) {
 	// setup types
 	l := testLog()
+
 	err := l.Compress(constants.CompressionThree)
 	if err != nil {
 		t.Errorf("unable to compress log: %v", err)

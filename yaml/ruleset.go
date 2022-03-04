@@ -145,6 +145,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 		// account for users who use non-scoped pull_request event
 		events := []string{}
+		
 		for _, e := range rules.Event {
 			if e == "pull_request" {
 				events = append(events, "pull_request:opened", "pull_request:synchronized")
@@ -152,6 +153,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				events = append(events, e)
 			}
 		}
+		
 		r.Event = events
 	}
 

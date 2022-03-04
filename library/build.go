@@ -81,7 +81,6 @@ func (b *Build) Duration() string {
 
 // Environment returns a list of environment variables
 // provided from the fields of the Build type.
-// nolint:funlen // function length inflated due to number of env vars
 func (b *Build) Environment(workspace, channel string) map[string]string {
 	envs := map[string]string{
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),

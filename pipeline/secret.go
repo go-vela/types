@@ -153,8 +153,7 @@ func (s *Secret) ParseRepo(org, repo string) (string, string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
-	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-		!strings.EqualFold(s.Engine, constants.DriverVault) {
+	if !strings.EqualFold(s.Engine, constants.DriverNative) && !strings.EqualFold(s.Engine, constants.DriverVault) {
 		return "", "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
 	}
 
@@ -200,8 +199,7 @@ func (s *Secret) ParseShared() (string, string, string, error) {
 	path := s.Key
 
 	// check if the secret is not a native or vault type
-	if !strings.EqualFold(s.Engine, constants.DriverNative) &&
-		!strings.EqualFold(s.Engine, constants.DriverVault) {
+	if !strings.EqualFold(s.Engine, constants.DriverNative) && !strings.EqualFold(s.Engine, constants.DriverVault) {
 		return "", "", "", fmt.Errorf("%w: %s", ErrInvalidEngine, s.Engine)
 	}
 

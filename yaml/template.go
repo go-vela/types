@@ -8,19 +8,6 @@ import (
 	"github.com/go-vela/types/library"
 )
 
-//version: "1"
-//
-//metadata:
-//render_inline: true # defaults to false
-//
-//templates:
-//- name: go
-//	source: github.com/octocat/hello-world/.vela/build.yml
-//	format: go
-//	type: github
-//	vars:
-//	image: golang:latest
-
 // nolint:lll // jsonschema will cause long lines
 type (
 	// TemplateSlice is the yaml representation

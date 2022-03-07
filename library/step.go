@@ -391,6 +391,7 @@ func (s *Step) SetStatus(v string) {
 	if s == nil {
 		return
 	}
+
 	s.Status = &v
 }
 
@@ -573,8 +574,6 @@ func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 
 // StepFromContainerEnvironment converts the pipeline Container
 // to a library Step using the container's Environment.
-//
-// nolint: funlen // ignore function length due to comments and conditionals
 func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {

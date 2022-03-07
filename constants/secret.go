@@ -20,4 +20,10 @@ const (
 
 	// SecretLogMask defines the secret mask to be used when distributing logs that contain secrets.
 	SecretLogMask = "***"
+
+	// SecretRestrictedCharacters defines the set of characters that a secret name cannot contain.
+	// This matches the following characters:
+	//   Equal Sign =
+	//   Null Character \x00
+	SecretRestrictedCharacters = "=\x00"
 )

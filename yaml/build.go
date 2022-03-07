@@ -10,7 +10,6 @@ import (
 )
 
 // Build is the yaml representation of a build for a pipeline.
-// nolint:lll // jsonschema will cause long lines
 type Build struct {
 	Version     string             `yaml:"version,omitempty"   json:"version,omitempty"  jsonschema:"required,minLength=1,description=Provide syntax version used to evaluate the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/version/"`
 	Metadata    Metadata           `yaml:"metadata,omitempty"  json:"metadata,omitempty" jsonschema:"description=Pass extra information.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/"`

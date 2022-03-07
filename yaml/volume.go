@@ -19,7 +19,6 @@ type (
 
 	// Volume is the yaml representation of a volume
 	// from a volumes block for a step in a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Volume struct {
 		Source      string `yaml:"source,omitempty"      json:"source,omitempty" jsonschema:"required,minLength=1,description=Set the source directory to be mounted.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-volume-tag"`
 		Destination string `yaml:"destination,omitempty" json:"destination,omitempty" jsonschema:"required,minLength=1,description=Set the destination directory for the mount in the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-volume-tag"`

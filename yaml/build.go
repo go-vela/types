@@ -22,8 +22,8 @@ type Build struct {
 	Templates   TemplateSlice      `yaml:"templates,omitempty" json:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/"`
 }
 
-// ToLibrary converts the Build type to a library Pipeline type.
-func (b *Build) ToLibrary() *library.Pipeline {
+// ToPipelineLibrary converts the Build type to a library Pipeline type.
+func (b *Build) ToPipelineLibrary() *library.Pipeline {
 	pipeline := new(library.Pipeline)
 
 	pipeline.SetFlavor(b.Worker.Flavor)

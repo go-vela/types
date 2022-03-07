@@ -98,6 +98,7 @@ func TestDatabase_Pipeline_Compress(t *testing.T) {
 func TestDatabase_Pipeline_Decompress(t *testing.T) {
 	// setup types
 	p := testPipeline()
+
 	err := p.Compress(constants.CompressionThree)
 	if err != nil {
 		t.Errorf("unable to compress log: %v", err)

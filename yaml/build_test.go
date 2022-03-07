@@ -85,10 +85,10 @@ func TestYaml_Build_ToLibrary(t *testing.T) {
 			t.Errorf("unable to unmarshal YAML for %s: %v", test.name, err)
 		}
 
-		got := b.ToLibrary()
+		got := b.ToPipelineLibrary()
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("ToLibrary for %s is %v, want %v", test.name, got, test.want)
+			t.Errorf("ToPipelineLibrary for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }

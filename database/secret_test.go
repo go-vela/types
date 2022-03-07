@@ -22,8 +22,8 @@ var (
 func TestDatabase_Secret_Decrypt(t *testing.T) {
 	// setup types
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
-
 	encrypted := testSecret()
+
 	err := encrypted.Encrypt(key)
 	if err != nil {
 		t.Errorf("unable to encrypt secret: %v", err)

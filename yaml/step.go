@@ -20,7 +20,6 @@ type (
 
 	// Step is the yaml representation of a step
 	// from the steps block for a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Step struct {
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Commands    raw.StringSlice        `yaml:"commands,omitempty"    json:"commands,omitempty" jsonschema:"description=Execution instructions to run inside the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-commands-tag"`

@@ -537,8 +537,6 @@ func ServiceFromBuildContainer(build *Build, ctn *pipeline.Container) *Service {
 
 // ServiceFromContainerEnvironment converts the pipeline Container
 // to a library Service using the container's Environment.
-//
-// nolint: funlen // ignore function length due to comments and conditionals
 func ServiceFromContainerEnvironment(ctn *pipeline.Container) *Service {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {

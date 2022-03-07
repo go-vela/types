@@ -8,7 +8,6 @@ import (
 	"github.com/go-vela/types/library"
 )
 
-// nolint:lll // jsonschema will cause long lines
 type (
 	// TemplateSlice is the yaml representation
 	// of the templates block for a pipeline.
@@ -21,7 +20,7 @@ type (
 		Source    string                 `yaml:"source,omitempty" json:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-source-tag"`
 		Format    string                 `yaml:"format,omitempty" json:"format,omitempty" jsonschema:"enum=starlark,enum=golang,enum=go,default=go,minLength=1,description=language used within the template file \nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-format-tag"`
 		Type      string                 `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"minLength=1,example=github,description=Type of template provided from the remote system.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-type-tag"`
-		Variables map[string]interface{} `yaml:"vars,omitempty"   json:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: TODO"`
+		Variables map[string]interface{} `yaml:"vars,omitempty"   json:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-variables-tag"`
 	}
 
 	// StepTemplate is the yaml representation of the

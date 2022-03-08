@@ -5,8 +5,6 @@
 package yaml
 
 import (
-	"strings"
-
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -149,11 +147,19 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		events := []string{}
 
 		for _, e := range rules.Event {
-			if strings.EqualFold(e, constants.EventPull) {
+			switch e {
+			// backwards compatibility - pull_request = pull_request:opened + pull_request:synchronized
+			case constants.EventPull:
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,
 					constants.EventPull+":"+constants.ActionSynchronized)
-			} else {
+			// convert all and * to cover all configured actions
+			case constants.EventPull + ":" + "all", constants.EventPull + ":" + "*":
+				events = append(events,
+					constants.EventPull+":"+constants.ActionOpened,
+					constants.EventPull+":"+constants.ActionSynchronized,
+					constants.EventPull+":"+constants.ActionEdited)
+			default:
 				events = append(events, e)
 			}
 		}

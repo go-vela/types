@@ -57,7 +57,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized", "pull_request:edited"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},

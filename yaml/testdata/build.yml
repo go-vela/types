@@ -34,7 +34,7 @@ steps:
     image: openjdk:latest
     pull: true
     ruleset:
-      event: [ push, pull_request ]
+      event: [ push, pull_request:all ]
     volumes: [ /foo:/bar:ro ]
     ulimits: [ foo=1024:2048 ]
 

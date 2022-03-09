@@ -77,8 +77,8 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 			t.Errorf("GetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
 		}
 
-		if test.hook.GetAddress() != test.want.GetAddress() {
-			t.Errorf("GetAddress is %v, want %v", test.hook.GetAddress(), test.want.GetAddress())
+		if test.hook.GetWebhookID() != test.want.GetWebhookID() {
+			t.Errorf("GetWebhookID is %v, want %v", test.hook.GetWebhookID(), test.want.GetWebhookID())
 		}
 	}
 }
@@ -116,7 +116,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		test.hook.SetError(test.want.GetError())
 		test.hook.SetStatus(test.want.GetStatus())
 		test.hook.SetLink(test.want.GetLink())
-		test.hook.SetAddress(test.want.GetAddress())
+		test.hook.SetWebhookID(test.want.GetWebhookID())
 
 		if test.hook.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.hook.GetID(), test.want.GetID())
@@ -166,8 +166,8 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 			t.Errorf("SetLink is %v, want %v", test.hook.GetLink(), test.want.GetLink())
 		}
 
-		if test.hook.GetAddress() != test.want.GetAddress() {
-			t.Errorf("SetAddress is %v, want %v", test.hook.GetAddress(), test.want.GetAddress())
+		if test.hook.GetWebhookID() != test.want.GetWebhookID() {
+			t.Errorf("SetWebhookID is %v, want %v", test.hook.GetWebhookID(), test.want.GetWebhookID())
 		}
 	}
 }
@@ -177,7 +177,6 @@ func TestLibrary_Hook_String(t *testing.T) {
 	h := testHook()
 
 	want := fmt.Sprintf(`{
-  Address: %d,
   Branch: %s,
   BuildID: %d,
   Created: %d,
@@ -190,8 +189,8 @@ func TestLibrary_Hook_String(t *testing.T) {
   RepoID: %d,
   SourceID: %s,
   Status: %s,
+  WebhookID: %d,
 }`,
-		h.GetAddress(),
 		h.GetBranch(),
 		h.GetBuildID(),
 		h.GetCreated(),
@@ -204,6 +203,7 @@ func TestLibrary_Hook_String(t *testing.T) {
 		h.GetRepoID(),
 		h.GetSourceID(),
 		h.GetStatus(),
+		h.GetWebhookID(),
 	)
 
 	// run test
@@ -231,7 +231,7 @@ func testHook() *Hook {
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
-	h.SetAddress(123456)
+	h.SetWebhookID(123456)
 
 	return h
 }

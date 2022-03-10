@@ -4,7 +4,7 @@
 
 package pipeline
 
-// Metadata is the yaml representation of the metadata block for a pipeline.
+// Metadata is the pipeline representation of the metadata block for a pipeline.
 //
 // swagger:model PipelineMetadata
 type Metadata struct {

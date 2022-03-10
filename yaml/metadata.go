@@ -12,9 +12,10 @@ type (
 	// Metadata is the yaml representation of
 	// the metadata block for a pipeline.
 	Metadata struct {
-		Template    bool     `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-tag"`
-		Clone       *bool    `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-clone-tag"`
-		Environment []string `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Controls which containers processes can have global env injected.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-environment-tag"`
+		Template     bool     `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-tag"`
+		RenderInline bool     `yaml:"render_inline,omitempty" json:"render_inline,omitempty" jsonschema:"description=Enables inline compiling for the pipeline templates.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-render-inline-tag"`
+		Clone        *bool    `yaml:"clone,omitempty" json:"clone,omitempty" jsonschema:"default=true,description=Enables injecting the default clone process.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-clone-tag"`
+		Environment  []string `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Controls which containers processes can have global env injected.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-environment-tag"`
 	}
 )
 

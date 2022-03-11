@@ -441,6 +441,54 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 				},
 			},
 		},
+		{
+			file: "testdata/build_empty_env.yml",
+			want: &Build{
+				Version: "1",
+				Metadata: Metadata{
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{},
+				},
+				Environment: raw.StringSliceMap{
+					"HELLO": "Hello, Global Message",
+				},
+				Worker: Worker{
+					Flavor:   "16cpu8gb",
+					Platform: "gcp"},
+				Steps: StepSlice{
+					{
+						Commands: raw.StringSlice{"./gradlew downloadDependencies"},
+						Environment: raw.StringSliceMap{
+							"GRADLE_OPTS":      "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Dorg.gradle.parallel=false",
+							"GRADLE_USER_HOME": ".gradle",
+						},
+						Image: "openjdk:latest",
+						Name:  "install",
+						Pull:  "always",
+						Ruleset: Ruleset{
+							If:       Rules{Event: []string{"push", "pull_request"}},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+						Ulimits: UlimitSlice{
+							{
+								Name: "foo",
+								Soft: 1024,
+								Hard: 2048,
+							},
+						},
+						Volumes: VolumeSlice{
+							{
+								Source:      "/foo",
+								Destination: "/bar",
+								AccessMode:  "ro",
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	// run tests

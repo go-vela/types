@@ -63,7 +63,6 @@ type Repo struct {
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
-	LastUpdate   sql.NullInt64  `sql:"last_update"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -194,11 +193,6 @@ func (r *Repo) Nullify() *Repo {
 		r.PreviousName.Valid = false
 	}
 
-	// check if the LastUpdate field should be false
-	if r.LastUpdate.Int64 == 0 {
-		r.LastUpdate.Valid = false
-	}
-
 	return r
 }
 
@@ -230,7 +224,6 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowComment(r.AllowComment.Bool)
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
-	repo.SetLastUpdate(r.LastUpdate.Int64)
 
 	return repo
 }
@@ -310,7 +303,6 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
-		LastUpdate:   sql.NullInt64{Int64: r.GetLastUpdate(), Valid: true},
 	}
 
 	return repo.Nullify()

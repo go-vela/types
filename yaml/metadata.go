@@ -47,32 +47,3 @@ func (m *Metadata) HasEnvironment(container string) bool {
 
 	return false
 }
-
-// UnmarshalYAML implements the Unmarshaler interface for the Metadata type.
-func (m *Metadata) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	// metadata we try unmarshalling to
-	metadata := new(struct {
-		Template     bool
-		RenderInline bool `yaml:"render_inline,omitempty" json:"render_inline,omitempty"`
-		Clone        *bool
-		Environment  []string
-	})
-
-	// attempt to unmarshal as a metadata type
-	err := unmarshal(metadata)
-	if err != nil {
-		return err
-	}
-
-	if len(metadata.Environment) == 0 {
-		metadata.Environment = []string{"steps", "services", "secrets"}
-	}
-
-	// overwrite existing metadata environment details
-	m.Template = metadata.Template
-	m.RenderInline = metadata.RenderInline
-	m.Clone = metadata.Clone
-	m.Environment = metadata.Environment
-
-	return nil
-}

@@ -61,3 +61,43 @@ func (b *Build) ToPipelineLibrary() *library.Pipeline {
 
 	return pipeline
 }
+
+// UnmarshalYAML implements the Unmarshaler interface for the Build type.
+func (b *Build) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// build we try unmarshalling to
+	build := new(struct {
+		Version     string
+		Metadata    Metadata
+		Environment raw.StringSliceMap
+		Worker      Worker
+		Secrets     SecretSlice
+		Services    ServiceSlice
+		Stages      StageSlice
+		Steps       StepSlice
+		Templates   TemplateSlice
+	})
+
+	// attempt to unmarshal as a build type
+	err := unmarshal(build)
+	if err != nil {
+		return err
+	}
+
+	// give the documented default value to metadata environment
+	if build.Metadata.Environment == nil {
+		build.Metadata.Environment = []string{"steps", "services", "secrets"}
+	}
+
+	// override the values
+	b.Version = build.Version
+	b.Metadata = build.Metadata
+	b.Environment = build.Environment
+	b.Worker = build.Worker
+	b.Secrets = build.Secrets
+	b.Services = build.Services
+	b.Stages = build.Stages
+	b.Steps = build.Steps
+	b.Templates = build.Templates
+
+	return nil
+}

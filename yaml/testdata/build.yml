@@ -1,9 +1,6 @@
 ---
 version: "1"
 
-metadata:
-  template: false
-
 environment:
   HELLO: "Hello, Global Message"
 

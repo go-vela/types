@@ -120,7 +120,6 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
 		Visibility:   sql.NullString{String: "", Valid: false},
 		PipelineType: sql.NullString{String: "", Valid: false},
-		LastUpdate:   sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -179,7 +178,6 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
-	want.SetLastUpdate(1563474076)
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -312,7 +310,6 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
-	r.SetLastUpdate(1563474076)
 
 	want := testRepo()
 
@@ -351,6 +348,5 @@ func testRepo() *Repo {
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},
-		LastUpdate:   sql.NullInt64{Int64: 1563474076, Valid: true},
 	}
 }

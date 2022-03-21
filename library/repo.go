@@ -35,7 +35,6 @@ type Repo struct {
 	AllowComment *bool   `json:"allow_comment,omitempty"`
 	PipelineType *string `json:"pipeline_type,omitempty"`
 	PreviousName *string `json:"previous_name,omitempty"`
-	LastUpdate   *int64  `json:"last_update,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -60,7 +59,6 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
 		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
 		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
-		"VELA_REPO_LAST_UPDATE":   ToString(r.GetLastUpdate()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
@@ -381,19 +379,6 @@ func (r *Repo) GetPreviousName() string {
 	return *r.PreviousName
 }
 
-// GetLastUpdate returns the LastUpdate field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetLastUpdate() int64 {
-	// return the zero value if Repo type or LastUpdate field is nil
-	if r == nil || r.LastUpdate == nil {
-		return 0
-	}
-
-	return *r.LastUpdate
-}
-
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -693,19 +678,6 @@ func (r *Repo) SetPreviousName(v string) {
 	r.PreviousName = &v
 }
 
-// SetLastUpdate sets the LastUpdate field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetLastUpdate(v int64) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.LastUpdate = &v
-}
-
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -721,7 +693,6 @@ func (r *Repo) String() string {
   Counter: %d,
   FullName: %s,
   ID: %d,
-  LastUpdate: %d,
   Link: %s,
   Name: %s,
   Org: %s,
@@ -745,7 +716,6 @@ func (r *Repo) String() string {
 		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
-		r.GetLastUpdate(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),

@@ -19,6 +19,7 @@ import (
 type Build struct {
 	ID            *int64              `json:"id,omitempty"`
 	RepoID        *int64              `json:"repo_id,omitempty"`
+	PipelineID    *int64              `json:"pipeline_id,omitempty"`
 	Number        *int                `json:"number,omitempty"`
 	Parent        *int                `json:"parent,omitempty"`
 	Event         *string             `json:"event,omitempty"`
@@ -220,6 +221,19 @@ func (b *Build) GetRepoID() int64 {
 	}
 
 	return *b.RepoID
+}
+
+// GetPipelineID returns the PipelineID field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetPipelineID() int64 {
+	// return zero value if Build type or PipelineID field is nil
+	if b == nil || b.PipelineID == nil {
+		return 0
+	}
+
+	return *b.PipelineID
 }
 
 // GetNumber returns the Number field.
@@ -599,6 +613,19 @@ func (b *Build) SetRepoID(v int64) {
 	b.RepoID = &v
 }
 
+// SetPipelineID sets the PipelineID field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetPipelineID(v int64) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.PipelineID = &v
+}
+
 // SetNumber sets the Number field.
 //
 // When the provided Build type is nil, it
@@ -975,6 +1002,7 @@ func (b *Build) String() string {
   Message: %s,
   Number: %d,
   Parent: %d,
+  PipelineID: %d,
   Ref: %s,
   RepoID: %d,
   Runtime: %s,
@@ -1005,6 +1033,7 @@ func (b *Build) String() string {
 		b.GetMessage(),
 		b.GetNumber(),
 		b.GetParent(),
+		b.GetPipelineID(),
 		b.GetRef(),
 		b.GetRepoID(),
 		b.GetRuntime(),

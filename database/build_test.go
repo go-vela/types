@@ -45,6 +45,7 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 	want := &Build{
 		ID:            sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:        sql.NullInt64{Int64: 0, Valid: false},
+		PipelineID:    sql.NullInt64{Int64: 0, Valid: false},
 		Number:        sql.NullInt32{Int32: 0, Valid: false},
 		Parent:        sql.NullInt32{Int32: 0, Valid: false},
 		Event:         sql.NullString{String: "", Valid: false},
@@ -109,6 +110,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 
 	want.SetID(1)
 	want.SetRepoID(1)
+	want.SetPipelineID(1)
 	want.SetNumber(1)
 	want.SetParent(1)
 	want.SetEvent("push")
@@ -196,6 +198,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 
 	b.SetID(1)
 	b.SetRepoID(1)
+	b.SetPipelineID(1)
 	b.SetNumber(1)
 	b.SetParent(1)
 	b.SetEvent("push")
@@ -253,6 +256,7 @@ func testBuild() *Build {
 	return &Build{
 		ID:            sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:        sql.NullInt64{Int64: 1, Valid: true},
+		PipelineID:    sql.NullInt64{Int64: 1, Valid: true},
 		Number:        sql.NullInt32{Int32: 1, Valid: true},
 		Parent:        sql.NullInt32{Int32: 1, Valid: true},
 		Event:         sql.NullString{String: "push", Valid: true},

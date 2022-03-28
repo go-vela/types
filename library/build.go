@@ -574,7 +574,7 @@ func (b *Build) GetRuntime() string {
 	return *b.Runtime
 }
 
-// GetDistribution returns the Runtime field.
+// GetDistribution returns the Distribution field.
 //
 // When the provided Build type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -964,7 +964,7 @@ func (b *Build) SetRuntime(v string) {
 	b.Runtime = &v
 }
 
-// SetDistribution sets the Runtime field.
+// SetDistribution sets the Distribution field.
 //
 // When the provided Build type is nil, it
 // will set nothing and immediately return.

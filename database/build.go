@@ -35,6 +35,7 @@ const (
 type Build struct {
 	ID            sql.NullInt64      `sql:"id"`
 	RepoID        sql.NullInt64      `sql:"repo_id"`
+	PipelineID    sql.NullInt64      `sql:"pipeline_id"`
 	Number        sql.NullInt32      `sql:"number"`
 	Parent        sql.NullInt32      `sql:"parent"`
 	Event         sql.NullString     `sql:"event"`
@@ -91,6 +92,8 @@ func (b *Build) Crop() *Build {
 // When a field within the Build type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
+//
+// nolint: gocyclo // ignore cyclomatic complexity due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil
@@ -104,6 +107,11 @@ func (b *Build) Nullify() *Build {
 	// check if the RepoID field should be false
 	if b.RepoID.Int64 == 0 {
 		b.RepoID.Valid = false
+	}
+
+	// check if the PipelineID field should be false
+	if b.PipelineID.Int64 == 0 {
+		b.PipelineID.Valid = false
 	}
 
 	// check if the Number field should be false
@@ -246,6 +254,7 @@ func (b *Build) ToLibrary() *library.Build {
 
 	build.SetID(b.ID.Int64)
 	build.SetRepoID(b.RepoID.Int64)
+	build.SetPipelineID(b.PipelineID.Int64)
 	build.SetNumber(int(b.Number.Int32))
 	build.SetParent(int(b.Parent.Int32))
 	build.SetEvent(b.Event.String)
@@ -323,6 +332,7 @@ func BuildFromLibrary(b *library.Build) *Build {
 	build := &Build{
 		ID:            sql.NullInt64{Int64: b.GetID(), Valid: true},
 		RepoID:        sql.NullInt64{Int64: b.GetRepoID(), Valid: true},
+		PipelineID:    sql.NullInt64{Int64: b.GetPipelineID(), Valid: true},
 		Number:        sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
 		Parent:        sql.NullInt32{Int32: int32(b.GetParent()), Valid: true},
 		Event:         sql.NullString{String: b.GetEvent(), Valid: true},

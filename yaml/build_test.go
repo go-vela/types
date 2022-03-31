@@ -10,8 +10,88 @@ import (
 	"testing"
 
 	"github.com/buildkite/yaml"
+	"github.com/go-vela/types/library"
 	"github.com/go-vela/types/raw"
 )
+
+func TestYaml_Build_ToLibrary(t *testing.T) {
+	build := new(library.Pipeline)
+	build.SetFlavor("16cpu8gb")
+	build.SetPlatform("gcp")
+	build.SetVersion("1")
+	build.SetExternalSecrets(true)
+	build.SetInternalSecrets(true)
+	build.SetServices(true)
+	build.SetStages(false)
+	build.SetSteps(true)
+	build.SetTemplates(true)
+
+	stages := new(library.Pipeline)
+	stages.SetFlavor("")
+	stages.SetPlatform("")
+	stages.SetVersion("1")
+	stages.SetExternalSecrets(false)
+	stages.SetInternalSecrets(false)
+	stages.SetServices(false)
+	stages.SetStages(true)
+	stages.SetSteps(false)
+	stages.SetTemplates(false)
+
+	steps := new(library.Pipeline)
+	steps.SetFlavor("")
+	steps.SetPlatform("")
+	steps.SetVersion("1")
+	steps.SetExternalSecrets(false)
+	steps.SetInternalSecrets(false)
+	steps.SetServices(false)
+	steps.SetStages(false)
+	steps.SetSteps(true)
+	steps.SetTemplates(false)
+
+	// setup tests
+	tests := []struct {
+		name string
+		file string
+		want *library.Pipeline
+	}{
+		{
+			name: "build",
+			file: "testdata/build.yml",
+			want: build,
+		},
+		{
+			name: "stages",
+			file: "testdata/build_anchor_stage.yml",
+			want: stages,
+		},
+		{
+			name: "steps",
+			file: "testdata/build_anchor_step.yml",
+			want: steps,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		b := new(Build)
+
+		data, err := ioutil.ReadFile(test.file)
+		if err != nil {
+			t.Errorf("unable to read file %s for %s: %v", test.file, test.name, err)
+		}
+
+		err = yaml.Unmarshal(data, b)
+		if err != nil {
+			t.Errorf("unable to unmarshal YAML for %s: %v", test.name, err)
+		}
+
+		got := b.ToPipelineLibrary()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToPipelineLibrary for %s is %v, want %v", test.name, got, test.want)
+		}
+	}
+}
 
 func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 	// setup tests
@@ -212,6 +292,25 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Key:    "org/team/docker/password",
 						Engine: "vault",
 						Type:   "shared",
+					},
+					{
+						Origin: Origin{
+							Image: "target/vela-vault:latest",
+							Parameters: map[string]interface{}{
+								"addr": "vault.example.com",
+							},
+							Pull: "always",
+							Secrets: StepSecretSlice{
+								{
+									Source: "docker_username",
+									Target: "docker_username",
+								},
+								{
+									Source: "docker_password",
+									Target: "docker_password",
+								},
+							},
+						},
 					},
 				},
 				Templates: TemplateSlice{

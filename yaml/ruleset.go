@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -10,7 +10,6 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
-// nolint:lll // jsonschema will cause long lines
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.

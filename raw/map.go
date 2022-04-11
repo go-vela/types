@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -20,6 +20,7 @@ func (s StringSliceMap) Value() (driver.Value, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return string(value), nil
 }
 

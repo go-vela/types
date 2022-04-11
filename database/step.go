@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -210,7 +210,6 @@ func (s *Step) Validate() error {
 	s.Error = sql.NullString{String: sanitize(s.Error.String), Valid: s.Error.Valid}
 	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: s.Host.Valid}
 	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: s.Runtime.Valid}
-	// nolint: lll // ignore long line length
 	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: s.Distribution.Valid}
 
 	return nil

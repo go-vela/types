@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -83,6 +83,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
+
 	return worker
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -19,6 +19,7 @@ import (
 type Build struct {
 	ID            *int64              `json:"id,omitempty"`
 	RepoID        *int64              `json:"repo_id,omitempty"`
+	PipelineID    *int64              `json:"pipeline_id,omitempty"`
 	Number        *int                `json:"number,omitempty"`
 	Parent        *int                `json:"parent,omitempty"`
 	Event         *string             `json:"event,omitempty"`
@@ -51,27 +52,36 @@ type Build struct {
 // Duration calculates and returns the total amount of
 // time the build ran for in a human-readable format.
 func (b *Build) Duration() string {
-	// check if the build doesn't have a started or finished timestamp
-	if b.GetStarted() == 0 || b.GetFinished() == 0 {
-		// return zero value for time.Duration (0s)
-		return new(time.Duration).String()
+	// check if the build doesn't have a started timestamp
+	if b.GetStarted() == 0 {
+		// nolint: goconst // ignore making a constant
+		return "..."
+	}
+
+	// capture started unix timestamp from the build
+	started := time.Unix(b.GetStarted(), 0)
+
+	// check if the build doesn't have a finished timestamp
+	if b.GetFinished() == 0 {
+		// return the duration in a human-readable form by
+		// subtracting the build started time from the
+		// current time rounded to the nearest second
+		return time.Since(started).Round(time.Second).String()
 	}
 
 	// capture finished unix timestamp from the build
 	finished := time.Unix(b.GetFinished(), 0)
-	// capture started unix timestamp from the build
-	started := time.Unix(b.GetStarted(), 0)
+
 	// calculate the duration by subtracting the build
 	// started time from the build finished time
 	duration := finished.Sub(started)
 
-	// return duration in a human-readable form
+	// return the duration in a human-readable form
 	return duration.String()
 }
 
 // Environment returns a list of environment variables
 // provided from the fields of the Build type.
-// nolint:funlen // function length inflated due to number of env vars
 func (b *Build) Environment(workspace, channel string) map[string]string {
 	envs := map[string]string{
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
@@ -211,6 +221,19 @@ func (b *Build) GetRepoID() int64 {
 	}
 
 	return *b.RepoID
+}
+
+// GetPipelineID returns the PipelineID field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetPipelineID() int64 {
+	// return zero value if Build type or PipelineID field is nil
+	if b == nil || b.PipelineID == nil {
+		return 0
+	}
+
+	return *b.PipelineID
 }
 
 // GetNumber returns the Number field.
@@ -551,7 +574,7 @@ func (b *Build) GetRuntime() string {
 	return *b.Runtime
 }
 
-// GetDistribution returns the Runtime field.
+// GetDistribution returns the Distribution field.
 //
 // When the provided Build type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -588,6 +611,19 @@ func (b *Build) SetRepoID(v int64) {
 	}
 
 	b.RepoID = &v
+}
+
+// SetPipelineID sets the PipelineID field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetPipelineID(v int64) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.PipelineID = &v
 }
 
 // SetNumber sets the Number field.
@@ -928,7 +964,7 @@ func (b *Build) SetRuntime(v string) {
 	b.Runtime = &v
 }
 
-// SetDistribution sets the Runtime field.
+// SetDistribution sets the Distribution field.
 //
 // When the provided Build type is nil, it
 // will set nothing and immediately return.
@@ -966,6 +1002,7 @@ func (b *Build) String() string {
   Message: %s,
   Number: %d,
   Parent: %d,
+  PipelineID: %d,
   Ref: %s,
   RepoID: %d,
   Runtime: %s,
@@ -996,6 +1033,7 @@ func (b *Build) String() string {
 		b.GetMessage(),
 		b.GetNumber(),
 		b.GetParent(),
+		b.GetPipelineID(),
 		b.GetRef(),
 		b.GetRepoID(),
 		b.GetRuntime(),

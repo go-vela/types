@@ -1,25 +1,32 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package library
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Pipeline is the library representation of a Pipeline.
 //
 // swagger:model Pipeline
 type Pipeline struct {
-	ID        *int64  `json:"id,omitempty"`
-	RepoID    *int64  `json:"repo_id,omitempty"`
-	Flavor    *string `json:"flavor,omitempty"`
-	Platform  *string `json:"platform,omitempty"`
-	Ref       *string `json:"ref,omitempty"`
-	Version   *string `json:"version,omitempty"`
-	Services  *bool   `json:"services,omitempty"`
-	Stages    *bool   `json:"stages,omitempty"`
-	Steps     *bool   `json:"steps,omitempty"`
-	Templates *bool   `json:"templates,omitempty"`
+	ID              *int64  `json:"id,omitempty"`
+	RepoID          *int64  `json:"repo_id,omitempty"`
+	Number          *int    `json:"number,omitempty"`
+	Commit          *string `json:"commit,omitempty"`
+	Flavor          *string `json:"flavor,omitempty"`
+	Platform        *string `json:"platform,omitempty"`
+	Ref             *string `json:"ref,omitempty"`
+	Type            *string `json:"type,omitempty"`
+	Version         *string `json:"version,omitempty"`
+	ExternalSecrets *bool   `json:"external_secrets,omitempty"`
+	InternalSecrets *bool   `json:"internal_secrets,omitempty"`
+	Services        *bool   `json:"services,omitempty"`
+	Stages          *bool   `json:"stages,omitempty"`
+	Steps           *bool   `json:"steps,omitempty"`
+	Templates       *bool   `json:"templates,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }
@@ -48,6 +55,32 @@ func (p *Pipeline) GetRepoID() int64 {
 	}
 
 	return *p.RepoID
+}
+
+// GetNumber returns the Number field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetNumber() int {
+	// return zero value if Pipeline type or Number field is nil
+	if p == nil || p.Number == nil {
+		return 0
+	}
+
+	return *p.Number
+}
+
+// GetCommit returns the Commit field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetCommit() string {
+	// return zero value if Pipeline type or Commit field is nil
+	if p == nil || p.Commit == nil {
+		return ""
+	}
+
+	return *p.Commit
 }
 
 // GetFlavor returns the Flavor field.
@@ -89,6 +122,19 @@ func (p *Pipeline) GetRef() string {
 	return *p.Ref
 }
 
+// GetType returns the Type field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetType() string {
+	// return zero value if Pipeline type or Type field is nil
+	if p == nil || p.Type == nil {
+		return ""
+	}
+
+	return *p.Type
+}
+
 // GetVersion returns the Version field.
 //
 // When the provided Pipeline type is nil, or the field within
@@ -100,6 +146,32 @@ func (p *Pipeline) GetVersion() string {
 	}
 
 	return *p.Version
+}
+
+// GetExternalSecrets returns the ExternalSecrets field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetExternalSecrets() bool {
+	// return zero value if Pipeline type or ExternalSecrets field is nil
+	if p == nil || p.ExternalSecrets == nil {
+		return false
+	}
+
+	return *p.ExternalSecrets
+}
+
+// GetInternalSecrets returns the InternalSecrets field.
+//
+// When the provided Pipeline type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (p *Pipeline) GetInternalSecrets() bool {
+	// return zero value if Pipeline type or InternalSecrets field is nil
+	if p == nil || p.InternalSecrets == nil {
+		return false
+	}
+
+	return *p.InternalSecrets
 }
 
 // GetServices returns the Services field.
@@ -193,6 +265,32 @@ func (p *Pipeline) SetRepoID(v int64) {
 	p.RepoID = &v
 }
 
+// SetNumber sets the Number field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetNumber(v int) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Number = &v
+}
+
+// SetCommit sets the Commit field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetCommit(v string) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Commit = &v
+}
+
 // SetFlavor sets the Flavor field.
 //
 // When the provided Pipeline type is nil, it
@@ -232,6 +330,19 @@ func (p *Pipeline) SetRef(v string) {
 	p.Ref = &v
 }
 
+// SetType sets the Type field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetType(v string) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Type = &v
+}
+
 // SetVersion sets the Version field.
 //
 // When the provided Pipeline type is nil, it
@@ -243,6 +354,32 @@ func (p *Pipeline) SetVersion(v string) {
 	}
 
 	p.Version = &v
+}
+
+// SetExternalSecrets sets the ExternalSecrets field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetExternalSecrets(v bool) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.ExternalSecrets = &v
+}
+
+// SetInternalSecrets sets the InternalSecrets field.
+//
+// When the provided Pipeline type is nil, it
+// will set nothing and immediately return.
+func (p *Pipeline) SetInternalSecrets(v bool) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.InternalSecrets = &v
 }
 
 // SetServices sets the Services field.
@@ -313,28 +450,38 @@ func (p *Pipeline) SetData(v []byte) {
 // String implements the Stringer interface for the Pipeline type.
 func (p *Pipeline) String() string {
 	return fmt.Sprintf(`{
+  Commit: %s,
   Data: %s,
   Flavor: %s,
   ID: %d,
+  Number: %d,
   Platform: %s,
   Ref: %s,
   RepoID: %d,
+  ExternalSecrets: %t,
+  InternalSecrets: %t,
   Services: %t,
   Stages: %t,
   Steps: %t,
   Templates: %t,
+  Type: %s,
   Version: %s,
 }`,
+		p.GetCommit(),
 		p.GetData(),
 		p.GetFlavor(),
 		p.GetID(),
+		p.GetNumber(),
 		p.GetPlatform(),
 		p.GetRef(),
 		p.GetRepoID(),
+		p.GetExternalSecrets(),
+		p.GetInternalSecrets(),
 		p.GetServices(),
 		p.GetStages(),
 		p.GetSteps(),
 		p.GetTemplates(),
+		p.GetType(),
 		p.GetVersion(),
 	)
 }

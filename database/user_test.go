@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -16,8 +16,8 @@ import (
 func TestDatabase_User_Decrypt(t *testing.T) {
 	// setup types
 	key := "C639A572E14D5075C526FDDD43E4ECF6"
-
 	encrypted := testUser()
+
 	err := encrypted.Encrypt(key)
 	if err != nil {
 		t.Errorf("unable to encrypt user: %v", err)

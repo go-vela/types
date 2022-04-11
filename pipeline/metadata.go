@@ -1,10 +1,10 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
 package pipeline
 
-// Metadata is the yaml representation of the metadata block for a pipeline.
+// Metadata is the pipeline representation of the metadata block for a pipeline.
 //
 // swagger:model PipelineMetadata
 type Metadata struct {

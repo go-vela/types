@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -31,7 +31,6 @@ type (
 	// of a Container in a pipeline.
 	//
 	// swagger:model PipelineContainer
-	// nolint:maligned // suppressing struct optimization, prefer to keep current order
 	Container struct {
 		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
 		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
@@ -289,10 +288,12 @@ func (c *Container) Sanitize(driver string) *Container {
 
 		// Kubernetes requires DNS compatible names (lowercase, <= 63 chars)
 		container.ID = strings.ToLower(c.ID)
+
 		const dnsMaxLength = 63
 		if utf8.RuneCountInString(c.ID) > dnsMaxLength {
-			rs := []rune(c.ID)
 			const randomSuffixLength = 6
+
+			rs := []rune(c.ID)
 			container.ID = fmt.Sprintf(
 				"%s-%s",
 				string(rs[:dnsMaxLength-1-randomSuffixLength]),

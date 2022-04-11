@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -16,88 +16,64 @@ import (
 func TestDatabase_Pipeline_Compress(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		name     string
 		failure  bool
 		level    int
 		pipeline *Pipeline
-		want     []byte
 	}{
 		{
-			name:     "compression level -1",
 			failure:  false,
 			level:    constants.CompressionNegOne,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 0",
 			failure:  false,
 			level:    constants.CompressionZero,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 1",
 			failure:  false,
 			level:    constants.CompressionOne,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 2",
 			failure:  false,
 			level:    constants.CompressionTwo,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 3",
 			failure:  false,
 			level:    constants.CompressionThree,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 4",
 			failure:  false,
 			level:    constants.CompressionFour,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 5",
 			failure:  false,
 			level:    constants.CompressionFive,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 6",
 			failure:  false,
 			level:    constants.CompressionSix,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 7",
 			failure:  false,
 			level:    constants.CompressionSeven,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 8",
 			failure:  false,
 			level:    constants.CompressionEight,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 		{
-			name:     "compression level 9",
 			failure:  false,
 			level:    constants.CompressionNine,
-			pipeline: &Pipeline{Data: []byte("foo")},
-			want:     []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69},
+			pipeline: testPipeline(),
 		},
 	}
 
@@ -107,95 +83,39 @@ func TestDatabase_Pipeline_Compress(t *testing.T) {
 
 		if test.failure {
 			if err == nil {
-				t.Errorf("Compress for %s should have returned err", test.name)
+				t.Errorf("Compress should have returned err")
 			}
 
 			continue
 		}
 
 		if err != nil {
-			t.Errorf("Compress for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(test.pipeline.Data, test.want) {
-			t.Errorf("Compress for %s is %v, want %v", test.name, string(test.pipeline.Data), string(test.want))
+			t.Errorf("Compress returned err: %v", err)
 		}
 	}
 }
 
 func TestDatabase_Pipeline_Decompress(t *testing.T) {
+	// setup types
+	p := testPipeline()
+
+	err := p.Compress(constants.CompressionThree)
+	if err != nil {
+		t.Errorf("unable to compress log: %v", err)
+	}
+
 	// setup tests
 	tests := []struct {
-		name     string
 		failure  bool
 		pipeline *Pipeline
-		want     []byte
 	}{
 		{
-			name:     "compression level -1",
 			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
+			pipeline: p,
 		},
 		{
-			name:     "compression level 0",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 1",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 1, 0, 3, 0, 252, 255, 102, 111, 111, 1, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 2",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 3",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 4",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 5",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 94, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 6",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 156, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 7",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 8",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
-		},
-		{
-			name:     "compression level 9",
-			failure:  false,
-			pipeline: &Pipeline{Data: []byte{120, 218, 74, 203, 207, 7, 4, 0, 0, 255, 255, 2, 130, 1, 69}},
-			want:     []byte("foo"),
+			failure:  true,
+			pipeline: testPipeline(),
 		},
 	}
 
@@ -205,18 +125,14 @@ func TestDatabase_Pipeline_Decompress(t *testing.T) {
 
 		if test.failure {
 			if err == nil {
-				t.Errorf("Decompress for %s should have returned err", test.name)
+				t.Errorf("Decompress should have returned err")
 			}
 
 			continue
 		}
 
 		if err != nil {
-			t.Errorf("Decompress for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(test.pipeline.Data, test.want) {
-			t.Errorf("Decompress for %s is %v, want %v", test.name, string(test.pipeline.Data), string(test.want))
+			t.Errorf("Decompress returned err: %v", err)
 		}
 	}
 }
@@ -228,9 +144,11 @@ func TestDatabase_Pipeline_Nullify(t *testing.T) {
 	want := &Pipeline{
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
+		Number:   sql.NullInt32{Int32: 0, Valid: false},
 		Flavor:   sql.NullString{String: "", Valid: false},
 		Platform: sql.NullString{String: "", Valid: false},
 		Ref:      sql.NullString{String: "", Valid: false},
+		Type:     sql.NullString{String: "", Valid: false},
 		Version:  sql.NullString{String: "", Valid: false},
 	}
 
@@ -269,10 +187,15 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 
 	want.SetID(1)
 	want.SetRepoID(1)
+	want.SetNumber(1)
+	want.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	want.SetFlavor("large")
 	want.SetPlatform("docker")
 	want.SetRef("refs/heads/master")
+	want.SetType(constants.PipelineTypeYAML)
 	want.SetVersion("1")
+	want.SetExternalSecrets(false)
+	want.SetInternalSecrets(false)
 	want.SetServices(true)
 	want.SetStages(false)
 	want.SetSteps(true)
@@ -297,11 +220,23 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure:  false,
 			pipeline: testPipeline(),
 		},
-		{ // no ref set for pipeline
+		{ // no number set for pipeline
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
+				Version: sql.NullString{String: "1", Valid: true},
+			},
+		},
+		{ // no ref set for pipeline
+			failure: true,
+			pipeline: &Pipeline{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
 		},
@@ -309,6 +244,17 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure: true,
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
+				Version: sql.NullString{String: "1", Valid: true},
+			},
+		},
+		{ // no type set for pipeline
+			failure: true,
+			pipeline: &Pipeline{
+				ID:      sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
 				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
@@ -317,8 +263,10 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			failure: true,
 			pipeline: &Pipeline{
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt32{Int32: 1, Valid: true},
 				Ref:    sql.NullString{String: "refs/heads/master", Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Type:   sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 			},
 		},
 	}
@@ -347,10 +295,15 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 
 	p.SetID(1)
 	p.SetRepoID(1)
+	p.SetNumber(1)
+	p.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
 	p.SetRef("refs/heads/master")
+	p.SetType(constants.PipelineTypeYAML)
 	p.SetVersion("1")
+	p.SetExternalSecrets(false)
+	p.SetInternalSecrets(false)
 	p.SetServices(true)
 	p.SetStages(false)
 	p.SetSteps(true)
@@ -371,17 +324,22 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testPipeline() *Pipeline {
 	return &Pipeline{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		Flavor:    sql.NullString{String: "large", Valid: true},
-		Platform:  sql.NullString{String: "docker", Valid: true},
-		Ref:       sql.NullString{String: "refs/heads/master", Valid: true},
-		Version:   sql.NullString{String: "1", Valid: true},
-		Services:  sql.NullBool{Bool: true, Valid: true},
-		Stages:    sql.NullBool{Bool: false, Valid: true},
-		Steps:     sql.NullBool{Bool: true, Valid: true},
-		Templates: sql.NullBool{Bool: false, Valid: true},
-		Data:      testPipelineData(),
+		ID:              sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:          sql.NullInt64{Int64: 1, Valid: true},
+		Number:          sql.NullInt32{Int32: 1, Valid: true},
+		Commit:          sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
+		Flavor:          sql.NullString{String: "large", Valid: true},
+		Platform:        sql.NullString{String: "docker", Valid: true},
+		Ref:             sql.NullString{String: "refs/heads/master", Valid: true},
+		Type:            sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
+		Version:         sql.NullString{String: "1", Valid: true},
+		ExternalSecrets: sql.NullBool{Bool: false, Valid: true},
+		InternalSecrets: sql.NullBool{Bool: false, Valid: true},
+		Services:        sql.NullBool{Bool: true, Valid: true},
+		Stages:          sql.NullBool{Bool: false, Valid: true},
+		Steps:           sql.NullBool{Bool: true, Valid: true},
+		Templates:       sql.NullBool{Bool: false, Valid: true},
+		Data:            testPipelineData(),
 	}
 }
 

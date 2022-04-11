@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -20,4 +20,10 @@ const (
 
 	// SecretLogMask defines the secret mask to be used when distributing logs that contain secrets.
 	SecretLogMask = "***"
+
+	// SecretRestrictedCharacters defines the set of characters that a secret name cannot contain.
+	// This matches the following characters:
+	//   Equal Sign =
+	//   Null Character \x00
+	SecretRestrictedCharacters = "=\x00"
 )

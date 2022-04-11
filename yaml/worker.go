@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -8,7 +8,6 @@ import "github.com/go-vela/types/pipeline"
 
 // Worker is the yaml representation of a worker
 // from a worker block in a pipeline.
-// nolint:lll // jsonschema will cause long lines
 type Worker struct {
 	Flavor   string `yaml:"flavor,omitempty"   json:"flavor,omitempty" jsonschema:"minLength=1,description=Flavor identifier for worker.\nReference: https://go-vela.github.io/docs/reference/yaml/worker/#the-flavor-tag,example=large"`
 	Platform string `yaml:"platform,omitempty" json:"platform,omitempty" jsonschema:"minLength=1,description=Platform identifier for the worker.\nReference: https://go-vela.github.io/docs/reference/yaml/worker/#the-platform-tag,example=kubernetes"`

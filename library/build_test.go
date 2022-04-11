@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -8,11 +8,16 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/go-vela/types/raw"
 )
 
 func TestLibrary_Build_Duration(t *testing.T) {
+	// setup types
+	unfinished := testBuild()
+	unfinished.SetFinished(0)
+
 	// setup tests
 	tests := []struct {
 		build *Build
@@ -23,8 +28,12 @@ func TestLibrary_Build_Duration(t *testing.T) {
 			want:  "1s",
 		},
 		{
+			build: unfinished,
+			want:  time.Since(time.Unix(unfinished.GetStarted(), 0)).Round(time.Second).String(),
+		},
+		{
 			build: new(Build),
-			want:  "0s",
+			want:  "...",
 		},
 	}
 
@@ -440,6 +449,10 @@ func TestLibrary_Build_Getters(t *testing.T) {
 			t.Errorf("GetRepoID is %v, want %v", test.build.GetRepoID(), test.want.GetRepoID())
 		}
 
+		if test.build.GetPipelineID() != test.want.GetPipelineID() {
+			t.Errorf("GetPipelineID is %v, want %v", test.build.GetPipelineID(), test.want.GetPipelineID())
+		}
+
 		if test.build.GetNumber() != test.want.GetNumber() {
 			t.Errorf("GetNumber is %v, want %v", test.build.GetNumber(), test.want.GetNumber())
 		}
@@ -573,6 +586,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 	for _, test := range tests {
 		test.build.SetID(test.want.GetID())
 		test.build.SetRepoID(test.want.GetRepoID())
+		test.build.SetPipelineID(test.want.GetPipelineID())
 		test.build.SetNumber(test.want.GetNumber())
 		test.build.SetParent(test.want.GetParent())
 		test.build.SetEvent(test.want.GetEvent())
@@ -607,6 +621,10 @@ func TestLibrary_Build_Setters(t *testing.T) {
 
 		if test.build.GetRepoID() != test.want.GetRepoID() {
 			t.Errorf("SetRepoID is %v, want %v", test.build.GetRepoID(), test.want.GetRepoID())
+		}
+
+		if test.build.GetPipelineID() != test.want.GetPipelineID() {
+			t.Errorf("SetPipelineID is %v, want %v", test.build.GetPipelineID(), test.want.GetPipelineID())
 		}
 
 		if test.build.GetNumber() != test.want.GetNumber() {
@@ -745,6 +763,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Message: %s,
   Number: %d,
   Parent: %d,
+  PipelineID: %d,
   Ref: %s,
   RepoID: %d,
   Runtime: %s,
@@ -775,6 +794,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetMessage(),
 		b.GetNumber(),
 		b.GetParent(),
+		b.GetPipelineID(),
 		b.GetRef(),
 		b.GetRepoID(),
 		b.GetRuntime(),
@@ -800,6 +820,7 @@ func testBuild() *Build {
 
 	b.SetID(1)
 	b.SetRepoID(1)
+	b.SetPipelineID(1)
 	b.SetNumber(1)
 	b.SetParent(1)
 	b.SetEvent("push")

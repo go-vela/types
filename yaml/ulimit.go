@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -20,7 +20,6 @@ type (
 
 	// Ulimit is the yaml representation of a ulimit
 	// from the ulimits block for a step in a pipeline.
-	// nolint:lll // jsonschema will cause long lines
 	Ulimit struct {
 		Name string `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name of the user limit.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ulimits-tag"`
 		Soft int64  `yaml:"soft,omitempty" json:"soft,omitempty" jsonschema:"description=Set the soft limit.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ulimits-tag"`

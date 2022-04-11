@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -27,12 +27,15 @@ const (
 	maxTitleLength = 1000
 	// Maximum message field length.
 	maxMessageLength = 2000
+	// Maximum error field length.
+	maxErrorLength = 1000
 )
 
 // Build is the database representation of a build for a pipeline.
 type Build struct {
 	ID            sql.NullInt64      `sql:"id"`
 	RepoID        sql.NullInt64      `sql:"repo_id"`
+	PipelineID    sql.NullInt64      `sql:"pipeline_id"`
 	Number        sql.NullInt32      `sql:"number"`
 	Parent        sql.NullInt32      `sql:"parent"`
 	Event         sql.NullString     `sql:"event"`
@@ -75,6 +78,11 @@ func (b *Build) Crop() *Build {
 		b.Message = sql.NullString{String: b.Message.String[:maxMessageLength], Valid: true}
 	}
 
+	// trim the Error field to 1000 characters
+	if len(b.Error.String) > maxErrorLength {
+		b.Error = sql.NullString{String: b.Error.String[:maxErrorLength], Valid: true}
+	}
+
 	return b
 }
 
@@ -84,7 +92,8 @@ func (b *Build) Crop() *Build {
 // When a field within the Build type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-// nolint:funlen // long function due to number of fields
+//
+// nolint: gocyclo // ignore cyclomatic complexity due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil
@@ -98,6 +107,11 @@ func (b *Build) Nullify() *Build {
 	// check if the RepoID field should be false
 	if b.RepoID.Int64 == 0 {
 		b.RepoID.Valid = false
+	}
+
+	// check if the PipelineID field should be false
+	if b.PipelineID.Int64 == 0 {
+		b.PipelineID.Valid = false
 	}
 
 	// check if the Number field should be false
@@ -240,6 +254,7 @@ func (b *Build) ToLibrary() *library.Build {
 
 	build.SetID(b.ID.Int64)
 	build.SetRepoID(b.RepoID.Int64)
+	build.SetPipelineID(b.PipelineID.Int64)
 	build.SetNumber(int(b.Number.Int32))
 	build.SetParent(int(b.Parent.Int32))
 	build.SetEvent(b.Event.String)
@@ -306,7 +321,6 @@ func (b *Build) Validate() error {
 	b.HeadRef = sql.NullString{String: sanitize(b.HeadRef.String), Valid: b.HeadRef.Valid}
 	b.Host = sql.NullString{String: sanitize(b.Host.String), Valid: b.Host.Valid}
 	b.Runtime = sql.NullString{String: sanitize(b.Runtime.String), Valid: b.Runtime.Valid}
-	// nolint: lll // ignore long line length
 	b.Distribution = sql.NullString{String: sanitize(b.Distribution.String), Valid: b.Distribution.Valid}
 
 	return nil
@@ -318,6 +332,7 @@ func BuildFromLibrary(b *library.Build) *Build {
 	build := &Build{
 		ID:            sql.NullInt64{Int64: b.GetID(), Valid: true},
 		RepoID:        sql.NullInt64{Int64: b.GetRepoID(), Valid: true},
+		PipelineID:    sql.NullInt64{Int64: b.GetPipelineID(), Valid: true},
 		Number:        sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
 		Parent:        sql.NullInt32{Int32: int32(b.GetParent()), Valid: true},
 		Event:         sql.NullString{String: b.GetEvent(), Valid: true},

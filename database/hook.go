@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -23,22 +23,27 @@ var (
 	// ErrEmptyHookSourceID defines the error type when a
 	// Hook type has an empty SourceID field provided.
 	ErrEmptyHookSourceID = errors.New("empty webhook source_id provided")
+
+	// ErrEmptyHookWebhookID defines the error type when a
+	// Hook type has an empty WebhookID field provided.
+	ErrEmptyHookWebhookID = errors.New("empty webhook webhook_id provided")
 )
 
 // Hook is the database representation of a webhook for a repo.
 type Hook struct {
-	ID       sql.NullInt64  `sql:"id"`
-	RepoID   sql.NullInt64  `sql:"repo_id"`
-	BuildID  sql.NullInt64  `sql:"build_id"`
-	Number   sql.NullInt32  `sql:"number"`
-	SourceID sql.NullString `sql:"source_id"`
-	Created  sql.NullInt64  `sql:"created"`
-	Host     sql.NullString `sql:"host"`
-	Event    sql.NullString `sql:"event"`
-	Branch   sql.NullString `sql:"branch"`
-	Error    sql.NullString `sql:"error"`
-	Status   sql.NullString `sql:"status"`
-	Link     sql.NullString `sql:"link"`
+	ID        sql.NullInt64  `sql:"id"`
+	RepoID    sql.NullInt64  `sql:"repo_id"`
+	BuildID   sql.NullInt64  `sql:"build_id"`
+	Number    sql.NullInt32  `sql:"number"`
+	SourceID  sql.NullString `sql:"source_id"`
+	Created   sql.NullInt64  `sql:"created"`
+	Host      sql.NullString `sql:"host"`
+	Event     sql.NullString `sql:"event"`
+	Branch    sql.NullString `sql:"branch"`
+	Error     sql.NullString `sql:"error"`
+	Status    sql.NullString `sql:"status"`
+	Link      sql.NullString `sql:"link"`
+	WebhookID sql.NullInt64  `sql:"webhook_id"`
 }
 
 // Nullify ensures the valid flag for
@@ -112,6 +117,11 @@ func (h *Hook) Nullify() *Hook {
 		h.Link.Valid = false
 	}
 
+	// check if the WebhookID field should be false
+	if h.WebhookID.Int64 == 0 {
+		h.WebhookID.Valid = false
+	}
+
 	return h
 }
 
@@ -132,6 +142,7 @@ func (h *Hook) ToLibrary() *library.Hook {
 	hook.SetError(h.Error.String)
 	hook.SetStatus(h.Status.String)
 	hook.SetLink(h.Link.String)
+	hook.SetWebhookID(h.WebhookID.Int64)
 
 	return hook
 }
@@ -154,6 +165,11 @@ func (h *Hook) Validate() error {
 		return ErrEmptyHookSourceID
 	}
 
+	// verify the WebhookID field is populated
+	if h.WebhookID.Int64 <= 0 {
+		return ErrEmptyHookWebhookID
+	}
+
 	// ensure that all Hook string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
@@ -172,18 +188,19 @@ func (h *Hook) Validate() error {
 // to a library Hook type.
 func HookFromLibrary(h *library.Hook) *Hook {
 	hook := &Hook{
-		ID:       sql.NullInt64{Int64: h.GetID(), Valid: true},
-		RepoID:   sql.NullInt64{Int64: h.GetRepoID(), Valid: true},
-		BuildID:  sql.NullInt64{Int64: h.GetBuildID(), Valid: true},
-		Number:   sql.NullInt32{Int32: int32(h.GetNumber()), Valid: true},
-		SourceID: sql.NullString{String: h.GetSourceID(), Valid: true},
-		Created:  sql.NullInt64{Int64: h.GetCreated(), Valid: true},
-		Host:     sql.NullString{String: h.GetHost(), Valid: true},
-		Event:    sql.NullString{String: h.GetEvent(), Valid: true},
-		Branch:   sql.NullString{String: h.GetBranch(), Valid: true},
-		Error:    sql.NullString{String: h.GetError(), Valid: true},
-		Status:   sql.NullString{String: h.GetStatus(), Valid: true},
-		Link:     sql.NullString{String: h.GetLink(), Valid: true},
+		ID:        sql.NullInt64{Int64: h.GetID(), Valid: true},
+		RepoID:    sql.NullInt64{Int64: h.GetRepoID(), Valid: true},
+		BuildID:   sql.NullInt64{Int64: h.GetBuildID(), Valid: true},
+		Number:    sql.NullInt32{Int32: int32(h.GetNumber()), Valid: true},
+		SourceID:  sql.NullString{String: h.GetSourceID(), Valid: true},
+		Created:   sql.NullInt64{Int64: h.GetCreated(), Valid: true},
+		Host:      sql.NullString{String: h.GetHost(), Valid: true},
+		Event:     sql.NullString{String: h.GetEvent(), Valid: true},
+		Branch:    sql.NullString{String: h.GetBranch(), Valid: true},
+		Error:     sql.NullString{String: h.GetError(), Valid: true},
+		Status:    sql.NullString{String: h.GetStatus(), Valid: true},
+		Link:      sql.NullString{String: h.GetLink(), Valid: true},
+		WebhookID: sql.NullInt64{Int64: h.GetWebhookID(), Valid: true},
 	}
 
 	return hook.Nullify()

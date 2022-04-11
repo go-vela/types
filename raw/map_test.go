@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -178,6 +178,7 @@ func TestStringSliceMap_Scan(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
+
 	tests := []struct {
 		name    string
 		s       *StringSliceMap
@@ -186,6 +187,7 @@ func TestStringSliceMap_Scan(t *testing.T) {
 	}{
 		{"valid", &StringSliceMap{"foo": "test1"}, args{value: "{\"foo\":\"test1\"}"}, false},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.s.Scan(tt.args.value); (err != nil) != tt.wantErr {

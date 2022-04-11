@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -36,21 +37,30 @@ type Service struct {
 // Duration calculates and returns the total amount of
 // time the service ran for in a human-readable format.
 func (s *Service) Duration() string {
-	// check if the service doesn't have a started or finished timestamp
-	if s.GetStarted() == 0 || s.GetFinished() == 0 {
-		// return zero value for time.Duration (0s)
-		return new(time.Duration).String()
+	// check if the service doesn't have a started timestamp
+	if s.GetStarted() == 0 {
+		return "..."
+	}
+
+	// capture started unix timestamp from the service
+	started := time.Unix(s.GetStarted(), 0)
+
+	// check if the service doesn't have a finished timestamp
+	if s.GetFinished() == 0 {
+		// return the duration in a human-readable form by
+		// subtracting the service started time from the
+		// current time rounded to the nearest second
+		return time.Since(started).Round(time.Second).String()
 	}
 
 	// capture finished unix timestamp from the service
 	finished := time.Unix(s.GetFinished(), 0)
-	// capture started unix timestamp from the service
-	started := time.Unix(s.GetStarted(), 0)
+
 	// calculate the duration by subtracting the service
 	// started time from the service finished time
 	duration := finished.Sub(started)
 
-	// return duration in a human-readable form
+	// return the duration in a human-readable form
 	return duration.String()
 }
 
@@ -498,11 +508,36 @@ func (s *Service) String() string {
 	)
 }
 
-// ServiceFromContainer converts the pipeline
-// Container type to a library Service type.
-//
-// nolint: funlen // ignore function length due to comments and conditionals
-func ServiceFromContainer(ctn *pipeline.Container) *Service {
+// ServiceFromBuildContainer creates a new Service based on a Build and pipeline Container.
+func ServiceFromBuildContainer(build *Build, ctn *pipeline.Container) *Service {
+	// create new service type we want to return
+	s := new(Service)
+
+	// default status to Pending
+	s.SetStatus(constants.StatusPending)
+
+	// copy fields from build
+	if build != nil {
+		// set values from the build
+		s.SetHost(build.GetHost())
+		s.SetRuntime(build.GetRuntime())
+		s.SetDistribution(build.GetDistribution())
+	}
+
+	// copy fields from container
+	if ctn != nil && ctn.Name != "" {
+		// set values from the container
+		s.SetName(ctn.Name)
+		s.SetNumber(ctn.Number)
+		s.SetImage(ctn.Image)
+	}
+
+	return s
+}
+
+// ServiceFromContainerEnvironment converts the pipeline Container
+// to a library Service using the container's Environment.
+func ServiceFromContainerEnvironment(ctn *pipeline.Container) *Service {
 	// check if container or container environment are nil
 	if ctn == nil || ctn.Environment == nil {
 		return nil

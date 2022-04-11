@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -271,7 +271,6 @@ func (r *Repo) Validate() error {
 	r.Clone = sql.NullString{String: sanitize(r.Clone.String), Valid: r.Clone.Valid}
 	r.Branch = sql.NullString{String: sanitize(r.Branch.String), Valid: r.Branch.Valid}
 	r.Visibility = sql.NullString{String: sanitize(r.Visibility.String), Valid: r.Visibility.Valid}
-	// nolint:lll // ignore the line length
 	r.PipelineType = sql.NullString{String: sanitize(r.PipelineType.String), Valid: r.PipelineType.Valid}
 
 	return nil

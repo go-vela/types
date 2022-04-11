@@ -8,7 +8,6 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/lib/pq v1.10.5
 	github.com/microcosm-cc/bluemonday v1.0.18
-	github.com/sirupsen/logrus v1.8.1
 )
 
 require (

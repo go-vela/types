@@ -5,14 +5,10 @@
 package database
 
 import (
-	"bytes"
-	"compress/zlib"
 	"database/sql"
 	"errors"
-	"io/ioutil"
 
 	"github.com/go-vela/types/library"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -60,57 +56,27 @@ type Pipeline struct {
 // Compress will manipulate the existing data for the
 // pipeline by compressing that data. This produces
 // a significantly smaller amount of data that is
-// required to store in the system.
+// stored in the system.
 func (p *Pipeline) Compress(level int) error {
-	// create new buffer for storing compressed pipeline data
-	b := new(bytes.Buffer)
-
-	// create new writer for writing compressed pipeline data
-	w, err := zlib.NewWriterLevel(b, level)
+	// compress the database pipeline data
+	data, err := compress(level, p.Data)
 	if err != nil {
 		return err
-	}
-
-	// write compressed pipeline data to buffer
-	_, err = w.Write(p.Data)
-	if err != nil {
-		return err
-	}
-
-	// close the writer
-	//
-	// compressed bytes are not flushed until the
-	// writer is closed or explicitly flushed
-	err = w.Close()
-	if err != nil {
-		logrus.Errorf("unable to close compression buffer: %v", err)
 	}
 
 	// overwrite database pipeline data with compressed pipeline data
-	p.Data = b.Bytes()
+	p.Data = data
 
 	return nil
 }
 
 // Decompress will manipulate the existing data for the
-// pipeline by decompressing that data. This allows us
-// to have a significantly smaller amount of data that is
-// stored in the system.
+// log entry by decompressing that data. This allows us
+// to have a significantly smaller amount of data that
+// is stored in the system.
 func (p *Pipeline) Decompress() error {
-	// create new buffer from the compressed pipeline data
-	b := bytes.NewBuffer(p.Data)
-
-	// create new reader for reading the compressed pipeline data
-	r, err := zlib.NewReader(b)
-	if err != nil {
-		return err
-	}
-
-	// defer closing the reader
-	defer r.Close()
-
-	// capture decompressed pipeline data from the compressed pipeline data
-	data, err := ioutil.ReadAll(r)
+	// decompress the database pipeline data
+	data, err := decompress(p.Data)
 	if err != nil {
 		return err
 	}

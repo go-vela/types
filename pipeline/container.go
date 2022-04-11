@@ -144,37 +144,36 @@ func (c *Container) Execute(r *RuleData) bool {
 	if c == nil {
 		return false
 	}
+	// skip evaluating path in ruleset
+	//
+	// the compiler is the component responsible for
+	// choosing whether a container will run based
+	// off the files changed for a build
+	//
+	// the worker doesn't have any record of
+	// what files changed for a build so we
+	// should "skip" evaluating what the
+	// user provided for the path element
+	c.Ruleset.If.Path = []string{}
+	c.Ruleset.Unless.Path = []string{}
+
+	// skip evaluating comment in ruleset
+	//
+	// the compiler is the component responsible for
+	// choosing whether a container will run based
+	// off the PR comment matching the pipeline comment
+	//
+	// the worker doesn't have any record of
+	// the PR comment so we
+	// should "skip" evaluating what the
+	// user provided for the PR comment
+	c.Ruleset.If.Comment = []string{}
+	c.Ruleset.Unless.Comment = []string{}
 
 	// check if the build is in a running state
 	if strings.EqualFold(r.Status, constants.StatusRunning) {
 		// treat the ruleset status as success
 		r.Status = constants.StatusSuccess
-
-		// skip evaluating path in ruleset
-		//
-		// the compiler is the component responsible for
-		// choosing whether a container will run based
-		// off the files changed for a build
-		//
-		// the worker doesn't have any record of
-		// what files changed for a build so we
-		// should "skip" evaluating what the
-		// user provided for the path element
-		c.Ruleset.If.Path = []string{}
-		c.Ruleset.Unless.Path = []string{}
-
-		// skip evaluating comment in ruleset
-		//
-		// the compiler is the component responsible for
-		// choosing whether a container will run based
-		// off the PR comment matching the pipeline comment
-		//
-		// the worker doesn't have any record of
-		// the PR comment so we
-		// should "skip" evaluating what the
-		// user provided for the PR comment
-		c.Ruleset.If.Comment = []string{}
-		c.Ruleset.Unless.Comment = []string{}
 
 		// return if the container ruleset matches the conditions
 		return c.Ruleset.Match(r)

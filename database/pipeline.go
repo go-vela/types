@@ -71,7 +71,7 @@ func (p *Pipeline) Compress(level int) error {
 }
 
 // Decompress will manipulate the existing data for the
-// log entry by decompressing that data. This allows us
+// pipeline by decompressing that data. This allows us
 // to have a significantly smaller amount of data that
 // is stored in the system.
 func (p *Pipeline) Decompress() error {

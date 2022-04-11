@@ -14,7 +14,6 @@ import (
 	"github.com/go-vela/types/raw"
 )
 
-// nolint:lll // jsonschema will cause long lines
 type (
 	// SecretSlice is the yaml representation
 	// of the secrets block for a pipeline.
@@ -257,6 +256,7 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 
 		// overwrite existing StepSecretSlice
 		*s = StepSecretSlice(*secrets)
+
 		return nil
 	}
 

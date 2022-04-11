@@ -403,6 +403,7 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 		if err != nil {
 			t.Errorf("MarshalYAML returned err: %v", err)
 		}
+
 		err = yaml.Unmarshal(out, got2)
 		if err != nil {
 			t.Errorf("UnmarshalYAML returned err: %v", err)

@@ -12,18 +12,19 @@ import (
 //
 // swagger:model Webhook
 type Hook struct {
-	ID       *int64  `json:"id,omitempty"`
-	RepoID   *int64  `json:"repo_id,omitempty"`
-	BuildID  *int64  `json:"build_id,omitempty"`
-	Number   *int    `json:"number,omitempty"`
-	SourceID *string `json:"source_id,omitempty"`
-	Created  *int64  `json:"created,omitempty"`
-	Host     *string `json:"host,omitempty"`
-	Event    *string `json:"event,omitempty"`
-	Branch   *string `json:"branch,omitempty"`
-	Error    *string `json:"error,omitempty"`
-	Status   *string `json:"status,omitempty"`
-	Link     *string `json:"link,omitempty"`
+	ID        *int64  `json:"id,omitempty"`
+	RepoID    *int64  `json:"repo_id,omitempty"`
+	BuildID   *int64  `json:"build_id,omitempty"`
+	Number    *int    `json:"number,omitempty"`
+	SourceID  *string `json:"source_id,omitempty"`
+	Created   *int64  `json:"created,omitempty"`
+	Host      *string `json:"host,omitempty"`
+	Event     *string `json:"event,omitempty"`
+	Branch    *string `json:"branch,omitempty"`
+	Error     *string `json:"error,omitempty"`
+	Status    *string `json:"status,omitempty"`
+	Link      *string `json:"link,omitempty"`
+	WebhookID *int64  `json:"webhook_id,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -182,6 +183,19 @@ func (h *Hook) GetLink() string {
 	return *h.Link
 }
 
+// GetWebhookID returns the WebhookID field.
+//
+// When the provided Hook type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (h *Hook) GetWebhookID() int64 {
+	// return zero value if Hook type or WebhookID field is nil
+	if h == nil || h.WebhookID == nil {
+		return 0
+	}
+
+	return *h.WebhookID
+}
+
 // SetID sets the ID field.
 //
 // When the provided Hook type is nil, it
@@ -282,6 +296,7 @@ func (h *Hook) SetEvent(v string) {
 	if h == nil {
 		return
 	}
+
 	h.Event = &v
 }
 
@@ -337,6 +352,19 @@ func (h *Hook) SetLink(v string) {
 	h.Link = &v
 }
 
+// SetWebhookID sets the WebhookID field.
+//
+// When the provided Hook type is nil, it
+// will set nothing and immediately return.
+func (h *Hook) SetWebhookID(v int64) {
+	// return if Hook type is nil
+	if h == nil {
+		return
+	}
+
+	h.WebhookID = &v
+}
+
 // String implements the Stringer interface for the Hook type.
 func (h *Hook) String() string {
 	return fmt.Sprintf(`{
@@ -352,6 +380,7 @@ func (h *Hook) String() string {
   RepoID: %d,
   SourceID: %s,
   Status: %s,
+  WebhookID: %d,
 }`,
 		h.GetBranch(),
 		h.GetBuildID(),
@@ -365,5 +394,6 @@ func (h *Hook) String() string {
 		h.GetRepoID(),
 		h.GetSourceID(),
 		h.GetStatus(),
+		h.GetWebhookID(),
 	)
 }

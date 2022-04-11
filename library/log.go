@@ -46,6 +46,7 @@ func (l *Log) AppendData(data []byte) {
 // log is empty, we do nothing.
 func (l *Log) MaskData(secrets []string) {
 	data := l.GetData()
+
 	for _, secret := range secrets {
 		// escape regexp meta characters if they exist within value of secret
 		//

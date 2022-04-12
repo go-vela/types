@@ -153,12 +153,6 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,
 					constants.EventPull+":"+constants.ActionSynchronized)
-			// convert all and * to cover all configured actions
-			case constants.EventPull + ":" + "all", constants.EventPull + ":" + "*":
-				events = append(events,
-					constants.EventPull+":"+constants.ActionOpened,
-					constants.EventPull+":"+constants.ActionSynchronized,
-					constants.EventPull+":"+constants.ActionEdited)
 			default:
 				events = append(events, e)
 			}

@@ -24,7 +24,7 @@ type (
 		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-environment-tag"`
 		Name        string             `yaml:"name,omitempty"        json:"name,omitempty"        jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
 		Needs       raw.StringSlice    `yaml:"needs,omitempty,flow"  json:"needs,omitempty"       jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
-		Continue    bool               `yaml:"continue,omitempty"    json:"continue,omitempty"    jsonschema:"description=Stage will continue executing if other stage fails if set to false; default is true"`
+		Continue    bool               `yaml:"continue,omitempty"    json:"continue,omitempty"    jsonschema:"description=Stage will continue executing if other stage fails"`
 		Steps       StepSlice          `yaml:"steps,omitempty"       json:"steps,omitempty"       jsonschema:"required,description=Sequential execution instructions for the stage.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-steps-tag"`
 	}
 )
@@ -94,9 +94,6 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				return append(needs, "clone")
 			}(stage.Needs)
 		}
-
-		fmt.Println("THIS IS THE VALUE OF CONTINUE IN TYPES")
-		fmt.Println(stage.Continue)
 
 		// append stage to stage slice
 		*s = append(*s, stage)

@@ -2,6 +2,7 @@
 dependencies:
   environment:
       STAGE_ENV_VAR: stage
+  continue: true
   steps:
     - name: install
       commands:
@@ -17,6 +18,7 @@ test:
   environment:
       STAGE_ENV_VAR: stage
       SECOND_STAGE_ENV: stage2
+  continue: false
   steps:
     - name: test
       commands:

@@ -193,6 +193,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 					Environment: map[string]string{
 						"STAGE_ENV_VAR": "stage",
 					},
+					Continue: true,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew downloadDependencies"},
@@ -213,6 +214,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 						"STAGE_ENV_VAR":    "stage",
 						"SECOND_STAGE_ENV": "stage2",
 					},
+					Continue: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -232,6 +234,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 					Environment: map[string]string{
 						"STAGE_ENV_VAR": "stage",
 					},
+					Continue: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},
@@ -310,8 +313,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 			file:    "testdata/stage.yml",
 			want: &StageSlice{
 				{
-					Name:  "dependencies",
-					Needs: []string{"clone"},
+					Name:     "dependencies",
+					Needs:    []string{"clone"},
+					Continue: true,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew downloadDependencies"},
@@ -326,8 +330,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 					},
 				},
 				{
-					Name:  "test",
-					Needs: []string{"dependencies", "clone"},
+					Name:     "test",
+					Needs:    []string{"dependencies", "clone"},
+					Continue: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -342,8 +347,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 					},
 				},
 				{
-					Name:  "build",
-					Needs: []string{"dependencies", "clone"},
+					Name:     "build",
+					Needs:    []string{"dependencies", "clone"},
+					Continue: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},

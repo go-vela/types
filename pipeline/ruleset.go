@@ -30,14 +30,15 @@ type (
 	//
 	// swagger:model PipelineRules
 	Rules struct {
-		Branch  Ruletype `json:"branch,omitempty"  yaml:"branch,omitempty"`
-		Comment Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
-		Event   Ruletype `json:"event,omitempty"   yaml:"event,omitempty"`
-		Path    Ruletype `json:"path,omitempty"    yaml:"path,omitempty"`
-		Repo    Ruletype `json:"repo,omitempty"    yaml:"repo,omitempty"`
-		Status  Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
-		Tag     Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
-		Target  Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
+		Branch   Ruletype `json:"branch,omitempty"  yaml:"branch,omitempty"`
+		Comment  Ruletype `json:"comment,omitempty" yaml:"comment,omitempty"`
+		Event    Ruletype `json:"event,omitempty"   yaml:"event,omitempty"`
+		Path     Ruletype `json:"path,omitempty"    yaml:"path,omitempty"`
+		Repo     Ruletype `json:"repo,omitempty"    yaml:"repo,omitempty"`
+		Status   Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
+		Tag      Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target   Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
+		Parallel bool     `json:"parallel,omitempty" yaml:"parallel,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -49,14 +50,15 @@ type (
 	// RuleData is the data to check our ruleset
 	// against for a step in a pipeline.
 	RuleData struct {
-		Branch  string   `json:"branch,omitempty"  yaml:"branch,omitempty"`
-		Comment string   `json:"comment,omitempty" yaml:"comment,omitempty"`
-		Event   string   `json:"event,omitempty"   yaml:"event,omitempty"`
-		Path    []string `json:"path,omitempty"    yaml:"path,omitempty"`
-		Repo    string   `json:"repo,omitempty"    yaml:"repo,omitempty"`
-		Status  string   `json:"status,omitempty"  yaml:"status,omitempty"`
-		Tag     string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
-		Target  string   `json:"target,omitempty"  yaml:"target,omitempty"`
+		Branch   string   `json:"branch,omitempty"  yaml:"branch,omitempty"`
+		Comment  string   `json:"comment,omitempty" yaml:"comment,omitempty"`
+		Event    string   `json:"event,omitempty"   yaml:"event,omitempty"`
+		Path     []string `json:"path,omitempty"    yaml:"path,omitempty"`
+		Repo     string   `json:"repo,omitempty"    yaml:"repo,omitempty"`
+		Status   string   `json:"status,omitempty"  yaml:"status,omitempty"`
+		Tag      string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
+		Target   string   `json:"target,omitempty"  yaml:"target,omitempty"`
+		Parallel bool     `json:"parallel,omitempty" yaml:"parallel,omitempty"`
 	}
 )
 

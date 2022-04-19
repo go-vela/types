@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	// ErrEmptyPipelineNumber defines the error type when a
-	// Pipeline type has an empty Number field provided.
-	ErrEmptyPipelineNumber = errors.New("empty pipeline number provided")
+	// ErrEmptyPipelineCommit defines the error type when a
+	// Pipeline type has an empty Commit field provided.
+	ErrEmptyPipelineCommit = errors.New("empty pipeline commit provided")
 
 	// ErrEmptyPipelineRef defines the error type when a
 	// Pipeline type has an empty Ref field provided.
@@ -37,7 +37,6 @@ var (
 type Pipeline struct {
 	ID              sql.NullInt64  `sql:"id"`
 	RepoID          sql.NullInt64  `sql:"repo_id"`
-	Number          sql.NullInt32  `sql:"number"`
 	Commit          sql.NullString `sql:"commit"`
 	Flavor          sql.NullString `sql:"flavor"`
 	Platform        sql.NullString `sql:"platform"`
@@ -108,11 +107,6 @@ func (p *Pipeline) Nullify() *Pipeline {
 		p.RepoID.Valid = false
 	}
 
-	// check if the Number field should be false
-	if p.Number.Int32 == 0 {
-		p.Number.Valid = false
-	}
-
 	// check if the Commit field should be false
 	if len(p.Commit.String) == 0 {
 		p.Commit.Valid = false
@@ -153,7 +147,6 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 
 	pipeline.SetID(p.ID.Int64)
 	pipeline.SetRepoID(p.RepoID.Int64)
-	pipeline.SetNumber(int(p.Number.Int32))
 	pipeline.SetCommit(p.Commit.String)
 	pipeline.SetFlavor(p.Flavor.String)
 	pipeline.SetPlatform(p.Platform.String)
@@ -174,9 +167,9 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 // Validate verifies the necessary fields for
 // the Pipeline type are populated correctly.
 func (p *Pipeline) Validate() error {
-	// verify the Number field is populated
-	if p.Number.Int32 <= 0 {
-		return ErrEmptyPipelineNumber
+	// verify the Commit field is populated
+	if len(p.Commit.String) == 0 {
+		return ErrEmptyPipelineCommit
 	}
 
 	// verify the Ref field is populated
@@ -218,7 +211,6 @@ func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 	pipeline := &Pipeline{
 		ID:              sql.NullInt64{Int64: p.GetID(), Valid: true},
 		RepoID:          sql.NullInt64{Int64: p.GetRepoID(), Valid: true},
-		Number:          sql.NullInt32{Int32: int32(p.GetNumber()), Valid: true},
 		Commit:          sql.NullString{String: p.GetCommit(), Valid: true},
 		Flavor:          sql.NullString{String: p.GetFlavor(), Valid: true},
 		Platform:        sql.NullString{String: p.GetPlatform(), Valid: true},

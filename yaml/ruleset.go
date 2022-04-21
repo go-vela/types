@@ -137,12 +137,28 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if err == nil {
 		r.Branch = rules.Branch
 		r.Comment = rules.Comment
-		r.Event = rules.Event
 		r.Path = rules.Path
 		r.Repo = rules.Repo
 		r.Status = rules.Status
 		r.Tag = rules.Tag
 		r.Target = rules.Target
+
+		// account for users who use non-scoped pull_request event
+		events := []string{}
+
+		for _, e := range rules.Event {
+			switch e {
+			// backwards compatibility - pull_request = pull_request:opened + pull_request:synchronized
+			case constants.EventPull:
+				events = append(events,
+					constants.EventPull+":"+constants.ActionOpened,
+					constants.EventPull+":"+constants.ActionSynchronized)
+			default:
+				events = append(events, e)
+			}
+		}
+
+		r.Event = events
 	}
 
 	return err

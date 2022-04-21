@@ -70,7 +70,7 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 	}
 
 	// check incoming events
-	switch from.Environment["BUILD_EVENT"] {
+	switch strings.Split(from.Environment["BUILD_EVENT"], ":")[0] {
 	case constants.EventPush:
 		eACL = checkEvent(events, constants.EventPush)
 	case constants.EventPull:
@@ -508,7 +508,7 @@ func (s *Secret) String() string {
 // a list to check the event is a member of the list.
 func checkEvent(events []string, event string) bool {
 	for _, e := range events {
-		if e == event {
+		if strings.Split(e, ":")[0] == event {
 			return true
 		}
 	}

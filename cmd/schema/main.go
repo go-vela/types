@@ -90,12 +90,19 @@ func main() {
 	rulesEnumMap := map[string][]string{
 		"branch":  {},
 		"comment": {},
-		"event":   {"push", "pull_request", "tag", "deployment", "comment"},
-		"path":    {},
-		"repo":    {},
-		"status":  {"failure", "success"},
-		"tag":     {},
-		"target":  {},
+		"event": {"comment",
+			"deployment",
+			"pull_request",
+			"pull_request:edited",
+			"pull_request:opened",
+			"pull_request:synchronized",
+			"push",
+			"tag"},
+		"path":   {},
+		"repo":   {},
+		"status": {"failure", "success"},
+		"tag":    {},
+		"target": {},
 	}
 
 	// iterate over the enum map to configure

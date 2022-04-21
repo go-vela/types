@@ -90,14 +90,16 @@ func main() {
 	rulesEnumMap := map[string][]string{
 		"branch":  {},
 		"comment": {},
-		"event": {"comment",
+		"event": {
+			"comment",
 			"deployment",
 			"pull_request",
 			"pull_request:edited",
 			"pull_request:opened",
 			"pull_request:synchronized",
 			"push",
-			"tag"},
+			"tag",
+		},
 		"path":   {},
 		"repo":   {},
 		"status": {"failure", "success"},

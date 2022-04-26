@@ -149,10 +149,15 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		for _, e := range rules.Event {
 			switch e {
 			// backwards compatibility - pull_request = pull_request:opened + pull_request:synchronized
+			// comment = comment:created + comment:edited
 			case constants.EventPull:
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,
 					constants.EventPull+":"+constants.ActionSynchronized)
+			case constants.EventComment:
+				events = append(events,
+					constants.EventComment+":"+constants.ActionCreated,
+					constants.EventComment+":"+constants.ActionEdited)
 			default:
 				events = append(events, e)
 			}

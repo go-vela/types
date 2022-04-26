@@ -51,10 +51,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	// setup types
 	_comment := testBuild()
 	_comment.SetEvent("comment")
+	_comment.SetEventAction("comment:created")
 	_comment.SetRef("refs/pulls/1/head")
 
 	_deploy := testBuild()
 	_deploy.SetEvent("deployment")
+	_deploy.SetEventAction("deployment")
 	_deploy.SetDeploy("production")
 	_deploy.SetDeployPayload(map[string]string{
 		"foo": "test1",
@@ -64,6 +66,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_deployTag := testBuild()
 	_deployTag.SetRef("refs/tags/v0.1.0")
 	_deployTag.SetEvent("deployment")
+	_deployTag.SetEventAction("deployment")
 	_deployTag.SetDeploy("production")
 	_deployTag.SetDeployPayload(map[string]string{
 		"foo": "test1",
@@ -72,10 +75,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 
 	_pull := testBuild()
 	_pull.SetEvent("pull_request")
+	_pull.SetEventAction("pull_request:opened")
 	_pull.SetRef("refs/pulls/1/head")
 
 	_tag := testBuild()
 	_tag.SetEvent("tag")
+	_tag.SetEventAction("tag")
 	_tag.SetRef("refs/tags/v0.1.0")
 
 	// setup tests
@@ -97,6 +102,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION": "linux",
 				"VELA_BUILD_ENQUEUED":     "1563474077",
 				"VELA_BUILD_EVENT":        "push",
+				"VELA_BUILD_EVENT_ACTION": "push",
 				"VELA_BUILD_HOST":         "example.company.com",
 				"VELA_BUILD_LINK":         "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":      "First commit...",
@@ -148,6 +154,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION":   "linux",
 				"VELA_BUILD_ENQUEUED":       "1563474077",
 				"VELA_BUILD_EVENT":          "comment",
+				"VELA_BUILD_EVENT_ACTION":   "comment:created",
 				"VELA_BUILD_HOST":           "example.company.com",
 				"VELA_BUILD_LINK":           "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":        "First commit...",
@@ -202,6 +209,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION":  "linux",
 				"VELA_BUILD_ENQUEUED":      "1563474077",
 				"VELA_BUILD_EVENT":         "deployment",
+				"VELA_BUILD_EVENT_ACTION":  "deployment",
 				"VELA_BUILD_HOST":          "example.company.com",
 				"VELA_BUILD_LINK":          "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":       "First commit...",
@@ -258,6 +266,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION":  "linux",
 				"VELA_BUILD_ENQUEUED":      "1563474077",
 				"VELA_BUILD_EVENT":         "deployment",
+				"VELA_BUILD_EVENT_ACTION":  "deployment",
 				"VELA_BUILD_HOST":          "example.company.com",
 				"VELA_BUILD_LINK":          "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":       "First commit...",
@@ -316,6 +325,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION":   "linux",
 				"VELA_BUILD_ENQUEUED":       "1563474077",
 				"VELA_BUILD_EVENT":          "pull_request",
+				"VELA_BUILD_EVENT_ACTION":   "pull_request:opened",
 				"VELA_BUILD_HOST":           "example.company.com",
 				"VELA_BUILD_LINK":           "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":        "First commit...",
@@ -372,6 +382,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_DISTRIBUTION": "linux",
 				"VELA_BUILD_ENQUEUED":     "1563474077",
 				"VELA_BUILD_EVENT":        "tag",
+				"VELA_BUILD_EVENT_ACTION": "tag",
 				"VELA_BUILD_HOST":         "example.company.com",
 				"VELA_BUILD_LINK":         "https://example.company.com/github/octocat/1",
 				"VELA_BUILD_MESSAGE":      "First commit...",
@@ -463,6 +474,10 @@ func TestLibrary_Build_Getters(t *testing.T) {
 
 		if test.build.GetEvent() != test.want.GetEvent() {
 			t.Errorf("GetEvent is %v, want %v", test.build.GetEvent(), test.want.GetEvent())
+		}
+
+		if test.build.GetEventAction() != test.want.GetEventAction() {
+			t.Errorf("GetEventAction is %v, want %v", test.build.GetEventAction(), test.want.GetEventAction())
 		}
 
 		if test.build.GetStatus() != test.want.GetStatus() {
@@ -590,6 +605,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetNumber(test.want.GetNumber())
 		test.build.SetParent(test.want.GetParent())
 		test.build.SetEvent(test.want.GetEvent())
+		test.build.SetEventAction(test.want.GetEventAction())
 		test.build.SetStatus(test.want.GetStatus())
 		test.build.SetError(test.want.GetError())
 		test.build.SetEnqueued(test.want.GetEnqueued())
@@ -637,6 +653,10 @@ func TestLibrary_Build_Setters(t *testing.T) {
 
 		if test.build.GetEvent() != test.want.GetEvent() {
 			t.Errorf("SetEvent is %v, want %v", test.build.GetEvent(), test.want.GetEvent())
+		}
+
+		if test.build.GetEventAction() != test.want.GetEventAction() {
+			t.Errorf("SetEventAction is %v, want %v", test.build.GetEventAction(), test.want.GetEventAction())
 		}
 
 		if test.build.GetStatus() != test.want.GetStatus() {
@@ -755,6 +775,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Enqueued: %d,
   Error: %s,
   Event: %s,
+  EventAction: %s,
   Finished: %d,
   HeadRef: %s,
   Host: %s,
@@ -786,6 +807,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetEnqueued(),
 		b.GetError(),
 		b.GetEvent(),
+		b.GetEventAction(),
 		b.GetFinished(),
 		b.GetHeadRef(),
 		b.GetHost(),
@@ -824,6 +846,7 @@ func testBuild() *Build {
 	b.SetNumber(1)
 	b.SetParent(1)
 	b.SetEvent("push")
+	b.SetEventAction("push")
 	b.SetStatus("running")
 	b.SetError("")
 	b.SetEnqueued(1563474077)

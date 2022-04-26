@@ -39,6 +39,7 @@ type Build struct {
 	Number        sql.NullInt32      `sql:"number"`
 	Parent        sql.NullInt32      `sql:"parent"`
 	Event         sql.NullString     `sql:"event"`
+	EventAction   sql.NullString     `sql:"event_action"`
 	Status        sql.NullString     `sql:"status"`
 	Error         sql.NullString     `sql:"error"`
 	Enqueued      sql.NullInt64      `sql:"enqueued"`
@@ -127,6 +128,11 @@ func (b *Build) Nullify() *Build {
 	// check if the Event field should be false
 	if len(b.Event.String) == 0 {
 		b.Event.Valid = false
+	}
+
+	// check if the EventAction field should be false
+	if len(b.EventAction.String) == 0 {
+		b.EventAction.Valid = false
 	}
 
 	// check if the Status field should be false
@@ -258,6 +264,7 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetNumber(int(b.Number.Int32))
 	build.SetParent(int(b.Parent.Int32))
 	build.SetEvent(b.Event.String)
+	build.SetEventAction(b.EventAction.String)
 	build.SetStatus(b.Status.String)
 	build.SetError(b.Error.String)
 	build.SetEnqueued(b.Enqueued.Int64)
@@ -303,6 +310,7 @@ func (b *Build) Validate() error {
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
 	b.Event = sql.NullString{String: sanitize(b.Event.String), Valid: b.Event.Valid}
+	b.EventAction = sql.NullString{String: sanitize(b.EventAction.String), Valid: b.EventAction.Valid}
 	b.Status = sql.NullString{String: sanitize(b.Status.String), Valid: b.Status.Valid}
 	b.Error = sql.NullString{String: sanitize(b.Error.String), Valid: b.Error.Valid}
 	b.Deploy = sql.NullString{String: sanitize(b.Deploy.String), Valid: b.Deploy.Valid}
@@ -336,6 +344,7 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Number:        sql.NullInt32{Int32: int32(b.GetNumber()), Valid: true},
 		Parent:        sql.NullInt32{Int32: int32(b.GetParent()), Valid: true},
 		Event:         sql.NullString{String: b.GetEvent(), Valid: true},
+		EventAction:   sql.NullString{String: b.GetEventAction(), Valid: true},
 		Status:        sql.NullString{String: b.GetStatus(), Valid: true},
 		Error:         sql.NullString{String: b.GetError(), Valid: true},
 		Enqueued:      sql.NullInt64{Int64: b.GetEnqueued(), Valid: true},

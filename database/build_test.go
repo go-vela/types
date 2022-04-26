@@ -49,6 +49,7 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 		Number:        sql.NullInt32{Int32: 0, Valid: false},
 		Parent:        sql.NullInt32{Int32: 0, Valid: false},
 		Event:         sql.NullString{String: "", Valid: false},
+		EventAction:   sql.NullString{String: "", Valid: false},
 		Status:        sql.NullString{String: "", Valid: false},
 		Error:         sql.NullString{String: "", Valid: false},
 		Enqueued:      sql.NullInt64{Int64: 0, Valid: false},
@@ -114,6 +115,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetNumber(1)
 	want.SetParent(1)
 	want.SetEvent("push")
+	want.SetEventAction("push")
 	want.SetStatus("running")
 	want.SetError("")
 	want.SetEnqueued(1563474077)
@@ -202,6 +204,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetNumber(1)
 	b.SetParent(1)
 	b.SetEvent("push")
+	b.SetEventAction("push")
 	b.SetStatus("running")
 	b.SetError("")
 	b.SetEnqueued(1563474077)
@@ -260,6 +263,7 @@ func testBuild() *Build {
 		Number:        sql.NullInt32{Int32: 1, Valid: true},
 		Parent:        sql.NullInt32{Int32: 1, Valid: true},
 		Event:         sql.NullString{String: "push", Valid: true},
+		EventAction:   sql.NullString{String: "push", Valid: true},
 		Status:        sql.NullString{String: "running", Valid: true},
 		Error:         sql.NullString{String: "", Valid: false},
 		Enqueued:      sql.NullInt64{Int64: 1563474077, Valid: true},

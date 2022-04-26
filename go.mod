@@ -11,12 +11,11 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 )
 
-require github.com/stretchr/testify v1.3.1-0.20190311161405-34c6fa2dc709 // indirect
-
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
+	github.com/stretchr/testify v1.3.1-0.20190311161405-34c6fa2dc709 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect

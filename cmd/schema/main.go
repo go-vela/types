@@ -92,6 +92,8 @@ func main() {
 		"comment": {},
 		"event": {
 			"comment",
+			"comment:created",
+			"comment:edited",
 			"deployment",
 			"pull_request",
 			"pull_request:edited",

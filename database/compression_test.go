@@ -101,23 +101,25 @@ func TestDatabase_compress(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got, err := compress(test.level, test.data)
+		t.Run(test.name, func(t *testing.T) {
+			got, err := compress(test.level, test.data)
 
-		if test.failure {
-			if err == nil {
-				t.Errorf("compress for %s should have returned err", test.name)
+			if test.failure {
+				if err == nil {
+					t.Errorf("compress for %s should have returned err", test.name)
+				}
+
+				return
 			}
 
-			continue
-		}
+			if err != nil {
+				t.Errorf("compress for %s returned err: %v", test.name, err)
+			}
 
-		if err != nil {
-			t.Errorf("compress for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("compress for %s is %v, want %v", test.name, string(got), string(test.want))
-		}
+			if !reflect.DeepEqual(got, test.want) {
+				t.Errorf("compress for %s is %v, want %v", test.name, string(got), string(test.want))
+			}
+		})
 	}
 }
 
@@ -199,22 +201,24 @@ func TestDatabase_decompress(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got, err := decompress(test.data)
+		t.Run(test.name, func(t *testing.T) {
+			got, err := decompress(test.data)
 
-		if test.failure {
-			if err == nil {
-				t.Errorf("decompress for %s should have returned err", test.name)
+			if test.failure {
+				if err == nil {
+					t.Errorf("decompress for %s should have returned err", test.name)
+				}
+
+				return
 			}
 
-			continue
-		}
+			if err != nil {
+				t.Errorf("decompressm for %s returned err: %v", test.name, err)
+			}
 
-		if err != nil {
-			t.Errorf("decompressm for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("decompress for %s is %v, want %v", test.name, string(got), string(test.want))
-		}
+			if !reflect.DeepEqual(got, test.want) {
+				t.Errorf("decompress for %s is %v, want %v", test.name, string(got), string(test.want))
+			}
+		})
 	}
 }

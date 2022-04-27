@@ -103,23 +103,25 @@ func TestDatabase_Log_Compress(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		err := test.log.Compress(test.level)
+		t.Run(test.name, func(t *testing.T) {
+			err := test.log.Compress(test.level)
 
-		if test.failure {
-			if err == nil {
-				t.Errorf("Compress for %s should have returned err", test.name)
+			if test.failure {
+				if err == nil {
+					t.Errorf("Compress for %s should have returned err", test.name)
+				}
+
+				return
 			}
 
-			continue
-		}
+			if err != nil {
+				t.Errorf("Compress for %s returned err: %v", test.name, err)
+			}
 
-		if err != nil {
-			t.Errorf("Compress for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(test.log.Data, test.want) {
-			t.Errorf("Compress for %s is %v, want %v", test.name, string(test.log.Data), string(test.want))
-		}
+			if !reflect.DeepEqual(test.log.Data, test.want) {
+				t.Errorf("Compress for %s is %v, want %v", test.name, string(test.log.Data), string(test.want))
+			}
+		})
 	}
 }
 
@@ -201,23 +203,25 @@ func TestDatabase_Log_Decompress(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		err := test.log.Decompress()
+		t.Run(test.name, func(t *testing.T) {
+			err := test.log.Decompress()
 
-		if test.failure {
-			if err == nil {
-				t.Errorf("Decompress for %s should have returned err", test.name)
+			if test.failure {
+				if err == nil {
+					t.Errorf("Decompress for %s should have returned err", test.name)
+				}
+
+				return
 			}
 
-			continue
-		}
+			if err != nil {
+				t.Errorf("Decompress for %s returned err: %v", test.name, err)
+			}
 
-		if err != nil {
-			t.Errorf("Decompress for %s returned err: %v", test.name, err)
-		}
-
-		if !reflect.DeepEqual(test.log.Data, test.want) {
-			t.Errorf("Decompress for %s is %v, want %v", test.name, string(test.log.Data), string(test.want))
-		}
+			if !reflect.DeepEqual(test.log.Data, test.want) {
+				t.Errorf("Decompress for %s is %v, want %v", test.name, string(test.log.Data), string(test.want))
+			}
+		})
 	}
 }
 

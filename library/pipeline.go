@@ -14,7 +14,6 @@ import (
 type Pipeline struct {
 	ID              *int64  `json:"id,omitempty"`
 	RepoID          *int64  `json:"repo_id,omitempty"`
-	Number          *int    `json:"number,omitempty"`
 	Commit          *string `json:"commit,omitempty"`
 	Flavor          *string `json:"flavor,omitempty"`
 	Platform        *string `json:"platform,omitempty"`
@@ -55,19 +54,6 @@ func (p *Pipeline) GetRepoID() int64 {
 	}
 
 	return *p.RepoID
-}
-
-// GetNumber returns the Number field.
-//
-// When the provided Pipeline type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (p *Pipeline) GetNumber() int {
-	// return zero value if Pipeline type or Number field is nil
-	if p == nil || p.Number == nil {
-		return 0
-	}
-
-	return *p.Number
 }
 
 // GetCommit returns the Commit field.
@@ -265,19 +251,6 @@ func (p *Pipeline) SetRepoID(v int64) {
 	p.RepoID = &v
 }
 
-// SetNumber sets the Number field.
-//
-// When the provided Pipeline type is nil, it
-// will set nothing and immediately return.
-func (p *Pipeline) SetNumber(v int) {
-	// return if Pipeline type is nil
-	if p == nil {
-		return
-	}
-
-	p.Number = &v
-}
-
 // SetCommit sets the Commit field.
 //
 // When the provided Pipeline type is nil, it
@@ -454,7 +427,6 @@ func (p *Pipeline) String() string {
   Data: %s,
   Flavor: %s,
   ID: %d,
-  Number: %d,
   Platform: %s,
   Ref: %s,
   RepoID: %d,
@@ -471,7 +443,6 @@ func (p *Pipeline) String() string {
 		p.GetData(),
 		p.GetFlavor(),
 		p.GetID(),
-		p.GetNumber(),
 		p.GetPlatform(),
 		p.GetRef(),
 		p.GetRepoID(),

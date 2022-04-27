@@ -23,6 +23,7 @@ type Build struct {
 	Number        *int                `json:"number,omitempty"`
 	Parent        *int                `json:"parent,omitempty"`
 	Event         *string             `json:"event,omitempty"`
+	EventAction   *string             `json:"event_action,omitempty"`
 	Status        *string             `json:"status,omitempty"`
 	Error         *string             `json:"error,omitempty"`
 	Enqueued      *int64              `json:"enqueued,omitempty"`
@@ -95,6 +96,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		"VELA_BUILD_DISTRIBUTION": ToString(b.GetDistribution()),
 		"VELA_BUILD_ENQUEUED":     ToString(b.GetEnqueued()),
 		"VELA_BUILD_EVENT":        ToString(b.GetEvent()),
+		"VELA_BUILD_EVENT_ACTION": ToString(b.GetEventAction()),
 		"VELA_BUILD_HOST":         ToString(b.GetHost()),
 		"VELA_BUILD_LINK":         ToString(b.GetLink()),
 		"VELA_BUILD_MESSAGE":      ToString(b.GetMessage()),
@@ -273,6 +275,19 @@ func (b *Build) GetEvent() string {
 	}
 
 	return *b.Event
+}
+
+// GetEventAction returns the EventAction field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetEventAction() string {
+	// return zero value if Build type or EventAction field is nil
+	if b == nil || b.EventAction == nil {
+		return ""
+	}
+
+	return *b.EventAction
 }
 
 // GetStatus returns the Status field.
@@ -665,6 +680,19 @@ func (b *Build) SetEvent(v string) {
 	b.Event = &v
 }
 
+// SetEventAction sets the EventAction field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetEventAction(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.EventAction = &v
+}
+
 // SetStatus sets the Status field.
 //
 // When the provided Build type is nil, it
@@ -994,6 +1022,7 @@ func (b *Build) String() string {
   Enqueued: %d,
   Error: %s,
   Event: %s,
+  EventAction: %s,
   Finished: %d,
   HeadRef: %s,
   Host: %s,
@@ -1025,6 +1054,7 @@ func (b *Build) String() string {
 		b.GetEnqueued(),
 		b.GetError(),
 		b.GetEvent(),
+		b.GetEventAction(),
 		b.GetFinished(),
 		b.GetHeadRef(),
 		b.GetHost(),

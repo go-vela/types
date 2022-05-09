@@ -15,6 +15,9 @@ const (
 	// ActionEdited defines the action for the editing of pull requests or issue comments.
 	ActionEdited = "edited"
 
+	// ActionRenamed defines the action for renaming a repository.
+	ActionRenamed = "renamed"
+
 	// ActionSynchronized defines the action for the synchronizing of pull requests.
 	ActionSynchronized = "synchronized"
 )

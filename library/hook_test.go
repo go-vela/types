@@ -61,6 +61,10 @@ func TestLibrary_Hook_Getters(t *testing.T) {
 			t.Errorf("GetEvent is %v, want %v", test.hook.GetEvent(), test.want.GetEvent())
 		}
 
+		if test.hook.GetEventAction() != test.want.GetEventAction() {
+			t.Errorf("GetEventAction is %v, want %v", test.hook.GetEventAction(), test.want.GetEventAction())
+		}
+
 		if test.hook.GetBranch() != test.want.GetBranch() {
 			t.Errorf("GetBranch is %v, want %v", test.hook.GetBranch(), test.want.GetBranch())
 		}
@@ -112,6 +116,7 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		test.hook.SetCreated(test.want.GetCreated())
 		test.hook.SetHost(test.want.GetHost())
 		test.hook.SetEvent(test.want.GetEvent())
+		test.hook.SetEventAction(test.want.GetEventAction())
 		test.hook.SetBranch(test.want.GetBranch())
 		test.hook.SetError(test.want.GetError())
 		test.hook.SetStatus(test.want.GetStatus())
@@ -150,6 +155,10 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 			t.Errorf("SetEvent is %v, want %v", test.hook.GetEvent(), test.want.GetEvent())
 		}
 
+		if test.hook.GetEventAction() != test.want.GetEventAction() {
+			t.Errorf("SetEventAction is %v, want %v", test.hook.GetEventAction(), test.want.GetEventAction())
+		}
+
 		if test.hook.GetBranch() != test.want.GetBranch() {
 			t.Errorf("SetBranch is %v, want %v", test.hook.GetBranch(), test.want.GetBranch())
 		}
@@ -182,6 +191,7 @@ func TestLibrary_Hook_String(t *testing.T) {
   Created: %d,
   Error: %s,
   Event: %s,
+  EventAction: %s,
   Host: %s,
   ID: %d,
   Link: %s,
@@ -196,6 +206,7 @@ func TestLibrary_Hook_String(t *testing.T) {
 		h.GetCreated(),
 		h.GetError(),
 		h.GetEvent(),
+		h.GetEventAction(),
 		h.GetHost(),
 		h.GetID(),
 		h.GetLink(),
@@ -227,6 +238,7 @@ func testHook() *Hook {
 	h.SetCreated(time.Now().UTC().Unix())
 	h.SetHost("github.com")
 	h.SetEvent("push")
+	h.SetEventAction("")
 	h.SetBranch("master")
 	h.SetError("")
 	h.SetStatus("success")

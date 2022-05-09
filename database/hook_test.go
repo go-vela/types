@@ -227,7 +227,7 @@ func testHook() *Hook {
 		Created:     sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
 		Host:        sql.NullString{String: "github.com", Valid: true},
 		Event:       sql.NullString{String: "push", Valid: true},
-		EventAction: sql.NullString{String: "", Valid: true},
+		EventAction: sql.NullString{String: "", Valid: false},
 		Branch:      sql.NullString{String: "master", Valid: true},
 		Error:       sql.NullString{String: "", Valid: false},
 		Status:      sql.NullString{String: "success", Valid: true},

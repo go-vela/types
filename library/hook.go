@@ -12,19 +12,20 @@ import (
 //
 // swagger:model Webhook
 type Hook struct {
-	ID        *int64  `json:"id,omitempty"`
-	RepoID    *int64  `json:"repo_id,omitempty"`
-	BuildID   *int64  `json:"build_id,omitempty"`
-	Number    *int    `json:"number,omitempty"`
-	SourceID  *string `json:"source_id,omitempty"`
-	Created   *int64  `json:"created,omitempty"`
-	Host      *string `json:"host,omitempty"`
-	Event     *string `json:"event,omitempty"`
-	Branch    *string `json:"branch,omitempty"`
-	Error     *string `json:"error,omitempty"`
-	Status    *string `json:"status,omitempty"`
-	Link      *string `json:"link,omitempty"`
-	WebhookID *int64  `json:"webhook_id,omitempty"`
+	ID          *int64  `json:"id,omitempty"`
+	RepoID      *int64  `json:"repo_id,omitempty"`
+	BuildID     *int64  `json:"build_id,omitempty"`
+	Number      *int    `json:"number,omitempty"`
+	SourceID    *string `json:"source_id,omitempty"`
+	Created     *int64  `json:"created,omitempty"`
+	Host        *string `json:"host,omitempty"`
+	Event       *string `json:"event,omitempty"`
+	EventAction *string `json:"event_action,omitempty"`
+	Branch      *string `json:"branch,omitempty"`
+	Error       *string `json:"error,omitempty"`
+	Status      *string `json:"status,omitempty"`
+	Link        *string `json:"link,omitempty"`
+	WebhookID   *int64  `json:"webhook_id,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -129,6 +130,19 @@ func (h *Hook) GetEvent() string {
 	}
 
 	return *h.Event
+}
+
+// GetEventAction returns the EventAction field.
+//
+// When the provided Hook type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (h *Hook) GetEventAction() string {
+	// return zero value if Hook type or EventAction field is nil
+	if h == nil || h.EventAction == nil {
+		return ""
+	}
+
+	return *h.EventAction
 }
 
 // GetBranch returns the Branch field.
@@ -300,6 +314,19 @@ func (h *Hook) SetEvent(v string) {
 	h.Event = &v
 }
 
+// SetEventAction sets the EventAction field.
+//
+// When the provided Hook type is nil, it
+// will set nothing and immediately return.
+func (h *Hook) SetEventAction(v string) {
+	// return if Hook type is nil
+	if h == nil {
+		return
+	}
+
+	h.EventAction = &v
+}
+
 // SetBranch sets the Branch field.
 //
 // When the provided Hook type is nil, it
@@ -373,6 +400,7 @@ func (h *Hook) String() string {
   Created: %d,
   Error: %s,
   Event: %s,
+  EventAction: %s,
   Host: %s,
   ID: %d,
   Link: %s,
@@ -387,6 +415,7 @@ func (h *Hook) String() string {
 		h.GetCreated(),
 		h.GetError(),
 		h.GetEvent(),
+		h.GetEventAction(),
 		h.GetHost(),
 		h.GetID(),
 		h.GetLink(),

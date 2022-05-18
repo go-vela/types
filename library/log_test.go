@@ -52,6 +52,8 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 	s2Masked := "***"
 	s3 := "$ echo $SECRET1\n((%.YY245***pP.><@@}}\n$ echo $SECRET2\nlittlesecret\n"
 	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
+	s4 := "SOME_SECRET=((%.YY245***pP.><@@}}"
+	s4Masked := "SOME_SECRET=***"
 
 	tests := []struct {
 		want    []byte
@@ -71,6 +73,11 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 		{ // multiple secrets in log
 			want:    []byte(s3Masked),
 			log:     []byte(s3),
+			secrets: sVals,
+		},
+		{ // secret with leading =
+			want:    []byte(s4Masked),
+			log:     []byte(s4),
 			secrets: sVals,
 		},
 		{ // empty secrets slice

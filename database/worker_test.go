@@ -23,6 +23,8 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 		Active:        sql.NullBool{Bool: false, Valid: false},
 		LastCheckedIn: sql.NullInt64{Int64: 0, Valid: false},
 		BuildLimit:    sql.NullInt64{Int64: 0, Valid: false},
+		LastRepo:      sql.NullString{String: "", Valid: false},
+		LastBuildID:   sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -65,6 +67,8 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetActive(true)
 	want.SetLastCheckedIn(1563474077)
 	want.SetBuildLimit(2)
+	want.SetLastRepo("org/repo")
+	want.SetLastBuildID(1)
 
 	// run test
 	got := testWorker().ToLibrary()
@@ -133,6 +137,8 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetActive(true)
 	w.SetLastCheckedIn(1563474077)
 	w.SetBuildLimit(2)
+	w.SetLastRepo("org/repo")
+	w.SetLastBuildID(1)
 
 	want := testWorker()
 
@@ -155,5 +161,7 @@ func testWorker() *Worker {
 		Active:        sql.NullBool{Bool: true, Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 		BuildLimit:    sql.NullInt64{Int64: 2, Valid: true},
+		LastRepo:      sql.NullString{String: "org/repo", Valid: true},
+		LastBuildID:   sql.NullInt64{Int64: 1, Valid: true},
 	}
 }

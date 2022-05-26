@@ -19,6 +19,8 @@ type Worker struct {
 	Active        *bool     `json:"active,omitempty"`
 	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
 	BuildLimit    *int64    `json:"build_limit,omitempty"`
+	LastRepo      *string   `json:"last_repo,omitempty"`
+	LastBuildID   *int64    `json:"last_build_id,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -112,6 +114,32 @@ func (w *Worker) GetBuildLimit() int64 {
 	return *w.BuildLimit
 }
 
+// GetLastRepo returns the LastRepo field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetLastRepo() string {
+	// return zero value if Worker type or LastRepo field is nil
+	if w == nil || w.LastBuildID == nil {
+		return ""
+	}
+
+	return *w.LastRepo
+}
+
+// GetLastBuildID returns the LastBuildID field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetLastBuildID() int64 {
+	// return zero value if Worker type or BuildLimit field is nil
+	if w == nil || w.LastBuildID == nil {
+		return 0
+	}
+
+	return *w.LastBuildID
+}
+
 // SetID sets the ID field.
 //
 // When the provided Worker type is nil, it
@@ -190,7 +218,7 @@ func (w *Worker) SetLastCheckedIn(v int64) {
 	w.LastCheckedIn = &v
 }
 
-// SetBuildLimit sets the LastBuildLimit field.
+// SetBuildLimit sets the BuildLimit field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
@@ -203,6 +231,32 @@ func (w *Worker) SetBuildLimit(v int64) {
 	w.BuildLimit = &v
 }
 
+// SetLastRepo sets the LastRepo field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetLastRepo(v string) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.LastRepo = &v
+}
+
+// SetLastBuildID sets the LastBuildID field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetLastBuildID(v int64) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.LastBuildID = &v
+}
+
 // String implements the Stringer interface for the Worker type.
 func (w *Worker) String() string {
 	return fmt.Sprintf(`{
@@ -213,6 +267,8 @@ func (w *Worker) String() string {
   Active: %t,
   LastCheckedIn: %v,
   BuildLimit: %v,
+  LastRepo: %s,
+  LastBuildID: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
@@ -221,5 +277,7 @@ func (w *Worker) String() string {
 		w.GetActive(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),
+		w.GetLastRepo(),
+		w.GetLastBuildID(),
 	)
 }

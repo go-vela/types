@@ -31,6 +31,8 @@ type Worker struct {
 	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit    sql.NullInt64  `sql:"build_limit"`
+	LastRepo      sql.NullString `sql:"last_repo"`
+	LastBuildID   sql.NullInt64  `sql:"last_build_id"`
 }
 
 // Nullify ensures the valid flag for
@@ -64,8 +66,19 @@ func (w *Worker) Nullify() *Worker {
 		w.LastCheckedIn.Valid = false
 	}
 
+	// check if the BuildLimit field should be false
 	if w.BuildLimit.Int64 == 0 {
 		w.BuildLimit.Valid = false
+	}
+
+	// check if the LastRepo field should be false
+	if len(w.LastRepo.String) == 0 {
+		w.LastRepo.Valid = false
+	}
+
+	// check if the LastBuildID field should be false
+	if w.LastBuildID.Int64 == 0 {
+		w.LastBuildID.Valid = false
 	}
 
 	return w
@@ -83,6 +96,8 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
+	worker.SetLastRepo(w.LastRepo.String)
+	worker.SetLastBuildID(w.LastBuildID.Int64)
 
 	return worker
 }
@@ -126,6 +141,8 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
 		BuildLimit:    sql.NullInt64{Int64: w.GetBuildLimit(), Valid: true},
+		LastRepo:      sql.NullString{String: w.GetLastRepo(), Valid: true},
+		LastBuildID:   sql.NullInt64{Int64: w.GetLastBuildID(), Valid: true},
 	}
 
 	return worker.Nullify()

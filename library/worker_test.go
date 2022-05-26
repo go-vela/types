@@ -56,6 +56,14 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 		if test.worker.GetBuildLimit() != test.want.GetBuildLimit() {
 			t.Errorf("GetBuildLimit is %v, want %v", test.worker.GetBuildLimit(), test.want.GetBuildLimit())
 		}
+
+		if test.worker.GetLastRepo() != test.want.GetLastRepo() {
+			t.Errorf("GetLastRepo is %v, want %v", test.worker.GetLastRepo(), test.want.GetLastRepo())
+		}
+
+		if test.worker.GetLastBuildID() != test.want.GetLastBuildID() {
+			t.Errorf("GetLastBuildID is %v, want %v", test.worker.GetLastBuildID(), test.want.GetLastBuildID())
+		}
 	}
 }
 
@@ -114,6 +122,14 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		if test.worker.GetBuildLimit() != test.want.GetBuildLimit() {
 			t.Errorf("SetBuildLimit is %v, want %v", test.worker.GetBuildLimit(), test.want.GetBuildLimit())
 		}
+
+		if test.worker.GetLastRepo() != test.want.GetLastRepo() {
+			t.Errorf("GetLastRepo is %v, want %v", test.worker.GetLastRepo(), test.want.GetLastRepo())
+		}
+
+		if test.worker.GetLastBuildID() != test.want.GetLastBuildID() {
+			t.Errorf("GetLastBuildID is %v, want %v", test.worker.GetLastBuildID(), test.want.GetLastBuildID())
+		}
 	}
 }
 
@@ -129,6 +145,8 @@ func TestLibrary_Worker_String(t *testing.T) {
   Active: %t,
   LastCheckedIn: %v,
   BuildLimit: %v,
+  LastRepo: %s,
+  LastBuildID: %v,
 }`,
 		w.GetID(),
 		w.GetHostname(),
@@ -137,6 +155,8 @@ func TestLibrary_Worker_String(t *testing.T) {
 		w.GetActive(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),
+		w.GetLastRepo(),
+		w.GetLastBuildID(),
 	)
 
 	// run test
@@ -159,6 +179,8 @@ func testWorker() *Worker {
 	w.SetActive(true)
 	w.SetLastCheckedIn(time.Time{}.UTC().Unix())
 	w.SetBuildLimit(2)
+	w.SetLastRepo("org/repo")
+	w.SetLastBuildID(1)
 
 	return w
 }

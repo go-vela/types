@@ -19,5 +19,5 @@ const (
 	ActionRenamed = "renamed"
 
 	// ActionSynchronized defines the action for the synchronizing of pull requests.
-	ActionSynchronized = "synchronized"
+	ActionSynchronized = "synchronize"
 )

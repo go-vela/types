@@ -98,7 +98,7 @@ func main() {
 			"pull_request",
 			"pull_request:edited",
 			"pull_request:opened",
-			"pull_request:synchronized",
+			"pull_request:synchronize",
 			"push",
 			"tag",
 		},

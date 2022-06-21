@@ -29,3 +29,6 @@
 *.ipr
 *.iws
 *.xml
+
+# VSCode project folder
+.vscode/

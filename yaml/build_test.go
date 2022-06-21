@@ -137,7 +137,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized", "pull_request:edited"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:edited"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -166,7 +166,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -195,7 +195,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -225,7 +225,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "plugins/docker:18.09",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -347,7 +347,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Name:  "install",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -383,7 +383,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Image: "openjdk:latest",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -419,7 +419,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Image: "openjdk:latest",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -463,7 +463,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -492,7 +492,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -521,7 +521,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -569,7 +569,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronized"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},

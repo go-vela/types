@@ -18,19 +18,20 @@ func TestDatabase_Hook_Nullify(t *testing.T) {
 	var h *Hook
 
 	want := &Hook{
-		ID:        sql.NullInt64{Int64: 0, Valid: false},
-		RepoID:    sql.NullInt64{Int64: 0, Valid: false},
-		BuildID:   sql.NullInt64{Int64: 0, Valid: false},
-		Number:    sql.NullInt32{Int32: 0, Valid: false},
-		SourceID:  sql.NullString{String: "", Valid: false},
-		Created:   sql.NullInt64{Int64: 0, Valid: false},
-		Host:      sql.NullString{String: "", Valid: false},
-		Event:     sql.NullString{String: "", Valid: false},
-		Branch:    sql.NullString{String: "", Valid: false},
-		Error:     sql.NullString{String: "", Valid: false},
-		Status:    sql.NullString{String: "", Valid: false},
-		Link:      sql.NullString{String: "", Valid: false},
-		WebhookID: sql.NullInt64{Int64: 0, Valid: false},
+		ID:          sql.NullInt64{Int64: 0, Valid: false},
+		RepoID:      sql.NullInt64{Int64: 0, Valid: false},
+		BuildID:     sql.NullInt64{Int64: 0, Valid: false},
+		Number:      sql.NullInt32{Int32: 0, Valid: false},
+		SourceID:    sql.NullString{String: "", Valid: false},
+		Created:     sql.NullInt64{Int64: 0, Valid: false},
+		Host:        sql.NullString{String: "", Valid: false},
+		Event:       sql.NullString{String: "", Valid: false},
+		EventAction: sql.NullString{String: "", Valid: false},
+		Branch:      sql.NullString{String: "", Valid: false},
+		Error:       sql.NullString{String: "", Valid: false},
+		Status:      sql.NullString{String: "", Valid: false},
+		Link:        sql.NullString{String: "", Valid: false},
+		WebhookID:   sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -73,6 +74,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 	want.SetCreated(time.Now().UTC().Unix())
 	want.SetHost("github.com")
 	want.SetEvent("push")
+	want.SetEventAction("")
 	want.SetBranch("master")
 	want.SetError("")
 	want.SetStatus("success")
@@ -80,19 +82,20 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 	want.SetWebhookID(123456)
 
 	h := &Hook{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		Number:    sql.NullInt32{Int32: 1, Valid: true},
-		SourceID:  sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
-		Created:   sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
-		Host:      sql.NullString{String: "github.com", Valid: true},
-		Event:     sql.NullString{String: "push", Valid: true},
-		Branch:    sql.NullString{String: "master", Valid: true},
-		Error:     sql.NullString{String: "", Valid: true},
-		Status:    sql.NullString{String: "success", Valid: true},
-		Link:      sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
-		WebhookID: sql.NullInt64{Int64: 123456, Valid: true},
+		ID:          sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:      sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:     sql.NullInt64{Int64: 1, Valid: true},
+		Number:      sql.NullInt32{Int32: 1, Valid: true},
+		SourceID:    sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+		Created:     sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
+		Host:        sql.NullString{String: "github.com", Valid: true},
+		Event:       sql.NullString{String: "push", Valid: true},
+		EventAction: sql.NullString{String: "", Valid: true},
+		Branch:      sql.NullString{String: "master", Valid: true},
+		Error:       sql.NullString{String: "", Valid: true},
+		Status:      sql.NullString{String: "success", Valid: true},
+		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		WebhookID:   sql.NullInt64{Int64: 123456, Valid: true},
 	}
 
 	// run test
@@ -172,19 +175,20 @@ func TestDatabase_Hook_Validate(t *testing.T) {
 func TestDatabase_HookFromLibrary(t *testing.T) {
 	// setup types
 	want := &Hook{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		Number:    sql.NullInt32{Int32: 1, Valid: true},
-		SourceID:  sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
-		Created:   sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
-		Host:      sql.NullString{String: "github.com", Valid: true},
-		Event:     sql.NullString{String: "push", Valid: true},
-		Branch:    sql.NullString{String: "master", Valid: true},
-		Error:     sql.NullString{String: "", Valid: false},
-		Status:    sql.NullString{String: "success", Valid: true},
-		Link:      sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
-		WebhookID: sql.NullInt64{Int64: 123456, Valid: true},
+		ID:          sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:      sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:     sql.NullInt64{Int64: 1, Valid: true},
+		Number:      sql.NullInt32{Int32: 1, Valid: true},
+		SourceID:    sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+		Created:     sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
+		Host:        sql.NullString{String: "github.com", Valid: true},
+		Event:       sql.NullString{String: "pull_request", Valid: true},
+		EventAction: sql.NullString{String: "opened", Valid: true},
+		Branch:      sql.NullString{String: "master", Valid: true},
+		Error:       sql.NullString{String: "", Valid: false},
+		Status:      sql.NullString{String: "success", Valid: true},
+		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		WebhookID:   sql.NullInt64{Int64: 123456, Valid: true},
 	}
 
 	h := new(library.Hook)
@@ -195,7 +199,8 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 	h.SetSourceID("c8da1302-07d6-11ea-882f-4893bca275b8")
 	h.SetCreated(time.Now().UTC().Unix())
 	h.SetHost("github.com")
-	h.SetEvent("push")
+	h.SetEvent("pull_request")
+	h.SetEventAction("opened")
 	h.SetBranch("master")
 	h.SetError("")
 	h.SetStatus("success")
@@ -214,18 +219,19 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testHook() *Hook {
 	return &Hook{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		Number:    sql.NullInt32{Int32: 1, Valid: true},
-		SourceID:  sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
-		Created:   sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
-		Host:      sql.NullString{String: "github.com", Valid: true},
-		Event:     sql.NullString{String: "push", Valid: true},
-		Branch:    sql.NullString{String: "master", Valid: true},
-		Error:     sql.NullString{String: "", Valid: false},
-		Status:    sql.NullString{String: "success", Valid: true},
-		Link:      sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
-		WebhookID: sql.NullInt64{Int64: 123456, Valid: true},
+		ID:          sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:      sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:     sql.NullInt64{Int64: 1, Valid: true},
+		Number:      sql.NullInt32{Int32: 1, Valid: true},
+		SourceID:    sql.NullString{String: "c8da1302-07d6-11ea-882f-4893bca275b8", Valid: true},
+		Created:     sql.NullInt64{Int64: time.Now().UTC().Unix(), Valid: true},
+		Host:        sql.NullString{String: "github.com", Valid: true},
+		Event:       sql.NullString{String: "push", Valid: true},
+		EventAction: sql.NullString{String: "", Valid: false},
+		Branch:      sql.NullString{String: "master", Valid: true},
+		Error:       sql.NullString{String: "", Valid: false},
+		Status:      sql.NullString{String: "success", Valid: true},
+		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
+		WebhookID:   sql.NullInt64{Int64: 123456, Valid: true},
 	}
 }

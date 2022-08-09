@@ -14,7 +14,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.17
+      image: golang:1.19
     steps:
       - name: clone
         uses: actions/checkout@v3

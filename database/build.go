@@ -94,7 +94,7 @@ func (b *Build) Crop() *Build {
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
 //
-// nolint: gocyclo // ignore cyclomatic complexity due to number of fields
+//nolint: gocyclo // ignore cyclomatic complexity due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil

@@ -2,7 +2,7 @@
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
-// nolint: dupl // ignore false positive with build_queue.go
+//nolint: dupl // ignore false positive with build_queue.go
 package library
 
 import (

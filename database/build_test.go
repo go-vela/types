@@ -246,7 +246,7 @@ func randomString(n int) string {
 
 	b := make([]rune, n)
 	for i := range b {
-		// nolint:gosec // accepting weak RNG for test
+		//nolint:gosec // accepting weak RNG for test
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 

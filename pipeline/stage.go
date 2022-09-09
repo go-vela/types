@@ -26,7 +26,7 @@ type (
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
 		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
 		Needs       []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
-		Continue    bool              `json:"continue,omitempty"    yaml:"continue,omitempty"`
+		Independent bool              `json:"independent,omitempty"    yaml:"independent,omitempty"`
 		Steps       ContainerSlice    `json:"steps,omitempty"       yaml:"steps,omitempty"`
 	}
 )
@@ -79,8 +79,8 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 // based off of the provided runtime driver which is setup on every
 // worker. Currently, this function supports the following runtimes:
 //
-//   * Docker
-//   * Kubernetes
+//   - Docker
+//   - Kubernetes
 func (s *StageSlice) Sanitize(driver string) *StageSlice {
 	stages := new(StageSlice)
 

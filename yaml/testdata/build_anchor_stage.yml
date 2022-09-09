@@ -38,7 +38,7 @@ stages:
 
   build:
     needs: [ dependencies ]
-    continue: true
+    independent: true
     steps:
       - name: build
         commands:

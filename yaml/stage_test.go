@@ -193,7 +193,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 					Environment: map[string]string{
 						"STAGE_ENV_VAR": "stage",
 					},
-					Continue: true,
+					Independent: true,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew downloadDependencies"},
@@ -214,7 +214,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 						"STAGE_ENV_VAR":    "stage",
 						"SECOND_STAGE_ENV": "stage2",
 					},
-					Continue: false,
+					Independent: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -234,7 +234,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 					Environment: map[string]string{
 						"STAGE_ENV_VAR": "stage",
 					},
-					Continue: false,
+					Independent: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},
@@ -313,9 +313,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 			file:    "testdata/stage.yml",
 			want: &StageSlice{
 				{
-					Name:     "dependencies",
-					Needs:    []string{"clone"},
-					Continue: true,
+					Name:        "dependencies",
+					Needs:       []string{"clone"},
+					Independent: true,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew downloadDependencies"},
@@ -330,9 +330,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 					},
 				},
 				{
-					Name:     "test",
-					Needs:    []string{"dependencies", "clone"},
-					Continue: false,
+					Name:        "test",
+					Needs:       []string{"dependencies", "clone"},
+					Independent: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew check"},
@@ -347,9 +347,9 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 					},
 				},
 				{
-					Name:     "build",
-					Needs:    []string{"dependencies", "clone"},
-					Continue: false,
+					Name:        "build",
+					Needs:       []string{"dependencies", "clone"},
+					Independent: false,
 					Steps: StepSlice{
 						{
 							Commands: []string{"./gradlew build"},

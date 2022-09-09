@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -75,7 +75,7 @@ func TestYaml_Build_ToLibrary(t *testing.T) {
 	for _, test := range tests {
 		b := new(Build)
 
-		data, err := ioutil.ReadFile(test.file)
+		data, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file %s for %s: %v", test.file, test.name, err)
 		}
@@ -594,7 +594,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 	for _, test := range tests {
 		got := new(Build)
 
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("Reading file for UnmarshalYAML returned err: %v", err)
 		}

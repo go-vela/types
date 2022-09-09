@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -310,7 +310,7 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 		got := new(SecretSlice)
 
 		// run test
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file: %v", err)
 		}
@@ -424,7 +424,7 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 		got := new(StepSecretSlice)
 
 		// run test
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file: %v", err)
 		}

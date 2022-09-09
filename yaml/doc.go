@@ -6,5 +6,5 @@
 //
 // Usage:
 //
-// 	import "github.com/go-vela/types/yaml"
+//	import "github.com/go-vela/types/yaml"
 package yaml

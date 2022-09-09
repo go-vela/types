@@ -70,8 +70,8 @@ func (b *Build) Purge(r *RuleData) *Build {
 // of the provided runtime driver which is setup on every worker.
 // Currently, this function supports the following runtimes:
 //
-//   * Docker
-//   * Kubernetes
+//   - Docker
+//   - Kubernetes
 func (b *Build) Sanitize(driver string) *Build {
 	// return an empty pipeline if both stages and steps are provided
 	if len(b.Stages) > 0 && len(b.Steps) > 0 {

@@ -369,7 +369,7 @@ func (r *Repo) GetPipelineType() string {
 // GetPreviousName returns the PreviousName field.
 //
 // When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
+//  the type is nil, it returns the zero value for the field.
 func (r *Repo) GetPreviousName() string {
 	// return zero value if Repo type or PreviousName field is nil
 	if r == nil || r.PreviousName == nil {

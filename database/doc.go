@@ -6,5 +6,5 @@
 //
 // Usage:
 //
-// 	import "github.com/go-vela/types/database"
+//	import "github.com/go-vela/types/database"
 package database

@@ -78,8 +78,8 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 // based off of the provided runtime driver which is setup on every
 // worker. Currently, this function supports the following runtimes:
 //
-//   * Docker
-//   * Kubernetes
+//   - Docker
+//   - Kubernetes
 func (s *StageSlice) Sanitize(driver string) *StageSlice {
 	stages := new(StageSlice)
 

@@ -6,5 +6,5 @@
 //
 // Usage:
 //
-// 	import "github.com/go-vela/types/library"
+//	import "github.com/go-vela/types/library"
 package library

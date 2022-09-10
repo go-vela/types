@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -142,7 +142,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 	for _, test := range tests {
 		got := new(Ruleset)
 
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file: %v", err)
 		}
@@ -238,7 +238,7 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 		got := new(Rules)
 
 		if len(test.file) > 0 {
-			b, err = ioutil.ReadFile(test.file)
+			b, err = os.ReadFile(test.file)
 			if err != nil {
 				t.Errorf("unable to read file: %v", err)
 			}

@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -122,7 +122,7 @@ func TestYaml_UlimitSlice_UnmarshalYAML(t *testing.T) {
 	for _, test := range tests {
 		got := new(UlimitSlice)
 
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file: %v", err)
 		}

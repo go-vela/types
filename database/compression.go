@@ -7,7 +7,7 @@ package database
 import (
 	"bytes"
 	"compress/zlib"
-	"io/ioutil"
+	"io"
 )
 
 // compress is a helper function to compress values. First, an
@@ -64,7 +64,7 @@ func decompress(value []byte) ([]byte, error) {
 	defer r.Close()
 
 	// capture decompressed data from the compressed data in the buffer
-	data, err := ioutil.ReadAll(r)
+	data, err := io.ReadAll(r)
 	if err != nil {
 		return value, err
 	}

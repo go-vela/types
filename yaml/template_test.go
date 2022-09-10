@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -54,7 +54,7 @@ func TestBuild_TemplateSlice_UnmarshalYAML(t *testing.T) {
 	for _, test := range tests {
 		got := new(TemplateSlice)
 
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read file: %v", err)
 		}

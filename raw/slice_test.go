@@ -5,7 +5,7 @@
 package raw
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -51,7 +51,7 @@ func TestRaw_StringSlice_UnmarshalJSON(t *testing.T) {
 		)
 
 		if len(test.file) > 0 {
-			b, err = ioutil.ReadFile(test.file)
+			b, err = os.ReadFile(test.file)
 			if err != nil {
 				t.Errorf("unable to read %s file: %v", test.file, err)
 			}
@@ -105,7 +105,7 @@ func TestRaw_StringSlice_UnmarshalYAML(t *testing.T) {
 	for _, test := range tests {
 		got := new(StringSlice)
 
-		b, err := ioutil.ReadFile(test.file)
+		b, err := os.ReadFile(test.file)
 		if err != nil {
 			t.Errorf("unable to read %s file: %v", test.file, err)
 		}

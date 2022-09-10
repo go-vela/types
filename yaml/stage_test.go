@@ -5,7 +5,7 @@
 package yaml
 
 import (
-	"io/ioutil"
+	"os"
 	"reflect"
 	"testing"
 
@@ -264,7 +264,7 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 		got := new(StageSlice)
 
 		if len(test.file) > 0 {
-			b, err = ioutil.ReadFile(test.file)
+			b, err = os.ReadFile(test.file)
 			if err != nil {
 				t.Errorf("unable to read file: %v", err)
 			}
@@ -377,7 +377,7 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 		got2 := new(StageSlice)
 
 		if len(test.file) > 0 {
-			b, err = ioutil.ReadFile(test.file)
+			b, err = os.ReadFile(test.file)
 			if err != nil {
 				t.Errorf("unable to read file: %v", err)
 			}

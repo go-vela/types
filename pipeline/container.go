@@ -377,7 +377,7 @@ func dnsSafeRandomString(n int) string {
 
 	b := make([]rune, n)
 	for i := range b {
-		// nolint:gosec // this is not about security. Just a random string.
+		//nolint:gosec // this is not about security. Just a random string.
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 

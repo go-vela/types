@@ -122,7 +122,8 @@ func (r *Rules) Empty() bool {
 // ruletypes from the rules match the provided ruledata. For
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
-// nolint:gocyclo // accepting complexity in this case
+//
+//nolint:gocyclo // accepting complexity in this case
 func (r *Rules) Match(from *RuleData, matcher, op string) bool {
 	// set defaults
 	status := true

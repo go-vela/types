@@ -6,5 +6,5 @@
 //
 // Usage:
 //
-// 	import "github.com/go-vela/types/constants"
+//	import "github.com/go-vela/types/constants"
 package constants

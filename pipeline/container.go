@@ -85,8 +85,8 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 // based off of the provided runtime driver which is setup on every
 // worker. Currently, this function supports the following runtimes:
 //
-//   * Docker
-//   * Kubernetes
+//   - Docker
+//   - Kubernetes
 func (c *ContainerSlice) Sanitize(driver string) *ContainerSlice {
 	containers := new(ContainerSlice)
 
@@ -251,8 +251,8 @@ func (c *Container) MergeEnv(environment map[string]string) error {
 // based off of the provided runtime driver which is setup on every
 // worker. Currently, this function supports the following runtimes:
 //
-//   * Docker
-//   * Kubernetes
+//   - Docker
+//   - Kubernetes
 func (c *Container) Sanitize(driver string) *Container {
 	container := c
 
@@ -378,7 +378,7 @@ func dnsSafeRandomString(n int) string {
 
 	b := make([]rune, n)
 	for i := range b {
-		// nolint:gosec // this is not about security. Just a random string.
+		//nolint:gosec // this is not about security. Just a random string.
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 

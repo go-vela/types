@@ -6,5 +6,5 @@
 //
 // Usage:
 //
-// 	import "github.com/go-vela/types/raw"
+//	import "github.com/go-vela/types/raw"
 package raw

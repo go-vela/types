@@ -91,7 +91,7 @@ func TestPipeline_Build_Purge(t *testing.T) {
 func TestPipeline_Build_Sanitize(t *testing.T) {
 	// setup types
 	stages := testBuildStages()
-	stages.ID = "github-octocat._1"
+	stages.ID = "github-Octocat._1"
 	stages.Services[0].ID = "service_github-octocat._1_postgres"
 	stages.Stages[0].Steps[0].ID = "github-octocat._1_init_init"
 	stages.Stages[1].Steps[0].ID = "github-octocat._1_clone_clone"
@@ -206,7 +206,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 func testBuildStages() *Build {
 	return &Build{
 		Version:     "1",
-		ID:          "github octocat._1",
+		ID:          "github Octocat._1",
 		Environment: map[string]string{"HELLO": "Hello, Global Message"},
 		Services: ContainerSlice{
 			{

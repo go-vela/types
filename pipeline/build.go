@@ -5,7 +5,9 @@
 package pipeline
 
 import (
+	"fmt"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/raw"
@@ -120,6 +122,21 @@ func (b *Build) Sanitize(driver string) *Build {
 
 		if strings.Contains(b.ID, ".") {
 			b.ID = strings.ReplaceAll(b.ID, ".", "-")
+		}
+
+		// Kubernetes requires DNS compatible names (lowercase, <= 63 chars)
+		b.ID = strings.ToLower(b.ID)
+
+		const dnsMaxLength = 63
+		if utf8.RuneCountInString(b.ID) > dnsMaxLength {
+			const randomSuffixLength = 6
+
+			rs := []rune(b.ID)
+			b.ID = fmt.Sprintf(
+				"%s-%s",
+				string(rs[:dnsMaxLength-1-randomSuffixLength]),
+				dnsSafeRandomString(randomSuffixLength),
+			)
 		}
 	}
 

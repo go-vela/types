@@ -17,7 +17,7 @@ func TestVersion_Metadata_String(t *testing.T) {
 		BuildDate:       "1970-1-1T00:00:00Z",
 		Compiler:        "gc",
 		GitCommit:       "abcdef123456789",
-		GoVersion:       "1.17.0",
+		GoVersion:       "1.19.0",
 		OperatingSystem: "linux",
 	}
 

@@ -1,7 +1,7 @@
 ---
 if:
   branch: [ master ]
-  event: push
+  event: [ push, pull_request_fork ]
   tag: "^refs/tags/(\\d+\\.)+\\d+$"
 unless:
   event:

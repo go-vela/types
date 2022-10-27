@@ -12,71 +12,74 @@ import (
 //
 // swagger:model Repo
 type Repo struct {
-	ID           *int64  `json:"id,omitempty"`
-	UserID       *int64  `json:"user_id,omitempty"`
-	Hash         *string `json:"-"`
-	Org          *string `json:"org,omitempty"`
-	Name         *string `json:"name,omitempty"`
-	FullName     *string `json:"full_name,omitempty"`
-	Link         *string `json:"link,omitempty"`
-	Clone        *string `json:"clone,omitempty"`
-	Branch       *string `json:"branch,omitempty"`
-	BuildLimit   *int64  `json:"build_limit,omitempty"`
-	Timeout      *int64  `json:"timeout,omitempty"`
-	Counter      *int    `json:"counter,omitempty"`
-	Visibility   *string `json:"visibility,omitempty"`
-	Private      *bool   `json:"private,omitempty"`
-	Trusted      *bool   `json:"trusted,omitempty"`
-	Active       *bool   `json:"active,omitempty"`
-	AllowPull    *bool   `json:"allow_pull,omitempty"`
-	AllowPush    *bool   `json:"allow_push,omitempty"`
-	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
-	AllowTag     *bool   `json:"allow_tag,omitempty"`
-	AllowComment *bool   `json:"allow_comment,omitempty"`
-	PipelineType *string `json:"pipeline_type,omitempty"`
-	PreviousName *string `json:"previous_name,omitempty"`
+	ID            *int64  `json:"id,omitempty"`
+	UserID        *int64  `json:"user_id,omitempty"`
+	Hash          *string `json:"-"`
+	Org           *string `json:"org,omitempty"`
+	Name          *string `json:"name,omitempty"`
+	FullName      *string `json:"full_name,omitempty"`
+	Link          *string `json:"link,omitempty"`
+	Clone         *string `json:"clone,omitempty"`
+	Branch        *string `json:"branch,omitempty"`
+	BuildLimit    *int64  `json:"build_limit,omitempty"`
+	Timeout       *int64  `json:"timeout,omitempty"`
+	Counter       *int    `json:"counter,omitempty"`
+	Visibility    *string `json:"visibility,omitempty"`
+	Private       *bool   `json:"private,omitempty"`
+	Trusted       *bool   `json:"trusted,omitempty"`
+	Active        *bool   `json:"active,omitempty"`
+	AllowPull     *bool   `json:"allow_pull,omitempty"`
+	AllowPullFork *bool   `json:"allow_pull_fork,omitempty"`
+	AllowPush     *bool   `json:"allow_push,omitempty"`
+	AllowDeploy   *bool   `json:"allow_deploy,omitempty"`
+	AllowTag      *bool   `json:"allow_tag,omitempty"`
+	AllowComment  *bool   `json:"allow_comment,omitempty"`
+	PipelineType  *string `json:"pipeline_type,omitempty"`
+	PreviousName  *string `json:"previous_name,omitempty"`
 }
 
 // Environment returns a list of environment variables
 // provided from the fields of the Repo type.
 func (r *Repo) Environment() map[string]string {
 	return map[string]string{
-		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
-		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
-		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
-		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
-		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
-		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
-		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
-		"VELA_REPO_CLONE":         ToString(r.GetClone()),
-		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
-		"VELA_REPO_LINK":          ToString(r.GetLink()),
-		"VELA_REPO_NAME":          ToString(r.GetName()),
-		"VELA_REPO_ORG":           ToString(r.GetOrg()),
-		"VELA_REPO_PRIVATE":       ToString(r.GetPrivate()),
-		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
-		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
-		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
-		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
+		"VELA_REPO_ACTIVE":          ToString(r.GetActive()),
+		"VELA_REPO_ALLOW_COMMENT":   ToString(r.GetAllowComment()),
+		"VELA_REPO_ALLOW_DEPLOY":    ToString(r.GetAllowDeploy()),
+		"VELA_REPO_ALLOW_PULL":      ToString(r.GetAllowPull()),
+		"VELA_REPO_ALLOW_PULL_FORK": ToString(r.GetAllowPullFork()),
+		"VELA_REPO_ALLOW_PUSH":      ToString(r.GetAllowPush()),
+		"VELA_REPO_ALLOW_TAG":       ToString(r.GetAllowTag()),
+		"VELA_REPO_BRANCH":          ToString(r.GetBranch()),
+		"VELA_REPO_BUILD_LIMIT":     ToString(r.GetBuildLimit()),
+		"VELA_REPO_CLONE":           ToString(r.GetClone()),
+		"VELA_REPO_FULL_NAME":       ToString(r.GetFullName()),
+		"VELA_REPO_LINK":            ToString(r.GetLink()),
+		"VELA_REPO_NAME":            ToString(r.GetName()),
+		"VELA_REPO_ORG":             ToString(r.GetOrg()),
+		"VELA_REPO_PRIVATE":         ToString(r.GetPrivate()),
+		"VELA_REPO_TIMEOUT":         ToString(r.GetTimeout()),
+		"VELA_REPO_TRUSTED":         ToString(r.GetTrusted()),
+		"VELA_REPO_VISIBILITY":      ToString(r.GetVisibility()),
+		"VELA_REPO_PIPELINE_TYPE":   ToString(r.GetPipelineType()),
 
 		// deprecated environment variables
-		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
-		"REPOSITORY_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"REPOSITORY_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
-		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
-		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
-		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
-		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
-		"REPOSITORY_CLONE":         ToString(r.GetClone()),
-		"REPOSITORY_FULL_NAME":     ToString(r.GetFullName()),
-		"REPOSITORY_LINK":          ToString(r.GetLink()),
-		"REPOSITORY_NAME":          ToString(r.GetName()),
-		"REPOSITORY_ORG":           ToString(r.GetOrg()),
-		"REPOSITORY_PRIVATE":       ToString(r.GetPrivate()),
-		"REPOSITORY_TIMEOUT":       ToString(r.GetTimeout()),
-		"REPOSITORY_TRUSTED":       ToString(r.GetTrusted()),
-		"REPOSITORY_VISIBILITY":    ToString(r.GetVisibility()),
+		"REPOSITORY_ACTIVE":          ToString(r.GetActive()),
+		"REPOSITORY_ALLOW_COMMENT":   ToString(r.GetAllowComment()),
+		"REPOSITORY_ALLOW_DEPLOY":    ToString(r.GetAllowDeploy()),
+		"REPOSITORY_ALLOW_PULL":      ToString(r.GetAllowPull()),
+		"REPOSITORY_ALLOW_PULL_FORK": ToString(r.GetAllowPullFork()),
+		"REPOSITORY_ALLOW_PUSH":      ToString(r.GetAllowPush()),
+		"REPOSITORY_ALLOW_TAG":       ToString(r.GetAllowTag()),
+		"REPOSITORY_BRANCH":          ToString(r.GetBranch()),
+		"REPOSITORY_CLONE":           ToString(r.GetClone()),
+		"REPOSITORY_FULL_NAME":       ToString(r.GetFullName()),
+		"REPOSITORY_LINK":            ToString(r.GetLink()),
+		"REPOSITORY_NAME":            ToString(r.GetName()),
+		"REPOSITORY_ORG":             ToString(r.GetOrg()),
+		"REPOSITORY_PRIVATE":         ToString(r.GetPrivate()),
+		"REPOSITORY_TIMEOUT":         ToString(r.GetTimeout()),
+		"REPOSITORY_TRUSTED":         ToString(r.GetTrusted()),
+		"REPOSITORY_VISIBILITY":      ToString(r.GetVisibility()),
 	}
 }
 
@@ -299,6 +302,19 @@ func (r *Repo) GetAllowPull() bool {
 	}
 
 	return *r.AllowPull
+}
+
+// GetAllowPullFork returns the AllowPullFork field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowPullFork() bool {
+	// return zero value if Repo type or AllowPullFork field is nil
+	if r == nil || r.AllowPullFork == nil {
+		return false
+	}
+
+	return *r.AllowPullFork
 }
 
 // GetAllowPush returns the AllowPush field.
@@ -600,6 +616,19 @@ func (r *Repo) SetAllowPull(v bool) {
 	r.AllowPull = &v
 }
 
+// SetAllowPullFork sets the AllowPullFork field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowPullFork(v bool) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowPullFork = &v
+}
+
 // SetAllowPush sets the AllowPush field.
 //
 // When the provided Repo type is nil, it
@@ -685,6 +714,7 @@ func (r *Repo) String() string {
   AllowComment: %t,
   AllowDeploy: %t,
   AllowPull: %t,
+  AllowPullFork: %t,
   AllowPush: %t,
   AllowTag: %t,
   Branch: %s,
@@ -708,6 +738,7 @@ func (r *Repo) String() string {
 		r.GetAllowComment(),
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
+		r.GetAllowPullFork(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
 		r.GetBranch(),

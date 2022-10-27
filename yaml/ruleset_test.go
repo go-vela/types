@@ -112,7 +112,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 			want: &Ruleset{
 				If: Rules{
 					Branch: []string{"master"},
-					Event:  []string{"push"},
+					Event:  []string{"push", "pull_request_fork:opened", "pull_request_fork:synchronize"},
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
 				Unless: Rules{

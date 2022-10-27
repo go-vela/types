@@ -12,6 +12,9 @@ const (
 	// EventPull defines the event type for build and repo pull_request events.
 	EventPull = "pull_request"
 
+	// EventPullFork defines the event type for build and repo pull_request_fork events.
+	EventPullFork = "pull_request_fork"
+
 	// EventTag defines the event type for build and repo tag events.
 	EventTag = "tag"
 

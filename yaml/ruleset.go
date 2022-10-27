@@ -150,6 +150,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			switch e {
 			// backwards compatibility - pull_request = pull_request:opened + pull_request:synchronize
 			// comment = comment:created + comment:edited
+			// release = release:created + release:edited + release:deleted + release:published + release:unpublished + release:prereleased + release:released
 			case constants.EventPull:
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,
@@ -158,6 +159,15 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				events = append(events,
 					constants.EventComment+":"+constants.ActionCreated,
 					constants.EventComment+":"+constants.ActionEdited)
+			case constants.EventRelease:
+				events = append(events,
+					constants.EventRelease+":"+constants.ActionCreated,
+					constants.EventRelease+":"+constants.ActionEdited,
+					constants.EventRelease+":"+constants.ActionDeleted,
+					constants.EventRelease+":"+constants.ActionPublished,
+					constants.EventRelease+":"+constants.ActionUnpublished,
+					constants.EventRelease+":"+constants.ActionReleased,
+					constants.EventRelease+":"+constants.ActionPrereleased)
 			default:
 				events = append(events, e)
 			}

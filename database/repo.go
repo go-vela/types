@@ -60,6 +60,7 @@ type Repo struct {
 	AllowPush    sql.NullBool   `sql:"allow_push"`
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
+	AllowRelease sql.NullBool   `sql:"allow_release"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
@@ -221,6 +222,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowPush(r.AllowPush.Bool)
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
+	repo.SetAllowRelease(r.AllowRelease.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
@@ -300,6 +302,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowPush:    sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
 		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
+		AllowRelease: sql.NullBool{Bool: r.GetAllowRelease(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},

@@ -22,6 +22,7 @@ var (
 type Webhook struct {
 	Comment  string
 	PRNumber int
+	TagName  string
 	Hook     *library.Hook
 	Repo     *library.Repo
 	Build    *library.Build
@@ -31,12 +32,16 @@ type Webhook struct {
 // associated with the given hook to determine
 // whether the hook should be skipped.
 func (w *Webhook) ShouldSkip() (bool, string) {
-	// push or tag event
-	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) || strings.EqualFold(constants.EventTag, w.Build.GetEvent()) {
+	// push, tag, or release event
+	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) ||
+		strings.EqualFold(constants.EventTag, w.Build.GetEvent()) ||
+		strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) {
 		// the head commit will return null in the hook
 		// payload from the scm when the event is
-		// associated with a branch/tag delete
-		if len(w.Build.GetCommit()) == 0 {
+		// associated with a branch/tag delete or the event
+		// is of type release
+		if !strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) &&
+			len(w.Build.GetCommit()) == 0 {
 			return true, skipDeleteEventMsg
 		}
 

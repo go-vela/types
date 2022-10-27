@@ -15,6 +15,9 @@ const (
 	// EventTag defines the event type for build and repo tag events.
 	EventTag = "tag"
 
+	// EventRelease defines the event type for build and repo release events.
+	EventRelease = "release"
+
 	// EventDeploy defines the event type for build and repo deployment events.
 	EventDeploy = "deployment"
 

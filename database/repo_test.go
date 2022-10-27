@@ -175,6 +175,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowPush(true)
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
+	want.SetAllowRelease(false)
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
@@ -307,6 +308,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowPush(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
+	r.SetAllowRelease(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
@@ -345,6 +347,7 @@ func testRepo() *Repo {
 		AllowPush:    sql.NullBool{Bool: true, Valid: true},
 		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
+		AllowRelease: sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},

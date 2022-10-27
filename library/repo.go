@@ -32,6 +32,7 @@ type Repo struct {
 	AllowPush    *bool   `json:"allow_push,omitempty"`
 	AllowDeploy  *bool   `json:"allow_deploy,omitempty"`
 	AllowTag     *bool   `json:"allow_tag,omitempty"`
+	AllowRelease *bool   `json:"allow_release,omitempty"`
 	AllowComment *bool   `json:"allow_comment,omitempty"`
 	PipelineType *string `json:"pipeline_type,omitempty"`
 	PreviousName *string `json:"previous_name,omitempty"`
@@ -47,6 +48,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
 		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"VELA_REPO_ALLOW_RELEASE": ToString(r.GetAllowRelease()),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
 		"VELA_REPO_CLONE":         ToString(r.GetClone()),
@@ -67,6 +69,7 @@ func (r *Repo) Environment() map[string]string {
 		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
 		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"REPOSITORY_ALLOW_RELEASE": ToString(r.GetAllowRelease()),
 		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
 		"REPOSITORY_CLONE":         ToString(r.GetClone()),
 		"REPOSITORY_FULL_NAME":     ToString(r.GetFullName()),
@@ -340,12 +343,25 @@ func (r *Repo) GetAllowTag() bool {
 	return *r.AllowTag
 }
 
+// GetAllowRelease returns the AllowRelease field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowRelease() bool {
+	// return zero value if Repo type or AllowRelease field is nil
+	if r == nil || r.AllowRelease == nil {
+		return false
+	}
+
+	return *r.AllowRelease
+}
+
 // GetAllowComment returns the AllowComment field.
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (r *Repo) GetAllowComment() bool {
-	// return zero value if Repo type or AllowTag field is nil
+	// return zero value if Repo type or AllowComment field is nil
 	if r == nil || r.AllowComment == nil {
 		return false
 	}
@@ -639,6 +655,19 @@ func (r *Repo) SetAllowTag(v bool) {
 	r.AllowTag = &v
 }
 
+// SetAllowRelease sets the AllowRelease field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowRelease(v bool) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowRelease = &v
+}
+
 // SetAllowComment sets the AllowComment field.
 //
 // When the provided Repo type is nil, it
@@ -687,6 +716,7 @@ func (r *Repo) String() string {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  AllowRelease: %t,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -710,6 +740,7 @@ func (r *Repo) String() string {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetAllowRelease(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),

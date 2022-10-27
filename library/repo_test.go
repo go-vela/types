@@ -19,6 +19,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
+		"VELA_REPO_ALLOW_RELEASE":  "false",
 		"VELA_REPO_BRANCH":         "master",
 		"VELA_REPO_BUILD_LIMIT":    "10",
 		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
@@ -37,6 +38,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",
 		"REPOSITORY_ALLOW_TAG":     "false",
+		"REPOSITORY_ALLOW_RELEASE": "false",
 		"REPOSITORY_BRANCH":        "master",
 		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":     "github/octocat",
@@ -151,6 +153,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetAllowTag is %v, want %v", test.repo.GetAllowTag(), test.want.GetAllowTag())
 		}
 
+		if test.repo.GetAllowRelease() != test.want.GetAllowRelease() {
+			t.Errorf("GetAllowRelease is %v, want %v", test.repo.GetAllowRelease(), test.want.GetAllowRelease())
+		}
+
 		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
 			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
@@ -206,6 +212,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowPush(test.want.GetAllowPush())
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
+		test.repo.SetAllowRelease(test.want.GetAllowRelease())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
@@ -286,6 +293,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowTag is %v, want %v", test.repo.GetAllowTag(), test.want.GetAllowTag())
 		}
 
+		if test.repo.GetAllowRelease() != test.want.GetAllowRelease() {
+			t.Errorf("SetAllowRelease is %v, want %v", test.repo.GetAllowRelease(), test.want.GetAllowRelease())
+		}
+
 		if test.repo.GetAllowComment() != test.want.GetAllowComment() {
 			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
@@ -311,6 +322,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  AllowRelease: %t,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -334,6 +346,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetAllowRelease(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),
@@ -383,6 +396,7 @@ func testRepo() *Repo {
 	r.SetAllowPush(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
+	r.SetAllowRelease(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
 	r.SetPreviousName("")

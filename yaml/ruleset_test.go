@@ -140,7 +140,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 			file: "testdata/ruleset_release.yml",
 			want: &Ruleset{
 				If: Rules{
-					Event: []string{"release:created", "release:edited", "release:deleted", "release:published", "release:unpublished", "release:released", "release:prereleased"},
+					Event: []string{"release:released"},
 				},
 				Matcher:  "filepath",
 				Operator: "and",

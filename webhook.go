@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	skipDeleteEventMsg = "tag/branch delete event"
-	skipDirectiveMsg   = "skip ci directive found in commit title/message"
+	skipDeleteEventMsg              = "tag/branch delete event"
+	skipUnsupportedReleaseActionMsg = "unsupported release action"
+	skipDirectiveMsg                = "skip ci directive found in commit title/message"
 )
 
 // Webhook defines a struct that is used to return
@@ -38,11 +39,16 @@ func (w *Webhook) ShouldSkip() (bool, string) {
 		strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) {
 		// the head commit will return null in the hook
 		// payload from the scm when the event is
-		// associated with a branch/tag delete or the event
-		// is of type release
+		// associated with a branch/tag delete
 		if !strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) &&
 			len(w.Build.GetCommit()) == 0 {
 			return true, skipDeleteEventMsg
+		}
+
+		// only release events with the action of "released" should be processed
+		if strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) &&
+			!strings.EqualFold(constants.ActionReleased, w.Build.GetEventAction()) {
+			return true, skipUnsupportedReleaseActionMsg
 		}
 
 		// check for skip ci directive in message or title

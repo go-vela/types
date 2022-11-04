@@ -19,74 +19,104 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 		wantString string
 	}{
 		{
-			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventPush, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventPush, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventPush, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventPush, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventPush, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, false)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, "", false)},
 			true,
 			skipDeleteEventMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, "", true)},
 			false,
 			"",
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventTag, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventTag, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventTag, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventTag, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag, "", true)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, false)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, "", false)},
 			true,
 			skipDeleteEventMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, "", true)},
 			false,
 			"",
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "created", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "edited", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "deleted", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "published", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "unpublished", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
+		},
+		{
+			&Webhook{Build: testPushBuild("testing unsupported release action", "nothing", constants.EventRelease, "prereleased", true)},
+			true,
+			skipUnsupportedReleaseActionMsg,
 		},
 	}
 
@@ -104,10 +134,11 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 	}
 }
 
-func testPushBuild(message, title, event string, hasCommit bool) *library.Build {
+func testPushBuild(message, title, event string, eventAction string, hasCommit bool) *library.Build {
 	b := new(library.Build)
 
 	b.SetEvent(event)
+	b.SetEventAction(eventAction)
 
 	if len(message) > 0 {
 		b.SetMessage(message)

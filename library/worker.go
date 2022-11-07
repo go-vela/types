@@ -20,6 +20,7 @@ type Worker struct {
 	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
 	BuildLimit    *int64    `json:"build_limit,omitempty"`
 	Status        *string   `json:"status,omitempty"`
+	Builds        *string   `json:"builds,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -114,12 +115,21 @@ func (w *Worker) GetBuildLimit() int64 {
 }
 
 func (w *Worker) GetStatus() string {
-	// return zero value if Worker type or BuildLimit field is nil
+	// return zero value if Worker type or Status field is nil
 	if w == nil || w.Status == nil {
 		return ""
 	}
 
 	return *w.Status
+}
+
+func (w *Worker) GetBuilds() string {
+	// return zero value if Worker type or Builds field is nil
+	if w == nil || w.Builds == nil {
+		return ""
+	}
+
+	return *w.Builds
 }
 
 // SetID sets the ID field.
@@ -223,6 +233,18 @@ func (w *Worker) SetStatus(s string) {
 	// validate status is legit (dont do the cli events thing)
 
 	w.Status = &s
+}
+
+// SetBuilds TODO: fillme
+func (w *Worker) SetBuilds(b string) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	// validate status is legit (dont do the cli events thing)
+
+	w.Builds = &b
 }
 
 // String implements the Stringer interface for the Worker type.

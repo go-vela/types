@@ -35,4 +35,6 @@ const (
 
 	// TableWorker defines the table type for the database workers table.
 	TableWorker = "workers"
+	// TableBuildQueue defines the table type for the database build_queue table.
+	TableBuildQueue = "build_queue"
 )

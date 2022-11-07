@@ -15,6 +15,8 @@ type BuildQueue struct {
 	Number   *int32  `json:"number,omitempty"`
 	Created  *int64  `json:"created,omitempty"`
 	FullName *string `json:"full_name,omitempty"`
+	Flavor   *string `json:"flavor,omitempty"`
+	BuildID  *int64  `json:"build_id,omitempty"`
 }
 
 // GetStatus returns the Status field.
@@ -69,6 +71,23 @@ func (b *BuildQueue) GetFullName() string {
 	return *b.FullName
 }
 
+func (b *BuildQueue) GetFlavor() string {
+	// return zero value if BuildQueue type or Flavor field is nil
+	if b == nil || b.Flavor == nil {
+		return ""
+	}
+
+	return *b.Flavor
+}
+func (b *BuildQueue) GetBuildID() int64 {
+	// return zero value if BuildQueue type or ID field is nil
+	if b == nil || b.BuildID == nil {
+		return 0
+	}
+
+	return *b.BuildID
+}
+
 // SetStatus sets the Status field.
 //
 // When the provided BuildQueue type is nil, it
@@ -119,6 +138,24 @@ func (b *BuildQueue) SetFullName(v string) {
 	}
 
 	b.FullName = &v
+}
+
+func (b *BuildQueue) SetFlavor(f string) {
+	// return if BuildQueue type is nil
+	if b == nil {
+		return
+	}
+
+	b.Flavor = &f
+}
+
+func (b *BuildQueue) SetBuildID(id int64) {
+	// return if BuildQueue type is nil
+	if b == nil {
+		return
+	}
+
+	b.BuildID = &id
 }
 
 // String implements the Stringer interface for the BuildQueue type.

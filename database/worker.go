@@ -32,6 +32,7 @@ type Worker struct {
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit    sql.NullInt64  `sql:"build_limit"`
 	Status        sql.NullString `sql:"status"`
+	Builds        sql.NullString `sql:"builds"`
 }
 
 // Nullify ensures the valid flag for
@@ -85,6 +86,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
 	worker.SetStatus(w.Status.String)
+	worker.SetBuilds(w.Builds.String)
 
 	return worker
 }

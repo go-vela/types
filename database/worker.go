@@ -31,6 +31,7 @@ type Worker struct {
 	Active        sql.NullBool   `sql:"active"`
 	LastCheckedIn sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit    sql.NullInt64  `sql:"build_limit"`
+	Status        sql.NullString `sql:"status"`
 }
 
 // Nullify ensures the valid flag for
@@ -83,6 +84,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetActive(w.Active.Bool)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
+	worker.SetStatus(w.Status.String)
 
 	return worker
 }
@@ -126,6 +128,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		Active:        sql.NullBool{Bool: w.GetActive(), Valid: true},
 		LastCheckedIn: sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
 		BuildLimit:    sql.NullInt64{Int64: w.GetBuildLimit(), Valid: true},
+		Status:        sql.NullString{String: w.GetStatus(), Valid: true},
 	}
 
 	return worker.Nullify()

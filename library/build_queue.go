@@ -79,6 +79,7 @@ func (b *BuildQueue) GetFlavor() string {
 
 	return *b.Flavor
 }
+
 func (b *BuildQueue) GetBuildID() int64 {
 	// return zero value if BuildQueue type or ID field is nil
 	if b == nil || b.BuildID == nil {

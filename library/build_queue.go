@@ -17,6 +17,7 @@ type BuildQueue struct {
 	FullName *string `json:"full_name,omitempty"`
 	Flavor   *string `json:"flavor,omitempty"`
 	BuildID  *int64  `json:"build_id,omitempty"`
+	Pipeline *[]byte `json:"pipeline,omitempty"`
 }
 
 // GetStatus returns the Status field.
@@ -89,6 +90,15 @@ func (b *BuildQueue) GetBuildID() int64 {
 	return *b.BuildID
 }
 
+func (b *BuildQueue) GetPipeline() []byte {
+	// return zero value if BuildQueue type or Pipeline field is nil
+	if b == nil || b.Pipeline == nil {
+		return nil
+	}
+
+	return *b.Pipeline
+}
+
 // SetStatus sets the Status field.
 //
 // When the provided BuildQueue type is nil, it
@@ -157,6 +167,15 @@ func (b *BuildQueue) SetBuildID(id int64) {
 	}
 
 	b.BuildID = &id
+}
+
+func (b *BuildQueue) SetPipeline(v []byte) {
+	// return if BuildQueue type is nil
+	if b == nil {
+		return
+	}
+
+	b.Pipeline = &v
 }
 
 // String implements the Stringer interface for the BuildQueue type.

@@ -18,6 +18,7 @@ type BuildQueue struct {
 	FullName sql.NullString `sql:"full_name"`
 	Flavor   sql.NullString `sql:"flavor"`
 	BuildID  sql.NullInt64  `sql:"build_id"`
+	Pipeline []byte         `sql:"pipeline"`
 }
 
 // ToLibrary converts the BuildQueue type
@@ -31,6 +32,7 @@ func (b *BuildQueue) ToLibrary() *library.BuildQueue {
 	buildQueue.SetFullName(b.FullName.String)
 	buildQueue.SetFlavor(b.Flavor.String)
 	buildQueue.SetBuildID(b.BuildID.Int64)
+	buildQueue.SetPipeline(b.Pipeline)
 
 	return buildQueue
 }
@@ -45,6 +47,7 @@ func BuildQueueFromLibrary(b *library.BuildQueue) *BuildQueue {
 		FullName: sql.NullString{String: b.GetFullName(), Valid: true},
 		Flavor:   sql.NullString{String: b.GetFlavor(), Valid: true},
 		BuildID:  sql.NullInt64{Int64: b.GetBuildID(), Valid: true},
+		Pipeline: b.GetPipeline(),
 	}
 
 	return buildQueue

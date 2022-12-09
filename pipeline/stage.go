@@ -26,7 +26,7 @@ type (
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
 		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
 		Needs       []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
-		Independent bool              `json:"independent,omitempty"    yaml:"independent,omitempty"`
+		Independent bool              `json:"independent,omitempty" yaml:"independent,omitempty"`
 		Steps       ContainerSlice    `json:"steps,omitempty"       yaml:"steps,omitempty"`
 	}
 )

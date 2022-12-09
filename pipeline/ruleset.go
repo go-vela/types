@@ -38,7 +38,7 @@ type (
 		Status   Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag      Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
-		Parallel bool     `json:"parallel,omitempty" yaml:"parallel,omitempty"`
+		Parallel bool     `json:"-"                 yaml:"-"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -58,7 +58,7 @@ type (
 		Status   string   `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag      string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   string   `json:"target,omitempty"  yaml:"target,omitempty"`
-		Parallel bool     `json:"parallel,omitempty" yaml:"parallel,omitempty"`
+		Parallel bool     `json:"-"                 yaml:"-"`
 	}
 )
 

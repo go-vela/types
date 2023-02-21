@@ -18,6 +18,6 @@ const (
 	// WorkerBuildTokenType is the name associated with the worker build token type.
 	WorkerBuildTokenType = "WorkerBuild"
 
-	// ServerWorkerTokenType is the name associated with the worker-server symmetric token.
+	// ServerWorkerTokenType is the name associated with the server-worker symmetric token.
 	ServerWorkerTokenType = "ServerWorker"
 )

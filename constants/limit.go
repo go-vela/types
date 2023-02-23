@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -26,4 +26,7 @@ const (
 
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.
 	FavoritesMaxSize = 5000
+
+	// RunningBuildIDsMaxSize defines the maximum size in characters for worker RunningBuildIDs.
+	RunningBuildIDsMaxSize = 500
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -7,6 +7,7 @@ package database
 import (
 	"database/sql"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"github.com/go-vela/types/library"
@@ -17,12 +18,15 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 	var w *Worker
 
 	want := &Worker{
-		ID:            sql.NullInt64{Int64: 0, Valid: false},
-		Hostname:      sql.NullString{String: "", Valid: false},
-		Address:       sql.NullString{String: "", Valid: false},
-		Active:        sql.NullBool{Bool: false, Valid: false},
-		LastCheckedIn: sql.NullInt64{Int64: 0, Valid: false},
-		BuildLimit:    sql.NullInt64{Int64: 0, Valid: false},
+		ID:                  sql.NullInt64{Int64: 0, Valid: false},
+		Hostname:            sql.NullString{String: "", Valid: false},
+		Address:             sql.NullString{String: "", Valid: false},
+		Active:              sql.NullBool{Bool: false, Valid: false},
+		Status:              sql.NullString{String: "", Valid: false},
+		LastStatusUpdateAt:  sql.NullInt64{Int64: 0, Valid: false},
+		LastBuildFinishedAt: sql.NullInt64{Int64: 0, Valid: false},
+		LastCheckedIn:       sql.NullInt64{Int64: 0, Valid: false},
+		BuildLimit:          sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -63,6 +67,10 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetAddress("http://localhost:8080")
 	want.SetRoutes([]string{"vela"})
 	want.SetActive(true)
+	want.SetStatus("available")
+	want.SetLastStatusUpdateAt(1563474077)
+	want.SetRunningBuildIDs([]string{"12345"})
+	want.SetLastBuildFinishedAt(1563474077)
 	want.SetLastCheckedIn(1563474077)
 	want.SetBuildLimit(2)
 
@@ -102,6 +110,17 @@ func TestDatabase_Worker_Validate(t *testing.T) {
 				LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
 			},
 		},
+		{ // invalid RunningBuildIDs set for worker
+			failure: true,
+			worker: &Worker{
+				ID:              sql.NullInt64{Int64: 1, Valid: true},
+				Address:         sql.NullString{String: "http://localhost:8080", Valid: true},
+				Hostname:        sql.NullString{String: "worker_0", Valid: true},
+				Active:          sql.NullBool{Bool: true, Valid: true},
+				RunningBuildIDs: exceededRunningBuildIDs(),
+				LastCheckedIn:   sql.NullInt64{Int64: 1563474077, Valid: true},
+			},
+		},
 	}
 
 	// run tests
@@ -131,6 +150,10 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetAddress("http://localhost:8080")
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
+	w.SetStatus("available")
+	w.SetLastStatusUpdateAt(1563474077)
+	w.SetRunningBuildIDs([]string{"12345"})
+	w.SetLastBuildFinishedAt(1563474077)
 	w.SetLastCheckedIn(1563474077)
 	w.SetBuildLimit(2)
 
@@ -148,12 +171,33 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testWorker() *Worker {
 	return &Worker{
-		ID:            sql.NullInt64{Int64: 1, Valid: true},
-		Hostname:      sql.NullString{String: "worker_0", Valid: true},
-		Address:       sql.NullString{String: "http://localhost:8080", Valid: true},
-		Routes:        []string{"vela"},
-		Active:        sql.NullBool{Bool: true, Valid: true},
-		LastCheckedIn: sql.NullInt64{Int64: 1563474077, Valid: true},
-		BuildLimit:    sql.NullInt64{Int64: 2, Valid: true},
+		ID:                  sql.NullInt64{Int64: 1, Valid: true},
+		Hostname:            sql.NullString{String: "worker_0", Valid: true},
+		Address:             sql.NullString{String: "http://localhost:8080", Valid: true},
+		Routes:              []string{"vela"},
+		Active:              sql.NullBool{Bool: true, Valid: true},
+		Status:              sql.NullString{String: "available", Valid: true},
+		LastStatusUpdateAt:  sql.NullInt64{Int64: 1563474077, Valid: true},
+		RunningBuildIDs:     []string{"12345"},
+		LastBuildFinishedAt: sql.NullInt64{Int64: 1563474077, Valid: true},
+		LastCheckedIn:       sql.NullInt64{Int64: 1563474077, Valid: true},
+		BuildLimit:          sql.NullInt64{Int64: 2, Valid: true},
 	}
+}
+
+// exceededRunningBuildIDs returns a list of valid running builds that exceed the maximum size.
+func exceededRunningBuildIDs() []string {
+	// initialize empty runningBuildIDs
+	runningBuildIDs := []string{}
+
+	// add enough build ids to exceed the character limit
+	for i := 0; i < 50; i++ {
+		// construct runningBuildID
+		// use i to adhere to unique runningBuildIDs
+		runningBuildID := "1234567890-" + strconv.Itoa(i)
+
+		runningBuildIDs = append(runningBuildIDs, runningBuildID)
+	}
+
+	return runningBuildIDs
 }

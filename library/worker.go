@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -12,13 +12,17 @@ import (
 //
 // swagger:model Worker
 type Worker struct {
-	ID            *int64    `json:"id,omitempty"`
-	Hostname      *string   `json:"hostname,omitempty"`
-	Address       *string   `json:"address,omitempty"`
-	Routes        *[]string `json:"routes,omitempty"`
-	Active        *bool     `json:"active,omitempty"`
-	LastCheckedIn *int64    `json:"last_checked_in,omitempty"`
-	BuildLimit    *int64    `json:"build_limit,omitempty"`
+	ID                  *int64    `json:"id,omitempty"`
+	Hostname            *string   `json:"hostname,omitempty"`
+	Address             *string   `json:"address,omitempty"`
+	Routes              *[]string `json:"routes,omitempty"`
+	Active              *bool     `json:"active,omitempty"`
+	Status              *string   `json:"status,omitempty"`
+	LastStatusUpdateAt  *int64    `json:"last_status_update_at,omitempty"`
+	RunningBuildIDs     *[]string `json:"running_build_ids,omitempty"`
+	LastBuildFinishedAt *int64    `json:"last_build_finished_at,omitempty"`
+	LastCheckedIn       *int64    `json:"last_checked_in,omitempty"`
+	BuildLimit          *int64    `json:"build_limit,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -84,6 +88,58 @@ func (w *Worker) GetActive() bool {
 	}
 
 	return *w.Active
+}
+
+// GetStatus returns the Status field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetStatus() string {
+	// return zero value if Worker type or Status field is nil
+	if w == nil || w.Status == nil {
+		return ""
+	}
+
+	return *w.Status
+}
+
+// GetLastStatusUpdateAt returns the LastStatusUpdateAt field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetLastStatusUpdateAt() int64 {
+	// return zero value if Worker type or LastStatusUpdateAt field is nil
+	if w == nil || w.LastStatusUpdateAt == nil {
+		return 0
+	}
+
+	return *w.LastStatusUpdateAt
+}
+
+// GetRunningBuildIDs returns the Routes field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetRunningBuildIDs() []string {
+	// return zero value if Worker type or RunningBuildIDs field is nil
+	if w == nil || w.RunningBuildIDs == nil {
+		return []string{}
+	}
+
+	return *w.RunningBuildIDs
+}
+
+// GetLastBuildFinishedAt returns the LastBuildFinishedAt field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetLastBuildFinishedAt() int64 {
+	// return zero value if Worker type or LastBuildFinishedAt field is nil
+	if w == nil || w.LastBuildFinishedAt == nil {
+		return 0
+	}
+
+	return *w.LastBuildFinishedAt
 }
 
 // GetLastCheckedIn returns the LastCheckedIn field.
@@ -177,6 +233,58 @@ func (w *Worker) SetActive(v bool) {
 	w.Active = &v
 }
 
+// SetStatus sets the Status field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetStatus(v string) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.Status = &v
+}
+
+// SetLastStatusUpdateAt sets the LastStatusUpdateAt field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetLastStatusUpdateAt(v int64) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.LastStatusUpdateAt = &v
+}
+
+// SetRunningBuildIDs sets the RunningBuildIDs field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetRunningBuildIDs(v []string) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.RunningBuildIDs = &v
+}
+
+// SetLastBuildFinishedAt sets the LastBuildFinishedAt field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetLastBuildFinishedAt(v int64) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.LastBuildFinishedAt = &v
+}
+
 // SetLastCheckedIn sets the LastCheckedIn field.
 //
 // When the provided Worker type is nil, it
@@ -211,6 +319,10 @@ func (w *Worker) String() string {
   Address: %s,
   Routes: %s,
   Active: %t,
+  Status: %s,
+  LastStatusUpdateAt: %v,
+  RunningBuildIDs: %s,
+  LastBuildFinishedAt: %v,
   LastCheckedIn: %v,
   BuildLimit: %v,
 }`,
@@ -219,6 +331,10 @@ func (w *Worker) String() string {
 		w.GetAddress(),
 		w.GetRoutes(),
 		w.GetActive(),
+		w.GetStatus(),
+		w.GetLastStatusUpdateAt(),
+		w.GetRunningBuildIDs(),
+		w.GetLastBuildFinishedAt(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),
 	)

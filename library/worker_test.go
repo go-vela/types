@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -49,6 +49,22 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 			t.Errorf("GetActive is %v, want %v", test.worker.GetActive(), test.want.GetActive())
 		}
 
+		if test.worker.GetStatus() != test.want.GetStatus() {
+			t.Errorf("GetStatus is %v, want %v", test.worker.GetStatus(), test.want.GetStatus())
+		}
+
+		if test.worker.GetLastStatusUpdateAt() != test.want.GetLastStatusUpdateAt() {
+			t.Errorf("GetLastStatusUpdateAt is %v, want %v", test.worker.GetLastStatusUpdateAt(), test.want.GetLastStatusUpdateAt())
+		}
+
+		if !reflect.DeepEqual(test.worker.GetRunningBuildIDs(), test.want.GetRunningBuildIDs()) {
+			t.Errorf("GetRunningBuildIDs is %v, want %v", test.worker.GetRunningBuildIDs(), test.want.GetRunningBuildIDs())
+		}
+
+		if test.worker.GetLastBuildFinishedAt() != test.want.GetLastBuildFinishedAt() {
+			t.Errorf("GetLastBuildFinishedAt is %v, want %v", test.worker.GetLastBuildFinishedAt(), test.want.GetLastBuildFinishedAt())
+		}
+
 		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
 			t.Errorf("GetLastCheckedIn is %v, want %v", test.worker.GetLastCheckedIn(), test.want.GetLastCheckedIn())
 		}
@@ -83,7 +99,12 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		test.worker.SetID(test.want.GetID())
 		test.worker.SetHostname(test.want.GetHostname())
 		test.worker.SetAddress(test.want.GetAddress())
+		test.worker.SetRoutes(test.want.GetRoutes())
 		test.worker.SetActive(test.want.GetActive())
+		test.worker.SetStatus(test.want.GetStatus())
+		test.worker.SetLastStatusUpdateAt(test.want.GetLastStatusUpdateAt())
+		test.worker.SetRunningBuildIDs(test.want.GetRunningBuildIDs())
+		test.worker.SetLastBuildFinishedAt(test.want.GetLastBuildFinishedAt())
 		test.worker.SetLastCheckedIn(test.want.GetLastCheckedIn())
 		test.worker.SetBuildLimit(test.want.GetBuildLimit())
 
@@ -100,11 +121,23 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		}
 
 		if !reflect.DeepEqual(test.worker.GetRoutes(), test.want.GetRoutes()) {
-			t.Errorf("SetImages is %v, want %v", test.worker.GetRoutes(), test.want.GetRoutes())
+			t.Errorf("SetRoutes is %v, want %v", test.worker.GetRoutes(), test.want.GetRoutes())
 		}
 
 		if test.worker.GetActive() != test.want.GetActive() {
 			t.Errorf("SetActive is %v, want %v", test.worker.GetActive(), test.want.GetActive())
+		}
+
+		if test.worker.GetStatus() != test.want.GetStatus() {
+			t.Errorf("SetStatus is %v, want %v", test.worker.GetStatus(), test.want.GetStatus())
+		}
+
+		if test.worker.GetLastStatusUpdateAt() != test.want.GetLastStatusUpdateAt() {
+			t.Errorf("SetLastStatusUpdateAt is %v, want %v", test.worker.GetLastStatusUpdateAt(), test.want.GetLastStatusUpdateAt())
+		}
+
+		if test.worker.GetLastBuildFinishedAt() != test.want.GetLastBuildFinishedAt() {
+			t.Errorf("SetLastBuildFinishedAt is %v, want %v", test.worker.GetLastBuildFinishedAt(), test.want.GetLastBuildFinishedAt())
 		}
 
 		if test.worker.GetLastCheckedIn() != test.want.GetLastCheckedIn() {
@@ -127,6 +160,10 @@ func TestLibrary_Worker_String(t *testing.T) {
   Address: %s,
   Routes: %s,
   Active: %t,
+  Status: %s,
+  LastStatusUpdateAt: %v,
+  RunningBuildIDs: %s,
+  LastBuildFinishedAt: %v,
   LastCheckedIn: %v,
   BuildLimit: %v,
 }`,
@@ -135,6 +172,10 @@ func TestLibrary_Worker_String(t *testing.T) {
 		w.GetAddress(),
 		w.GetRoutes(),
 		w.GetActive(),
+		w.GetStatus(),
+		w.GetLastStatusUpdateAt(),
+		w.GetRunningBuildIDs(),
+		w.GetLastBuildFinishedAt(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),
 	)
@@ -157,6 +198,10 @@ func testWorker() *Worker {
 	w.SetAddress("http://localhost:8080")
 	w.SetRoutes([]string{"vela"})
 	w.SetActive(true)
+	w.SetStatus("available")
+	w.SetLastStatusUpdateAt(time.Time{}.UTC().Unix())
+	w.SetRunningBuildIDs([]string{"12345"})
+	w.SetLastBuildFinishedAt(time.Time{}.UTC().Unix())
 	w.SetLastCheckedIn(time.Time{}.UTC().Unix())
 	w.SetBuildLimit(2)
 

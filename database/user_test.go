@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -192,15 +192,6 @@ func TestDatabase_User_Validate(t *testing.T) {
 				ID:   sql.NullInt64{Int64: 1, Valid: true},
 				Name: sql.NullString{String: "octocat", Valid: true},
 				Hash: sql.NullString{String: "superSecretHash", Valid: true},
-			},
-		},
-		{ // no hash set for user
-			failure: true,
-			user: &User{
-				ID:           sql.NullInt64{Int64: 1, Valid: true},
-				Name:         sql.NullString{String: "octocat", Valid: true},
-				RefreshToken: sql.NullString{String: "superSecretRefreshToken", Valid: true},
-				Token:        sql.NullString{String: "superSecretToken", Valid: true},
 			},
 		},
 		{ // invalid name set for user

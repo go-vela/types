@@ -85,7 +85,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 
 		// implicitly set the stage `needs`
-		if stage.Name != "clone" && !stage.IsInit && stage.Name != "init" { // TODO: drop "init" Name check
+		if stage.Name != "clone" && !stage.IsInit {
 			// add clone if not present
 			stage.Needs = func(needs []string) []string {
 				for _, s := range needs {

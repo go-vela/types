@@ -161,7 +161,6 @@ func testStages() *StageSlice {
 	return &StageSlice{
 		{
 			IsInit:      true,
-			Name:        "init",
 			Environment: map[string]string{"FOO": "bar"},
 			Steps: ContainerSlice{
 				{
@@ -169,8 +168,6 @@ func testStages() *StageSlice {
 					Directory:   "/home/github/octocat",
 					Environment: map[string]string{"FOO": "bar"},
 					IsInit:      true,
-					Image:       "#init",
-					Name:        "init",
 					Number:      1,
 					Pull:        "always",
 				},

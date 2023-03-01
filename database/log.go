@@ -20,9 +20,9 @@ var (
 	// Log type has an empty RepoID field provided.
 	ErrEmptyLogRepoID = errors.New("empty log repo_id provided")
 
-	// ErrEmptyLogStepOrServiceID defines the error type when a
+	// ErrEmptyLogStepOrServiceOrInitID defines the error type when a
 	// Log type has an empty StepID or ServiceID field provided.
-	ErrEmptyLogStepOrServiceID = errors.New("empty log step_id or service_id not provided")
+	ErrEmptyLogStepOrServiceOrInitID = errors.New("empty log step_id or service_id or init_id provided")
 )
 
 // Log is the database representation of a log for a step in a build.
@@ -32,6 +32,7 @@ type Log struct {
 	RepoID    sql.NullInt64 `sql:"repo_id"`
 	ServiceID sql.NullInt64 `sql:"service_id"`
 	StepID    sql.NullInt64 `sql:"step_id"`
+	InitID    sql.NullInt64 `sql:"init_id"`
 	Data      []byte        `sql:"data"`
 }
 
@@ -105,6 +106,11 @@ func (l *Log) Nullify() *Log {
 		l.StepID.Valid = false
 	}
 
+	// check if the InitID field should be false
+	if l.InitID.Int64 == 0 {
+		l.InitID.Valid = false
+	}
+
 	return l
 }
 
@@ -118,6 +124,7 @@ func (l *Log) ToLibrary() *library.Log {
 	log.SetRepoID(l.RepoID.Int64)
 	log.SetServiceID(l.ServiceID.Int64)
 	log.SetStepID(l.StepID.Int64)
+	log.SetInitID(l.InitID.Int64)
 	log.SetData(l.Data)
 
 	return log
@@ -126,9 +133,9 @@ func (l *Log) ToLibrary() *library.Log {
 // Validate verifies the necessary fields for
 // the Log type are populated correctly.
 func (l *Log) Validate() error {
-	// verify the has StepID or ServiceID field populated
-	if l.StepID.Int64 <= 0 && l.ServiceID.Int64 <= 0 {
-		return ErrEmptyLogStepOrServiceID
+	// verify the has StepID or ServiceID or InitID field populated
+	if l.StepID.Int64 <= 0 && l.ServiceID.Int64 <= 0 && l.InitID.Int64 <= 0 {
+		return ErrEmptyLogStepOrServiceOrInitID
 	}
 
 	// verify the BuildID field is populated
@@ -153,6 +160,7 @@ func LogFromLibrary(l *library.Log) *Log {
 		RepoID:    sql.NullInt64{Int64: l.GetRepoID(), Valid: true},
 		ServiceID: sql.NullInt64{Int64: l.GetServiceID(), Valid: true},
 		StepID:    sql.NullInt64{Int64: l.GetStepID(), Valid: true},
+		InitID:    sql.NullInt64{Int64: l.GetInitID(), Valid: true},
 		Data:      l.GetData(),
 	}
 

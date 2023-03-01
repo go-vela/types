@@ -20,6 +20,7 @@ type Log struct {
 	RepoID    *int64 `json:"repo_id,omitempty"`
 	ServiceID *int64 `json:"service_id,omitempty"`
 	StepID    *int64 `json:"step_id,omitempty"`
+	InitID    *int64 `json:"init_id,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }
@@ -136,6 +137,19 @@ func (l *Log) GetStepID() int64 {
 	return *l.StepID
 }
 
+// GetInitID returns the InitID field.
+//
+// When the provided Log type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (l *Log) GetInitID() int64 {
+	// return zero value if Log type or InitID field is nil
+	if l == nil || l.InitID == nil {
+		return 0
+	}
+
+	return *l.InitID
+}
+
 // GetData returns the Data field.
 //
 // When the provided Log type is nil, or the field within
@@ -214,6 +228,19 @@ func (l *Log) SetStepID(v int64) {
 	l.StepID = &v
 }
 
+// SetInitID sets the InitID field.
+//
+// When the provided Log type is nil, it
+// will set nothing and immediately return.
+func (l *Log) SetInitID(v int64) {
+	// return if Log type is nil
+	if l == nil {
+		return
+	}
+
+	l.InitID = &v
+}
+
 // SetData sets the Data field.
 //
 // When the provided Log type is nil, it
@@ -236,6 +263,7 @@ func (l *Log) String() string {
   RepoID: %d,
   ServiceID: %d,
   StepID: %d,
+  InitID: %d,
 }`,
 		l.GetBuildID(),
 		l.GetData(),
@@ -243,5 +271,6 @@ func (l *Log) String() string {
 		l.GetRepoID(),
 		l.GetServiceID(),
 		l.GetStepID(),
+		l.GetInitID(),
 	)
 }

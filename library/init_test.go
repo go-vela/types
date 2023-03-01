@@ -33,16 +33,20 @@ func TestLibrary_Init_Getters(t *testing.T) {
 			t.Errorf("GetID is %v, want %v", test.step.GetID(), test.want.GetID())
 		}
 
-		if test.step.GetBuildID() != test.want.GetBuildID() {
-			t.Errorf("GetBuildID is %v, want %v", test.step.GetBuildID(), test.want.GetBuildID())
-		}
-
 		if test.step.GetRepoID() != test.want.GetRepoID() {
 			t.Errorf("GetRepoID is %v, want %v", test.step.GetRepoID(), test.want.GetRepoID())
 		}
 
+		if test.step.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("GetBuildID is %v, want %v", test.step.GetBuildID(), test.want.GetBuildID())
+		}
+
 		if test.step.GetNumber() != test.want.GetNumber() {
 			t.Errorf("GetNumber is %v, want %v", test.step.GetNumber(), test.want.GetNumber())
+		}
+
+		if test.step.GetReporter() != test.want.GetReporter() {
+			t.Errorf("GetReporter is %v, want %v", test.step.GetReporter(), test.want.GetReporter())
 		}
 
 		if test.step.GetName() != test.want.GetName() {
@@ -51,10 +55,6 @@ func TestLibrary_Init_Getters(t *testing.T) {
 
 		if test.step.GetMimetype() != test.want.GetMimetype() {
 			t.Errorf("GetMimetype is %v, want %v", test.step.GetMimetype(), test.want.GetMimetype())
-		}
-
-		if test.step.GetReporter() != test.want.GetReporter() {
-			t.Errorf("GetReporter is %v, want %v", test.step.GetReporter(), test.want.GetReporter())
 		}
 	}
 }
@@ -81,27 +81,31 @@ func TestLibrary_Init_Setters(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		test.step.SetID(test.want.GetID())
-		test.step.SetBuildID(test.want.GetBuildID())
 		test.step.SetRepoID(test.want.GetRepoID())
+		test.step.SetBuildID(test.want.GetBuildID())
 		test.step.SetNumber(test.want.GetNumber())
+		test.step.SetReporter(test.want.GetReporter())
 		test.step.SetName(test.want.GetName())
 		test.step.SetMimetype(test.want.GetMimetype())
-		test.step.SetReporter(test.want.GetReporter())
 
 		if test.step.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.step.GetID(), test.want.GetID())
-		}
-
-		if test.step.GetBuildID() != test.want.GetBuildID() {
-			t.Errorf("SetBuildID is %v, want %v", test.step.GetBuildID(), test.want.GetBuildID())
 		}
 
 		if test.step.GetRepoID() != test.want.GetRepoID() {
 			t.Errorf("SetRepoID is %v, want %v", test.step.GetRepoID(), test.want.GetRepoID())
 		}
 
+		if test.step.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("SetBuildID is %v, want %v", test.step.GetBuildID(), test.want.GetBuildID())
+		}
+
 		if test.step.GetNumber() != test.want.GetNumber() {
 			t.Errorf("SetNumber is %v, want %v", test.step.GetNumber(), test.want.GetNumber())
+		}
+
+		if test.step.GetReporter() != test.want.GetReporter() {
+			t.Errorf("SetReporter is %v, want %v", test.step.GetReporter(), test.want.GetReporter())
 		}
 
 		if test.step.GetName() != test.want.GetName() {
@@ -110,10 +114,6 @@ func TestLibrary_Init_Setters(t *testing.T) {
 
 		if test.step.GetMimetype() != test.want.GetMimetype() {
 			t.Errorf("SetMimetype is %v, want %v", test.step.GetMimetype(), test.want.GetMimetype())
-		}
-
-		if test.step.GetReporter() != test.want.GetReporter() {
-			t.Errorf("SetReporter is %v, want %v", test.step.GetReporter(), test.want.GetReporter())
 		}
 	}
 }
@@ -151,12 +151,12 @@ func TestLibrary_Init_String(t *testing.T) {
 func TestLibrary_InitFromBuildInit(t *testing.T) {
 	// setup types
 	s := testInit()
-	s.SetReporter("clone")
+	s.SetReporter("Foobar Runtime")
 
 	// modify fields that aren't set
 	s.ID = nil
-	s.BuildID = nil
 	s.RepoID = nil
+	s.BuildID = nil
 
 	tests := []struct {
 		name string
@@ -176,10 +176,10 @@ func TestLibrary_InitFromBuildInit(t *testing.T) {
 		{
 			name: "populated init",
 			init: &pipeline.Init{
-				Name:     s.GetName(),
 				Number:   s.GetNumber(),
-				Mimetype: s.GetMimetype(),
 				Reporter: s.GetReporter(),
+				Name:     s.GetName(),
+				Mimetype: s.GetMimetype(),
 			},
 			want: s,
 		},
@@ -201,12 +201,12 @@ func testInit() *Init {
 	s := new(Init)
 
 	s.SetID(1)
-	s.SetBuildID(1)
 	s.SetRepoID(1)
+	s.SetBuildID(1)
 	s.SetNumber(1)
+	s.SetReporter("Kubernetes Runtime")
 	s.SetName("clone")
 	s.SetMimetype("text/plain")
-	s.SetReporter("Kubernetes Runtime")
 
 	return s
 }

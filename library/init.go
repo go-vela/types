@@ -14,12 +14,12 @@ import (
 // swagger:model Init
 type Init struct {
 	ID       *int64  `json:"id,omitempty"`
-	BuildID  *int64  `json:"build_id,omitempty"`
 	RepoID   *int64  `json:"repo_id,omitempty"`
+	BuildID  *int64  `json:"build_id,omitempty"`
 	Number   *int    `json:"number,omitempty"`
+	Reporter *string `json:"reporter,omitempty"` // which layer created this: compile, runtime, ...
 	Name     *string `json:"name,omitempty"`
 	Mimetype *string `json:"mimetype,omitempty"`
-	Reporter *string `json:"reporter,omitempty"` // which layer created this: compile, runtime, ...
 }
 
 // GetID returns the ID field.
@@ -35,19 +35,6 @@ func (i *Init) GetID() int64 {
 	return *i.ID
 }
 
-// GetBuildID returns the BuildID field.
-//
-// When the provided Init type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (i *Init) GetBuildID() int64 {
-	// return zero value if Init type or BuildID field is nil
-	if i == nil || i.BuildID == nil {
-		return 0
-	}
-
-	return *i.BuildID
-}
-
 // GetRepoID returns the RepoID field.
 //
 // When the provided Init type is nil, or the field within
@@ -61,6 +48,19 @@ func (i *Init) GetRepoID() int64 {
 	return *i.RepoID
 }
 
+// GetBuildID returns the BuildID field.
+//
+// When the provided Init type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (i *Init) GetBuildID() int64 {
+	// return zero value if Init type or BuildID field is nil
+	if i == nil || i.BuildID == nil {
+		return 0
+	}
+
+	return *i.BuildID
+}
+
 // GetNumber returns the Number field.
 //
 // When the provided Init type is nil, or the field within
@@ -72,6 +72,19 @@ func (i *Init) GetNumber() int {
 	}
 
 	return *i.Number
+}
+
+// GetReporter returns the Reporter field.
+//
+// When the provided Init type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (i *Init) GetReporter() string {
+	// return zero value if Init type or Stage field is nil
+	if i == nil || i.Reporter == nil {
+		return ""
+	}
+
+	return *i.Reporter
 }
 
 // GetName returns the Name field.
@@ -100,19 +113,6 @@ func (i *Init) GetMimetype() string {
 	return *i.Mimetype
 }
 
-// GetReporter returns the Reporter field.
-//
-// When the provided Init type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (i *Init) GetReporter() string {
-	// return zero value if Init type or Stage field is nil
-	if i == nil || i.Reporter == nil {
-		return ""
-	}
-
-	return *i.Reporter
-}
-
 // SetID sets the ID field.
 //
 // When the provided Init type is nil, it
@@ -124,19 +124,6 @@ func (i *Init) SetID(v int64) {
 	}
 
 	i.ID = &v
-}
-
-// SetBuildID sets the BuildID field.
-//
-// When the provided Init type is nil, it
-// will set nothing and immediately return.
-func (i *Init) SetBuildID(v int64) {
-	// return if Init type is nil
-	if i == nil {
-		return
-	}
-
-	i.BuildID = &v
 }
 
 // SetRepoID sets the RepoID field.
@@ -152,6 +139,19 @@ func (i *Init) SetRepoID(v int64) {
 	i.RepoID = &v
 }
 
+// SetBuildID sets the BuildID field.
+//
+// When the provided Init type is nil, it
+// will set nothing and immediately return.
+func (i *Init) SetBuildID(v int64) {
+	// return if Init type is nil
+	if i == nil {
+		return
+	}
+
+	i.BuildID = &v
+}
+
 // SetNumber sets the Number field.
 //
 // When the provided Init type is nil, it
@@ -163,6 +163,19 @@ func (i *Init) SetNumber(v int) {
 	}
 
 	i.Number = &v
+}
+
+// SetReporter sets the Reporter field.
+//
+// When the provided Init type is nil, it
+// will set nothing and immediately return.
+func (i *Init) SetReporter(v string) {
+	// return if Init type is nil
+	if i == nil {
+		return
+	}
+
+	i.Reporter = &v
 }
 
 // SetName sets the Name field.
@@ -189,19 +202,6 @@ func (i *Init) SetMimetype(v string) {
 	}
 
 	i.Mimetype = &v
-}
-
-// SetReporter sets the Reporter field.
-//
-// When the provided Init type is nil, it
-// will set nothing and immediately return.
-func (i *Init) SetReporter(v string) {
-	// return if Init type is nil
-	if i == nil {
-		return
-	}
-
-	i.Reporter = &v
 }
 
 // String implements the Stringer interface for the Init type.
@@ -233,10 +233,10 @@ func InitFromBuildInit(init *pipeline.Init) *Init {
 	// copy fields from init
 	if init != nil && init.Name != "" {
 		// set values from the init
-		i.SetName(init.Name)
 		i.SetNumber(init.Number)
-		i.SetMimetype(init.Mimetype)
 		i.SetReporter(init.Reporter)
+		i.SetName(init.Name)
+		i.SetMimetype(init.Mimetype)
 	}
 
 	return i

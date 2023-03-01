@@ -18,11 +18,11 @@ func TestDatabase_Init_Nullify(t *testing.T) {
 
 	want := &Init{
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
-		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
+		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
 		Number:   sql.NullInt32{Int32: 0, Valid: false},
-		Name:     sql.NullString{String: "", Valid: false},
 		Reporter: sql.NullString{String: "", Valid: false},
+		Name:     sql.NullString{String: "", Valid: false},
 		Mimetype: sql.NullString{String: "", Valid: false},
 	}
 
@@ -60,12 +60,12 @@ func TestDatabase_Init_ToLibrary(t *testing.T) {
 	want := new(library.Init)
 
 	want.SetID(1)
-	want.SetBuildID(1)
 	want.SetRepoID(1)
+	want.SetBuildID(1)
 	want.SetNumber(1)
+	want.SetReporter("Foobar Runtime")
 	want.SetName("foobar")
 	want.SetMimetype("text/plain")
-	want.SetReporter("Foobar Runtime")
 
 	// run test
 	got := testInit().ToLibrary()
@@ -85,54 +85,54 @@ func TestDatabase_Init_Validate(t *testing.T) {
 			failure: false,
 			init:    testInit(),
 		},
-		{ // no build_id set for init
-			failure: true,
-			init: &Init{
-				ID:       sql.NullInt64{Int64: 1, Valid: true},
-				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
-				Number:   sql.NullInt32{Int32: 1, Valid: true},
-				Name:     sql.NullString{String: "foobar", Valid: true},
-				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
-			},
-		},
 		{ // no repo_id set for init
 			failure: true,
 			init: &Init{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 				Number:   sql.NullInt32{Int32: 1, Valid: true},
-				Name:     sql.NullString{String: "foobar", Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
+				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
-		{ // no name set for init
+		{ // no build_id set for init
 			failure: true,
 			init: &Init{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
-				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				Number:   sql.NullInt32{Int32: 1, Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
+				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
 		{ // no number set for init
 			failure: true,
 			init: &Init{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
-				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
-				Name:     sql.NullString{String: "foobar", Valid: true},
+				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
+				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
 		{ // no reporter set for init
 			failure: true,
 			init: &Init{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
-				BuildID: sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+				BuildID: sql.NullInt64{Int64: 1, Valid: true},
 				Number:  sql.NullInt32{Int32: 1, Valid: true},
 				Name:    sql.NullString{String: "foobar", Valid: true},
+			},
+		},
+		{ // no name set for init
+			failure: true,
+			init: &Init{
+				ID:       sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
+				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 			},
 		},
 	}
@@ -160,12 +160,12 @@ func TestDatabase_InitFromLibrary(t *testing.T) {
 	s := new(library.Init)
 
 	s.SetID(1)
-	s.SetBuildID(1)
 	s.SetRepoID(1)
+	s.SetBuildID(1)
 	s.SetNumber(1)
+	s.SetReporter("Foobar Runtime")
 	s.SetName("foobar")
 	s.SetMimetype("text/plain")
-	s.SetReporter("Foobar Runtime")
 
 	want := testInit()
 
@@ -182,11 +182,11 @@ func TestDatabase_InitFromLibrary(t *testing.T) {
 func testInit() *Init {
 	return &Init{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 		Number:   sql.NullInt32{Int32: 1, Valid: true},
+		Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 		Name:     sql.NullString{String: "foobar", Valid: true},
 		Mimetype: sql.NullString{String: "text/plain", Valid: true},
-		Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 	}
 }

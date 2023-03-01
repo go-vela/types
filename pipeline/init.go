@@ -20,9 +20,9 @@ type (
 	// swagger:model PipelineInit
 	Init struct {
 		ID       string `json:"id,omitempty"         yaml:"id,omitempty"`
-		Name     string `json:"name,omitempty"       yaml:"name,omitempty"`
 		Number   int    `json:"number,omitempty"     yaml:"number,omitempty"`
 		Reporter string `json:"reporter,omitempty"   yaml:"reporter,omitempty"`
+		Name     string `json:"name,omitempty"       yaml:"name,omitempty"`
 		Mimetype string `json:"mimetype,omitempty"   yaml:"mimetype,omitempty"`
 	}
 )

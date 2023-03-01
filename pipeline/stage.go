@@ -22,6 +22,8 @@ type (
 	//
 	// swagger:model PipelineStage
 	Stage struct {
+		// The IsInit flag is true for the injected "init" stage. It cannot be set via json/yaml.
+		IsInit      bool              `json:"-"                     yaml:"-"`
 		Done        chan error        `json:"-"                     yaml:"-"`
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
 		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`

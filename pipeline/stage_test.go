@@ -160,6 +160,7 @@ func TestPipeline_Stage_MergeEnv(t *testing.T) {
 func testStages() *StageSlice {
 	return &StageSlice{
 		{
+			IsInit:      true,
 			Name:        "init",
 			Environment: map[string]string{"FOO": "bar"},
 			Steps: ContainerSlice{
@@ -167,6 +168,7 @@ func testStages() *StageSlice {
 					ID:          "github octocat._1_init_init",
 					Directory:   "/home/github/octocat",
 					Environment: map[string]string{"FOO": "bar"},
+					IsInit:      true,
 					Image:       "#init",
 					Name:        "init",
 					Number:      1,

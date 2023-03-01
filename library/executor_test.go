@@ -168,6 +168,7 @@ func testExecutor() *Executor {
 			{
 				ID:        "step_github_octocat_1_init",
 				Directory: "/home/github/octocat",
+				IsInit:    true,
 				Image:     "#init",
 				Name:      "init",
 				Number:    1,

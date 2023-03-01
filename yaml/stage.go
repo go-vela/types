@@ -21,6 +21,8 @@ type (
 	// Stage is the yaml representation
 	// of a stage in a pipeline.
 	Stage struct {
+		// The IsInit flag is true for the injected "init" stage. It cannot be set via yaml/json.
+		IsInit      bool               `yaml:"-"                     json:"-"`
 		Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-environment-tag"`
 		Name        string             `yaml:"name,omitempty"        json:"name,omitempty"        jsonschema:"minLength=1,description=Unique identifier for the stage in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-name-tag"`
 		Needs       raw.StringSlice    `yaml:"needs,omitempty,flow"  json:"needs,omitempty"       jsonschema:"description=Stages that must complete before starting the current one.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/#the-needs-tag"`
@@ -39,6 +41,7 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 	for _, stage := range *s {
 		// append the element to the pipeline stage slice
 		*stageSlice = append(*stageSlice, &pipeline.Stage{
+			IsInit:      stage.IsInit,
 			Done:        make(chan error, 1),
 			Environment: stage.Environment,
 			Name:        stage.Name,
@@ -82,7 +85,7 @@ func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 
 		// implicitly set the stage `needs`
-		if stage.Name != "clone" && stage.Name != "init" {
+		if stage.Name != "clone" && !stage.IsInit && stage.Name != "init" { // TODO: drop "init" Name check
 			// add clone if not present
 			stage.Needs = func(needs []string) []string {
 				for _, s := range needs {

@@ -40,12 +40,14 @@ func TestPipeline_Build_Purge(t *testing.T) {
 			pipeline: &Build{
 				Stages: StageSlice{
 					{
-						Name: "init",
+						IsInit: true,
+						Name:   "init",
 						Steps: ContainerSlice{
 							{
 								ID:          "github octocat._1_init_init",
 								Directory:   "/home/github/octocat",
 								Environment: map[string]string{"FOO": "bar"},
+								IsInit:      true,
 								Image:       "#init",
 								Name:        "init",
 								Number:      1,
@@ -59,6 +61,7 @@ func TestPipeline_Build_Purge(t *testing.T) {
 						ID:          "step_github octocat._1_init",
 						Directory:   "/home/github/octocat",
 						Environment: map[string]string{"FOO": "bar"},
+						IsInit:      true,
 						Image:       "#init",
 						Name:        "init",
 						Number:      1,
@@ -163,12 +166,14 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 			pipeline: &Build{
 				Stages: StageSlice{
 					{
-						Name: "init",
+						IsInit: true,
+						Name:   "init",
 						Steps: ContainerSlice{
 							{
 								ID:          "github octocat._1_init_init",
 								Directory:   "/home/github/octocat",
 								Environment: map[string]string{"FOO": "bar"},
+								IsInit:      true,
 								Image:       "#init",
 								Name:        "init",
 								Number:      1,
@@ -182,6 +187,7 @@ func TestPipeline_Build_Sanitize(t *testing.T) {
 						ID:          "step_github octocat._1_init",
 						Directory:   "/home/github/octocat",
 						Environment: map[string]string{"FOO": "bar"},
+						IsInit:      true,
 						Image:       "#init",
 						Name:        "init",
 						Number:      1,
@@ -221,12 +227,14 @@ func testBuildStages() *Build {
 		},
 		Stages: StageSlice{
 			{
-				Name: "init",
+				IsInit: true,
+				Name:   "init",
 				Steps: ContainerSlice{
 					{
 						ID:          "github octocat._1_init_init",
 						Directory:   "/home/github/octocat",
 						Environment: map[string]string{"FOO": "bar"},
+						IsInit:      true,
 						Image:       "#init",
 						Name:        "init",
 						Number:      1,
@@ -307,6 +315,7 @@ func testBuildSteps() *Build {
 				ID:          "step_github octocat._1_init",
 				Directory:   "/home/github/octocat",
 				Environment: map[string]string{"FOO": "bar"},
+				IsInit:      true,
 				Image:       "#init",
 				Name:        "init",
 				Number:      1,

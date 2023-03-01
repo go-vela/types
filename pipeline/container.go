@@ -32,6 +32,8 @@ type (
 	//
 	// swagger:model PipelineContainer
 	Container struct {
+		// The IsInit flag is true for the injected "init" step. It cannot be set via json/yaml.
+		IsInit      bool              `json:"-"                     yaml:"-"`
 		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
 		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
 		Detach      bool              `json:"detach,omitempty"      yaml:"detach,omitempty"`

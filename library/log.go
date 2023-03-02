@@ -20,7 +20,7 @@ type Log struct {
 	RepoID     *int64 `json:"repo_id,omitempty"`
 	ServiceID  *int64 `json:"service_id,omitempty"`
 	StepID     *int64 `json:"step_id,omitempty"`
-	InitStepID *int64 `json:"init_step_id,omitempty"`
+	InitStepID *int64 `json:"initstep_id,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }

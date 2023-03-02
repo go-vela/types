@@ -6,9 +6,10 @@ package library
 
 import (
 	"fmt"
-	"github.com/go-vela/types/pipeline"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/pipeline"
 )
 
 func TestLibrary_InitStep_Getters(t *testing.T) {

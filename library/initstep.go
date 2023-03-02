@@ -6,6 +6,7 @@ package library
 
 import (
 	"fmt"
+
 	"github.com/go-vela/types/pipeline"
 )
 

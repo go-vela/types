@@ -5,20 +5,20 @@
 package pipeline
 
 type (
-	// InitSlice is the pipeline representation
-	// of the Inits block for a pipeline.
+	// InitStepSlice is the pipeline representation
+	// of the InitSteps block for a pipeline.
 	//
 	// swagger:model PipelineInitSlice
 	//
 	// swagger:model PipelineInitSlice
-	InitSlice []*Init
+	InitStepSlice []*InitStep
 
-	// Init is the pipeline representation of an Init entry in a pipeline.
+	// InitStep is the pipeline representation of an init step in a pipeline.
 	//
-	// An Init allows logs to be associated with something other than a container.
+	// An InitStep allows logs to be associated with something other than a container.
 	//
 	// swagger:model PipelineInit
-	Init struct {
+	InitStep struct {
 		ID       string `json:"id,omitempty"         yaml:"id,omitempty"`
 		Number   int    `json:"number,omitempty"     yaml:"number,omitempty"`
 		Reporter string `json:"reporter,omitempty"   yaml:"reporter,omitempty"`

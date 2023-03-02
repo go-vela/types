@@ -12,8 +12,8 @@ const (
 	// TableHook defines the table type for the database hooks table.
 	TableHook = "hooks"
 
-	// TableInit defines the table type for the database inits table.
-	TableInit = "inits"
+	// TableInitStep defines the table type for the database initsteps table.
+	TableInitStep = "initsteps"
 
 	// TableLog defines the table type for the database logs table.
 	TableLog = "logs"

@@ -129,8 +129,8 @@ func TestLibrary_Log_Getters(t *testing.T) {
 			t.Errorf("GetStepID is %v, want %v", test.log.GetStepID(), test.want.GetStepID())
 		}
 
-		if test.log.GetInitID() != test.want.GetInitID() {
-			t.Errorf("GetInitID is %v, want %v", test.log.GetInitID(), test.want.GetInitID())
+		if test.log.GetInitStepID() != test.want.GetInitStepID() {
+			t.Errorf("GetInitStepID is %v, want %v", test.log.GetInitStepID(), test.want.GetInitStepID())
 		}
 
 		if test.log.GetBuildID() != test.want.GetBuildID() {
@@ -171,7 +171,7 @@ func TestLibrary_Log_Setters(t *testing.T) {
 		test.log.SetID(test.want.GetID())
 		test.log.SetServiceID(test.want.GetServiceID())
 		test.log.SetStepID(test.want.GetStepID())
-		test.log.SetInitID(test.want.GetInitID())
+		test.log.SetInitStepID(test.want.GetInitStepID())
 		test.log.SetBuildID(test.want.GetBuildID())
 		test.log.SetRepoID(test.want.GetRepoID())
 		test.log.SetData(test.want.GetData())
@@ -188,8 +188,8 @@ func TestLibrary_Log_Setters(t *testing.T) {
 			t.Errorf("SetStepID is %v, want %v", test.log.GetStepID(), test.want.GetStepID())
 		}
 
-		if test.log.GetInitID() != test.want.GetInitID() {
-			t.Errorf("SetInitID is %v, want %v", test.log.GetInitID(), test.want.GetInitID())
+		if test.log.GetInitStepID() != test.want.GetInitStepID() {
+			t.Errorf("SetInitStepID is %v, want %v", test.log.GetInitStepID(), test.want.GetInitStepID())
 		}
 
 		if test.log.GetBuildID() != test.want.GetBuildID() {
@@ -217,7 +217,7 @@ func TestLibrary_Log_String(t *testing.T) {
   RepoID: %d,
   ServiceID: %d,
   StepID: %d,
-  InitID: %d,
+  InitStepID: %d,
 }`,
 		l.GetBuildID(),
 		l.GetData(),
@@ -225,7 +225,7 @@ func TestLibrary_Log_String(t *testing.T) {
 		l.GetRepoID(),
 		l.GetServiceID(),
 		l.GetStepID(),
-		l.GetInitID(),
+		l.GetInitStepID(),
 	)
 
 	// run test

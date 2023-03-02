@@ -20,7 +20,7 @@ type Build struct {
 	Stages      StageSlice         `yaml:"stages,omitempty"    json:"stages,omitempty" jsonschema:"oneof_required=stages,description=Provide parallel execution instructions.\nReference: https://go-vela.github.io/docs/reference/yaml/stages/"`
 	Steps       StepSlice          `yaml:"steps,omitempty"     json:"steps,omitempty" jsonschema:"oneof_required=steps,description=Provide sequential execution instructions.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/"`
 	Templates   TemplateSlice      `yaml:"templates,omitempty" json:"templates,omitempty" jsonschema:"description=Provide the name of templates to expand.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/"`
-	// The init section is internal and should not be exposed in yaml.
+	// The InitSteps are internal and should not be exposed in yaml.
 }
 
 // ToPipelineLibrary converts the Build type to a library Pipeline type.

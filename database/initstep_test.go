@@ -12,11 +12,11 @@ import (
 	"github.com/go-vela/types/library"
 )
 
-func TestDatabase_Init_Nullify(t *testing.T) {
+func TestDatabase_InitStep_Nullify(t *testing.T) {
 	// setup types
-	var s *Init
+	var s *InitStep
 
-	want := &Init{
+	want := &InitStep{
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
@@ -28,26 +28,26 @@ func TestDatabase_Init_Nullify(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		init *Init
-		want *Init
+		initStep *InitStep
+		want     *InitStep
 	}{
 		{
-			init: testInit(),
-			want: testInit(),
+			initStep: testInitStep(),
+			want:     testInitStep(),
 		},
 		{
-			init: s,
-			want: nil,
+			initStep: s,
+			want:     nil,
 		},
 		{
-			init: new(Init),
-			want: want,
+			initStep: new(InitStep),
+			want:     want,
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		got := test.init.Nullify()
+		got := test.initStep.Nullify()
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Nullify is %v, want %v", got, test.want)
@@ -55,9 +55,9 @@ func TestDatabase_Init_Nullify(t *testing.T) {
 	}
 }
 
-func TestDatabase_Init_ToLibrary(t *testing.T) {
+func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	// setup types
-	want := new(library.Init)
+	want := new(library.InitStep)
 
 	want.SetID(1)
 	want.SetRepoID(1)
@@ -68,26 +68,26 @@ func TestDatabase_Init_ToLibrary(t *testing.T) {
 	want.SetMimetype("text/plain")
 
 	// run test
-	got := testInit().ToLibrary()
+	got := testInitStep().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
 	}
 }
 
-func TestDatabase_Init_Validate(t *testing.T) {
+func TestDatabase_InitStep_Validate(t *testing.T) {
 	// setup types
 	tests := []struct {
-		failure bool
-		init    *Init
+		failure  bool
+		initStep *InitStep
 	}{
 		{
-			failure: false,
-			init:    testInit(),
+			failure:  false,
+			initStep: testInitStep(),
 		},
-		{ // no repo_id set for init
+		{ // no repo_id set for InitStep
 			failure: true,
-			init: &Init{
+			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
 				Number:   sql.NullInt32{Int32: 1, Valid: true},
@@ -95,9 +95,9 @@ func TestDatabase_Init_Validate(t *testing.T) {
 				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
-		{ // no build_id set for init
+		{ // no build_id set for InitStep
 			failure: true,
-			init: &Init{
+			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				Number:   sql.NullInt32{Int32: 1, Valid: true},
@@ -105,9 +105,9 @@ func TestDatabase_Init_Validate(t *testing.T) {
 				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
-		{ // no number set for init
+		{ // no number set for InitStep
 			failure: true,
-			init: &Init{
+			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
@@ -115,9 +115,9 @@ func TestDatabase_Init_Validate(t *testing.T) {
 				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
 		},
-		{ // no reporter set for init
+		{ // no reporter set for InitStep
 			failure: true,
-			init: &Init{
+			initStep: &InitStep{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 				BuildID: sql.NullInt64{Int64: 1, Valid: true},
@@ -125,9 +125,9 @@ func TestDatabase_Init_Validate(t *testing.T) {
 				Name:    sql.NullString{String: "foobar", Valid: true},
 			},
 		},
-		{ // no name set for init
+		{ // no name set for InitStep
 			failure: true,
-			init: &Init{
+			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
@@ -139,7 +139,7 @@ func TestDatabase_Init_Validate(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		err := test.init.Validate()
+		err := test.initStep.Validate()
 
 		if test.failure {
 			if err == nil {
@@ -155,9 +155,9 @@ func TestDatabase_Init_Validate(t *testing.T) {
 	}
 }
 
-func TestDatabase_InitFromLibrary(t *testing.T) {
+func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	// setup types
-	s := new(library.Init)
+	s := new(library.InitStep)
 
 	s.SetID(1)
 	s.SetRepoID(1)
@@ -167,20 +167,20 @@ func TestDatabase_InitFromLibrary(t *testing.T) {
 	s.SetName("foobar")
 	s.SetMimetype("text/plain")
 
-	want := testInit()
+	want := testInitStep()
 
 	// run test
-	got := InitFromLibrary(s)
+	got := InitStepFromLibrary(s)
 
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("InitFromLibrary is %v, want %v", got, want)
+		t.Errorf("InitStepFromLibrary is %v, want %v", got, want)
 	}
 }
 
-// testInit is a test helper function to create a Init
+// testInitStep is a test helper function to create a InitStep
 // type with all fields set to a fake value.
-func testInit() *Init {
-	return &Init{
+func testInitStep() *InitStep {
+	return &InitStep{
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 		BuildID:  sql.NullInt64{Int64: 1, Valid: true},

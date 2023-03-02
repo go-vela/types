@@ -230,12 +230,12 @@ func TestDatabase_Log_Nullify(t *testing.T) {
 	var l *Log
 
 	want := &Log{
-		ID:        sql.NullInt64{Int64: 0, Valid: false},
-		BuildID:   sql.NullInt64{Int64: 0, Valid: false},
-		RepoID:    sql.NullInt64{Int64: 0, Valid: false},
-		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
-		StepID:    sql.NullInt64{Int64: 0, Valid: false},
-		InitID:    sql.NullInt64{Int64: 0, Valid: false},
+		ID:         sql.NullInt64{Int64: 0, Valid: false},
+		BuildID:    sql.NullInt64{Int64: 0, Valid: false},
+		RepoID:     sql.NullInt64{Int64: 0, Valid: false},
+		ServiceID:  sql.NullInt64{Int64: 0, Valid: false},
+		StepID:     sql.NullInt64{Int64: 0, Valid: false},
+		InitStepID: sql.NullInt64{Int64: 0, Valid: false},
 	}
 
 	// setup tests
@@ -274,7 +274,7 @@ func TestDatabase_Log_ToLibrary(t *testing.T) {
 	want.SetID(1)
 	want.SetServiceID(1)
 	want.SetStepID(1)
-	want.SetInitID(1)
+	want.SetInitStepID(1)
 	want.SetBuildID(1)
 	want.SetRepoID(1)
 	want.SetData([]byte("foo"))
@@ -297,7 +297,7 @@ func TestDatabase_Log_Validate(t *testing.T) {
 			failure: false,
 			log:     testLog(),
 		},
-		{ // no service_id or step_id or init_id set for log
+		{ // no service_id or step_id or init_step_id set for log
 			failure: true,
 			log: &Log{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
@@ -323,13 +323,13 @@ func TestDatabase_Log_Validate(t *testing.T) {
 				ServiceID: sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
-		{ // only init_id set for log
+		{ // only init_step_id set for log
 			failure: false,
 			log: &Log{
-				ID:      sql.NullInt64{Int64: 1, Valid: true},
-				BuildID: sql.NullInt64{Int64: 1, Valid: true},
-				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-				InitID:  sql.NullInt64{Int64: 1, Valid: true},
+				ID:         sql.NullInt64{Int64: 1, Valid: true},
+				BuildID:    sql.NullInt64{Int64: 1, Valid: true},
+				RepoID:     sql.NullInt64{Int64: 1, Valid: true},
+				InitStepID: sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
 		{ // no build_id set for log
@@ -377,7 +377,7 @@ func TestDatabase_LogFromLibrary(t *testing.T) {
 	l.SetID(1)
 	l.SetServiceID(1)
 	l.SetStepID(1)
-	l.SetInitID(1)
+	l.SetInitStepID(1)
 	l.SetBuildID(1)
 	l.SetRepoID(1)
 	l.SetData([]byte("foo"))
@@ -396,12 +396,12 @@ func TestDatabase_LogFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testLog() *Log {
 	return &Log{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		ServiceID: sql.NullInt64{Int64: 1, Valid: true},
-		StepID:    sql.NullInt64{Int64: 1, Valid: true},
-		InitID:    sql.NullInt64{Int64: 1, Valid: true},
-		Data:      []byte("foo"),
+		ID:         sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:    sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:     sql.NullInt64{Int64: 1, Valid: true},
+		ServiceID:  sql.NullInt64{Int64: 1, Valid: true},
+		StepID:     sql.NullInt64{Int64: 1, Valid: true},
+		InitStepID: sql.NullInt64{Int64: 1, Valid: true},
+		Data:       []byte("foo"),
 	}
 }

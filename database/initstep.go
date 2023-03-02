@@ -12,29 +12,29 @@ import (
 )
 
 var (
-	// ErrEmptyInitBuildID defines the error type when a
-	// Init type has an empty BuildID field provided.
-	ErrEmptyInitBuildID = errors.New("empty init build_id provided")
+	// ErrEmptyInitStepRepoID defines the error type when an
+	// InitStep type has an empty RepoID field provided.
+	ErrEmptyInitStepRepoID = errors.New("empty init step repo_id provided")
 
-	// ErrEmptyInitNumber defines the error type when a
-	// Init type has an empty Number field provided.
-	ErrEmptyInitNumber = errors.New("empty init number provided")
+	// ErrEmptyInitStepBuildID defines the error type when an
+	// InitStep type has an empty BuildID field provided.
+	ErrEmptyInitStepBuildID = errors.New("empty init step build_id provided")
 
-	// ErrEmptyInitReporter defines the error type when a
-	// Init type has an empty Reporter field provided.
-	ErrEmptyInitReporter = errors.New("empty init reporter provided")
+	// ErrEmptyInitStepNumber defines the error type when an
+	// InitStep type has an empty Number field provided.
+	ErrEmptyInitStepNumber = errors.New("empty init step number provided")
 
-	// ErrEmptyInitName defines the error type when a
-	// Init type has an empty Name field provided.
-	ErrEmptyInitName = errors.New("empty init name provided")
+	// ErrEmptyInitStepReporter defines the error type when an
+	// InitStep type has an empty Reporter field provided.
+	ErrEmptyInitStepReporter = errors.New("empty init step reporter provided")
 
-	// ErrEmptyInitRepoID defines the error type when a
-	// Init type has an empty RepoID field provided.
-	ErrEmptyInitRepoID = errors.New("empty init repo_id provided")
+	// ErrEmptyInitStepName defines the error type when an
+	// InitStep type has an empty Name field provided.
+	ErrEmptyInitStepName = errors.New("empty init step name provided")
 )
 
-// Init is the database representation of a init in a build.
-type Init struct {
+// InitStep is the database representation of an init step in a build.
+type InitStep struct {
 	ID       sql.NullInt64  `sql:"id"`
 	RepoID   sql.NullInt64  `sql:"repo_id"`
 	BuildID  sql.NullInt64  `sql:"build_id"`
@@ -47,10 +47,10 @@ type Init struct {
 // Nullify ensures the valid flag for
 // the sql.Null types are properly set.
 //
-// When a field within the Init type is the zero
+// When a field within the InitStep type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-func (i *Init) Nullify() *Init {
+func (i *InitStep) Nullify() *InitStep {
 	if i == nil {
 		return nil
 	}
@@ -93,51 +93,51 @@ func (i *Init) Nullify() *Init {
 	return i
 }
 
-// ToLibrary converts the Init type
-// to a library Init type.
-func (i *Init) ToLibrary() *library.Init {
-	init := new(library.Init)
+// ToLibrary converts the InitStep type
+// to a library InitStep type.
+func (i *InitStep) ToLibrary() *library.InitStep {
+	initStep := new(library.InitStep)
 
-	init.SetID(i.ID.Int64)
-	init.SetRepoID(i.RepoID.Int64)
-	init.SetBuildID(i.BuildID.Int64)
-	init.SetNumber(int(i.Number.Int32))
-	init.SetReporter(i.Reporter.String)
-	init.SetName(i.Name.String)
-	init.SetMimetype(i.Mimetype.String)
+	initStep.SetID(i.ID.Int64)
+	initStep.SetRepoID(i.RepoID.Int64)
+	initStep.SetBuildID(i.BuildID.Int64)
+	initStep.SetNumber(int(i.Number.Int32))
+	initStep.SetReporter(i.Reporter.String)
+	initStep.SetName(i.Name.String)
+	initStep.SetMimetype(i.Mimetype.String)
 
-	return init
+	return initStep
 }
 
 // Validate verifies the necessary fields for
-// the Init type are populated correctly.
-func (i *Init) Validate() error {
+// the InitStep type are populated correctly.
+func (i *InitStep) Validate() error {
 	// verify the RepoID field is populated
 	if i.RepoID.Int64 <= 0 {
-		return ErrEmptyInitRepoID
+		return ErrEmptyInitStepRepoID
 	}
 
 	// verify the BuildID field is populated
 	if i.BuildID.Int64 <= 0 {
-		return ErrEmptyInitBuildID
+		return ErrEmptyInitStepBuildID
 	}
 
 	// verify the Number field is populated
 	if i.Number.Int32 <= 0 {
-		return ErrEmptyInitNumber
+		return ErrEmptyInitStepNumber
 	}
 
 	// verify the Reporter field is populated
 	if len(i.Reporter.String) == 0 {
-		return ErrEmptyInitReporter
+		return ErrEmptyInitStepReporter
 	}
 
 	// verify the Name field is populated
 	if len(i.Name.String) == 0 {
-		return ErrEmptyInitName
+		return ErrEmptyInitStepName
 	}
 
-	// ensure that all Init string fields
+	// ensure that all InitStep string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
 	i.Name = sql.NullString{String: sanitize(i.Name.String), Valid: i.Name.Valid}
@@ -147,10 +147,10 @@ func (i *Init) Validate() error {
 	return nil
 }
 
-// InitFromLibrary converts the library Init type
-// to a database Init type.
-func InitFromLibrary(i *library.Init) *Init {
-	init := &Init{
+// InitStepFromLibrary converts the library InitStep type
+// to a database InitStep type.
+func InitStepFromLibrary(i *library.InitStep) *InitStep {
+	initStep := &InitStep{
 		ID:       sql.NullInt64{Int64: i.GetID(), Valid: true},
 		RepoID:   sql.NullInt64{Int64: i.GetRepoID(), Valid: true},
 		BuildID:  sql.NullInt64{Int64: i.GetBuildID(), Valid: true},
@@ -160,5 +160,5 @@ func InitFromLibrary(i *library.Init) *Init {
 		Mimetype: sql.NullString{String: i.GetMimetype(), Valid: true},
 	}
 
-	return init.Nullify()
+	return initStep.Nullify()
 }

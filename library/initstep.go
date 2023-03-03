@@ -17,7 +17,6 @@ type InitStep struct {
 	ID       *int64  `json:"id,omitempty"`
 	RepoID   *int64  `json:"repo_id,omitempty"`
 	BuildID  *int64  `json:"build_id,omitempty"`
-	Number   *int    `json:"number,omitempty"`
 	Reporter *string `json:"reporter,omitempty"` // which layer created this: compile, runtime, ...
 	Name     *string `json:"name,omitempty"`
 	Mimetype *string `json:"mimetype,omitempty"`
@@ -60,19 +59,6 @@ func (i *InitStep) GetBuildID() int64 {
 	}
 
 	return *i.BuildID
-}
-
-// GetNumber returns the Number field.
-//
-// When the provided InitStep type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (i *InitStep) GetNumber() int {
-	// return zero value if InitStep type or Number field is nil
-	if i == nil || i.Number == nil {
-		return 0
-	}
-
-	return *i.Number
 }
 
 // GetReporter returns the Reporter field.
@@ -153,19 +139,6 @@ func (i *InitStep) SetBuildID(v int64) {
 	i.BuildID = &v
 }
 
-// SetNumber sets the Number field.
-//
-// When the provided InitStep type is nil, it
-// will set nothing and immediately return.
-func (i *InitStep) SetNumber(v int) {
-	// return if InitStep type is nil
-	if i == nil {
-		return
-	}
-
-	i.Number = &v
-}
-
 // SetReporter sets the Reporter field.
 //
 // When the provided InitStep type is nil, it
@@ -212,7 +185,6 @@ func (i *InitStep) String() string {
   ID: %d,
   Mimetype: %s,
   Name: %s,
-  Number: %d,
   RepoID: %d,
   Reporter: %s,
 }`,
@@ -220,7 +192,6 @@ func (i *InitStep) String() string {
 		i.GetID(),
 		i.GetMimetype(),
 		i.GetName(),
-		i.GetNumber(),
 		i.GetRepoID(),
 		i.GetReporter(),
 	)
@@ -234,7 +205,6 @@ func InitStepFromBuildInitStep(initStep *pipeline.InitStep) *InitStep {
 	// copy fields from initStep
 	if initStep != nil && (initStep.Reporter != "" || initStep.Name != "") {
 		// set values from the initStep
-		i.SetNumber(initStep.Number)
 		i.SetReporter(initStep.Reporter)
 		i.SetName(initStep.Name)
 		i.SetMimetype(initStep.Mimetype)

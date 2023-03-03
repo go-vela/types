@@ -20,6 +20,7 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 		ID:       sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
 		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
+		Number:   sql.NullInt32{Int32: 0, Valid: false},
 		Reporter: sql.NullString{String: "", Valid: false},
 		Name:     sql.NullString{String: "", Valid: false},
 		Mimetype: sql.NullString{String: "", Valid: false},
@@ -61,6 +62,7 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	want.SetID(1)
 	want.SetRepoID(1)
 	want.SetBuildID(1)
+	want.SetNumber(1)
 	want.SetReporter("Foobar Runtime")
 	want.SetName("foobar")
 	want.SetMimetype("text/plain")
@@ -88,6 +90,7 @@ func TestDatabase_InitStep_Validate(t *testing.T) {
 			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
@@ -97,6 +100,7 @@ func TestDatabase_InitStep_Validate(t *testing.T) {
 			initStep: &InitStep{
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 				Name:     sql.NullString{String: "foobar", Valid: true},
 			},
@@ -117,6 +121,7 @@ func TestDatabase_InitStep_Validate(t *testing.T) {
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 				BuildID: sql.NullInt64{Int64: 1, Valid: true},
+				Number:  sql.NullInt32{Int32: 1, Valid: true},
 				Name:    sql.NullString{String: "foobar", Valid: true},
 			},
 		},
@@ -126,6 +131,7 @@ func TestDatabase_InitStep_Validate(t *testing.T) {
 				ID:       sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 				BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+				Number:   sql.NullInt32{Int32: 1, Valid: true},
 				Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 			},
 		},
@@ -156,6 +162,7 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	s.SetID(1)
 	s.SetRepoID(1)
 	s.SetBuildID(1)
+	s.SetNumber(1)
 	s.SetReporter("Foobar Runtime")
 	s.SetName("foobar")
 	s.SetMimetype("text/plain")
@@ -177,6 +184,7 @@ func testInitStep() *InitStep {
 		ID:       sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
 		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
 		Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
 		Name:     sql.NullString{String: "foobar", Valid: true},
 		Mimetype: sql.NullString{String: "text/plain", Valid: true},

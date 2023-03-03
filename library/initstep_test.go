@@ -42,6 +42,10 @@ func TestLibrary_InitStep_Getters(t *testing.T) {
 			t.Errorf("GetBuildID is %v, want %v", test.initStep.GetBuildID(), test.want.GetBuildID())
 		}
 
+		if test.initStep.GetNumber() != test.want.GetNumber() {
+			t.Errorf("GetNumber is %v, want %v", test.initStep.GetNumber(), test.want.GetNumber())
+		}
+
 		if test.initStep.GetReporter() != test.want.GetReporter() {
 			t.Errorf("GetReporter is %v, want %v", test.initStep.GetReporter(), test.want.GetReporter())
 		}
@@ -80,6 +84,7 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 		test.initStep.SetID(test.want.GetID())
 		test.initStep.SetRepoID(test.want.GetRepoID())
 		test.initStep.SetBuildID(test.want.GetBuildID())
+		test.initStep.SetNumber(test.want.GetNumber())
 		test.initStep.SetReporter(test.want.GetReporter())
 		test.initStep.SetName(test.want.GetName())
 		test.initStep.SetMimetype(test.want.GetMimetype())
@@ -94,6 +99,10 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 
 		if test.initStep.GetBuildID() != test.want.GetBuildID() {
 			t.Errorf("SetBuildID is %v, want %v", test.initStep.GetBuildID(), test.want.GetBuildID())
+		}
+
+		if test.initStep.GetNumber() != test.want.GetNumber() {
+			t.Errorf("SetNumber is %v, want %v", test.initStep.GetNumber(), test.want.GetNumber())
 		}
 
 		if test.initStep.GetReporter() != test.want.GetReporter() {
@@ -119,6 +128,7 @@ func TestLibrary_InitStep_String(t *testing.T) {
   ID: %d,
   Mimetype: %s,
   Name: %s,
+  Number: %d,
   RepoID: %d,
   Reporter: %s,
 }`,
@@ -126,6 +136,7 @@ func TestLibrary_InitStep_String(t *testing.T) {
 		i.GetID(),
 		i.GetMimetype(),
 		i.GetName(),
+		i.GetNumber(),
 		i.GetRepoID(),
 		i.GetReporter(),
 	)
@@ -166,6 +177,7 @@ func TestLibrary_InitStepFromBuildInitStep(t *testing.T) {
 		{
 			name: "populated InitStep",
 			initStep: &pipeline.InitStep{
+				Number:   i.GetNumber(),
 				Reporter: i.GetReporter(),
 				Name:     i.GetName(),
 				Mimetype: i.GetMimetype(),
@@ -192,6 +204,7 @@ func testInitStep() *InitStep {
 	i.SetID(1)
 	i.SetRepoID(1)
 	i.SetBuildID(1)
+	i.SetNumber(1)
 	i.SetReporter("Kubernetes Runtime")
 	i.SetName("clone")
 	i.SetMimetype("text/plain")

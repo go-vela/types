@@ -20,6 +20,10 @@ var (
 	// InitStep type has an empty BuildID field provided.
 	ErrEmptyInitStepBuildID = errors.New("empty init step build_id provided")
 
+	// ErrEmptyInitStepNumber defines the error type when an
+	// InitStep type has an empty Number field provided.
+	ErrEmptyInitStepNumber = errors.New("empty init step number provided")
+
 	// ErrEmptyInitStepReporter defines the error type when an
 	// InitStep type has an empty Reporter field provided.
 	ErrEmptyInitStepReporter = errors.New("empty init step reporter provided")
@@ -34,6 +38,7 @@ type InitStep struct {
 	ID       sql.NullInt64  `sql:"id"`
 	RepoID   sql.NullInt64  `sql:"repo_id"`
 	BuildID  sql.NullInt64  `sql:"build_id"`
+	Number   sql.NullInt32  `sql:"number"`
 	Reporter sql.NullString `sql:"reporter"`
 	Name     sql.NullString `sql:"name"`
 	Mimetype sql.NullString `sql:"mimetype"`
@@ -65,6 +70,11 @@ func (i *InitStep) Nullify() *InitStep {
 		i.BuildID.Valid = false
 	}
 
+	// check if the Number field should be false
+	if i.Number.Int32 == 0 {
+		i.Number.Valid = false
+	}
+
 	// check if the Reporter field should be false
 	if len(i.Reporter.String) == 0 {
 		i.Reporter.Valid = false
@@ -91,6 +101,7 @@ func (i *InitStep) ToLibrary() *library.InitStep {
 	initStep.SetID(i.ID.Int64)
 	initStep.SetRepoID(i.RepoID.Int64)
 	initStep.SetBuildID(i.BuildID.Int64)
+	initStep.SetNumber(int(i.Number.Int32))
 	initStep.SetReporter(i.Reporter.String)
 	initStep.SetName(i.Name.String)
 	initStep.SetMimetype(i.Mimetype.String)
@@ -109,6 +120,11 @@ func (i *InitStep) Validate() error {
 	// verify the BuildID field is populated
 	if i.BuildID.Int64 <= 0 {
 		return ErrEmptyInitStepBuildID
+	}
+
+	// verify the Number field is populated
+	if i.Number.Int32 <= 0 {
+		return ErrEmptyInitStepNumber
 	}
 
 	// verify the Reporter field is populated
@@ -138,6 +154,7 @@ func InitStepFromLibrary(i *library.InitStep) *InitStep {
 		ID:       sql.NullInt64{Int64: i.GetID(), Valid: true},
 		RepoID:   sql.NullInt64{Int64: i.GetRepoID(), Valid: true},
 		BuildID:  sql.NullInt64{Int64: i.GetBuildID(), Valid: true},
+		Number:   sql.NullInt32{Int32: int32(i.GetNumber()), Valid: true},
 		Reporter: sql.NullString{String: i.GetReporter(), Valid: true},
 		Name:     sql.NullString{String: i.GetName(), Valid: true},
 		Mimetype: sql.NullString{String: i.GetMimetype(), Valid: true},

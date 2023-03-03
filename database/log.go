@@ -22,7 +22,7 @@ var (
 
 	// ErrEmptyLogStepOrServiceOrInitStepID defines the error type when a
 	// Log type has an empty StepID or ServiceID field provided.
-	ErrEmptyLogStepOrServiceOrInitStepID = errors.New("empty log step_id or service_id or initstep_id provided")
+	ErrEmptyLogStepOrServiceOrInitStepID = errors.New("empty log step_id or service_id or init_step_id provided")
 )
 
 // Log is the database representation of a log for a step in a build.
@@ -32,7 +32,7 @@ type Log struct {
 	RepoID     sql.NullInt64 `sql:"repo_id"`
 	ServiceID  sql.NullInt64 `sql:"service_id"`
 	StepID     sql.NullInt64 `sql:"step_id"`
-	InitStepID sql.NullInt64 `sql:"initstep_id"`
+	InitStepID sql.NullInt64 `sql:"init_step_id"`
 	Data       []byte        `sql:"data"`
 }
 

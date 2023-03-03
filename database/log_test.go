@@ -297,7 +297,7 @@ func TestDatabase_Log_Validate(t *testing.T) {
 			failure: false,
 			log:     testLog(),
 		},
-		{ // no service_id or step_id or initstep_id set for log
+		{ // no service_id or step_id or init_step_id set for log
 			failure: true,
 			log: &Log{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
@@ -323,7 +323,7 @@ func TestDatabase_Log_Validate(t *testing.T) {
 				ServiceID: sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
-		{ // only initstep_id set for log
+		{ // only init_step_id set for log
 			failure: false,
 			log: &Log{
 				ID:         sql.NullInt64{Int64: 1, Valid: true},

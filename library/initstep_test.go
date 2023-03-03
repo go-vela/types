@@ -149,7 +149,7 @@ func TestLibrary_InitStep_String(t *testing.T) {
 	}
 }
 
-func TestLibrary_InitStepFromBuildInitStep(t *testing.T) {
+func TestLibrary_InitStepFromPipelineInitStep(t *testing.T) {
 	// setup types
 	i := testInitStep()
 	i.SetReporter("Foobar Runtime")
@@ -188,10 +188,10 @@ func TestLibrary_InitStepFromBuildInitStep(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := InitStepFromBuildInitStep(test.initStep)
+		got := InitStepFromPipelineInitStep(test.initStep)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("InitStepFromBuildInitStep for %s is %v, want %v", test.name, got, test.want)
+			t.Errorf("InitStepFromPipelineInitStep for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }

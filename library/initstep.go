@@ -226,8 +226,8 @@ func (i *InitStep) String() string {
 	)
 }
 
-// InitStepFromBuildInitStep creates a new InitStep based on a Build and pipeline InitStep.
-func InitStepFromBuildInitStep(initStep *pipeline.InitStep) *InitStep {
+// InitStepFromPipelineInitStep creates a new InitStep based on a pipeline InitStep.
+func InitStepFromPipelineInitStep(initStep *pipeline.InitStep) *InitStep {
 	// create new InitStep type we want to return
 	i := new(InitStep)
 
@@ -241,4 +241,24 @@ func InitStepFromBuildInitStep(initStep *pipeline.InitStep) *InitStep {
 	}
 
 	return i
+}
+
+// InitStepLogFromBuild creates a new InitStep and Log based on a Build.
+func InitStepLogFromBuild(build *Build) (*InitStep, *Log) {
+	// create new InitStep type we want to return
+	i := new(InitStep)
+	l := new(Log)
+
+	l.SetData([]byte{})
+
+	// copy fields from build
+	if build != nil {
+		// set values from the initStep
+		i.SetRepoID(build.GetRepoID())
+		l.SetRepoID(build.GetRepoID())
+		i.SetBuildID(build.GetID())
+		l.SetBuildID(build.GetID())
+	}
+
+	return i, l
 }

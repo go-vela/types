@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -19,10 +19,6 @@ var (
 	// userRegex defines the regex pattern for validating
 	// the Name field for the User type.
 	userRegex = regexp.MustCompile("^[a-zA-Z0-9_-]{0,38}$")
-
-	// ErrEmptyUserHash defines the error type when a
-	// User type has an empty Hash field provided.
-	ErrEmptyUserHash = errors.New("empty user hash provided")
 
 	// ErrEmptyUserName defines the error type when a
 	// User type has an empty Name field provided.
@@ -51,7 +47,7 @@ type User struct {
 	Name         sql.NullString `sql:"name"`
 	RefreshToken sql.NullString `sql:"refresh_token"`
 	Token        sql.NullString `sql:"token"`
-	Hash         sql.NullString `sql:"hash"`
+	Hash         sql.NullString `sql:"hash"` // deprecated
 	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
 	Active       sql.NullBool   `sql:"active"`
 	Admin        sql.NullBool   `sql:"admin"`
@@ -231,11 +227,6 @@ func (u *User) Validate() error {
 	// verify the Token field is populated
 	if len(u.Token.String) == 0 {
 		return ErrEmptyUserToken
-	}
-
-	// verify the Hash field is populated
-	if len(u.Hash.String) == 0 {
-		return ErrEmptyUserHash
 	}
 
 	// verify the Name field is valid

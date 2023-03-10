@@ -186,8 +186,9 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_PULL_REQUEST_TARGET"] = b.GetBaseRef()
 	}
 
-	// check if the Build event is tag
-	if strings.EqualFold(b.GetEvent(), constants.EventTag) {
+	// check if the Build event is tag or release
+	if strings.EqualFold(b.GetEvent(), constants.EventTag) ||
+		strings.EqualFold(b.GetEvent(), constants.EventRelease) {
 		// capture the tag reference
 		tag := ToString(strings.SplitN(b.GetRef(), "refs/tags/", 2)[1])
 

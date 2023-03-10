@@ -136,6 +136,17 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 				Matcher:  "regex",
 			},
 		},
+		{
+			file: "testdata/ruleset_release.yml",
+			want: &Ruleset{
+				If: Rules{
+					Event: []string{"release:released"},
+				},
+				Matcher:  "filepath",
+				Operator: "and",
+				Continue: true,
+			},
+		},
 	}
 
 	// run tests

@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	skipDeleteEventMsg = "tag/branch delete event"
-	skipDirectiveMsg   = "skip ci directive found in commit title/message"
+	skipDeleteEventMsg              = "tag/branch delete event"
+	skipUnsupportedReleaseActionMsg = "unsupported release action"
+	skipDirectiveMsg                = "skip ci directive found in commit title/message"
 )
 
 // Webhook defines a struct that is used to return
@@ -22,6 +23,7 @@ var (
 type Webhook struct {
 	Comment  string
 	PRNumber int
+	TagName  string
 	Hook     *library.Hook
 	Repo     *library.Repo
 	Build    *library.Build
@@ -31,13 +33,22 @@ type Webhook struct {
 // associated with the given hook to determine
 // whether the hook should be skipped.
 func (w *Webhook) ShouldSkip() (bool, string) {
-	// push or tag event
-	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) || strings.EqualFold(constants.EventTag, w.Build.GetEvent()) {
+	// push, tag, or release event
+	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) ||
+		strings.EqualFold(constants.EventTag, w.Build.GetEvent()) ||
+		strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) {
 		// the head commit will return null in the hook
 		// payload from the scm when the event is
 		// associated with a branch/tag delete
-		if len(w.Build.GetCommit()) == 0 {
+		if !strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) &&
+			len(w.Build.GetCommit()) == 0 {
 			return true, skipDeleteEventMsg
+		}
+
+		// only release events with the action of "released" should be processed
+		if strings.EqualFold(constants.EventRelease, w.Build.GetEvent()) &&
+			!strings.EqualFold(constants.ActionReleased, w.Build.GetEventAction()) {
+			return true, skipUnsupportedReleaseActionMsg
 		}
 
 		// check for skip ci directive in message or title

@@ -20,4 +20,7 @@ const (
 
 	// ActionSynchronize defines the action for the synchronizing of pull requests.
 	ActionSynchronize = "synchronize"
+
+	// ActionReleased defines the action for the creation of a release.
+	ActionReleased = "released"
 )

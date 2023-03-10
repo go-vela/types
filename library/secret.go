@@ -77,6 +77,8 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 		eACL = checkEvent(events, constants.EventPull)
 	case constants.EventTag:
 		eACL = checkEvent(events, constants.EventTag)
+	case constants.EventRelease:
+		eACL = checkEvent(events, constants.EventRelease)
 	case constants.EventDeploy:
 		eACL = checkEvent(events, constants.EventDeploy)
 	case constants.EventComment:

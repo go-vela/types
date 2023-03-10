@@ -101,6 +101,7 @@ func main() {
 			"pull_request:synchronize",
 			"push",
 			"tag",
+			"release",
 		},
 		"path":   {},
 		"repo":   {},

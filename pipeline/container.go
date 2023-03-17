@@ -14,7 +14,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/drone/envsubst"
+	"github.com/drone/envsubst/v2"
+
 	"github.com/go-vela/types/constants"
 )
 

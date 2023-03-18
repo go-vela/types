@@ -76,7 +76,6 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	forBuild.SetNumber(1)
 	forBuild.SetReporter("Foobar Runtime")
 	forBuild.SetName("foobar")
-	forBuild.SetMimetype("text/plain")
 
 	forStep.SetID(1)
 	forStep.SetRepoID(1)
@@ -85,7 +84,6 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	forStep.SetNumber(1)
 	forStep.SetReporter("Foobar Runtime")
 	forStep.SetName("foobar")
-	forStep.SetMimetype("text/plain")
 
 	forService.SetID(1)
 	forService.SetRepoID(1)
@@ -94,7 +92,6 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	forService.SetNumber(1)
 	forService.SetReporter("Foobar Runtime")
 	forService.SetName("foobar")
-	forService.SetMimetype("text/plain")
 
 	tests := []struct {
 		initStep *InitStep
@@ -216,7 +213,6 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	forBuild.SetNumber(1)
 	forBuild.SetReporter("Foobar Runtime")
 	forBuild.SetName("foobar")
-	forBuild.SetMimetype("text/plain")
 
 	forStep.SetID(1)
 	forStep.SetRepoID(1)
@@ -225,7 +221,6 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	forStep.SetNumber(1)
 	forStep.SetReporter("Foobar Runtime")
 	forStep.SetName("foobar")
-	forStep.SetMimetype("text/plain")
 
 	forService.SetID(1)
 	forService.SetRepoID(1)
@@ -234,7 +229,6 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	forService.SetNumber(1)
 	forService.SetReporter("Foobar Runtime")
 	forService.SetName("foobar")
-	forService.SetMimetype("text/plain")
 
 	tests := []struct {
 		library *library.InitStep

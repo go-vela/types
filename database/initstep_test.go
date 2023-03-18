@@ -264,8 +264,8 @@ func testInitStep() *InitStep {
 	return &InitStep{
 		ID:        sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		StepID:    sql.NullInt64{Int64: 0, Valid: true},
+		BuildID:   sql.NullInt64{Int64: 1, Valid: false},
+		StepID:    sql.NullInt64{Int64: 0, Valid: false},
 		ServiceID: sql.NullInt64{Int64: 0, Valid: true},
 		Number:    sql.NullInt32{Int32: 1, Valid: true},
 		Reporter:  sql.NullString{String: "Foobar Runtime", Valid: true},

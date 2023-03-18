@@ -276,7 +276,7 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+		if !reflect.DeepEqual(gotLog, test.wantLog) {
 			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
 		}
 	}
@@ -334,7 +334,7 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+		if !reflect.DeepEqual(gotLog, test.wantLog) {
 			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
 		}
 	}

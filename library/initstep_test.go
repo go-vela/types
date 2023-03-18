@@ -257,13 +257,13 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 		{
 			name: "populated Build",
 			build: &Build{
-				ID:     i.BuildID(),
-				RepoID: i.RepoID(),
+				ID:     i.BuildID,
+				RepoID: i.RepoID,
 			},
 			want: i,
 			wantLog: &Log{
-				RepoID:  i.RepoID(),
-				BuildID: i.BuildID(),
+				RepoID:  i.RepoID,
+				BuildID: i.BuildID,
 			},
 		},
 	}
@@ -314,14 +314,14 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 		{
 			name: "populated Step",
 			step: &Step{
-				ID:      i.StepID(),
-				RepoID:  i.RepoID(),
-				BuildID: i.BuildID(),
+				ID:      i.StepID,
+				RepoID:  i.RepoID,
+				BuildID: i.BuildID,
 			},
 			want: i,
 			wantLog: &Log{
-				RepoID:  i.RepoID(),
-				BuildID: i.BuildID(),
+				RepoID:  i.RepoID,
+				BuildID: i.BuildID,
 			},
 		},
 	}
@@ -372,14 +372,14 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 		{
 			name: "populated Service",
 			service: &Service{
-				ID:      i.ServiceID(),
-				RepoID:  i.RepoID(),
-				BuildID: i.BuildID(),
+				ID:      i.ServiceID,
+				RepoID:  i.RepoID,
+				BuildID: i.BuildID,
 			},
 			want: i,
 			wantLog: &Log{
-				RepoID:  i.RepoID(),
-				BuildID: i.BuildID(),
+				RepoID:  i.RepoID,
+				BuildID: i.BuildID,
 			},
 		},
 	}
@@ -392,7 +392,7 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+		if !reflect.DeepEqual(gotLog, test.wantLog) {
 			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
 		}
 	}

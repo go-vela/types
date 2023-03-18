@@ -116,7 +116,7 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 		got := test.initStep.ToLibrary()
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("ToLibrary is %v, want %v", got, want)
+			t.Errorf("ToLibrary is %v, want %v", got, test.want)
 		}
 	}
 }
@@ -253,7 +253,7 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 		got := InitStepFromLibrary(test.library)
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("InitStepFromLibrary is %v, want %v", got, want)
+			t.Errorf("InitStepFromLibrary is %v, want %v", got, test.want)
 		}
 	}
 }

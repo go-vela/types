@@ -17,13 +17,14 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 	var s *InitStep
 
 	want := &InitStep{
-		ID:       sql.NullInt64{Int64: 0, Valid: false},
-		RepoID:   sql.NullInt64{Int64: 0, Valid: false},
-		BuildID:  sql.NullInt64{Int64: 0, Valid: false},
-		Number:   sql.NullInt32{Int32: 0, Valid: false},
-		Reporter: sql.NullString{String: "", Valid: false},
-		Name:     sql.NullString{String: "", Valid: false},
-		Mimetype: sql.NullString{String: "", Valid: false},
+		ID:        sql.NullInt64{Int64: 0, Valid: false},
+		RepoID:    sql.NullInt64{Int64: 0, Valid: false},
+		BuildID:   sql.NullInt64{Int64: 0, Valid: false},
+		StepID:    sql.NullInt64{Int64: 0, Valid: false},
+		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
+		Number:    sql.NullInt32{Int32: 0, Valid: false},
+		Reporter:  sql.NullString{String: "", Valid: false},
+		Name:      sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -34,6 +35,14 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 		{
 			initStep: testInitStep(),
 			want:     testInitStep(),
+		},
+		{
+			initStep: testStepInitStep(),
+			want:     testStepInitStep(),
+		},
+		{
+			initStep: testServiceInitStep(),
+			want:     testServiceInitStep(),
 		},
 		{
 			initStep: s,
@@ -57,21 +66,61 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 
 func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	// setup types
-	want := new(library.InitStep)
+	forBuild := new(library.InitStep)
+	forStep := new(library.InitStep)
+	forService := new(library.InitStep)
 
-	want.SetID(1)
-	want.SetRepoID(1)
-	want.SetBuildID(1)
-	want.SetNumber(1)
-	want.SetReporter("Foobar Runtime")
-	want.SetName("foobar")
-	want.SetMimetype("text/plain")
+	forBuild.SetID(1)
+	forBuild.SetRepoID(1)
+	forBuild.SetBuildID(1)
+	forBuild.SetNumber(1)
+	forBuild.SetReporter("Foobar Runtime")
+	forBuild.SetName("foobar")
+	forBuild.SetMimetype("text/plain")
 
-	// run test
-	got := testInitStep().ToLibrary()
+	forStep.SetID(1)
+	forStep.SetRepoID(1)
+	forStep.SetBuildID(1)
+	forStep.SetStepID(1)
+	forStep.SetNumber(1)
+	forStep.SetReporter("Foobar Runtime")
+	forStep.SetName("foobar")
+	forStep.SetMimetype("text/plain")
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ToLibrary is %v, want %v", got, want)
+	forService.SetID(1)
+	forService.SetRepoID(1)
+	forService.SetBuildID(1)
+	forService.SetServiceID(1)
+	forService.SetNumber(1)
+	forService.SetReporter("Foobar Runtime")
+	forService.SetName("foobar")
+	forService.SetMimetype("text/plain")
+
+	tests := []struct {
+		initStep *InitStep
+		want     *library.InitStep
+	}{
+		{
+			initStep: testInitStep(),
+			want:     forBuild,
+		},
+		{
+			initStep: testStepInitStep(),
+			want:     forStep,
+		},
+		{
+			initStep: testServiceInitStep(),
+			want:     forService,
+		},
+	}
+	// run tests
+	for _, test := range tests {
+		// run test
+		got := test.initStep.ToLibrary()
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToLibrary is %v, want %v", got, want)
+		}
 	}
 }
 
@@ -157,36 +206,93 @@ func TestDatabase_InitStep_Validate(t *testing.T) {
 
 func TestDatabase_InitStepFromLibrary(t *testing.T) {
 	// setup types
-	s := new(library.InitStep)
+	forBuild := new(library.InitStep)
+	forStep := new(library.InitStep)
+	forService := new(library.InitStep)
 
-	s.SetID(1)
-	s.SetRepoID(1)
-	s.SetBuildID(1)
-	s.SetNumber(1)
-	s.SetReporter("Foobar Runtime")
-	s.SetName("foobar")
-	s.SetMimetype("text/plain")
+	forBuild.SetID(1)
+	forBuild.SetRepoID(1)
+	forBuild.SetBuildID(1)
+	forBuild.SetNumber(1)
+	forBuild.SetReporter("Foobar Runtime")
+	forBuild.SetName("foobar")
+	forBuild.SetMimetype("text/plain")
 
-	want := testInitStep()
+	forStep.SetID(1)
+	forStep.SetRepoID(1)
+	forStep.SetBuildID(1)
+	forStep.SetStepID(1)
+	forStep.SetNumber(1)
+	forStep.SetReporter("Foobar Runtime")
+	forStep.SetName("foobar")
+	forStep.SetMimetype("text/plain")
 
-	// run test
-	got := InitStepFromLibrary(s)
+	forService.SetID(1)
+	forService.SetRepoID(1)
+	forService.SetBuildID(1)
+	forService.SetServiceID(1)
+	forService.SetNumber(1)
+	forService.SetReporter("Foobar Runtime")
+	forService.SetName("foobar")
+	forService.SetMimetype("text/plain")
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("InitStepFromLibrary is %v, want %v", got, want)
+	tests := []struct {
+		library *library.InitStep
+		want    *InitStep
+	}{
+		{
+			library: forBuild,
+			want:    testInitStep(),
+		},
+		{
+			library: forStep,
+			want:    testStepInitStep(),
+		},
+		{
+			library: forService,
+			want:    testServiceInitStep(),
+		},
+	}
+	// run tests
+	for _, test := range tests {
+		// run test
+		got := InitStepFromLibrary(test.library)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("InitStepFromLibrary is %v, want %v", got, want)
+		}
 	}
 }
 
 // testInitStep is a test helper function to create a InitStep
-// type with all fields set to a fake value.
+// type for a Build with all fields set to a fake value.
 func testInitStep() *InitStep {
 	return &InitStep{
-		ID:       sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:   sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:  sql.NullInt64{Int64: 1, Valid: true},
-		Number:   sql.NullInt32{Int32: 1, Valid: true},
-		Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
-		Name:     sql.NullString{String: "foobar", Valid: true},
-		Mimetype: sql.NullString{String: "text/plain", Valid: true},
+		ID:        sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
+		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
+		StepID:    sql.NullInt64{Int64: 0, Valid: false},
+		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
+		Number:    sql.NullInt32{Int32: 1, Valid: true},
+		Reporter:  sql.NullString{String: "Foobar Runtime", Valid: true},
+		Name:      sql.NullString{String: "foobar", Valid: true},
 	}
+}
+
+// testStepInitStep is a test helper function to create a InitStep
+// type for a Step with all fields set to a fake value.
+func testStepInitStep() *InitStep {
+    i := testInitStep()
+    i.StepID = sql.NullInt64{Int64: 1, Valid: true}
+
+    return i
+}
+
+// testServiceInitStep is a test helper function to create a InitStep
+// type for a Service with all fields set to a fake value.
+func testServiceInitStep() *InitStep {
+    i := testInitStep()
+    i.ServiceID = sql.NullInt64{Int64: 1, Valid: true}
+
+    return i
 }

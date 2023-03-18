@@ -23,6 +23,14 @@ func TestLibrary_InitStep_Getters(t *testing.T) {
 			want:     testInitStep(),
 		},
 		{
+			initStep: testStepInitStep(),
+			want:     testStepInitStep(),
+		},
+		{
+			initStep: testServiceInitStep(),
+			want:     testServiceInitStep(),
+		},
+		{
 			initStep: new(InitStep),
 			want:     new(InitStep),
 		},
@@ -42,6 +50,14 @@ func TestLibrary_InitStep_Getters(t *testing.T) {
 			t.Errorf("GetBuildID is %v, want %v", test.initStep.GetBuildID(), test.want.GetBuildID())
 		}
 
+		if test.initStep.GetStepID() != test.want.GetStepID() {
+			t.Errorf("GetStepID is %v, want %v", test.initStep.GetStepID(), test.want.GetStepID())
+		}
+
+		if test.initStep.GetServiceID() != test.want.GetServiceID() {
+			t.Errorf("GetServiceID is %v, want %v", test.initStep.GetServiceID(), test.want.GetServiceID())
+		}
+
 		if test.initStep.GetNumber() != test.want.GetNumber() {
 			t.Errorf("GetNumber is %v, want %v", test.initStep.GetNumber(), test.want.GetNumber())
 		}
@@ -52,10 +68,6 @@ func TestLibrary_InitStep_Getters(t *testing.T) {
 
 		if test.initStep.GetName() != test.want.GetName() {
 			t.Errorf("GetName is %v, want %v", test.initStep.GetName(), test.want.GetName())
-		}
-
-		if test.initStep.GetMimetype() != test.want.GetMimetype() {
-			t.Errorf("GetMimetype is %v, want %v", test.initStep.GetMimetype(), test.want.GetMimetype())
 		}
 	}
 }
@@ -74,6 +86,14 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 			want:     testInitStep(),
 		},
 		{
+			initStep: testStepInitStep(),
+			want:     testStepInitStep(),
+		},
+		{
+			initStep: testServiceInitStep(),
+			want:     testServiceInitStep(),
+		},
+		{
 			initStep: s,
 			want:     new(InitStep),
 		},
@@ -84,10 +104,11 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 		test.initStep.SetID(test.want.GetID())
 		test.initStep.SetRepoID(test.want.GetRepoID())
 		test.initStep.SetBuildID(test.want.GetBuildID())
+		test.initStep.SetStepID(test.want.GetStepID())
+		test.initStep.SetServiceID(test.want.GetServiceID())
 		test.initStep.SetNumber(test.want.GetNumber())
 		test.initStep.SetReporter(test.want.GetReporter())
 		test.initStep.SetName(test.want.GetName())
-		test.initStep.SetMimetype(test.want.GetMimetype())
 
 		if test.initStep.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.initStep.GetID(), test.want.GetID())
@@ -101,6 +122,14 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 			t.Errorf("SetBuildID is %v, want %v", test.initStep.GetBuildID(), test.want.GetBuildID())
 		}
 
+		if test.initStep.GetStepID() != test.want.GetStepID() {
+			t.Errorf("SetStepID is %v, want %v", test.initStep.GetStepID(), test.want.GetStepID())
+		}
+
+		if test.initStep.GetServiceID() != test.want.GetServiceID() {
+			t.Errorf("SetServiceID is %v, want %v", test.initStep.GetServiceID(), test.want.GetServiceID())
+		}
+
 		if test.initStep.GetNumber() != test.want.GetNumber() {
 			t.Errorf("SetNumber is %v, want %v", test.initStep.GetNumber(), test.want.GetNumber())
 		}
@@ -112,10 +141,6 @@ func TestLibrary_InitStep_Setters(t *testing.T) {
 		if test.initStep.GetName() != test.want.GetName() {
 			t.Errorf("SetName is %v, want %v", test.initStep.GetName(), test.want.GetName())
 		}
-
-		if test.initStep.GetMimetype() != test.want.GetMimetype() {
-			t.Errorf("SetMimetype is %v, want %v", test.initStep.GetMimetype(), test.want.GetMimetype())
-		}
 	}
 }
 
@@ -124,21 +149,23 @@ func TestLibrary_InitStep_String(t *testing.T) {
 	i := testInitStep()
 
 	want := fmt.Sprintf(`{
-  BuildID: %d,
   ID: %d,
-  Mimetype: %s,
-  Name: %s,
-  Number: %d,
   RepoID: %d,
+  BuildID: %d,
+  StepID: %d,
+  ServiceID: %d,
+  Number: %d,
   Reporter: %s,
+  Name: %s,
 }`,
-		i.GetBuildID(),
 		i.GetID(),
-		i.GetMimetype(),
-		i.GetName(),
-		i.GetNumber(),
 		i.GetRepoID(),
+		i.GetBuildID(),
+		i.GetStepID(),
+		i.GetServiceID(),
+		i.GetNumber(),
 		i.GetReporter(),
+		i.GetName(),
 	)
 
 	// run test
@@ -158,6 +185,8 @@ func TestLibrary_InitStepFromPipelineInitStep(t *testing.T) {
 	i.ID = nil
 	i.RepoID = nil
 	i.BuildID = nil
+	i.StepID = nil
+	i.ServiceID = nil
 
 	tests := []struct {
 		name     string
@@ -180,7 +209,6 @@ func TestLibrary_InitStepFromPipelineInitStep(t *testing.T) {
 				Number:   i.GetNumber(),
 				Reporter: i.GetReporter(),
 				Name:     i.GetName(),
-				Mimetype: i.GetMimetype(),
 			},
 			want: i,
 		},
@@ -196,8 +224,182 @@ func TestLibrary_InitStepFromPipelineInitStep(t *testing.T) {
 	}
 }
 
+func TestLibrary_InitStepLogFromBuild(t *testing.T) {
+	// setup types
+	i := testInitStep()
+
+	// modify fields that aren't set
+	i.ID = nil
+	i.StepID = nil
+	i.ServiceID = nil
+	i.Number = nil
+	i.Reporter = nil
+	i.Name = nil
+
+	tests := []struct {
+		name    string
+		build   *Build
+		want    *InitStep
+		wantLog *Log
+	}{
+		{
+			name:    "nil Build",
+			build:   nil,
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name:    "empty Build",
+			build:   new(Build),
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name: "populated Build",
+			build: &Build{
+				ID:     i.BuildID(),
+				RepoID: i.RepoID(),
+			},
+			want: i,
+			wantLog: &Log{
+				RepoID:  i.RepoID(),
+				BuildID: i.BuildID(),
+			},
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got, gotLog := InitStepLogFromBuild(test.build)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		}
+
+		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		}
+	}
+}
+
+func TestLibrary_InitStepLogFromStep(t *testing.T) {
+	// setup types
+	i := testStepInitStep()
+
+	// modify fields that aren't set
+	i.ID = nil
+	i.ServiceID = nil
+	i.Number = nil
+	i.Reporter = nil
+	i.Name = nil
+
+	tests := []struct {
+		name    string
+		step    *Step
+		want    *InitStep
+		wantLog *Log
+	}{
+		{
+			name:    "nil Step",
+			step:    nil,
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name:    "empty Step",
+			step:    new(Step),
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name: "populated Step",
+			step: &Step{
+				ID:      i.StepID(),
+				RepoID:  i.RepoID(),
+				BuildID: i.BuildID(),
+			},
+			want: i,
+			wantLog: &Log{
+				RepoID:  i.RepoID(),
+				BuildID: i.BuildID(),
+			},
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got, gotLog := InitStepLogFromStep(test.step)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		}
+
+		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		}
+	}
+}
+
+func TestLibrary_InitStepLogFromService(t *testing.T) {
+	// setup types
+	i := testServiceInitStep()
+
+	// modify fields that aren't set
+	i.ID = nil
+	i.StepID = nil
+	i.Number = nil
+	i.Reporter = nil
+	i.Name = nil
+
+	tests := []struct {
+		name     string
+		service *Service
+		want     *InitStep
+		wantLog  *Log
+	}{
+		{
+			name:    "nil Service",
+			service: nil,
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name:    "empty Service",
+			service: new(Service),
+			want:    &InitStep{},
+			wantLog: &Log{},
+		},
+		{
+			name: "populated Service",
+			service: &Service{
+				ID:      i.ServiceID(),
+				RepoID:  i.RepoID(),
+				BuildID: i.BuildID(),
+			},
+			want: i,
+			wantLog: &Log{
+				RepoID:  i.RepoID(),
+				BuildID: i.BuildID(),
+			},
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got, gotLog := InitStepLogFromService(test.service)
+
+		if !reflect.DeepEqual(got, test.want) {
+			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		}
+
+		if !reflect.DeepEqual(gotLog, test.wantiLog) {
+			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		}
+	}
+}
+
 // testInitStep is a test helper function to create a InitStep
-// type with all fields set to a fake value.
+// type for a Build with all fields set to a fake value.
 func testInitStep() *InitStep {
 	i := new(InitStep)
 
@@ -207,7 +409,24 @@ func testInitStep() *InitStep {
 	i.SetNumber(1)
 	i.SetReporter("Kubernetes Runtime")
 	i.SetName("clone")
-	i.SetMimetype("text/plain")
+
+	return i
+}
+
+// testStepInitStep is a test helper function to create a InitStep
+// type for a Step with all fields set to a fake value.
+func testStepInitStep() *InitStep {
+	i := testInitStep()
+	i.SetStepID(1)
+
+	return i
+}
+
+// testServiceInitStep is a test helper function to create a InitStep
+// type for a Service with all fields set to a fake value.
+func testServiceInitStep() *InitStep {
+	i := testInitStep()
+	i.SetServiceID(1)
 
 	return i
 }

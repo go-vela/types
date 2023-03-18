@@ -14,13 +14,14 @@ import (
 //
 // swagger:model InitStep
 type InitStep struct {
-	ID       *int64  `json:"id,omitempty"`
-	RepoID   *int64  `json:"repo_id,omitempty"`
-	BuildID  *int64  `json:"build_id,omitempty"`
-	Number   *int    `json:"number,omitempty"`
-	Reporter *string `json:"reporter,omitempty"` // which layer created this: compile, runtime, ...
-	Name     *string `json:"name,omitempty"`
-	Mimetype *string `json:"mimetype,omitempty"`
+	ID        *int64  `json:"id,omitempty"`
+	RepoID    *int64  `json:"repo_id,omitempty"`
+	BuildID   *int64  `json:"build_id,omitempty"`
+	StepID    *int64  `json:"step_id,omitempty"`
+	ServiceID *int64  `json:"service_id,omitempty"`
+	Number    *int    `json:"number,omitempty"`
+	Reporter  *string `json:"reporter,omitempty"` // which layer created this: compile, runtime, ...
+	Name      *string `json:"name,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -62,6 +63,32 @@ func (i *InitStep) GetBuildID() int64 {
 	return *i.BuildID
 }
 
+// GetStepID returns the StepID field.
+//
+// When the provided InitStep type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (i *InitStep) GetStepID() int64 {
+	// return zero value if InitStep type or StepID field is nil
+	if i == nil || i.StepID == nil {
+		return 0
+	}
+
+	return *i.StepID
+}
+
+// GetServiceID returns the ServiceID field.
+//
+// When the provided InitStep type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (i *InitStep) GetServiceID() int64 {
+	// return zero value if InitStep type or ServiceID field is nil
+	if i == nil || i.ServiceID == nil {
+		return 0
+	}
+
+	return *i.ServiceID
+}
+
 // GetNumber returns the Number field.
 //
 // When the provided InitStep type is nil, or the field within
@@ -99,19 +126,6 @@ func (i *InitStep) GetName() string {
 	}
 
 	return *i.Name
-}
-
-// GetMimetype returns the Mimetype field.
-//
-// When the provided InitStep type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (i *InitStep) GetMimetype() string {
-	// return zero value if InitStep type of Image field is nil
-	if i == nil || i.Mimetype == nil {
-		return ""
-	}
-
-	return *i.Mimetype
 }
 
 // SetID sets the ID field.
@@ -153,6 +167,32 @@ func (i *InitStep) SetBuildID(v int64) {
 	i.BuildID = &v
 }
 
+// SetStepID sets the StepID field.
+//
+// When the provided InitStep type is nil, it
+// will set nothing and immediately return.
+func (i *InitStep) SetStepID(v int64) {
+	// return if InitStep type is nil
+	if i == nil {
+		return
+	}
+
+	i.StepID = &v
+}
+
+// SetServiceID sets the ServiceID field.
+//
+// When the provided InitStep type is nil, it
+// will set nothing and immediately return.
+func (i *InitStep) SetServiceID(v int64) {
+	// return if InitStep type is nil
+	if i == nil {
+		return
+	}
+
+	i.ServiceID = &v
+}
+
 // SetNumber sets the Number field.
 //
 // When the provided InitStep type is nil, it
@@ -192,37 +232,26 @@ func (i *InitStep) SetName(v string) {
 	i.Name = &v
 }
 
-// SetMimetype sets the Mimetype field.
-//
-// When the provided InitStep type is nil, it
-// will set nothing and immediately return.
-func (i *InitStep) SetMimetype(v string) {
-	// return if InitStep type is nil
-	if i == nil {
-		return
-	}
-
-	i.Mimetype = &v
-}
-
 // String implements the Stringer interface for the InitStep type.
 func (i *InitStep) String() string {
 	return fmt.Sprintf(`{
-  BuildID: %d,
   ID: %d,
-  Mimetype: %s,
-  Name: %s,
-  Number: %d,
   RepoID: %d,
+  BuildID: %d,
+  StepID: %d,
+  ServiceID: %d,
+  Number: %d,
   Reporter: %s,
+  Name: %s,
 }`,
-		i.GetBuildID(),
 		i.GetID(),
-		i.GetMimetype(),
-		i.GetName(),
-		i.GetNumber(),
 		i.GetRepoID(),
+		i.GetBuildID(),
+		i.GetStepID(),
+		i.GetServiceID(),
+		i.GetNumber(),
 		i.GetReporter(),
+		i.GetName(),
 	)
 }
 
@@ -237,7 +266,6 @@ func InitStepFromPipelineInitStep(initStep *pipeline.InitStep) *InitStep {
 		i.SetNumber(initStep.Number)
 		i.SetReporter(initStep.Reporter)
 		i.SetName(initStep.Name)
-		i.SetMimetype(initStep.Mimetype)
 	}
 
 	return i
@@ -258,6 +286,50 @@ func InitStepLogFromBuild(build *Build) (*InitStep, *Log) {
 		l.SetRepoID(build.GetRepoID())
 		i.SetBuildID(build.GetID())
 		l.SetBuildID(build.GetID())
+	}
+
+	return i, l
+}
+
+// InitStepLogFromStep creates a new InitStep and Log based on a Step.
+func InitStepLogFromStep(step *Step) (*InitStep, *Log) {
+	// create new InitStep type we want to return
+	i := new(InitStep)
+	l := new(Log)
+
+	l.SetData([]byte{})
+
+	// copy fields from step
+	if step != nil {
+		// set values from the step
+		i.SetRepoID(step.GetRepoID())
+		l.SetRepoID(step.GetRepoID())
+		i.SetBuildID(step.GetBuildID())
+		l.SetBuildID(step.GetBuildID())
+		// do not set StepID on the log!
+		i.SetStepID(step.GetID())
+	}
+
+	return i, l
+}
+
+// InitStepLogFromService creates a new InitStep and Log based on a Service.
+func InitStepLogFromService(service *Service) (*InitStep, *Log) {
+	// create new InitStep type we want to return
+	i := new(InitStep)
+	l := new(Log)
+
+	l.SetData([]byte{})
+
+	// copy fields from service
+	if service != nil {
+		// set values from the service
+		i.SetRepoID(service.GetRepoID())
+		l.SetRepoID(service.GetRepoID())
+		i.SetBuildID(service.GetBuildID())
+		l.SetBuildID(service.GetBuildID())
+		// do not set ServiceID on the log!
+		i.SetServiceID(service.GetID())
 	}
 
 	return i, l

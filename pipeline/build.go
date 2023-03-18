@@ -26,7 +26,7 @@ type Build struct {
 	Services    ContainerSlice     `json:"services,omitempty" yaml:"services,omitempty"`
 	Stages      StageSlice         `json:"stages,omitempty"   yaml:"stages,omitempty"`
 	Steps       ContainerSlice     `json:"steps,omitempty"    yaml:"steps,omitempty"`
-	InitSteps   InitStepSlice      `json:"init,omitempty"     yaml:"init,omitempty"`
+	InitSteps   InitStepSlice      `json:"initsteps,omitempty" yaml:"initsteps,omitempty"`
 }
 
 // Purge removes the steps, in every stage, that contain a ruleset

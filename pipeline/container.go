@@ -52,6 +52,7 @@ type (
 		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
 		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
 		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
+		InitSteps   InitStepSlice     `json:"initsteps,omitempty"   yaml:"initsteps,omitempty"`
 	}
 )
 
@@ -129,7 +130,8 @@ func (c *Container) Empty() bool {
 		len(c.Secrets) == 0 &&
 		len(c.Ulimits) == 0 &&
 		len(c.Volumes) == 0 &&
-		len(c.User) == 0 {
+		len(c.User) == 0 &&
+		len(c.InitSteps) == 0 {
 		return true
 	}
 

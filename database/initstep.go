@@ -35,13 +35,14 @@ var (
 
 // InitStep is the database representation of an init step in a build.
 type InitStep struct {
-	ID       sql.NullInt64  `sql:"id"`
-	RepoID   sql.NullInt64  `sql:"repo_id"`
-	BuildID  sql.NullInt64  `sql:"build_id"`
-	Number   sql.NullInt32  `sql:"number"`
-	Reporter sql.NullString `sql:"reporter"`
-	Name     sql.NullString `sql:"name"`
-	Mimetype sql.NullString `sql:"mimetype"`
+	ID        sql.NullInt64  `sql:"id"`
+	RepoID    sql.NullInt64  `sql:"repo_id"`
+	BuildID   sql.NullInt64  `sql:"build_id"`
+	StepID    sql.NullInt64  `sql:"step_id"`
+	ServiceID sql.NullInt64  `sql:"service_id"`
+	Number    sql.NullInt32  `sql:"number"`
+	Reporter  sql.NullString `sql:"reporter"`
+	Name      sql.NullString `sql:"name"`
 }
 
 // Nullify ensures the valid flag for
@@ -70,6 +71,16 @@ func (i *InitStep) Nullify() *InitStep {
 		i.BuildID.Valid = false
 	}
 
+	// check if the StepID field should be false
+	if i.StepID.Int64 == 0 {
+		i.StepID.Valid = false
+	}
+
+	// check if the ServiceID field should be false
+	if i.ServiceID.Int64 == 0 {
+		i.ServiceID.Valid = false
+	}
+
 	// check if the Number field should be false
 	if i.Number.Int32 == 0 {
 		i.Number.Valid = false
@@ -85,11 +96,6 @@ func (i *InitStep) Nullify() *InitStep {
 		i.Name.Valid = false
 	}
 
-	// check if the Mimetype field should be false
-	if len(i.Mimetype.String) == 0 {
-		i.Mimetype.Valid = false
-	}
-
 	return i
 }
 
@@ -101,10 +107,11 @@ func (i *InitStep) ToLibrary() *library.InitStep {
 	initStep.SetID(i.ID.Int64)
 	initStep.SetRepoID(i.RepoID.Int64)
 	initStep.SetBuildID(i.BuildID.Int64)
+	initStep.SetStepID(i.StepID.Int64)
+	initStep.SetServiceID(i.ServiceID.Int64)
 	initStep.SetNumber(int(i.Number.Int32))
 	initStep.SetReporter(i.Reporter.String)
 	initStep.SetName(i.Name.String)
-	initStep.SetMimetype(i.Mimetype.String)
 
 	return initStep
 }
@@ -142,7 +149,6 @@ func (i *InitStep) Validate() error {
 	// to avoid unsafe HTML content
 	i.Name = sql.NullString{String: sanitize(i.Name.String), Valid: i.Name.Valid}
 	i.Reporter = sql.NullString{String: sanitize(i.Reporter.String), Valid: i.Reporter.Valid}
-	i.Mimetype = sql.NullString{String: sanitize(i.Mimetype.String), Valid: i.Mimetype.Valid}
 
 	return nil
 }
@@ -151,13 +157,14 @@ func (i *InitStep) Validate() error {
 // to a database InitStep type.
 func InitStepFromLibrary(i *library.InitStep) *InitStep {
 	initStep := &InitStep{
-		ID:       sql.NullInt64{Int64: i.GetID(), Valid: true},
-		RepoID:   sql.NullInt64{Int64: i.GetRepoID(), Valid: true},
-		BuildID:  sql.NullInt64{Int64: i.GetBuildID(), Valid: true},
-		Number:   sql.NullInt32{Int32: int32(i.GetNumber()), Valid: true},
-		Reporter: sql.NullString{String: i.GetReporter(), Valid: true},
-		Name:     sql.NullString{String: i.GetName(), Valid: true},
-		Mimetype: sql.NullString{String: i.GetMimetype(), Valid: true},
+		ID:        sql.NullInt64{Int64: i.GetID(), Valid: true},
+		RepoID:    sql.NullInt64{Int64: i.GetRepoID(), Valid: true},
+		BuildID:   sql.NullInt64{Int64: i.GetBuildID(), Valid: true},
+		StepID:    sql.NullInt64{Int64: i.GetStepID(), Valid: true},
+		ServiceID: sql.NullInt64{Int64: i.GetServiceID(), Valid: true},
+		Number:    sql.NullInt32{Int32: int32(i.GetNumber()), Valid: true},
+		Reporter:  sql.NullString{String: i.GetReporter(), Valid: true},
+		Name:      sql.NullString{String: i.GetName(), Valid: true},
 	}
 
 	return initStep.Nullify()

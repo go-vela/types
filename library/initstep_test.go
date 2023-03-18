@@ -352,10 +352,10 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 	i.Name = nil
 
 	tests := []struct {
-		name     string
+		name    string
 		service *Service
-		want     *InitStep
-		wantLog  *Log
+		want    *InitStep
+		wantLog *Log
 	}{
 		{
 			name:    "nil Service",

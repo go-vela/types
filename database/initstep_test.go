@@ -276,17 +276,17 @@ func testInitStep() *InitStep {
 // testStepInitStep is a test helper function to create a InitStep
 // type for a Step with all fields set to a fake value.
 func testStepInitStep() *InitStep {
-    i := testInitStep()
-    i.StepID = sql.NullInt64{Int64: 1, Valid: true}
+	i := testInitStep()
+	i.StepID = sql.NullInt64{Int64: 1, Valid: true}
 
-    return i
+	return i
 }
 
 // testServiceInitStep is a test helper function to create a InitStep
 // type for a Service with all fields set to a fake value.
 func testServiceInitStep() *InitStep {
-    i := testInitStep()
-    i.ServiceID = sql.NullInt64{Int64: 1, Valid: true}
+	i := testInitStep()
+	i.ServiceID = sql.NullInt64{Int64: 1, Valid: true}
 
-    return i
+	return i
 }

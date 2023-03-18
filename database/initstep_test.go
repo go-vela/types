@@ -29,26 +29,32 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
+		name     string
 		initStep *InitStep
 		want     *InitStep
 	}{
 		{
+			name:     "Build-InitStep",
 			initStep: testInitStep(),
 			want:     testInitStep(),
 		},
 		{
+			name:     "Step-InitStep",
 			initStep: testStepInitStep(),
 			want:     testStepInitStep(),
 		},
 		{
+			name:     "Service-InitStep",
 			initStep: testServiceInitStep(),
 			want:     testServiceInitStep(),
 		},
 		{
+			name:     "nil-InitStep",
 			initStep: s,
 			want:     nil,
 		},
 		{
+			name:     "new-InitStep",
 			initStep: new(InitStep),
 			want:     want,
 		},
@@ -59,7 +65,7 @@ func TestDatabase_InitStep_Nullify(t *testing.T) {
 		got := test.initStep.Nullify()
 
 		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("Nullify is %v, want %v", got, test.want)
+			t.Errorf("%s Nullify is %v, want %v", test.name, got, test.want)
 		}
 	}
 }
@@ -264,9 +270,9 @@ func testInitStep() *InitStep {
 	return &InitStep{
 		ID:        sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: false},
+		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
 		StepID:    sql.NullInt64{Int64: 0, Valid: false},
-		ServiceID: sql.NullInt64{Int64: 0, Valid: true},
+		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
 		Number:    sql.NullInt32{Int32: 1, Valid: true},
 		Reporter:  sql.NullString{String: "Foobar Runtime", Valid: true},
 		Name:      sql.NullString{String: "foobar", Valid: true},

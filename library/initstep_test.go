@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/pipeline"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_InitStep_Getters(t *testing.T) {
@@ -171,8 +172,8 @@ func TestLibrary_InitStep_String(t *testing.T) {
 	// run test
 	got := i.String()
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("String is %v, want %v", got, want)
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("String %v", diff)
 	}
 }
 
@@ -227,6 +228,8 @@ func TestLibrary_InitStepFromPipelineInitStep(t *testing.T) {
 func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 	// setup types
 	i := testInitStep()
+	logData := &[]byte{}
+	empty := int64(0)
 
 	// modify fields that aren't set
 	i.ID = nil
@@ -243,16 +246,25 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 		wantLog *Log
 	}{
 		{
-			name:    "nil Build",
-			build:   nil,
-			want:    &InitStep{},
-			wantLog: &Log{},
+			name:  "nil Build",
+			build: nil,
+			want:  &InitStep{},
+			wantLog: &Log{
+				Data: logData,
+			},
 		},
 		{
-			name:    "empty Build",
-			build:   new(Build),
-			want:    &InitStep{},
-			wantLog: &Log{},
+			name:  "empty Build",
+			build: new(Build),
+			want: &InitStep{
+				RepoID:  &empty,
+				BuildID: &empty,
+			},
+			wantLog: &Log{
+				RepoID:  &empty,
+				BuildID: &empty,
+				Data:    logData,
+			},
 		},
 		{
 			name: "populated Build",
@@ -264,6 +276,7 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 			wantLog: &Log{
 				RepoID:  i.RepoID,
 				BuildID: i.BuildID,
+				Data:    logData,
 			},
 		},
 	}
@@ -272,12 +285,12 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 	for _, test := range tests {
 		got, gotLog := InitStepLogFromBuild(test.build)
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("%s InitStepLogFromBuild InitStep %v", test.name, diff)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantLog) {
-			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		if diff := cmp.Diff(test.wantLog, gotLog); diff != "" {
+			t.Errorf("%s InitStepLogFromBuild Log %v", test.name, diff)
 		}
 	}
 }
@@ -285,6 +298,8 @@ func TestLibrary_InitStepLogFromBuild(t *testing.T) {
 func TestLibrary_InitStepLogFromStep(t *testing.T) {
 	// setup types
 	i := testStepInitStep()
+	logData := &[]byte{}
+	empty := int64(0)
 
 	// modify fields that aren't set
 	i.ID = nil
@@ -300,16 +315,26 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 		wantLog *Log
 	}{
 		{
-			name:    "nil Step",
-			step:    nil,
-			want:    &InitStep{},
-			wantLog: &Log{},
+			name: "nil Step",
+			step: nil,
+			want: &InitStep{},
+			wantLog: &Log{
+				Data: logData,
+			},
 		},
 		{
-			name:    "empty Step",
-			step:    new(Step),
-			want:    &InitStep{},
-			wantLog: &Log{},
+			name: "empty Step",
+			step: new(Step),
+			want: &InitStep{
+				RepoID:  &empty,
+				BuildID: &empty,
+				StepID:  &empty,
+			},
+			wantLog: &Log{
+				RepoID:  &empty,
+				BuildID: &empty,
+				Data:    logData,
+			},
 		},
 		{
 			name: "populated Step",
@@ -322,6 +347,7 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 			wantLog: &Log{
 				RepoID:  i.RepoID,
 				BuildID: i.BuildID,
+				Data:    logData,
 			},
 		},
 	}
@@ -330,12 +356,12 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 	for _, test := range tests {
 		got, gotLog := InitStepLogFromStep(test.step)
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("%s InitStepLogFromStep InitStep %v", test.name, diff)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantLog) {
-			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		if diff := cmp.Diff(test.wantLog, gotLog); diff != "" {
+			t.Errorf("%s InitStepLogFromStep Log %v", test.name, diff)
 		}
 	}
 }
@@ -343,6 +369,8 @@ func TestLibrary_InitStepLogFromStep(t *testing.T) {
 func TestLibrary_InitStepLogFromService(t *testing.T) {
 	// setup types
 	i := testServiceInitStep()
+	logData := &[]byte{}
+	empty := int64(0)
 
 	// modify fields that aren't set
 	i.ID = nil
@@ -361,13 +389,23 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 			name:    "nil Service",
 			service: nil,
 			want:    &InitStep{},
-			wantLog: &Log{},
+			wantLog: &Log{
+				Data: logData,
+			},
 		},
 		{
 			name:    "empty Service",
 			service: new(Service),
-			want:    &InitStep{},
-			wantLog: &Log{},
+			want: &InitStep{
+				RepoID:    &empty,
+				BuildID:   &empty,
+				ServiceID: &empty,
+			},
+			wantLog: &Log{
+				RepoID:  &empty,
+				BuildID: &empty,
+				Data:    logData,
+			},
 		},
 		{
 			name: "populated Service",
@@ -380,6 +418,7 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 			wantLog: &Log{
 				RepoID:  i.RepoID,
 				BuildID: i.BuildID,
+				Data:    logData,
 			},
 		},
 	}
@@ -388,12 +427,12 @@ func TestLibrary_InitStepLogFromService(t *testing.T) {
 	for _, test := range tests {
 		got, gotLog := InitStepLogFromService(test.service)
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("InitStepLogFromBuild for %s InitStep is %v, want %v", test.name, got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("%s InitStepLogFromSeevice InitStep %v", test.name, diff)
 		}
 
-		if !reflect.DeepEqual(gotLog, test.wantLog) {
-			t.Errorf("InitStepLogFromBuild for %s Log is %v, want %v", test.name, gotLog, test.wantLog)
+		if diff := cmp.Diff(test.wantLog, gotLog); diff != "" {
+			t.Errorf("%s InitStepLogFromSeevice Log %v", test.name, diff)
 		}
 	}
 }

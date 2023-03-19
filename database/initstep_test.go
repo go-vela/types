@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestDatabase_InitStep_Nullify(t *testing.T) {
@@ -100,18 +101,22 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 	forService.SetName("foobar")
 
 	tests := []struct {
+		name     string
 		initStep *InitStep
 		want     *library.InitStep
 	}{
 		{
+			name:     "Build-InitStep",
 			initStep: testInitStep(),
 			want:     forBuild,
 		},
 		{
+			name:     "Step-InitStep",
 			initStep: testStepInitStep(),
 			want:     forStep,
 		},
 		{
+			name:     "Service-InitStep",
 			initStep: testServiceInitStep(),
 			want:     forService,
 		},
@@ -121,8 +126,8 @@ func TestDatabase_InitStep_ToLibrary(t *testing.T) {
 		// run test
 		got := test.initStep.ToLibrary()
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("ToLibrary is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("%s ToLibrary %v", test.name, diff)
 		}
 	}
 }
@@ -268,14 +273,14 @@ func TestDatabase_InitStepFromLibrary(t *testing.T) {
 // type for a Build with all fields set to a fake value.
 func testInitStep() *InitStep {
 	return &InitStep{
-		ID:        sql.NullInt64{Int64: 1, Valid: true},
-		RepoID:    sql.NullInt64{Int64: 1, Valid: true},
-		BuildID:   sql.NullInt64{Int64: 1, Valid: true},
-		StepID:    sql.NullInt64{Int64: 0, Valid: false},
-		ServiceID: sql.NullInt64{Int64: 0, Valid: false},
-		Number:    sql.NullInt32{Int32: 1, Valid: true},
-		Reporter:  sql.NullString{String: "Foobar Runtime", Valid: true},
-		Name:      sql.NullString{String: "foobar", Valid: true},
+		ID:      sql.NullInt64{Int64: 1, Valid: true},
+		RepoID:  sql.NullInt64{Int64: 1, Valid: true},
+		BuildID: sql.NullInt64{Int64: 1, Valid: true},
+		//StepID:    sql.NullInt64{Int64: 0, Valid: false},
+		//ServiceID: sql.NullInt64{Int64: 0, Valid: false},
+		Number:   sql.NullInt32{Int32: 1, Valid: true},
+		Reporter: sql.NullString{String: "Foobar Runtime", Valid: true},
+		Name:     sql.NullString{String: "foobar", Valid: true},
 	}
 }
 

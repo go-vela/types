@@ -107,8 +107,12 @@ func (i *InitStep) ToLibrary() *library.InitStep {
 	initStep.SetID(i.ID.Int64)
 	initStep.SetRepoID(i.RepoID.Int64)
 	initStep.SetBuildID(i.BuildID.Int64)
-	initStep.SetStepID(i.StepID.Int64)
-	initStep.SetServiceID(i.ServiceID.Int64)
+	if i.StepID.Valid {
+		initStep.SetStepID(i.StepID.Int64)
+	}
+	if i.ServiceID.Valid {
+		initStep.SetServiceID(i.ServiceID.Int64)
+	}
 	initStep.SetNumber(int(i.Number.Int32))
 	initStep.SetReporter(i.Reporter.String)
 	initStep.SetName(i.Name.String)

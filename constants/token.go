@@ -15,6 +15,12 @@ const (
 	// UserRefreshTokenType is the name associated with the user refresh token type.
 	UserRefreshTokenType = "UserRefresh"
 
+	// WorkerAuthTokenType is the name associated with the worker authentication token type.
+	WorkerAuthTokenType = "WorkerAuth"
+
+	// WorkerRegisterTokenType is the name associated with the worker registration token type.
+	WorkerRegisterTokenType = "WorkerRegister"
+
 	// WorkerBuildTokenType is the name associated with the worker build token type.
 	WorkerBuildTokenType = "WorkerBuild"
 

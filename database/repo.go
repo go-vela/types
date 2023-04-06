@@ -40,7 +40,7 @@ var (
 	ErrEmptyRepoVisibility = errors.New("empty repo visibility provided")
 
 	// ErrExceededTopicsLimit defines the error type when a
-	// User type has Topics field provided that exceeds the database limit.
+	// Repo type has Topics field provided that exceeds the database limit.
 	ErrExceededTopicsLimit = errors.New("exceeded topics limit")
 )
 

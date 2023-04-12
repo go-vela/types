@@ -29,4 +29,7 @@ const (
 
 	// RunningBuildIDsMaxSize defines the maximum size in characters for worker RunningBuildIDs.
 	RunningBuildIDsMaxSize = 500
+
+	// TopicsMaxSize defines the maximum size in characters for repo topics. Ex: GitHub has a 20-topic, 50-char limit.
+	TopicsMaxSize = 1020
 )

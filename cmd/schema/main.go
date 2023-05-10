@@ -171,7 +171,7 @@ func main() {
 		s.Definitions["Ruleset"].AdditionalProperties = []byte("")
 
 		// at the top level for Ruleset
-		s.Definitions["Ruleset"].OneOf = []*jsonschema.Type{
+		s.Definitions["Ruleset"].AnyOf = []*jsonschema.Type{
 			{
 				Properties:           rulesetProps,
 				Type:                 "object",

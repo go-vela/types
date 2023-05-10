@@ -21,6 +21,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PUSH":       "true",
 		"VELA_REPO_ALLOW_TAG":        "false",
 		"VELA_REPO_BRANCH":           "master",
+		"VELA_REPO_TOPICS":           "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":      "10",
 		"VELA_REPO_CLONE":            "https://github.com/github/octocat.git",
 		"VELA_REPO_FULL_NAME":        "github/octocat",
@@ -113,6 +114,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
 		}
 
+		if !reflect.DeepEqual(test.repo.GetTopics(), test.want.GetTopics()) {
+			t.Errorf("GetTopics is %v, want %v", test.repo.GetTopics(), test.want.GetTopics())
+		}
+
 		if test.repo.GetBuildLimit() != test.want.GetBuildLimit() {
 			t.Errorf("GetBuildLimit is %v, want %v", test.repo.GetBuildLimit(), test.want.GetBuildLimit())
 		}
@@ -201,6 +206,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetLink(test.want.GetLink())
 		test.repo.SetClone(test.want.GetClone())
 		test.repo.SetBranch(test.want.GetBranch())
+		test.repo.SetTopics(test.want.GetTopics())
 		test.repo.SetBuildLimit(test.want.GetBuildLimit())
 		test.repo.SetTimeout(test.want.GetTimeout())
 		test.repo.SetCounter(test.want.GetCounter())
@@ -251,6 +257,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 
 		if test.repo.GetBranch() != test.want.GetBranch() {
 			t.Errorf("SetBranch is %v, want %v", test.repo.GetBranch(), test.want.GetBranch())
+		}
+
+		if !reflect.DeepEqual(test.repo.GetTopics(), test.want.GetTopics()) {
+			t.Errorf("SetTopics is %v, want %v", test.repo.GetTopics(), test.want.GetTopics())
 		}
 
 		if test.repo.GetBuildLimit() != test.want.GetBuildLimit() {
@@ -336,6 +346,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   PreviousName: %s,
   Private: %t,
   Timeout: %d,
+  Topics: %s,
   Trusted: %t,
   UserID: %d
   Visibility: %s,
@@ -360,6 +371,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetPreviousName(),
 		r.GetPrivate(),
 		r.GetTimeout(),
+		r.GetTopics(),
 		r.GetTrusted(),
 		r.GetUserID(),
 		r.GetVisibility(),
@@ -385,6 +397,7 @@ func testRepo() *Repo {
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
 	r.SetBranch("master")
+	r.SetTopics([]string{"cloud", "security"})
 	r.SetBuildLimit(10)
 	r.SetTimeout(30)
 	r.SetCounter(0)

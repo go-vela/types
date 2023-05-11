@@ -6,24 +6,24 @@ package constants
 
 // Build and repo events.
 const (
-	// EventPush defines the event type for build and repo push events.
-	EventPush = "push"
-
-	// EventPull defines the event type for build and repo pull_request events.
-	EventPull = "pull_request"
-
-	// EventTag defines the event type for build and repo tag events.
-	EventTag = "tag"
+	// EventComment defines the event type for comments added to a pull request.
+	EventComment = "comment"
 
 	// EventDeploy defines the event type for build and repo deployment events.
 	EventDeploy = "deployment"
 
-	// EventComment defines the event type for comments added to a pull request.
-	EventComment = "comment"
+	// EventPull defines the event type for build and repo pull_request events.
+	EventPull = "pull_request"
+
+	// EventPush defines the event type for build and repo push events.
+	EventPush = "push"
 
 	// EventRepository defines the general event type for repo management.
 	EventRepository = "repository"
 
 	// EventSchedule defines the event type for build and repo deployment events.
 	EventSchedule = "schedule"
+
+	// EventTag defines the event type for build and repo tag events.
+	EventTag = "tag"
 )

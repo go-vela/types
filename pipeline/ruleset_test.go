@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -61,6 +61,16 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 		{
 			ruleset: &Ruleset{If: Rules{Event: []string{"deployment"}, Target: []string{"production"}}},
 			data:    &RuleData{Branch: "dev", Comment: "", Event: "deployment", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master", Target: "stage"},
+			want:    false,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Event: []string{"schedule"}, Target: []string{"weekly"}}},
+			data:    &RuleData{Branch: "dev", Comment: "", Event: "schedule", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master", Target: "weekly"},
+			want:    true,
+		},
+		{
+			ruleset: &Ruleset{If: Rules{Event: []string{"schedule"}, Target: []string{"weekly"}}},
+			data:    &RuleData{Branch: "dev", Comment: "", Event: "schedule", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/master", Target: "nightly"},
 			want:    false,
 		},
 		{

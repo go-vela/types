@@ -10,7 +10,7 @@ const (
 	TableBuild = "builds"
 
 	// TableBuildItineraries defines the table type for the database compiled table.
-	TableBuildItineraries = "build_itineraries"
+	TableBuildItinerary = "build_itineraries"
 
 	// TableHook defines the table type for the database hooks table.
 	TableHook = "hooks"

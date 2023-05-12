@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	// ErrEmptyCompiledRepoID defines the error type when a
-	// Compiled type has an empty RepoID field provided.
+	// ErrEmptyCompiledBuildID defines the error type when a
+	// Compiled type has an empty BuildID field provided.
 	ErrEmptyCompiledBuildID = errors.New("empty compiled build_id provided")
 )
 

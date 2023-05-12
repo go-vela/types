@@ -99,12 +99,12 @@ func (c *Compiled) SetData(v []byte) {
 // String implements the Stringer interface for the Compiled type.
 func (c *Compiled) String() string {
 	return fmt.Sprintf(`{
-  ID: %d,
-  Data: %s,
   BuildID: %d,
+  Data: %s,
+  ID: %d,
 }`,
-		c.GetID(),
-		c.GetData(),
 		c.GetBuildID(),
+		c.GetData(),
+		c.GetID(),
 	)
 }

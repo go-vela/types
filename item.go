@@ -15,7 +15,7 @@ type Item struct {
 	User  *library.User  `json:"user"`
 }
 
-// ToItem creates a queue item from a pipeline, build, repo and user.
+// ToItem creates a queue item from a build, repo and user.
 func ToItem(b *library.Build, r *library.Repo, u *library.User) *Item {
 	return &Item{
 		Build: b,

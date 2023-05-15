@@ -12,47 +12,47 @@ import (
 )
 
 var (
-	// ErrEmptyBuildItineraryBuildID defines the error type when a
-	// BuildItinerary type has an empty BuildID field provided.
-	ErrEmptyBuildItineraryBuildID = errors.New("empty build_itinerary build_id provided")
+	// ErrEmptyBuildExecutableBuildID defines the error type when a
+	// BuildExecutable type has an empty BuildID field provided.
+	ErrEmptyBuildExecutableBuildID = errors.New("empty build_executable build_id provided")
 )
 
-// BuildItinerary is the database representation of a BuildItinerary.
-type BuildItinerary struct {
+// BuildExecutable is the database representation of a BuildExecutable.
+type BuildExecutable struct {
 	ID      sql.NullInt64 `sql:"id"`
 	BuildID sql.NullInt64 `sql:"build_id"`
 	Data    []byte        `sql:"data"`
 }
 
 // Compress will manipulate the existing data for the
-// BuildItinerary by compressing that data. This produces
+// BuildExecutable by compressing that data. This produces
 // a significantly smaller amount of data that is
 // stored in the system.
-func (c *BuildItinerary) Compress(level int) error {
-	// compress the database BuildItinerary data
+func (c *BuildExecutable) Compress(level int) error {
+	// compress the database BuildExecutable data
 	data, err := compress(level, c.Data)
 	if err != nil {
 		return err
 	}
 
-	// overwrite database BuildItinerary data with compressed BuildItinerary data
+	// overwrite database BuildExecutable data with compressed BuildExecutable data
 	c.Data = data
 
 	return nil
 }
 
 // Decompress will manipulate the existing data for the
-// BuildItinerary by decompressing that data. This allows us
+// BuildExecutable by decompressing that data. This allows us
 // to have a significantly smaller amount of data that
 // is stored in the system.
-func (c *BuildItinerary) Decompress() error {
-	// decompress the database BuildItinerary data
+func (c *BuildExecutable) Decompress() error {
+	// decompress the database BuildExecutable data
 	data, err := decompress(c.Data)
 	if err != nil {
 		return err
 	}
 
-	// overwrite compressed BuildItinerary data with decompressed BuildItinerary data
+	// overwrite compressed BuildExecutable data with decompressed BuildExecutable data
 	c.Data = data
 
 	return nil
@@ -61,10 +61,10 @@ func (c *BuildItinerary) Decompress() error {
 // Nullify ensures the valid flag for
 // the sql.Null types are properly set.
 //
-// When a field within the BuildItinerary type is the zero
+// When a field within the BuildExecutable type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-func (c *BuildItinerary) Nullify() *BuildItinerary {
+func (c *BuildExecutable) Nullify() *BuildExecutable {
 	if c == nil {
 		return nil
 	}
@@ -82,37 +82,37 @@ func (c *BuildItinerary) Nullify() *BuildItinerary {
 	return c
 }
 
-// ToLibrary converts the BuildItinerary type
-// to a library BuildItinerary type.
-func (c *BuildItinerary) ToLibrary() *library.BuildItinerary {
-	buildItinerary := new(library.BuildItinerary)
+// ToLibrary converts the BuildExecutable type
+// to a library BuildExecutable type.
+func (c *BuildExecutable) ToLibrary() *library.BuildExecutable {
+	buildExecutable := new(library.BuildExecutable)
 
-	buildItinerary.SetID(c.ID.Int64)
-	buildItinerary.SetBuildID(c.BuildID.Int64)
-	buildItinerary.SetData(c.Data)
+	buildExecutable.SetID(c.ID.Int64)
+	buildExecutable.SetBuildID(c.BuildID.Int64)
+	buildExecutable.SetData(c.Data)
 
-	return buildItinerary
+	return buildExecutable
 }
 
 // Validate verifies the necessary fields for
-// the BuildItinerary type are populated correctly.
-func (c *BuildItinerary) Validate() error {
+// the BuildExecutable type are populated correctly.
+func (c *BuildExecutable) Validate() error {
 	// verify the BuildID field is populated
 	if c.BuildID.Int64 <= 0 {
-		return ErrEmptyBuildItineraryBuildID
+		return ErrEmptyBuildExecutableBuildID
 	}
 
 	return nil
 }
 
-// BuildItineraryFromLibrary converts the library BuildItinerary type
-// to a database BuildItinerary type.
-func BuildItineraryFromLibrary(c *library.BuildItinerary) *BuildItinerary {
-	buildItinerary := &BuildItinerary{
+// BuildExecutableFromLibrary converts the library BuildExecutable type
+// to a database BuildExecutable type.
+func BuildExecutableFromLibrary(c *library.BuildExecutable) *BuildExecutable {
+	buildExecutable := &BuildExecutable{
 		ID:      sql.NullInt64{Int64: c.GetID(), Valid: true},
 		BuildID: sql.NullInt64{Int64: c.GetBuildID(), Valid: true},
 		Data:    c.GetData(),
 	}
 
-	return buildItinerary.Nullify()
+	return buildExecutable.Nullify()
 }

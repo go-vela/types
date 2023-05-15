@@ -8,10 +8,10 @@ import (
 	"fmt"
 )
 
-// BuildItinerary is the library representation of a BuildItinerary.
+// BuildExecutable is the library representation of a BuildExecutable.
 //
-// swagger:model BuildItinerary
-type BuildItinerary struct {
+// swagger:model BuildExecutable
+type BuildExecutable struct {
 	ID      *int64 `json:"id,omitempty"`
 	BuildID *int64 `json:"build_id,omitempty"`
 	// swagger:strfmt base64
@@ -20,10 +20,10 @@ type BuildItinerary struct {
 
 // GetID returns the ID field.
 //
-// When the provided BuildItinerary type is nil, or the field within
+// When the provided BuildExecutable type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (b *BuildItinerary) GetID() int64 {
-	// return zero value if BuildItinerary type or ID field is nil
+func (b *BuildExecutable) GetID() int64 {
+	// return zero value if BuildExecutable type or ID field is nil
 	if b == nil || b.ID == nil {
 		return 0
 	}
@@ -33,10 +33,10 @@ func (b *BuildItinerary) GetID() int64 {
 
 // GetBuildID returns the BuildID field.
 //
-// When the provided BuildItinerary type is nil, or the field within
+// When the provided BuildExecutable type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (b *BuildItinerary) GetBuildID() int64 {
-	// return zero value if BuildItinerary type or BuildID field is nil
+func (b *BuildExecutable) GetBuildID() int64 {
+	// return zero value if BuildExecutable type or BuildID field is nil
 	if b == nil || b.BuildID == nil {
 		return 0
 	}
@@ -46,10 +46,10 @@ func (b *BuildItinerary) GetBuildID() int64 {
 
 // GetData returns the Data field.
 //
-// When the provided BuildItinerary type is nil, or the field within
+// When the provided BuildExecutable type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (b *BuildItinerary) GetData() []byte {
-	// return zero value if BuildItinerary type or Data field is nil
+func (b *BuildExecutable) GetData() []byte {
+	// return zero value if BuildExecutable type or Data field is nil
 	if b == nil || b.Data == nil {
 		return []byte{}
 	}
@@ -59,10 +59,10 @@ func (b *BuildItinerary) GetData() []byte {
 
 // SetID sets the ID field.
 //
-// When the provided BuildItinerary type is nil, it
+// When the provided BuildExecutable type is nil, it
 // will set nothing and immediately return.
-func (b *BuildItinerary) SetID(v int64) {
-	// return if BuildItinerary type is nil
+func (b *BuildExecutable) SetID(v int64) {
+	// return if BuildExecutable type is nil
 	if b == nil {
 		return
 	}
@@ -72,10 +72,10 @@ func (b *BuildItinerary) SetID(v int64) {
 
 // SetBuildID sets the BuildID field.
 //
-// When the provided BuildItinerary type is nil, it
+// When the provided BuildExecutable type is nil, it
 // will set nothing and immediately return.
-func (b *BuildItinerary) SetBuildID(v int64) {
-	// return if BuildItinerary type is nil
+func (b *BuildExecutable) SetBuildID(v int64) {
+	// return if BuildExecutable type is nil
 	if b == nil {
 		return
 	}
@@ -85,9 +85,9 @@ func (b *BuildItinerary) SetBuildID(v int64) {
 
 // SetData sets the Data field.
 //
-// When the provided BuildItinerary type is nil, it
+// When the provided BuildExecutable type is nil, it
 // will set nothing and immediately return.
-func (b *BuildItinerary) SetData(v []byte) {
+func (b *BuildExecutable) SetData(v []byte) {
 	// return if Log type is nil
 	if b == nil {
 		return
@@ -96,8 +96,8 @@ func (b *BuildItinerary) SetData(v []byte) {
 	b.Data = &v
 }
 
-// String implements the Stringer interface for the BuildItinerary type.
-func (b *BuildItinerary) String() string {
+// String implements the Stringer interface for the BuildExecutable type.
+func (b *BuildExecutable) String() string {
 	return fmt.Sprintf(`{
   BuildID: %d,
   Data: %s,

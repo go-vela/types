@@ -10,114 +10,114 @@ import (
 	"testing"
 )
 
-func TestLibrary_BuildItinerary_Getters(t *testing.T) {
+func TestLibrary_BuildExecutable_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		buildItinerary *BuildItinerary
-		want           *BuildItinerary
+		buildExecutable *BuildExecutable
+		want            *BuildExecutable
 	}{
 		{
-			buildItinerary: testBuildItinerary(),
-			want:           testBuildItinerary(),
+			buildExecutable: testBuildExecutable(),
+			want:            testBuildExecutable(),
 		},
 		{
-			buildItinerary: new(BuildItinerary),
-			want:           new(BuildItinerary),
+			buildExecutable: new(BuildExecutable),
+			want:            new(BuildExecutable),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		if test.buildItinerary.GetID() != test.want.GetID() {
-			t.Errorf("GetID is %v, want %v", test.buildItinerary.GetID(), test.want.GetID())
+		if test.buildExecutable.GetID() != test.want.GetID() {
+			t.Errorf("GetID is %v, want %v", test.buildExecutable.GetID(), test.want.GetID())
 		}
 
-		if test.buildItinerary.GetBuildID() != test.want.GetBuildID() {
-			t.Errorf("GetBuildID is %v, want %v", test.buildItinerary.GetBuildID(), test.want.GetBuildID())
+		if test.buildExecutable.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("GetBuildID is %v, want %v", test.buildExecutable.GetBuildID(), test.want.GetBuildID())
 		}
 
-		if !reflect.DeepEqual(test.buildItinerary.GetData(), test.want.GetData()) {
-			t.Errorf("GetData is %v, want %v", test.buildItinerary.GetData(), test.want.GetData())
+		if !reflect.DeepEqual(test.buildExecutable.GetData(), test.want.GetData()) {
+			t.Errorf("GetData is %v, want %v", test.buildExecutable.GetData(), test.want.GetData())
 		}
 	}
 }
 
-func TestLibrary_BuildItinerary_Setters(t *testing.T) {
+func TestLibrary_BuildExecutable_Setters(t *testing.T) {
 	// setup types
-	var bItinerary *BuildItinerary
+	var bExecutable *BuildExecutable
 
 	// setup tests
 	tests := []struct {
-		buildItinerary *BuildItinerary
-		want           *BuildItinerary
+		buildExecutable *BuildExecutable
+		want            *BuildExecutable
 	}{
 		{
-			buildItinerary: testBuildItinerary(),
-			want:           testBuildItinerary(),
+			buildExecutable: testBuildExecutable(),
+			want:            testBuildExecutable(),
 		},
 		{
-			buildItinerary: bItinerary,
-			want:           new(BuildItinerary),
+			buildExecutable: bExecutable,
+			want:            new(BuildExecutable),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		test.buildItinerary.SetID(test.want.GetID())
-		test.buildItinerary.SetBuildID(test.want.GetBuildID())
-		test.buildItinerary.SetData(test.want.GetData())
+		test.buildExecutable.SetID(test.want.GetID())
+		test.buildExecutable.SetBuildID(test.want.GetBuildID())
+		test.buildExecutable.SetData(test.want.GetData())
 
-		if test.buildItinerary.GetID() != test.want.GetID() {
-			t.Errorf("SetID is %v, want %v", test.buildItinerary.GetID(), test.want.GetID())
+		if test.buildExecutable.GetID() != test.want.GetID() {
+			t.Errorf("SetID is %v, want %v", test.buildExecutable.GetID(), test.want.GetID())
 		}
 
-		if test.buildItinerary.GetBuildID() != test.want.GetBuildID() {
-			t.Errorf("SetRepoID is %v, want %v", test.buildItinerary.GetBuildID(), test.want.GetBuildID())
+		if test.buildExecutable.GetBuildID() != test.want.GetBuildID() {
+			t.Errorf("SetRepoID is %v, want %v", test.buildExecutable.GetBuildID(), test.want.GetBuildID())
 		}
 
-		if !reflect.DeepEqual(test.buildItinerary.GetData(), test.want.GetData()) {
-			t.Errorf("SetData is %v, want %v", test.buildItinerary.GetData(), test.want.GetData())
+		if !reflect.DeepEqual(test.buildExecutable.GetData(), test.want.GetData()) {
+			t.Errorf("SetData is %v, want %v", test.buildExecutable.GetData(), test.want.GetData())
 		}
 	}
 }
 
-func TestLibrary_BuildItinerary_String(t *testing.T) {
+func TestLibrary_BuildExecutable_String(t *testing.T) {
 	// setup types
-	bItinerary := testBuildItinerary()
+	bExecutable := testBuildExecutable()
 
 	want := fmt.Sprintf(`{
   BuildID: %d,
   Data: %s,
   ID: %d,
 }`,
-		bItinerary.GetBuildID(),
-		bItinerary.GetData(),
-		bItinerary.GetID(),
+		bExecutable.GetBuildID(),
+		bExecutable.GetData(),
+		bExecutable.GetID(),
 	)
 
 	// run test
-	got := bItinerary.String()
+	got := bExecutable.String()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("String is %v, want %v", got, want)
 	}
 }
 
-// testBuildItinerary is a test helper function to create a Pipeline
+// testBuildExecutable is a test helper function to create a Pipeline
 // type with all fields set to a fake value.
-func testBuildItinerary() *BuildItinerary {
-	p := new(BuildItinerary)
+func testBuildExecutable() *BuildExecutable {
+	p := new(BuildExecutable)
 
 	p.SetID(1)
 	p.SetBuildID(1)
-	p.SetData(testBuildItineraryData())
+	p.SetData(testBuildExecutableData())
 
 	return p
 }
 
-// testBuildItineraryData is a test helper function to create the
+// testBuildExecutableData is a test helper function to create the
 // content for the Data field for the Pipeline type.
-func testBuildItineraryData() []byte {
+func testBuildExecutableData() []byte {
 	return []byte(`
 { 
     "id": "step_name",

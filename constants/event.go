@@ -21,7 +21,7 @@ const (
 	// EventRepository defines the general event type for repo management.
 	EventRepository = "repository"
 
-	// EventSchedule defines the event type for build and repo deployment events.
+	// EventSchedule defines the event type for build and repo schedule events.
 	EventSchedule = "schedule"
 
 	// EventTag defines the event type for build and repo tag events.

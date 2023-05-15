@@ -9,7 +9,7 @@ const (
 	// TableBuild defines the table type for the database builds table.
 	TableBuild = "builds"
 
-	// TableBuildExecutable defines the table type for the database compiled table.
+	// TableBuildExecutable defines the table type for the database build_executables table.
 	TableBuildExecutable = "build_executables"
 
 	// TableHook defines the table type for the database hooks table.

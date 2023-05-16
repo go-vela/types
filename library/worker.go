@@ -116,7 +116,7 @@ func (w *Worker) GetLastStatusUpdateAt() int64 {
 	return *w.LastStatusUpdateAt
 }
 
-// GetRunningBuildIDs returns the Routes field.
+// GetRunningBuildIDs returns the RunningBuildIDs field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.

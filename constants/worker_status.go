@@ -6,21 +6,17 @@ package constants
 
 // Worker statuses.
 const (
-	// WorkerStatusUnregistered defines the status type for a new worker
-	// that has not registered yet, or needs to be re-registered.
-	WorkerStatusUnregistered = "unregistered"
+	// WorkerStatusIdle defines the status for a worker
+	// where worker RunningBuildIDs.length = 0.
+	WorkerStatusIdle = "idle"
 
 	// WorkerStatusAvailable defines the status type for a worker in an available state,
-	// where worker RunningBuildIDs.length < worker BuildLimit.
+	// where worker RunningBuildIDs.length > 0 and < worker BuildLimit.
 	WorkerStatusAvailable = "available"
 
 	// WorkerStatusBusy defines the status type for a worker in an unavailable state,
 	// where worker BuildLimit == worker RunningBuildIDs.length.
 	WorkerStatusBusy = "busy"
-
-	// WorkerStatusMaintenance defines the status for a worker
-	// marked in maintenance mode to prevent it from being pushed a build.
-	WorkerStatusMaintenance = "maintenance"
 
 	// WorkerStatusError defines the status for a worker in an error state.
 	WorkerStatusError = "error"

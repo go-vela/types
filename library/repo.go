@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -13,55 +13,57 @@ import (
 //
 // swagger:model Repo
 type Repo struct {
-	ID           *int64    `json:"id,omitempty"`
-	UserID       *int64    `json:"user_id,omitempty"`
-	Hash         *string   `json:"-"`
-	Org          *string   `json:"org,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	FullName     *string   `json:"full_name,omitempty"`
-	Link         *string   `json:"link,omitempty"`
-	Clone        *string   `json:"clone,omitempty"`
-	Branch       *string   `json:"branch,omitempty"`
-	Topics       *[]string `json:"topics,omitempty"`
-	BuildLimit   *int64    `json:"build_limit,omitempty"`
-	Timeout      *int64    `json:"timeout,omitempty"`
-	Counter      *int      `json:"counter,omitempty"`
-	Visibility   *string   `json:"visibility,omitempty"`
-	Private      *bool     `json:"private,omitempty"`
-	Trusted      *bool     `json:"trusted,omitempty"`
-	Active       *bool     `json:"active,omitempty"`
-	AllowPull    *bool     `json:"allow_pull,omitempty"`
-	AllowPush    *bool     `json:"allow_push,omitempty"`
-	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
-	AllowTag     *bool     `json:"allow_tag,omitempty"`
-	AllowComment *bool     `json:"allow_comment,omitempty"`
-	PipelineType *string   `json:"pipeline_type,omitempty"`
-	PreviousName *string   `json:"previous_name,omitempty"`
+	ID            *int64    `json:"id,omitempty"`
+	UserID        *int64    `json:"user_id,omitempty"`
+	Hash          *string   `json:"-"`
+	Org           *string   `json:"org,omitempty"`
+	Name          *string   `json:"name,omitempty"`
+	FullName      *string   `json:"full_name,omitempty"`
+	Link          *string   `json:"link,omitempty"`
+	Clone         *string   `json:"clone,omitempty"`
+	Branch        *string   `json:"branch,omitempty"`
+	Topics        *[]string `json:"topics,omitempty"`
+	BuildLimit    *int64    `json:"build_limit,omitempty"`
+	Timeout       *int64    `json:"timeout,omitempty"`
+	Counter       *int      `json:"counter,omitempty"`
+	Visibility    *string   `json:"visibility,omitempty"`
+	Private       *bool     `json:"private,omitempty"`
+	Trusted       *bool     `json:"trusted,omitempty"`
+	Active        *bool     `json:"active,omitempty"`
+	AllowPull     *bool     `json:"allow_pull,omitempty"`
+	AllowPush     *bool     `json:"allow_push,omitempty"`
+	AllowDeploy   *bool     `json:"allow_deploy,omitempty"`
+	AllowTag      *bool     `json:"allow_tag,omitempty"`
+	AllowComment  *bool     `json:"allow_comment,omitempty"`
+	AllowSchedule *bool     `json:"allow_schedule,omitempty"`
+	PipelineType  *string   `json:"pipeline_type,omitempty"`
+	PreviousName  *string   `json:"previous_name,omitempty"`
 }
 
 // Environment returns a list of environment variables
 // provided from the fields of the Repo type.
 func (r *Repo) Environment() map[string]string {
 	return map[string]string{
-		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
-		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
-		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
-		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
-		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
-		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
-		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
-		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
-		"VELA_REPO_CLONE":         ToString(r.GetClone()),
-		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
-		"VELA_REPO_LINK":          ToString(r.GetLink()),
-		"VELA_REPO_NAME":          ToString(r.GetName()),
-		"VELA_REPO_ORG":           ToString(r.GetOrg()),
-		"VELA_REPO_PRIVATE":       ToString(r.GetPrivate()),
-		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
-		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
-		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
-		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
+		"VELA_REPO_ACTIVE":         ToString(r.GetActive()),
+		"VELA_REPO_ALLOW_COMMENT":  ToString(r.GetAllowComment()),
+		"VELA_REPO_ALLOW_DEPLOY":   ToString(r.GetAllowDeploy()),
+		"VELA_REPO_ALLOW_PULL":     ToString(r.GetAllowPull()),
+		"VELA_REPO_ALLOW_PUSH":     ToString(r.GetAllowPush()),
+		"VELA_REPO_ALLOW_SCHEDULE": ToString(r.GetAllowSchedule()),
+		"VELA_REPO_ALLOW_TAG":      ToString(r.GetAllowTag()),
+		"VELA_REPO_BRANCH":         ToString(r.GetBranch()),
+		"VELA_REPO_TOPICS":         strings.Join(r.GetTopics()[:], ","),
+		"VELA_REPO_BUILD_LIMIT":    ToString(r.GetBuildLimit()),
+		"VELA_REPO_CLONE":          ToString(r.GetClone()),
+		"VELA_REPO_FULL_NAME":      ToString(r.GetFullName()),
+		"VELA_REPO_LINK":           ToString(r.GetLink()),
+		"VELA_REPO_NAME":           ToString(r.GetName()),
+		"VELA_REPO_ORG":            ToString(r.GetOrg()),
+		"VELA_REPO_PRIVATE":        ToString(r.GetPrivate()),
+		"VELA_REPO_TIMEOUT":        ToString(r.GetTimeout()),
+		"VELA_REPO_TRUSTED":        ToString(r.GetTrusted()),
+		"VELA_REPO_VISIBILITY":     ToString(r.GetVisibility()),
+		"VELA_REPO_PIPELINE_TYPE":  ToString(r.GetPipelineType()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
@@ -361,12 +363,25 @@ func (r *Repo) GetAllowTag() bool {
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
 func (r *Repo) GetAllowComment() bool {
-	// return zero value if Repo type or AllowTag field is nil
+	// return zero value if Repo type or AllowComment field is nil
 	if r == nil || r.AllowComment == nil {
 		return false
 	}
 
 	return *r.AllowComment
+}
+
+// GetAllowSchedule returns the AllowSchedule field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowSchedule() bool {
+	// return zero value if Repo type or AllowSchedule field is nil
+	if r == nil || r.AllowSchedule == nil {
+		return false
+	}
+
+	return *r.AllowSchedule
 }
 
 // GetPipelineType returns the PipelineType field.
@@ -681,6 +696,19 @@ func (r *Repo) SetAllowComment(v bool) {
 	r.AllowComment = &v
 }
 
+// SetAllowSchedule sets the AllowSchedule field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowSchedule(v bool) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowSchedule = &v
+}
+
 // SetPipelineType sets the PipelineType field.
 //
 // When the provided Repo type is nil, it
@@ -715,6 +743,7 @@ func (r *Repo) String() string {
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
+  AllowSchedule: %t,
   AllowTag: %t,
   Branch: %s,
   BuildLimit: %d,
@@ -739,6 +768,7 @@ func (r *Repo) String() string {
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),
+		r.GetAllowSchedule(),
 		r.GetAllowTag(),
 		r.GetBranch(),
 		r.GetBuildLimit(),

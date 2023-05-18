@@ -22,7 +22,7 @@ type Item struct {
 	Repo     *library.Repo   `json:"repo"`
 	User     *library.User   `json:"user"`
 	// The 0-value is the implicit ItemVersion for queued Items that pre-date adding the field.
-	ItemVersion uint64 `json:"version"`
+	ItemVersion uint64 `json:"item_version"`
 }
 
 // ToItem creates a queue item from a pipeline, build, repo and user.

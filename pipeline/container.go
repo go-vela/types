@@ -15,6 +15,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/drone/envsubst"
+
 	"github.com/go-vela/types/constants"
 )
 

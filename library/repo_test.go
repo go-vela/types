@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -18,6 +18,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_DEPLOY":   "false",
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
+		"VELA_REPO_ALLOW_SCHEDULE": "false",
 		"VELA_REPO_ALLOW_TAG":      "false",
 		"VELA_REPO_BRANCH":         "master",
 		"VELA_REPO_TOPICS":         "cloud,security",
@@ -160,6 +161,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
+		if test.repo.GetAllowSchedule() != test.want.GetAllowSchedule() {
+			t.Errorf("GetAllowSchedule is %v, want %v", test.repo.GetAllowSchedule(), test.want.GetAllowSchedule())
+		}
+
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
@@ -213,6 +218,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
+		test.repo.SetAllowSchedule(test.want.GetAllowSchedule())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
 
@@ -300,6 +306,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
+		if test.repo.GetAllowSchedule() != test.want.GetAllowSchedule() {
+			t.Errorf("SetAllowSchedule is %v, want %v", test.repo.GetAllowSchedule(), test.want.GetAllowSchedule())
+		}
+
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
@@ -320,6 +330,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
+  AllowSchedule: %t,
   AllowTag: %t,
   Branch: %s,
   BuildLimit: %d,
@@ -344,6 +355,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),
+		r.GetAllowSchedule(),
 		r.GetAllowTag(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
@@ -397,6 +409,7 @@ func testRepo() *Repo {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
+	r.SetAllowSchedule(false)
 	r.SetPipelineType("")
 	r.SetPreviousName("")
 

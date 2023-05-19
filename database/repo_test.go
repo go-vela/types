@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -177,6 +177,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
+	want.SetAllowSchedule(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
 
@@ -329,6 +330,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowPush(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
+	r.SetAllowSchedule(false)
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
@@ -347,29 +349,30 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testRepo() *Repo {
 	return &Repo{
-		ID:           sql.NullInt64{Int64: 1, Valid: true},
-		UserID:       sql.NullInt64{Int64: 1, Valid: true},
-		Hash:         sql.NullString{String: "superSecretHash", Valid: true},
-		Org:          sql.NullString{String: "github", Valid: true},
-		Name:         sql.NullString{String: "octocat", Valid: true},
-		FullName:     sql.NullString{String: "github/octocat", Valid: true},
-		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
-		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
-		Branch:       sql.NullString{String: "master", Valid: true},
-		Topics:       []string{"cloud", "security"},
-		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
-		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
-		Counter:      sql.NullInt32{Int32: 0, Valid: true},
-		Visibility:   sql.NullString{String: "public", Valid: true},
-		Private:      sql.NullBool{Bool: false, Valid: true},
-		Trusted:      sql.NullBool{Bool: false, Valid: true},
-		Active:       sql.NullBool{Bool: true, Valid: true},
-		AllowPull:    sql.NullBool{Bool: false, Valid: true},
-		AllowPush:    sql.NullBool{Bool: true, Valid: true},
-		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
-		AllowTag:     sql.NullBool{Bool: false, Valid: true},
-		AllowComment: sql.NullBool{Bool: false, Valid: true},
-		PipelineType: sql.NullString{String: "yaml", Valid: true},
-		PreviousName: sql.NullString{String: "oldName", Valid: true},
+		ID:            sql.NullInt64{Int64: 1, Valid: true},
+		UserID:        sql.NullInt64{Int64: 1, Valid: true},
+		Hash:          sql.NullString{String: "superSecretHash", Valid: true},
+		Org:           sql.NullString{String: "github", Valid: true},
+		Name:          sql.NullString{String: "octocat", Valid: true},
+		FullName:      sql.NullString{String: "github/octocat", Valid: true},
+		Link:          sql.NullString{String: "https://github.com/github/octocat", Valid: true},
+		Clone:         sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
+		Branch:        sql.NullString{String: "master", Valid: true},
+		Topics:        []string{"cloud", "security"},
+		BuildLimit:    sql.NullInt64{Int64: 10, Valid: true},
+		Timeout:       sql.NullInt64{Int64: 30, Valid: true},
+		Counter:       sql.NullInt32{Int32: 0, Valid: true},
+		Visibility:    sql.NullString{String: "public", Valid: true},
+		Private:       sql.NullBool{Bool: false, Valid: true},
+		Trusted:       sql.NullBool{Bool: false, Valid: true},
+		Active:        sql.NullBool{Bool: true, Valid: true},
+		AllowPull:     sql.NullBool{Bool: false, Valid: true},
+		AllowPush:     sql.NullBool{Bool: true, Valid: true},
+		AllowDeploy:   sql.NullBool{Bool: false, Valid: true},
+		AllowTag:      sql.NullBool{Bool: false, Valid: true},
+		AllowSchedule: sql.NullBool{Bool: false, Valid: true},
+		AllowComment:  sql.NullBool{Bool: false, Valid: true},
+		PipelineType:  sql.NullString{String: "yaml", Valid: true},
+		PreviousName:  sql.NullString{String: "oldName", Valid: true},
 	}
 }

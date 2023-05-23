@@ -159,6 +159,7 @@ func TestTypes_ToItem(t *testing.T) {
 			Active: &booL,
 			Admin:  &booL,
 		},
+		ItemVersion: ItemVersion,
 	}
 
 	// run test

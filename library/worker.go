@@ -20,6 +20,7 @@ type Worker struct {
 	Status              *string   `json:"status,omitempty"`
 	LastStatusUpdateAt  *int64    `json:"last_status_update_at,omitempty"`
 	RunningBuildIDs     *[]string `json:"running_build_ids,omitempty"`
+	LastBuildStartedAt  *int64    `json:"last_build_started_at,omitempty"`
 	LastBuildFinishedAt *int64    `json:"last_build_finished_at,omitempty"`
 	LastCheckedIn       *int64    `json:"last_checked_in,omitempty"`
 	BuildLimit          *int64    `json:"build_limit,omitempty"`
@@ -127,6 +128,19 @@ func (w *Worker) GetRunningBuildIDs() []string {
 	}
 
 	return *w.RunningBuildIDs
+}
+
+// GetLastBuildStartedAt returns the LastBuildStartedAt field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (w *Worker) GetLastBuildStartedAt() int64 {
+	// return zero value if Worker type or LastBuildStartedAt field is nil
+	if w == nil || w.LastBuildStartedAt == nil {
+		return 0
+	}
+
+	return *w.LastBuildStartedAt
 }
 
 // GetLastBuildFinishedAt returns the LastBuildFinishedAt field.
@@ -272,6 +286,19 @@ func (w *Worker) SetRunningBuildIDs(v []string) {
 	w.RunningBuildIDs = &v
 }
 
+// SetLastBuildStartedAt sets the LastBuildStartedAt field.
+//
+// When the provided Worker type is nil, it
+// will set nothing and immediately return.
+func (w *Worker) SetLastBuildStartedAt(v int64) {
+	// return if Worker type is nil
+	if w == nil {
+		return
+	}
+
+	w.LastBuildStartedAt = &v
+}
+
 // SetLastBuildFinishedAt sets the LastBuildFinishedAt field.
 //
 // When the provided Worker type is nil, it
@@ -322,6 +349,10 @@ func (w *Worker) String() string {
   Status: %s,
   LastStatusUpdateAt: %v,
   RunningBuildIDs: %s,
+<<<<<<< HEAD
+=======
+  LastBuildStartedAt: %v,
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
   LastBuildFinishedAt: %v,
   LastCheckedIn: %v,
   BuildLimit: %v,
@@ -334,6 +365,7 @@ func (w *Worker) String() string {
 		w.GetStatus(),
 		w.GetLastStatusUpdateAt(),
 		w.GetRunningBuildIDs(),
+		w.GetLastBuildStartedAt(),
 		w.GetLastBuildFinishedAt(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),

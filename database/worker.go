@@ -37,6 +37,7 @@ type Worker struct {
 	Status              sql.NullString `sql:"status"`
 	LastStatusUpdateAt  sql.NullInt64  `sql:"last_status_update_at"`
 	RunningBuildIDs     pq.StringArray `sql:"running_build_ids" gorm:"type:varchar(500)"`
+	LastBuildStartedAt  sql.NullInt64  `sql:"last_build_started_at"`
 	LastBuildFinishedAt sql.NullInt64  `sql:"last_build_finished_at"`
 	LastCheckedIn       sql.NullInt64  `sql:"last_checked_in"`
 	BuildLimit          sql.NullInt64  `sql:"build_limit"`
@@ -78,6 +79,11 @@ func (w *Worker) Nullify() *Worker {
 		w.LastStatusUpdateAt.Valid = false
 	}
 
+	// check if the LastBuildStartedAt field should be false
+	if w.LastBuildStartedAt.Int64 == 0 {
+		w.LastBuildStartedAt.Valid = false
+	}
+
 	// check if the LastBuildFinishedAt field should be false
 	if w.LastBuildFinishedAt.Int64 == 0 {
 		w.LastBuildFinishedAt.Valid = false
@@ -108,6 +114,7 @@ func (w *Worker) ToLibrary() *library.Worker {
 	worker.SetStatus(w.Status.String)
 	worker.SetLastStatusUpdateAt(w.LastStatusUpdateAt.Int64)
 	worker.SetRunningBuildIDs(w.RunningBuildIDs)
+	worker.SetLastBuildStartedAt(w.LastBuildStartedAt.Int64)
 	worker.SetLastBuildFinishedAt(w.LastBuildFinishedAt.Int64)
 	worker.SetLastCheckedIn(w.LastCheckedIn.Int64)
 	worker.SetBuildLimit(w.BuildLimit.Int64)
@@ -166,6 +173,7 @@ func WorkerFromLibrary(w *library.Worker) *Worker {
 		Status:              sql.NullString{String: w.GetStatus(), Valid: true},
 		LastStatusUpdateAt:  sql.NullInt64{Int64: w.GetLastStatusUpdateAt(), Valid: true},
 		RunningBuildIDs:     pq.StringArray(w.GetRunningBuildIDs()),
+		LastBuildStartedAt:  sql.NullInt64{Int64: w.GetLastBuildStartedAt(), Valid: true},
 		LastBuildFinishedAt: sql.NullInt64{Int64: w.GetLastBuildFinishedAt(), Valid: true},
 		LastCheckedIn:       sql.NullInt64{Int64: w.GetLastCheckedIn(), Valid: true},
 		BuildLimit:          sql.NullInt64{Int64: w.GetBuildLimit(), Valid: true},

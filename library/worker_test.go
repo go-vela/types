@@ -61,6 +61,13 @@ func TestLibrary_Worker_Getters(t *testing.T) {
 			t.Errorf("GetRunningBuildIDs is %v, want %v", test.worker.GetRunningBuildIDs(), test.want.GetRunningBuildIDs())
 		}
 
+<<<<<<< HEAD
+=======
+		if test.worker.GetLastBuildStartedAt() != test.want.GetLastBuildStartedAt() {
+			t.Errorf("GetLastBuildStartedAt is %v, want %v", test.worker.GetLastBuildStartedAt(), test.want.GetLastBuildStartedAt())
+		}
+
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		if test.worker.GetLastBuildFinishedAt() != test.want.GetLastBuildFinishedAt() {
 			t.Errorf("GetLastBuildFinishedAt is %v, want %v", test.worker.GetLastBuildFinishedAt(), test.want.GetLastBuildFinishedAt())
 		}
@@ -104,6 +111,10 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 		test.worker.SetStatus(test.want.GetStatus())
 		test.worker.SetLastStatusUpdateAt(test.want.GetLastStatusUpdateAt())
 		test.worker.SetRunningBuildIDs(test.want.GetRunningBuildIDs())
+<<<<<<< HEAD
+=======
+		test.worker.SetLastBuildStartedAt(test.want.GetLastBuildStartedAt())
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		test.worker.SetLastBuildFinishedAt(test.want.GetLastBuildFinishedAt())
 		test.worker.SetLastCheckedIn(test.want.GetLastCheckedIn())
 		test.worker.SetBuildLimit(test.want.GetBuildLimit())
@@ -136,6 +147,13 @@ func TestLibrary_Worker_Setters(t *testing.T) {
 			t.Errorf("SetLastStatusUpdateAt is %v, want %v", test.worker.GetLastStatusUpdateAt(), test.want.GetLastStatusUpdateAt())
 		}
 
+<<<<<<< HEAD
+=======
+		if test.worker.GetLastBuildStartedAt() != test.want.GetLastBuildStartedAt() {
+			t.Errorf("SetLastBuildStartedAt is %v, want %v", test.worker.GetLastBuildStartedAt(), test.want.GetLastBuildStartedAt())
+		}
+
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		if test.worker.GetLastBuildFinishedAt() != test.want.GetLastBuildFinishedAt() {
 			t.Errorf("SetLastBuildFinishedAt is %v, want %v", test.worker.GetLastBuildFinishedAt(), test.want.GetLastBuildFinishedAt())
 		}
@@ -163,6 +181,10 @@ func TestLibrary_Worker_String(t *testing.T) {
   Status: %s,
   LastStatusUpdateAt: %v,
   RunningBuildIDs: %s,
+<<<<<<< HEAD
+=======
+  LastBuildStartedAt: %v,
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
   LastBuildFinishedAt: %v,
   LastCheckedIn: %v,
   BuildLimit: %v,
@@ -175,6 +197,10 @@ func TestLibrary_Worker_String(t *testing.T) {
 		w.GetStatus(),
 		w.GetLastStatusUpdateAt(),
 		w.GetRunningBuildIDs(),
+<<<<<<< HEAD
+=======
+		w.GetLastBuildStartedAt(),
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		w.GetLastBuildFinishedAt(),
 		w.GetLastCheckedIn(),
 		w.GetBuildLimit(),
@@ -201,6 +227,10 @@ func testWorker() *Worker {
 	w.SetStatus("available")
 	w.SetLastStatusUpdateAt(time.Time{}.UTC().Unix())
 	w.SetRunningBuildIDs([]string{"12345"})
+<<<<<<< HEAD
+=======
+	w.SetLastBuildStartedAt(time.Time{}.UTC().Unix())
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 	w.SetLastBuildFinishedAt(time.Time{}.UTC().Unix())
 	w.SetLastCheckedIn(time.Time{}.UTC().Unix())
 	w.SetBuildLimit(2)

@@ -24,6 +24,10 @@ func TestDatabase_Worker_Nullify(t *testing.T) {
 		Active:              sql.NullBool{Bool: false, Valid: false},
 		Status:              sql.NullString{String: "", Valid: false},
 		LastStatusUpdateAt:  sql.NullInt64{Int64: 0, Valid: false},
+<<<<<<< HEAD
+=======
+		LastBuildStartedAt:  sql.NullInt64{Int64: 0, Valid: false},
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		LastBuildFinishedAt: sql.NullInt64{Int64: 0, Valid: false},
 		LastCheckedIn:       sql.NullInt64{Int64: 0, Valid: false},
 		BuildLimit:          sql.NullInt64{Int64: 0, Valid: false},
@@ -70,6 +74,10 @@ func TestDatabase_Worker_ToLibrary(t *testing.T) {
 	want.SetStatus("available")
 	want.SetLastStatusUpdateAt(1563474077)
 	want.SetRunningBuildIDs([]string{"12345"})
+<<<<<<< HEAD
+=======
+	want.SetLastBuildStartedAt(1563474077)
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 	want.SetLastBuildFinishedAt(1563474077)
 	want.SetLastCheckedIn(1563474077)
 	want.SetBuildLimit(2)
@@ -153,6 +161,10 @@ func TestDatabase_WorkerFromLibrary(t *testing.T) {
 	w.SetStatus("available")
 	w.SetLastStatusUpdateAt(1563474077)
 	w.SetRunningBuildIDs([]string{"12345"})
+<<<<<<< HEAD
+=======
+	w.SetLastBuildStartedAt(1563474077)
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 	w.SetLastBuildFinishedAt(1563474077)
 	w.SetLastCheckedIn(1563474077)
 	w.SetBuildLimit(2)
@@ -179,6 +191,10 @@ func testWorker() *Worker {
 		Status:              sql.NullString{String: "available", Valid: true},
 		LastStatusUpdateAt:  sql.NullInt64{Int64: 1563474077, Valid: true},
 		RunningBuildIDs:     []string{"12345"},
+<<<<<<< HEAD
+=======
+		LastBuildStartedAt:  sql.NullInt64{Int64: 1563474077, Valid: true},
+>>>>>>> a13b7ca8ce2c6ff657c459b085c69840ef3bd308
 		LastBuildFinishedAt: sql.NullInt64{Int64: 1563474077, Valid: true},
 		LastCheckedIn:       sql.NullInt64{Int64: 1563474077, Valid: true},
 		BuildLimit:          sql.NullInt64{Int64: 2, Valid: true},

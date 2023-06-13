@@ -271,14 +271,15 @@ func (r *Repo) Validate() error {
 
 	// calculate total size of favorites while sanitizing entries
 	total := 0
-
 	for i, t := range r.Topics {
 		r.Topics[i] = sanitize(t)
-		total += len(t)
+		// "+ 1" to account for comma separators included in the database field
+		total += len(t) + 1
 	}
 
 	// verify the Favorites field is within the database constraints
-	if total > constants.TopicsMaxSize {
+	// "- 1" to account for the ending "+ 1" added above for the last topic
+	if (total - 1) > constants.TopicsMaxSize {
 		return ErrExceededTopicsLimit
 	}
 

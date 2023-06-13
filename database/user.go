@@ -237,11 +237,13 @@ func (u *User) Validate() error {
 	// calculate total size of favorites
 	total := 0
 	for _, f := range u.Favorites {
-		total += len(f)
+		// "+ 1" to account for comma separators included in the database field
+		total += len(f) + 1
 	}
 
 	// verify the Favorites field is within the database constraints
-	if total > constants.FavoritesMaxSize {
+	// "- 1" to account for the ending "+ 1" added above for the last favorite
+	if (total - 1) > constants.FavoritesMaxSize {
 		return ErrExceededFavoritesLimit
 	}
 

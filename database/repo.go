@@ -274,13 +274,13 @@ func (r *Repo) Validate() error {
 
 	for i, t := range r.Topics {
 		r.Topics[i] = sanitize(t)
-		// "+ 1" to account for comma separators included in the database field
-		total += len(t) + 1
+		total += len(t)
 	}
 
 	// verify the Favorites field is within the database constraints
-	// "- 1" to account for the ending "+ 1" added above for the last topic
-	if (total - 1) > constants.TopicsMaxSize {
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if (total + len(r.Topics) - 1) > constants.TopicsMaxSize {
 		return ErrExceededTopicsLimit
 	}
 

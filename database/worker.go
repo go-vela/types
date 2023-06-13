@@ -138,13 +138,13 @@ func (w *Worker) Validate() error {
 	// calculate total size of RunningBuildIds
 	total := 0
 	for _, f := range w.RunningBuildIDs {
-		// "+ 1" to account for comma separators included in the database field
-		total += len(f) + 1
+		total += len(f)
 	}
 
 	// verify the RunningBuildIds field is within the database constraints
-	// "- 1" to account for the ending "+ 1" added above for the last build id
-	if (total - 1) > constants.RunningBuildIDsMaxSize {
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if (total + len(w.RunningBuildIDs) - 1) > constants.RunningBuildIDsMaxSize {
 		return ErrExceededRunningBuildIDsLimit
 	}
 

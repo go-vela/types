@@ -271,6 +271,7 @@ func (r *Repo) Validate() error {
 
 	// calculate total size of favorites while sanitizing entries
 	total := 0
+
 	for i, t := range r.Topics {
 		r.Topics[i] = sanitize(t)
 		// "+ 1" to account for comma separators included in the database field

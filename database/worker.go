@@ -142,7 +142,9 @@ func (w *Worker) Validate() error {
 	}
 
 	// verify the RunningBuildIds field is within the database constraints
-	if total > constants.RunningBuildIDsMaxSize {
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if (total + len(w.RunningBuildIDs) - 1) > constants.RunningBuildIDsMaxSize {
 		return ErrExceededRunningBuildIDsLimit
 	}
 

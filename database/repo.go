@@ -63,11 +63,7 @@ type Repo struct {
 	Private      sql.NullBool   `sql:"private"`
 	Trusted      sql.NullBool   `sql:"trusted"`
 	Active       sql.NullBool   `sql:"active"`
-	AllowPull    sql.NullBool   `sql:"allow_pull"`
-	AllowPush    sql.NullBool   `sql:"allow_push"`
-	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
-	AllowTag     sql.NullBool   `sql:"allow_tag"`
-	AllowComment sql.NullBool   `sql:"allow_comment"`
+	AllowEvents  sql.NullInt64  `sql:"allow_events"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
 }
@@ -185,6 +181,11 @@ func (r *Repo) Nullify() *Repo {
 		r.Timeout.Valid = false
 	}
 
+	// check if the AllowEvents field should be false
+	if r.AllowEvents.Int64 == 0 {
+		r.AllowEvents.Valid = false
+	}
+
 	// check if the Visibility field should be false
 	if len(r.Visibility.String) == 0 {
 		r.Visibility.Valid = false
@@ -225,11 +226,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetPrivate(r.Private.Bool)
 	repo.SetTrusted(r.Trusted.Bool)
 	repo.SetActive(r.Active.Bool)
-	repo.SetAllowPull(r.AllowPull.Bool)
-	repo.SetAllowPush(r.AllowPush.Bool)
-	repo.SetAllowDeploy(r.AllowDeploy.Bool)
-	repo.SetAllowTag(r.AllowTag.Bool)
-	repo.SetAllowComment(r.AllowComment.Bool)
+	repo.SetAllowEvents(r.AllowEvents.Int64)
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
 
@@ -320,11 +317,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		Private:      sql.NullBool{Bool: r.GetPrivate(), Valid: true},
 		Trusted:      sql.NullBool{Bool: r.GetTrusted(), Valid: true},
 		Active:       sql.NullBool{Bool: r.GetActive(), Valid: true},
-		AllowPull:    sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
-		AllowPush:    sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
-		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
-		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
-		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
+		AllowEvents:  sql.NullInt64{Int64: r.GetAllowEvents(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
 	}

@@ -118,6 +118,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 		Clone:        sql.NullString{String: "", Valid: false},
 		Branch:       sql.NullString{String: "", Valid: false},
 		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
+		AllowEvents:  sql.NullInt64{Int64: 0, Valid: false},
 		Visibility:   sql.NullString{String: "", Valid: false},
 		PipelineType: sql.NullString{String: "", Valid: false},
 	}
@@ -172,11 +173,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetPrivate(false)
 	want.SetTrusted(false)
 	want.SetActive(true)
-	want.SetAllowPull(false)
-	want.SetAllowPush(true)
-	want.SetAllowDeploy(false)
-	want.SetAllowTag(false)
-	want.SetAllowComment(false)
+	want.SetAllowEvents(1)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
 
@@ -325,11 +322,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetPrivate(false)
 	r.SetTrusted(false)
 	r.SetActive(true)
-	r.SetAllowPull(false)
-	r.SetAllowPush(true)
-	r.SetAllowDeploy(false)
-	r.SetAllowTag(false)
-	r.SetAllowComment(false)
+	r.SetAllowEvents(1)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
 
@@ -364,11 +357,7 @@ func testRepo() *Repo {
 		Private:      sql.NullBool{Bool: false, Valid: true},
 		Trusted:      sql.NullBool{Bool: false, Valid: true},
 		Active:       sql.NullBool{Bool: true, Valid: true},
-		AllowPull:    sql.NullBool{Bool: false, Valid: true},
-		AllowPush:    sql.NullBool{Bool: true, Valid: true},
-		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
-		AllowTag:     sql.NullBool{Bool: false, Valid: true},
-		AllowComment: sql.NullBool{Bool: false, Valid: true},
+		AllowEvents:  sql.NullInt64{Int64: 1, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},
 	}

@@ -7,8 +7,6 @@ package library
 import (
 	"fmt"
 	"strings"
-
-	"github.com/go-vela/types/constants"
 )
 
 // Repo is the library representation of a repo.
@@ -32,7 +30,7 @@ type Repo struct {
 	Private      *bool     `json:"private,omitempty"`
 	Trusted      *bool     `json:"trusted,omitempty"`
 	Active       *bool     `json:"active,omitempty"`
-	AllowEvents  *int64    `json:"allow_events,omitempty"`
+	AllowEvents  *Events   `json:"allow_events,omitempty"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
 }
@@ -42,7 +40,7 @@ type Repo struct {
 func (r *Repo) Environment() map[string]string {
 	return map[string]string{
 		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
-		"VELA_REPO_ALLOW_EVENTS":  strings.Join(r.ListAllowedEvents()[:], ","),
+		"VELA_REPO_ALLOW_EVENTS":  strings.Join(r.GetAllowEvents().List()[:], ","),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
 		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
@@ -59,7 +57,7 @@ func (r *Repo) Environment() map[string]string {
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":       ToString(r.GetActive()),
-		"REPOSITORY_ALLOW_EVENTS": strings.Join(r.ListAllowedEvents()[:], ","),
+		"REPOSITORY_ALLOW_EVENTS": strings.Join(r.GetAllowEvents().List()[:], ","),
 		"REPOSITORY_BRANCH":       ToString(r.GetBranch()),
 		"REPOSITORY_CLONE":        ToString(r.GetClone()),
 		"REPOSITORY_FULL_NAME":    ToString(r.GetFullName()),
@@ -298,13 +296,13 @@ func (r *Repo) GetActive() bool {
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowEvents() int64 {
+func (r *Repo) GetAllowEvents() *Events {
 	// return zero value if Repo type or AllowPull field is nil
 	if r == nil || r.AllowEvents == nil {
-		return 0
+		return new(Events)
 	}
 
-	return *r.AllowEvents
+	return r.AllowEvents
 }
 
 // GetPipelineType returns the PipelineType field.
@@ -558,13 +556,13 @@ func (r *Repo) SetActive(v bool) {
 //
 // When the provided Repo type is nil, it
 // will set nothing and immediately return.
-func (r *Repo) SetAllowEvents(v int64) {
+func (r *Repo) SetAllowEvents(v *Events) {
 	// return if Repo type is nil
 	if r == nil {
 		return
 	}
 
-	r.AllowEvents = &v
+	r.AllowEvents = v
 }
 
 // SetPipelineType sets the PipelineType field.
@@ -593,65 +591,6 @@ func (r *Repo) SetPreviousName(v string) {
 	r.PreviousName = &v
 }
 
-func (r *Repo) ListAllowedEvents() []string {
-	eventSlice := []string{}
-	events := r.GetAllowEvents()
-
-	if events&constants.AllowPush > 0 {
-		eventSlice = append(eventSlice, constants.EventPush)
-	}
-
-	if events&constants.AllowPROpen > 0 {
-		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionOpened)
-	}
-
-	if events&constants.AllowPRSync > 0 {
-		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionSynchronize)
-	}
-
-	if events&constants.AllowPREdit > 0 {
-		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionEdited)
-	}
-
-	if events&constants.AllowPRLabel > 0 {
-		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionLabeled)
-	}
-
-	if events&constants.AllowPRReviewRequest > 0 {
-		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionReviewRequested)
-	}
-
-	if events&constants.AllowTag > 0 {
-		eventSlice = append(eventSlice, constants.EventTag)
-	}
-
-	if events&constants.AllowDeploy > 0 {
-		eventSlice = append(eventSlice, constants.EventDeploy)
-	}
-
-	if events&constants.AllowCommentCreate > 0 {
-		eventSlice = append(eventSlice, constants.EventComment+":"+constants.ActionCreated)
-	}
-
-	if events&constants.AllowCommentEdit > 0 {
-		eventSlice = append(eventSlice, constants.EventComment+":"+constants.ActionEdited)
-	}
-
-	if events&constants.AllowReviewSubmit > 0 {
-		eventSlice = append(eventSlice, constants.EventPullReview+":"+constants.ActionSubmitted)
-	}
-
-	if events&constants.AllowReviewEdit > 0 {
-		eventSlice = append(eventSlice, constants.EventPullReview+":"+constants.ActionEdited)
-	}
-
-	if events&constants.AllowSchedule > 0 {
-		eventSlice = append(eventSlice, constants.EventSchedule)
-	}
-
-	return eventSlice
-}
-
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -676,7 +615,7 @@ func (r *Repo) String() string {
   Visibility: %s,
 }`,
 		r.GetActive(),
-		r.ListAllowedEvents(),
+		r.GetAllowEvents().List(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),

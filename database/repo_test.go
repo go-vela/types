@@ -155,6 +155,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	// setup types
 	want := new(library.Repo)
+	e := library.NewEventsFromMask(1)
 
 	want.SetID(1)
 	want.SetUserID(1)
@@ -173,7 +174,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetPrivate(false)
 	want.SetTrusted(false)
 	want.SetActive(true)
-	want.SetAllowEvents(1)
+	want.SetAllowEvents(e)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
 
@@ -304,6 +305,8 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 func TestDatabase_RepoFromLibrary(t *testing.T) {
 	// setup types
 	r := new(library.Repo)
+	e := new(library.Events)
+	e.SetPush(true)
 
 	r.SetID(1)
 	r.SetUserID(1)
@@ -322,7 +325,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetPrivate(false)
 	r.SetTrusted(false)
 	r.SetActive(true)
-	r.SetAllowEvents(1)
+	r.SetAllowEvents(e)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
 

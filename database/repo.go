@@ -226,7 +226,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetPrivate(r.Private.Bool)
 	repo.SetTrusted(r.Trusted.Bool)
 	repo.SetActive(r.Active.Bool)
-	repo.SetAllowEvents(r.AllowEvents.Int64)
+	repo.SetAllowEvents(library.NewEventsFromMask(r.AllowEvents.Int64))
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
 
@@ -317,7 +317,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		Private:      sql.NullBool{Bool: r.GetPrivate(), Valid: true},
 		Trusted:      sql.NullBool{Bool: r.GetTrusted(), Valid: true},
 		Active:       sql.NullBool{Bool: r.GetActive(), Valid: true},
-		AllowEvents:  sql.NullInt64{Int64: r.GetAllowEvents(), Valid: true},
+		AllowEvents:  sql.NullInt64{Int64: r.GetAllowEvents().ToDatabase(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
 	}

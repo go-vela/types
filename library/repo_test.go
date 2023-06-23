@@ -14,7 +14,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 	// setup types
 	want := map[string]string{
 		"VELA_REPO_ACTIVE":        "true",
-		"VELA_REPO_ALLOW_EVENTS":  "push",
+		"VELA_REPO_ALLOW_EVENTS":  "push,pull_request:opened,pull_request:synchronize,tag",
 		"VELA_REPO_BRANCH":        "master",
 		"VELA_REPO_TOPICS":        "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":   "10",
@@ -29,7 +29,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_VISIBILITY":    "public",
 		"VELA_REPO_PIPELINE_TYPE": "",
 		"REPOSITORY_ACTIVE":       "true",
-		"REPOSITORY_ALLOW_EVENTS": "push",
+		"REPOSITORY_ALLOW_EVENTS": "push,pull_request:opened,pull_request:synchronize,tag",
 		"REPOSITORY_BRANCH":       "master",
 		"REPOSITORY_CLONE":        "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":    "github/octocat",
@@ -132,8 +132,8 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
 		}
 
-		if test.repo.GetAllowEvents() != test.want.GetAllowEvents() {
-			t.Errorf("GetAllowEvents is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
+		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
 		}
 
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
@@ -252,8 +252,8 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetActive is %v, want %v", test.repo.GetActive(), test.want.GetActive())
 		}
 
-		if test.repo.GetAllowEvents() != test.want.GetAllowEvents() {
-			t.Errorf("SetAllowEvents is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
+		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
 		}
 
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
@@ -292,7 +292,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   Visibility: %s,
 }`,
 		r.GetActive(),
-		r.ListAllowedEvents(),
+		r.GetAllowEvents().List(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),
@@ -325,6 +325,8 @@ func TestLibrary_Repo_String(t *testing.T) {
 func testRepo() *Repo {
 	r := new(Repo)
 
+	e := testEvents()
+
 	r.SetID(1)
 	r.SetOrg("github")
 	r.SetName("octocat")
@@ -340,9 +342,23 @@ func testRepo() *Repo {
 	r.SetPrivate(false)
 	r.SetTrusted(false)
 	r.SetActive(true)
-	r.SetAllowEvents(1)
+	r.SetAllowEvents(e)
 	r.SetPipelineType("")
 	r.SetPreviousName("")
 
 	return r
+}
+
+func testEvents() *Events {
+	e := new(Events)
+
+	pr := new(PRActions)
+	pr.SetOpened(true)
+	pr.SetSynchronize(true)
+
+	e.SetPush(true)
+	e.SetPullRequest(pr)
+	e.SetTag(true)
+
+	return e
 }

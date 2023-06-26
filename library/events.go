@@ -6,6 +6,8 @@ package library
 
 import "github.com/go-vela/types/constants"
 
+// PRActions is the library representation of the various actions associated
+// with the pull_request event webhook from the SCM.
 type PRActions struct {
 	Opened        *bool `json:"opened"`
 	Edited        *bool `json:"edited"`
@@ -14,16 +16,22 @@ type PRActions struct {
 	ReviewRequest *bool `json:"review_request"`
 }
 
+// CommentActions is the library representation of the various actions associated
+// with the comment event webhook from the SCM.
 type CommentActions struct {
 	Created *bool `json:"created"`
 	Edited  *bool `json:"edited"`
 }
 
+// ReviewActions is the library representation of the various actions associated
+// with the pull_request_review event webhook from the SCM.
 type ReviewActions struct {
 	Submitted *bool `json:"submitted"`
 	Edited    *bool `json:"edited"`
 }
 
+// Events is the library representation of the various events that generate a
+// webhook from the SCM.
 type Events struct {
 	Push        *bool           `json:"push"`
 	PullRequest *PRActions      `json:"pull_request"`
@@ -34,6 +42,8 @@ type Events struct {
 	PullReview  *ReviewActions  `json:"pull_review"`
 }
 
+// NewEventsFromMask is an instatiation function for the Events type that
+// takes in an event mask integer value and populates the nested Events struct.
 func NewEventsFromMask(mask int64) *Events {
 	prActions := new(PRActions)
 	commentActions := new(CommentActions)
@@ -63,6 +73,8 @@ func NewEventsFromMask(mask int64) *Events {
 	return e
 }
 
+// List is an Events method that generates a comma-separated list of event:action
+// combinations that are allowed for the repo.
 func (e *Events) List() []string {
 	eventSlice := []string{}
 
@@ -121,9 +133,11 @@ func (e *Events) List() []string {
 	return eventSlice
 }
 
+// ToDatabase is an Events method that converts a nested Events struct into an integer event mask.
 func (e *Events) ToDatabase() int64 {
 	events := int64(0)
 
+	// OR operator adds a "1" flag for each event (e.g. 0001 | 0101 == 0101)
 	if e.GetPush() {
 		events = events | constants.AllowPush
 	}
@@ -179,10 +193,10 @@ func (e *Events) ToDatabase() int64 {
 	return events
 }
 
-// GetPush returns the ScheduledAt field from the provided Schedule. If the object is nil,
+// GetPush returns the Push field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetPush() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Push field is nil
 	if e == nil || e.Push == nil {
 		return false
 	}
@@ -190,10 +204,10 @@ func (e *Events) GetPush() bool {
 	return *e.Push
 }
 
-// GetRepo returns the Repo field from the provided Schedule. If the object is nil,
+// GetPullRequest returns the PullRequest field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetPullRequest() *PRActions {
-	// return zero value if Schedule type or Repo field is nil
+	// return zero value if Events type or PullRequest field is nil
 	if e == nil || e.PullRequest == nil {
 		return new(PRActions)
 	}
@@ -201,8 +215,10 @@ func (e *Events) GetPullRequest() *PRActions {
 	return e.PullRequest
 }
 
+// GetTag returns the Tag field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetTag() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Tag field is nil
 	if e == nil || e.Tag == nil {
 		return false
 	}
@@ -210,8 +226,10 @@ func (e *Events) GetTag() bool {
 	return *e.Tag
 }
 
+// GetDeployment returns the Deployment field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetDeployment() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Deployment field is nil
 	if e == nil || e.Deployment == nil {
 		return false
 	}
@@ -219,8 +237,10 @@ func (e *Events) GetDeployment() bool {
 	return *e.Deployment
 }
 
+// GetComment returns the Comment field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetComment() *CommentActions {
-	// return zero value if Schedule type or Repo field is nil
+	// return zero value if Events type or Comment field is nil
 	if e == nil || e.Comment == nil {
 		return new(CommentActions)
 	}
@@ -228,8 +248,10 @@ func (e *Events) GetComment() *CommentActions {
 	return e.Comment
 }
 
+// GetSchedule returns the Schedule field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetSchedule() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Schedule field is nil
 	if e == nil || e.Schedule == nil {
 		return false
 	}
@@ -237,8 +259,10 @@ func (e *Events) GetSchedule() bool {
 	return *e.Schedule
 }
 
+// GetPullReview returns the PullReview field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (e *Events) GetPullReview() *ReviewActions {
-	// return zero value if Schedule type or Repo field is nil
+	// return zero value if Events type or PullReview field is nil
 	if e == nil || e.PullReview == nil {
 		return new(ReviewActions)
 	}
@@ -246,8 +270,10 @@ func (e *Events) GetPullReview() *ReviewActions {
 	return e.PullReview
 }
 
+// GetOpened returns the Opened field from the provided PRActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *PRActions) GetOpened() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if PRActions type or Opened field is nil
 	if a == nil || a.Opened == nil {
 		return false
 	}
@@ -255,8 +281,10 @@ func (a *PRActions) GetOpened() bool {
 	return *a.Opened
 }
 
+// GetSynchronize returns the Synchronize field from the provided PRActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *PRActions) GetSynchronize() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if PRActions type or Synchronize field is nil
 	if a == nil || a.Synchronize == nil {
 		return false
 	}
@@ -264,8 +292,10 @@ func (a *PRActions) GetSynchronize() bool {
 	return *a.Synchronize
 }
 
+// GetEdited returns the Edited field from the provided PRActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *PRActions) GetEdited() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if PRActions type or Edited field is nil
 	if a == nil || a.Edited == nil {
 		return false
 	}
@@ -273,8 +303,10 @@ func (a *PRActions) GetEdited() bool {
 	return *a.Edited
 }
 
+// GetLabeled returns the Labeled field from the provided PRActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *PRActions) GetLabeled() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if PRActions type or Labeled field is nil
 	if a == nil || a.Labeled == nil {
 		return false
 	}
@@ -282,8 +314,10 @@ func (a *PRActions) GetLabeled() bool {
 	return *a.Labeled
 }
 
+// GetReviewRequest returns the ReviewRequest field from the provided PRActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *PRActions) GetReviewRequest() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if PRActions type or ReviewRequest field is nil
 	if a == nil || a.ReviewRequest == nil {
 		return false
 	}
@@ -291,8 +325,10 @@ func (a *PRActions) GetReviewRequest() bool {
 	return *a.ReviewRequest
 }
 
+// GetCreated returns the Created field from the provided CommentActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *CommentActions) GetCreated() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Created field is nil
 	if a == nil || a.Created == nil {
 		return false
 	}
@@ -300,8 +336,10 @@ func (a *CommentActions) GetCreated() bool {
 	return *a.Created
 }
 
+// GetEdited returns the Edited field from the provided CommentActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *CommentActions) GetEdited() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Edited field is nil
 	if a == nil || a.Edited == nil {
 		return false
 	}
@@ -309,8 +347,10 @@ func (a *CommentActions) GetEdited() bool {
 	return *a.Edited
 }
 
+// GetSubmitted returns the Submitted field from the provided ReviewActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *ReviewActions) GetSubmitted() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Submitted field is nil
 	if a == nil || a.Submitted == nil {
 		return false
 	}
@@ -318,8 +358,10 @@ func (a *ReviewActions) GetSubmitted() bool {
 	return *a.Submitted
 }
 
+// GetEdited returns the Edited field from the provided ReviewActions. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
 func (a *ReviewActions) GetEdited() bool {
-	// return zero value if Schedule type or ScheduledAt field is nil
+	// return zero value if Events type or Edited field is nil
 	if a == nil || a.Edited == nil {
 		return false
 	}
@@ -327,8 +369,12 @@ func (a *ReviewActions) GetEdited() bool {
 	return *a.Edited
 }
 
+// SetPush sets the Events Push field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetPush(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -336,8 +382,12 @@ func (e *Events) SetPush(v bool) {
 	e.Push = &v
 }
 
+// SetPullRequest sets the Events PullRequest field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetPullRequest(v *PRActions) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -345,8 +395,12 @@ func (e *Events) SetPullRequest(v *PRActions) {
 	e.PullRequest = v
 }
 
+// SetTag sets the Events Tag field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetTag(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -354,8 +408,12 @@ func (e *Events) SetTag(v bool) {
 	e.Tag = &v
 }
 
+// SetDeployment sets the Events Deployment field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetDeployment(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -363,8 +421,12 @@ func (e *Events) SetDeployment(v bool) {
 	e.Deployment = &v
 }
 
+// SetComment sets the Events Comment field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetComment(v *CommentActions) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -372,8 +434,12 @@ func (e *Events) SetComment(v *CommentActions) {
 	e.Comment = v
 }
 
+// SetSchedule sets the Events Schedule field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetSchedule(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -381,8 +447,12 @@ func (e *Events) SetSchedule(v bool) {
 	e.Schedule = &v
 }
 
+// SetPullReview sets the Events PullReview field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (e *Events) SetPullReview(v *ReviewActions) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if e == nil {
 		return
 	}
@@ -390,8 +460,12 @@ func (e *Events) SetPullReview(v *ReviewActions) {
 	e.PullReview = v
 }
 
+// SetOpened sets the PRActions Opened field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *PRActions) SetOpened(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -399,8 +473,12 @@ func (a *PRActions) SetOpened(v bool) {
 	a.Opened = &v
 }
 
+// SetSynchronize sets the PRActions Synchronize field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *PRActions) SetSynchronize(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -408,8 +486,12 @@ func (a *PRActions) SetSynchronize(v bool) {
 	a.Synchronize = &v
 }
 
+// SetEdited sets the PRActions Edited field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *PRActions) SetEdited(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -417,8 +499,12 @@ func (a *PRActions) SetEdited(v bool) {
 	a.Edited = &v
 }
 
+// SetLabeled sets the PRActions Labeled field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *PRActions) SetLabeled(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -426,8 +512,12 @@ func (a *PRActions) SetLabeled(v bool) {
 	a.Labeled = &v
 }
 
+// SetReviewRequest sets the PRActions ReviewRequest field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *PRActions) SetReviewRequest(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -435,8 +525,12 @@ func (a *PRActions) SetReviewRequest(v bool) {
 	a.ReviewRequest = &v
 }
 
+// SetCreated sets the CommentActions Created field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *CommentActions) SetCreated(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -444,8 +538,12 @@ func (a *CommentActions) SetCreated(v bool) {
 	a.Created = &v
 }
 
+// SetEdited sets the CommentActions Edited field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *CommentActions) SetEdited(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -453,8 +551,12 @@ func (a *CommentActions) SetEdited(v bool) {
 	a.Edited = &v
 }
 
+// SetSubmitted sets the ReviewActions Submitted field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *ReviewActions) SetSubmitted(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}
@@ -462,8 +564,12 @@ func (a *ReviewActions) SetSubmitted(v bool) {
 	a.Submitted = &v
 }
 
+// SetEdited sets the ReviewActions Edited field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
 func (a *ReviewActions) SetEdited(v bool) {
-	// return if Schedule type is nil
+	// return if Events type is nil
 	if a == nil {
 		return
 	}

@@ -8,7 +8,14 @@ package pipeline
 //
 // swagger:model PipelineMetadata
 type Metadata struct {
-	Template    bool     `json:"template,omitempty" yaml:"template,omitempty"`
-	Clone       bool     `json:"clone,omitempty" yaml:"clone,omitempty"`
-	Environment []string `json:"environment,omitempty" yaml:"environment,omitempty"`
+	Template    bool           `json:"template,omitempty" yaml:"template,omitempty"`
+	Clone       bool           `json:"clone,omitempty" yaml:"clone,omitempty"`
+	Environment []string       `json:"environment,omitempty" yaml:"environment,omitempty"`
+	AutoCancel  *CancelOptions `json:"auto_cancel,omitempty" yaml:"auto_cancel,omitempty"`
+}
+
+type CancelOptions struct {
+	Running       bool `yaml:"running,omitempty" json:"running,omitempty"`
+	Pending       bool `yaml:"pending,omitempty" json:"pending,omitempty"`
+	DefaultBranch bool `yaml:"default_branch,omitempty" json:"default_branch,omitempty"`
 }

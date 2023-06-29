@@ -14,6 +14,7 @@ type Metadata struct {
 	AutoCancel  *CancelOptions `json:"auto_cancel,omitempty" yaml:"auto_cancel,omitempty"`
 }
 
+// CancelOptions is the pipeline representation of the auto_cancel block for a pipeline.
 type CancelOptions struct {
 	Running       bool `yaml:"running,omitempty" json:"running,omitempty"`
 	Pending       bool `yaml:"pending,omitempty" json:"pending,omitempty"`

@@ -19,6 +19,8 @@ type (
 		AutoCancel   *CancelOptions `yaml:"auto_cancel,omitempty" json:"auto_cancel,omitempty" jsonschema:"description=Enables auto canceling of queued or running pipelines that become stale due to new push.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-auto-cancel-tag"`
 	}
 
+	// CancelOptions is the yaml representation of
+	// the auto_cancel block for a pipeline.
 	CancelOptions struct {
 		Running       *bool `yaml:"running,omitempty" json:"running,omitempty" jsonschema:"description=Enables auto canceling of running pipelines that become stale due to new push.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-auto-cancel-tag"`
 		Pending       *bool `yaml:"pending,omitempty" json:"pending,omitempty" jsonschema:"description=Enables auto canceling of queued pipelines that become stale due to new push.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-auto-cancel-tag"`
@@ -37,11 +39,14 @@ func (m *Metadata) ToPipeline() *pipeline.Metadata {
 	}
 
 	autoCancel := new(pipeline.CancelOptions)
+
+	// default to false for all fields if block isn't found
 	if m.AutoCancel == nil {
 		autoCancel.Pending = false
 		autoCancel.Running = false
 		autoCancel.DefaultBranch = false
 	} else {
+		// if block is found but pending field isn't, default to true
 		if m.AutoCancel.Pending != nil {
 			autoCancel.Pending = *m.AutoCancel.Pending
 		} else {

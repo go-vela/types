@@ -66,6 +66,9 @@ func TestLibrary_Schedule_Getters(t *testing.T) {
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("GetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
 			}
+			if test.schedule.GetProcessing() != test.want.GetProcessing() {
+				t.Errorf("GetProcessing is %v, want %v", test.schedule.GetProcessing(), test.want.GetProcessing())
+			}
 		})
 	}
 }
@@ -135,6 +138,10 @@ func TestLibrary_Schedule_Setters(t *testing.T) {
 			test.schedule.SetScheduledAt(test.want.GetScheduledAt())
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("SetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
+			}
+			test.schedule.SetProcessing(test.want.GetProcessing())
+			if test.schedule.GetProcessing() != test.want.GetProcessing() {
+				t.Errorf("SetProcessing is %v, want %v", test.schedule.GetProcessing(), test.want.GetProcessing())
 			}
 		})
 	}

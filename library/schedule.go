@@ -22,6 +22,7 @@ type Schedule struct {
 	UpdatedAt   *int64  `json:"updated_at,omitempty"`
 	UpdatedBy   *string `json:"updated_by,omitempty"`
 	ScheduledAt *int64  `json:"scheduled_at,omitempty"`
+	Processing  *bool   `json:"-"`
 }
 
 // GetID returns the ID field from the provided Schedule. If the object is nil,
@@ -134,6 +135,17 @@ func (s *Schedule) GetScheduledAt() int64 {
 	return *s.ScheduledAt
 }
 
+// GetProcessing returns the Processing field from the provided Schedule. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (s *Schedule) GetProcessing() bool {
+	// return zero value if Schedule type or Processing field is nil
+	if s == nil || s.Processing == nil {
+		return false
+	}
+
+	return *s.Processing
+}
+
 // SetID sets the ID field in the provided Schedule. If the object is nil,
 // it will set nothing and immediately return making this a no-op.
 func (s *Schedule) SetID(id int64) {
@@ -242,6 +254,17 @@ func (s *Schedule) SetScheduledAt(scheduledAt int64) {
 	}
 
 	s.ScheduledAt = &scheduledAt
+}
+
+// SetProcessing sets the Processing field in the provided Schedule. If the object is nil,
+// it will set nothing and immediately return making this a no-op.
+func (s *Schedule) SetProcessing(processing bool) {
+	// return if Schedule type is nil
+	if s == nil {
+		return
+	}
+
+	s.Processing = &processing
 }
 
 // String implements the Stringer interface for the Schedule type.

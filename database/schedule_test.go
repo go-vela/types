@@ -90,6 +90,7 @@ func TestDatabase_Schedule_ToLibrary(t *testing.T) {
 	want.SetUpdatedAt(time.Now().Add(time.Hour * 1).UTC().Unix())
 	want.SetUpdatedBy("user2")
 	want.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
+	want.SetProcessing(false)
 
 	got := testSchedule().ToLibrary()
 	if !reflect.DeepEqual(got, want) {
@@ -176,5 +177,6 @@ func testSchedule() *Schedule {
 		UpdatedAt:   sql.NullInt64{Int64: time.Now().Add(time.Hour * 1).UTC().Unix(), Valid: true},
 		UpdatedBy:   sql.NullString{String: "user2", Valid: true},
 		ScheduledAt: sql.NullInt64{Int64: time.Now().Add(time.Hour * 2).UTC().Unix(), Valid: true},
+		Processing:  sql.NullBool{Bool: false, Valid: true},
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
+// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
 //
 // Use of this source code is governed by the LICENSE file in this repository.
 
@@ -278,7 +278,9 @@ func (r *Repo) Validate() error {
 	}
 
 	// verify the Favorites field is within the database constraints
-	if total > constants.TopicsMaxSize {
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if (total + len(r.Topics) - 1) > constants.TopicsMaxSize {
 		return ErrExceededTopicsLimit
 	}
 

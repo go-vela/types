@@ -24,6 +24,9 @@ const (
 	// TableRepo defines the table type for the database repos table.
 	TableRepo = "repos"
 
+	// TableSchedule defines the table type for the database schedules table.
+	TableSchedule = "schedules"
+
 	// TableSecret defines the table type for the database secrets table.
 	TableSecret = "secrets"
 

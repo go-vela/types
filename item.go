@@ -12,7 +12,7 @@ import (
 // upgrade or downgrade, so it can handle such stale data gracefully.
 // For example, the worker could fail a stale build or ask the server to recompile it.
 // This is not a public API and is unrelated to the version key in pipeline yaml.
-const ItemVersion uint64 = 1
+const ItemVersion uint64 = 2
 
 // Item is the queue representation of an item to publish to the queue.
 type Item struct {

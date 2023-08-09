@@ -99,12 +99,12 @@ func (b *BuildExecutable) SetData(v []byte) {
 // String implements the Stringer interface for the BuildExecutable type.
 func (b *BuildExecutable) String() string {
 	return fmt.Sprintf(`{
+  ID: %d,
   BuildID: %d,
   Data: %s,
-  ID: %d,
 }`,
+		b.GetID(),
 		b.GetBuildID(),
 		b.GetData(),
-		b.GetID(),
 	)
 }

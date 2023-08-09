@@ -148,6 +148,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetAllowPush is %v, want %v", test.repo.GetAllowPush(), test.want.GetAllowPush())
 		}
 
+		if test.repo.GetAllowDelete() != test.want.GetAllowDelete() {
+			t.Errorf("GetAllowDelete is %v, want %v", test.repo.GetAllowDelete(), test.want.GetAllowDelete())
+		}
+
 		if test.repo.GetAllowDeploy() != test.want.GetAllowDeploy() {
 			t.Errorf("GetAllowDeploy is %v, want %v", test.repo.GetAllowDeploy(), test.want.GetAllowDeploy())
 		}
@@ -210,6 +214,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetActive(test.want.GetActive())
 		test.repo.SetAllowPull(test.want.GetAllowPull())
 		test.repo.SetAllowPush(test.want.GetAllowPush())
+		test.repo.SetAllowDelete(test.want.GetAllowDelete())
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
@@ -288,6 +293,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowPush is %v, want %v", test.repo.GetAllowPush(), test.want.GetAllowPush())
 		}
 
+		if test.repo.GetAllowDelete() != test.want.GetAllowDelete() {
+			t.Errorf("SetAllowDelete is %v, want %v", test.repo.GetAllowDelete(), test.want.GetAllowDelete())
+		}
+
 		if test.repo.GetAllowDeploy() != test.want.GetAllowDeploy() {
 			t.Errorf("SetAllowDeploy is %v, want %v", test.repo.GetAllowDeploy(), test.want.GetAllowDeploy())
 		}
@@ -320,6 +329,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
+  AllowDelete: %t,
   AllowTag: %t,
   Branch: %s,
   BuildLimit: %d,
@@ -344,6 +354,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),
+		r.GetAllowDelete(),
 		r.GetAllowTag(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
@@ -394,6 +405,7 @@ func testRepo() *Repo {
 	r.SetActive(true)
 	r.SetAllowPull(false)
 	r.SetAllowPush(true)
+	r.SetAllowDelete(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)

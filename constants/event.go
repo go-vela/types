@@ -18,6 +18,9 @@ const (
 	// EventPush defines the event type for build and repo push events.
 	EventPush = "push"
 
+	// EventDelete defines the event type for build and repo delete events.
+	EventDelete = "delete"
+
 	// EventRepository defines the general event type for repo management.
 	EventRepository = "repository"
 

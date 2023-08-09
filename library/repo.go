@@ -32,6 +32,7 @@ type Repo struct {
 	Active       *bool     `json:"active,omitempty"`
 	AllowPull    *bool     `json:"allow_pull,omitempty"`
 	AllowPush    *bool     `json:"allow_push,omitempty"`
+	AllowDelete  *bool     `json:"allow_delete,omitempty"`
 	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
 	AllowTag     *bool     `json:"allow_tag,omitempty"`
 	AllowComment *bool     `json:"allow_comment,omitempty"`
@@ -48,6 +49,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
 		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
+		"VELA_REPO_ALLOW_DELETE":  ToString(r.GetAllowDelete()),
 		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
@@ -69,6 +71,7 @@ func (r *Repo) Environment() map[string]string {
 		"REPOSITORY_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
 		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
+		"REPOSITORY_ALLOW_DELETE":  ToString(r.GetAllowDelete()),
 		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
 		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
 		"REPOSITORY_CLONE":         ToString(r.GetClone()),
@@ -328,6 +331,19 @@ func (r *Repo) GetAllowPush() bool {
 	}
 
 	return *r.AllowPush
+}
+
+// GetAllowDelete returns the AllowDelete field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowDelete() bool {
+	// return zero value if Repo type or AllowPush field is nil
+	if r == nil || r.AllowDelete == nil {
+		return false
+	}
+
+	return *r.AllowDelete
 }
 
 // GetAllowDeploy returns the AllowDeploy field.
@@ -642,6 +658,19 @@ func (r *Repo) SetAllowPush(v bool) {
 	r.AllowPush = &v
 }
 
+// SetAllowDelete sets the AllowDelete field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowDelete(v bool) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowDelete = &v
+}
+
 // SetAllowDeploy sets the AllowDeploy field.
 //
 // When the provided Repo type is nil, it
@@ -715,6 +744,7 @@ func (r *Repo) String() string {
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
+  AllowDelete: %t,
   AllowTag: %t,
   Branch: %s,
   BuildLimit: %d,
@@ -739,6 +769,7 @@ func (r *Repo) String() string {
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),
+		r.GetAllowDelete(),
 		r.GetAllowTag(),
 		r.GetBranch(),
 		r.GetBuildLimit(),

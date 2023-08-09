@@ -65,6 +65,7 @@ type Repo struct {
 	Active       sql.NullBool   `sql:"active"`
 	AllowPull    sql.NullBool   `sql:"allow_pull"`
 	AllowPush    sql.NullBool   `sql:"allow_push"`
+	AllowDelete  sql.NullBool   `sql:"allow_delete"`
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
@@ -227,6 +228,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetActive(r.Active.Bool)
 	repo.SetAllowPull(r.AllowPull.Bool)
 	repo.SetAllowPush(r.AllowPush.Bool)
+	repo.SetAllowDelete(r.AllowDelete.Bool)
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
@@ -322,6 +324,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		Active:       sql.NullBool{Bool: r.GetActive(), Valid: true},
 		AllowPull:    sql.NullBool{Bool: r.GetAllowPull(), Valid: true},
 		AllowPush:    sql.NullBool{Bool: r.GetAllowPush(), Valid: true},
+		AllowDelete:  sql.NullBool{Bool: r.GetAllowDelete(), Valid: true},
 		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},

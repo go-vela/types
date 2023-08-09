@@ -174,6 +174,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetActive(true)
 	want.SetAllowPull(false)
 	want.SetAllowPush(true)
+	want.SetAllowDelete(true)
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
@@ -327,6 +328,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetActive(true)
 	r.SetAllowPull(false)
 	r.SetAllowPush(true)
+	r.SetAllowDelete(true)
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
@@ -366,6 +368,7 @@ func testRepo() *Repo {
 		Active:       sql.NullBool{Bool: true, Valid: true},
 		AllowPull:    sql.NullBool{Bool: false, Valid: true},
 		AllowPush:    sql.NullBool{Bool: true, Valid: true},
+		AllowDelete:  sql.NullBool{Bool: true, Valid: true},
 		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},

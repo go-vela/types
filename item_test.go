@@ -78,6 +78,7 @@ func TestTypes_ToItem(t *testing.T) {
 		Active:      &booL,
 		AllowPull:   &booL,
 		AllowPush:   &booL,
+		AllowDelete: &booL,
 		AllowDeploy: &booL,
 		AllowTag:    &booL,
 	}
@@ -149,6 +150,7 @@ func TestTypes_ToItem(t *testing.T) {
 			Active:      &booL,
 			AllowPull:   &booL,
 			AllowPush:   &booL,
+			AllowDelete: &booL,
 			AllowDeploy: &booL,
 			AllowTag:    &booL,
 		},

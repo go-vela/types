@@ -86,13 +86,13 @@ func TestLibrary_BuildExecutable_String(t *testing.T) {
 	bExecutable := testBuildExecutable()
 
 	want := fmt.Sprintf(`{
+  ID: %d,
   BuildID: %d,
   Data: %s,
-  ID: %d,
 }`,
+		bExecutable.GetID(),
 		bExecutable.GetBuildID(),
 		bExecutable.GetData(),
-		bExecutable.GetID(),
 	)
 
 	// run test

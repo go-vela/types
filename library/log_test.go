@@ -54,6 +54,8 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
 	s4 := "SOME_SECRET=((%.YY245***pP.><@@}}"
 	s4Masked := "SOME_SECRET=***"
+	s5 := "www.post-secrets.com?username=secret&password=extrasecret"
+	s5Masked := "www.post-secrets.com?username=***&password=***"
 
 	tests := []struct {
 		want    []byte
@@ -78,6 +80,11 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 		{ // secret with leading =
 			want:    []byte(s4Masked),
 			log:     []byte(s4),
+			secrets: sVals,
+		},
+		{ // secret baked in URL query params
+			want:    []byte(s5Masked),
+			log:     []byte(s5),
 			secrets: sVals,
 		},
 		{ // empty secrets slice

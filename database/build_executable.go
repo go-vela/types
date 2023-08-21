@@ -86,10 +86,10 @@ func (b *BuildExecutable) Decrypt(key string) error {
 	return nil
 }
 
-// Encrypt will manipulate the existing repo hash by
+// Encrypt will manipulate the existing build executable by
 // creating a AES-256 cipher block from the encryption
-// key in order to encrypt the repo hash. Then, the
-// repo hash is base64 encoded for transport across
+// key in order to encrypt the build executable. Then, the
+// build executable is base64 encoded for transport across
 // network boundaries.
 func (b *BuildExecutable) Encrypt(key string) error {
 	// encrypt the executable data

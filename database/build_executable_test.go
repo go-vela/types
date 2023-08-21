@@ -225,6 +225,97 @@ func TestDatabase_BuildExecutable_Decompress(t *testing.T) {
 	}
 }
 
+func TestDatabase_BuildExecutable_Decrypt(t *testing.T) {
+	// setup types
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+	encrypted := testBuildExecutable()
+
+	err := encrypted.Encrypt(key)
+	if err != nil {
+		t.Errorf("unable to encrypt repo: %v", err)
+	}
+
+	// setup tests
+	tests := []struct {
+		failure    bool
+		key        string
+		executable BuildExecutable
+	}{
+		{
+			failure:    false,
+			key:        key,
+			executable: *encrypted,
+		},
+		{
+			failure:    true,
+			key:        "",
+			executable: *encrypted,
+		},
+		{
+			failure:    true,
+			key:        key,
+			executable: *testBuildExecutable(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.executable.Decrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Decrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Decrypt returned err: %v", err)
+		}
+	}
+}
+
+func TestDatabase_BuildExecutable_Encrypt(t *testing.T) {
+	// setup types
+	key := "C639A572E14D5075C526FDDD43E4ECF6"
+
+	// setup tests
+	tests := []struct {
+		failure    bool
+		key        string
+		executable *BuildExecutable
+	}{
+		{
+			failure:    false,
+			key:        key,
+			executable: testBuildExecutable(),
+		},
+		{
+			failure:    true,
+			key:        "",
+			executable: testBuildExecutable(),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		err := test.executable.Encrypt(test.key)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("Encrypt should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("Encrypt returned err: %v", err)
+		}
+	}
+}
+
 func TestDatabase_BuildExecutable_Nullify(t *testing.T) {
 	// setup types
 	var p *BuildExecutable

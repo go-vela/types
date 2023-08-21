@@ -6,6 +6,7 @@ package database
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"errors"
 
 	"github.com/go-vela/types/library"
@@ -28,15 +29,15 @@ type BuildExecutable struct {
 // BuildExecutable by compressing that data. This produces
 // a significantly smaller amount of data that is
 // stored in the system.
-func (c *BuildExecutable) Compress(level int) error {
+func (b *BuildExecutable) Compress(level int) error {
 	// compress the database BuildExecutable data
-	data, err := compress(level, c.Data)
+	data, err := compress(level, b.Data)
 	if err != nil {
 		return err
 	}
 
 	// overwrite database BuildExecutable data with compressed BuildExecutable data
-	c.Data = data
+	b.Data = data
 
 	return nil
 }
@@ -45,15 +46,63 @@ func (c *BuildExecutable) Compress(level int) error {
 // BuildExecutable by decompressing that data. This allows us
 // to have a significantly smaller amount of data that
 // is stored in the system.
-func (c *BuildExecutable) Decompress() error {
+func (b *BuildExecutable) Decompress() error {
 	// decompress the database BuildExecutable data
-	data, err := decompress(c.Data)
+	data, err := decompress(b.Data)
 	if err != nil {
 		return err
 	}
 
 	// overwrite compressed BuildExecutable data with decompressed BuildExecutable data
-	c.Data = data
+	b.Data = data
+
+	return nil
+}
+
+// Decrypt will manipulate the existing executable data by
+// base64 decoding that value. Then, a AES-256 cipher
+// block is created from the encryption key in order to
+// decrypt the base64 decoded secret value.
+func (b *BuildExecutable) Decrypt(key string) error {
+	dst := make([]byte, base64.StdEncoding.DecodedLen(len(b.Data)))
+
+	// base64 decode the encrypted repo hash
+	n, err := base64.StdEncoding.Decode(dst, b.Data)
+	if err != nil {
+		return err
+	}
+
+	dst = dst[:n]
+
+	// decrypt the base64 decoded executable data
+	decrypted, err := decrypt(key, dst)
+	if err != nil {
+		return err
+	}
+
+	// set the decrypted executable
+	b.Data = decrypted
+
+	return nil
+}
+
+// Encrypt will manipulate the existing build executable by
+// creating a AES-256 cipher block from the encryption
+// key in order to encrypt the build executable. Then, the
+// build executable is base64 encoded for transport across
+// network boundaries.
+func (b *BuildExecutable) Encrypt(key string) error {
+	// encrypt the executable data
+	encrypted, err := encrypt(key, b.Data)
+	if err != nil {
+		return err
+	}
+
+	// base64 encode the encrypted executable to make it network safe
+	dst := make([]byte, base64.StdEncoding.EncodedLen(len(encrypted)))
+	base64.StdEncoding.Encode(dst, encrypted)
+
+	b.Data = dst
 
 	return nil
 }
@@ -64,41 +113,41 @@ func (c *BuildExecutable) Decompress() error {
 // When a field within the BuildExecutable type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
-func (c *BuildExecutable) Nullify() *BuildExecutable {
-	if c == nil {
+func (b *BuildExecutable) Nullify() *BuildExecutable {
+	if b == nil {
 		return nil
 	}
 
 	// check if the ID field should be false
-	if c.ID.Int64 == 0 {
-		c.ID.Valid = false
+	if b.ID.Int64 == 0 {
+		b.ID.Valid = false
 	}
 
 	// check if the BuildID field should be false
-	if c.BuildID.Int64 == 0 {
-		c.BuildID.Valid = false
+	if b.BuildID.Int64 == 0 {
+		b.BuildID.Valid = false
 	}
 
-	return c
+	return b
 }
 
 // ToLibrary converts the BuildExecutable type
 // to a library BuildExecutable type.
-func (c *BuildExecutable) ToLibrary() *library.BuildExecutable {
+func (b *BuildExecutable) ToLibrary() *library.BuildExecutable {
 	buildExecutable := new(library.BuildExecutable)
 
-	buildExecutable.SetID(c.ID.Int64)
-	buildExecutable.SetBuildID(c.BuildID.Int64)
-	buildExecutable.SetData(c.Data)
+	buildExecutable.SetID(b.ID.Int64)
+	buildExecutable.SetBuildID(b.BuildID.Int64)
+	buildExecutable.SetData(b.Data)
 
 	return buildExecutable
 }
 
 // Validate verifies the necessary fields for
 // the BuildExecutable type are populated correctly.
-func (c *BuildExecutable) Validate() error {
+func (b *BuildExecutable) Validate() error {
 	// verify the BuildID field is populated
-	if c.BuildID.Int64 <= 0 {
+	if b.BuildID.Int64 <= 0 {
 		return ErrEmptyBuildExecutableBuildID
 	}
 

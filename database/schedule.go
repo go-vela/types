@@ -38,6 +38,7 @@ type Schedule struct {
 	UpdatedAt   sql.NullInt64  `sql:"updated_at"`
 	UpdatedBy   sql.NullString `sql:"updated_by"`
 	ScheduledAt sql.NullInt64  `sql:"scheduled_at"`
+	Branch      sql.NullString `sql:"branch"`
 }
 
 // ScheduleFromLibrary converts the library.Schedule type to a database Schedule type.
@@ -53,6 +54,7 @@ func ScheduleFromLibrary(s *library.Schedule) *Schedule {
 		UpdatedAt:   sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
 		UpdatedBy:   sql.NullString{String: s.GetUpdatedBy(), Valid: true},
 		ScheduledAt: sql.NullInt64{Int64: s.GetScheduledAt(), Valid: true},
+		Branch:      sql.NullString{String: s.GetBranch(), Valid: true},
 	}
 
 	return schedule.Nullify()
@@ -87,6 +89,8 @@ func (s *Schedule) Nullify() *Schedule {
 	s.UpdatedBy.Valid = len(s.UpdatedBy.String) != 0
 	// check if the ScheduledAt field should be valid
 	s.ScheduledAt.Valid = s.ScheduledAt.Int64 != 0
+	// check if the Branch field should be valid
+	s.Branch.Valid = len(s.Branch.String) != 0
 
 	return s
 }
@@ -104,6 +108,7 @@ func (s *Schedule) ToLibrary() *library.Schedule {
 		UpdatedAt:   &s.UpdatedAt.Int64,
 		UpdatedBy:   &s.UpdatedBy.String,
 		ScheduledAt: &s.ScheduledAt.Int64,
+		Branch:      &s.Branch.String,
 	}
 }
 

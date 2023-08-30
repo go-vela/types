@@ -33,7 +33,6 @@ func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 		if test.qR.GetPublicKey() != test.want.GetPublicKey() {
 			t.Errorf("GetPublicKey is %v, want %v", test.qR.GetPublicKey(), test.want.GetPublicKey())
 		}
-
 	}
 }
 

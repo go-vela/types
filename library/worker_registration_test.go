@@ -11,21 +11,25 @@ import (
 func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		qR   *QueueRegistration
-		want *QueueRegistration
+		qR   *WorkerRegistration
+		want *WorkerRegistration
 	}{
 		{
 			qR:   testQueueRegistration(),
 			want: testQueueRegistration(),
 		},
 		{
-			qR:   new(QueueRegistration),
-			want: new(QueueRegistration),
+			qR:   new(WorkerRegistration),
+			want: new(WorkerRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
+		if test.qR.GetRegistrationToken() != test.want.GetRegistrationToken() {
+			t.Errorf("GetRegistrationToken is %v, want %v", test.qR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		}
+
 		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
 			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
 		}
@@ -38,12 +42,12 @@ func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 
 func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 	// setup types
-	var w *QueueRegistration
+	var w *WorkerRegistration
 
 	// setup tests
 	tests := []struct {
-		qR   *QueueRegistration
-		want *QueueRegistration
+		qR   *WorkerRegistration
+		want *WorkerRegistration
 	}{
 		{
 			qR:   testQueueRegistration(),
@@ -51,14 +55,19 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 		},
 		{
 			qR:   w,
-			want: new(QueueRegistration),
+			want: new(WorkerRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
+		test.qR.SetRegistrationToken(test.want.GetRegistrationToken())
 		test.qR.SetQueueAddress(test.want.GetQueueAddress())
 		test.qR.SetPublicKey(test.want.GetPublicKey())
+
+		if test.qR.GetRegistrationToken() != test.want.GetRegistrationToken() {
+			t.Errorf("GetRegistrationToken is %v, want %v", test.qR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		}
 
 		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
 			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
@@ -72,9 +81,9 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 
 // testWorker is a test helper function to create a Worker
 // type with all fields set to a fake value.
-func testQueueRegistration() *QueueRegistration {
-	w := new(QueueRegistration)
-
+func testQueueRegistration() *WorkerRegistration {
+	w := new(WorkerRegistration)
+	w.SetRegistrationToken("1234356")
 	w.SetPublicKey("http://localhost:8080")
 	w.SetPublicKey("worker_0")
 

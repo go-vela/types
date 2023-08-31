@@ -8,9 +8,9 @@ package library
 //
 // swagger:model WorkerRegistration
 type WorkerRegistration struct {
-	RegistrationToken *string `json:"registration-token,omitempty"`
-	QueuePublicKey    *string `json:"queue-public-key,omitempty"`
-	QueueAddress      *string `json:"queue-address,omitempty"`
+	RegistrationToken *string `json:"registration_token,omitempty"`
+	QueuePublicKey    *string `json:"queue_public_key,omitempty"`
+	QueueAddress      *string `json:"queue_address,omitempty"`
 }
 
 // GetRegistrationToken returns the QueuePublicKey field.

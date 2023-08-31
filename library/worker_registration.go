@@ -13,7 +13,7 @@ type WorkerRegistration struct {
 	QueueAddress      *string `json:"queue_address,omitempty"`
 }
 
-// GetRegistrationToken returns the QueuePublicKey field.
+// GetRegistrationToken returns the RegistrationToken field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
@@ -39,6 +39,10 @@ func (q *WorkerRegistration) GetPublicKey() string {
 	return *q.QueuePublicKey
 }
 
+// GetQueueAddress returns the QueueAddress field.
+//
+// When the provided Worker type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
 func (q *WorkerRegistration) GetQueueAddress() string {
 	// return zero value if Worker type or ID field is nil
 	if q == nil || q.QueueAddress == nil {

@@ -70,7 +70,7 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 	}
 
 	// check incoming events
-	switch from.Environment["BUILD_EVENT"] {
+	switch from.Environment["VELA_BUILD_EVENT"] {
 	case constants.EventPush:
 		eACL = checkEvent(events, constants.EventPush)
 	case constants.EventPull:
@@ -81,6 +81,8 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 		eACL = checkEvent(events, constants.EventDeploy)
 	case constants.EventComment:
 		eACL = checkEvent(events, constants.EventComment)
+	case constants.EventSchedule:
+		eACL = checkEvent(events, constants.EventSchedule)
 	}
 
 	// check images whitelist

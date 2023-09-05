@@ -15,8 +15,8 @@ func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 		want *WorkerRegistration
 	}{
 		{
-			wR:   testQueueRegistration(),
-			want: testQueueRegistration(),
+			wR:   testWorkerRegistration(),
+			want: testWorkerRegistration(),
 		},
 		{
 			wR:   new(WorkerRegistration),
@@ -50,8 +50,8 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 		want *WorkerRegistration
 	}{
 		{
-			wR:   testQueueRegistration(),
-			want: testQueueRegistration(),
+			wR:   testWorkerRegistration(),
+			want: testWorkerRegistration(),
 		},
 		{
 			wR:   w,
@@ -79,13 +79,13 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 	}
 }
 
-// testWorker is a test helper function to create a Worker
+// testWorkerRegistration is a test helper function to register a Worker
 // type with all fields set to a fake value.
-func testQueueRegistration() *WorkerRegistration {
+func testWorkerRegistration() *WorkerRegistration {
 	w := new(WorkerRegistration)
 	w.SetRegistrationToken("1234356")
 	w.SetPublicKey("http://localhost:8080")
-	w.SetPublicKey("worker_0")
+	w.SetPublicKey("isfnw1234")
 
 	return w
 }

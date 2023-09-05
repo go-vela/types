@@ -11,31 +11,31 @@ import (
 func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		qR   *WorkerRegistration
+		wR   *WorkerRegistration
 		want *WorkerRegistration
 	}{
 		{
-			qR:   testQueueRegistration(),
+			wR:   testQueueRegistration(),
 			want: testQueueRegistration(),
 		},
 		{
-			qR:   new(WorkerRegistration),
+			wR:   new(WorkerRegistration),
 			want: new(WorkerRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		if test.qR.GetRegistrationToken() != test.want.GetRegistrationToken() {
-			t.Errorf("GetRegistrationToken is %v, want %v", test.qR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		if test.wR.GetRegistrationToken() != test.want.GetRegistrationToken() {
+			t.Errorf("GetRegistrationToken is %v, want %v", test.wR.GetRegistrationToken(), test.want.GetRegistrationToken())
 		}
 
-		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
-			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
+		if test.wR.GetQueueAddress() != test.want.GetQueueAddress() {
+			t.Errorf("GetQueueAddress is %v, want %v", test.wR.GetQueueAddress(), test.want.GetQueueAddress())
 		}
 
-		if test.qR.GetPublicKey() != test.want.GetPublicKey() {
-			t.Errorf("GetPublicKey is %v, want %v", test.qR.GetPublicKey(), test.want.GetPublicKey())
+		if test.wR.GetPublicKey() != test.want.GetPublicKey() {
+			t.Errorf("GetPublicKey is %v, want %v", test.wR.GetPublicKey(), test.want.GetPublicKey())
 		}
 	}
 }
@@ -46,35 +46,35 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		qR   *WorkerRegistration
+		wR   *WorkerRegistration
 		want *WorkerRegistration
 	}{
 		{
-			qR:   testQueueRegistration(),
+			wR:   testQueueRegistration(),
 			want: testQueueRegistration(),
 		},
 		{
-			qR:   w,
+			wR:   w,
 			want: new(WorkerRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		test.qR.SetRegistrationToken(test.want.GetRegistrationToken())
-		test.qR.SetQueueAddress(test.want.GetQueueAddress())
-		test.qR.SetPublicKey(test.want.GetPublicKey())
+		test.wR.SetRegistrationToken(test.want.GetRegistrationToken())
+		test.wR.SetQueueAddress(test.want.GetQueueAddress())
+		test.wR.SetPublicKey(test.want.GetPublicKey())
 
-		if test.qR.GetRegistrationToken() != test.want.GetRegistrationToken() {
-			t.Errorf("GetRegistrationToken is %v, want %v", test.qR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		if test.wR.GetRegistrationToken() != test.want.GetRegistrationToken() {
+			t.Errorf("GetRegistrationToken is %v, want %v", test.wR.GetRegistrationToken(), test.want.GetRegistrationToken())
 		}
 
-		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
-			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
+		if test.wR.GetQueueAddress() != test.want.GetQueueAddress() {
+			t.Errorf("GetQueueAddress is %v, want %v", test.wR.GetQueueAddress(), test.want.GetQueueAddress())
 		}
 
-		if test.qR.GetPublicKey() != test.want.GetPublicKey() {
-			t.Errorf("GetPublicKey is %v, want %v", test.qR.GetPublicKey(), test.want.GetPublicKey())
+		if test.wR.GetPublicKey() != test.want.GetPublicKey() {
+			t.Errorf("GetPublicKey is %v, want %v", test.wR.GetPublicKey(), test.want.GetPublicKey())
 		}
 	}
 }

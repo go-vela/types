@@ -17,76 +17,76 @@ type WorkerRegistration struct {
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (q *WorkerRegistration) GetRegistrationToken() string {
+func (w *WorkerRegistration) GetRegistrationToken() string {
 	// return zero value if Worker type or ID field is nil
-	if q == nil || q.RegistrationToken == nil {
+	if w == nil || w.RegistrationToken == nil {
 		return ""
 	}
 
-	return *q.RegistrationToken
+	return *w.RegistrationToken
 }
 
 // GetPublicKey returns the QueuePublicKey field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (q *WorkerRegistration) GetPublicKey() string {
+func (w *WorkerRegistration) GetPublicKey() string {
 	// return zero value if Worker type or ID field is nil
-	if q == nil || q.QueuePublicKey == nil {
+	if w == nil || w.QueuePublicKey == nil {
 		return ""
 	}
 
-	return *q.QueuePublicKey
+	return *w.QueuePublicKey
 }
 
 // GetQueueAddress returns the QueueAddress field.
 //
 // When the provided Worker type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (q *WorkerRegistration) GetQueueAddress() string {
+func (w *WorkerRegistration) GetQueueAddress() string {
 	// return zero value if Worker type or ID field is nil
-	if q == nil || q.QueueAddress == nil {
+	if w == nil || w.QueueAddress == nil {
 		return ""
 	}
 
-	return *q.QueueAddress
+	return *w.QueueAddress
 }
 
 // SetRegistrationToken sets the RegistrationToken field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (q *WorkerRegistration) SetRegistrationToken(v string) {
+func (w *WorkerRegistration) SetRegistrationToken(v string) {
 	// return if Worker type is nil
-	if q == nil {
+	if w == nil {
 		return
 	}
 
-	q.RegistrationToken = &v
+	w.RegistrationToken = &v
 }
 
 // SetPublicKey sets the QueuePublicKey field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (q *WorkerRegistration) SetPublicKey(v string) {
+func (w *WorkerRegistration) SetPublicKey(v string) {
 	// return if Worker type is nil
-	if q == nil {
+	if w == nil {
 		return
 	}
 
-	q.QueuePublicKey = &v
+	w.QueuePublicKey = &v
 }
 
 // SetQueueAddress sets the QueueAddress field.
 //
 // When the provided Worker type is nil, it
 // will set nothing and immediately return.
-func (q *WorkerRegistration) SetQueueAddress(v string) {
+func (w *WorkerRegistration) SetQueueAddress(v string) {
 	// return if Worker type is nil
-	if q == nil {
+	if w == nil {
 		return
 	}
 
-	q.QueueAddress = &v
+	w.QueueAddress = &v
 }

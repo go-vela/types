@@ -15,8 +15,8 @@ type WorkerRegistration struct {
 
 // GetRegistrationToken returns the RegistrationToken field.
 //
-// When the provided Worker type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
+// When the provided WorkerRegistration type is nil, or the field within
+// the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetRegistrationToken() string {
 	// return zero value if Worker type or ID field is nil
 	if w == nil || w.RegistrationToken == nil {
@@ -28,8 +28,8 @@ func (w *WorkerRegistration) GetRegistrationToken() string {
 
 // GetPublicKey returns the QueuePublicKey field.
 //
-// When the provided Worker type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
+// When the provided WorkerRegistration type is nil, or the field within
+// the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetPublicKey() string {
 	// return zero value if Worker type or ID field is nil
 	if w == nil || w.QueuePublicKey == nil {
@@ -41,8 +41,8 @@ func (w *WorkerRegistration) GetPublicKey() string {
 
 // GetQueueAddress returns the QueueAddress field.
 //
-// When the provided Worker type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
+// When the provided WorkerRegistration type is nil, or the field within
+// the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetQueueAddress() string {
 	// return zero value if Worker type or ID field is nil
 	if w == nil || w.QueueAddress == nil {
@@ -54,7 +54,7 @@ func (w *WorkerRegistration) GetQueueAddress() string {
 
 // SetRegistrationToken sets the RegistrationToken field.
 //
-// When the provided Worker type is nil, it
+// When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetRegistrationToken(v string) {
 	// return if Worker type is nil
@@ -67,7 +67,7 @@ func (w *WorkerRegistration) SetRegistrationToken(v string) {
 
 // SetPublicKey sets the QueuePublicKey field.
 //
-// When the provided Worker type is nil, it
+// When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetPublicKey(v string) {
 	// return if Worker type is nil
@@ -80,7 +80,7 @@ func (w *WorkerRegistration) SetPublicKey(v string) {
 
 // SetQueueAddress sets the QueueAddress field.
 //
-// When the provided Worker type is nil, it
+// When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetQueueAddress(v string) {
 	// return if Worker type is nil

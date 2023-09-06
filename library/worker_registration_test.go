@@ -84,7 +84,7 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 func testWorkerRegistration() *WorkerRegistration {
 	w := new(WorkerRegistration)
 	w.SetRegistrationToken("1234356")
-	w.SetPublicKey("http://localhost:8080")
+	w.SetQueueAddress("http://localhost:8080")
 	w.SetPublicKey("isfnw1234")
 
 	return w

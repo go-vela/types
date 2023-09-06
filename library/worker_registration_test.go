@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestLibrary_Queue_Registration_Getters(t *testing.T) {
+func TestLibrary_WorkerRegistration_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
 		wR   *WorkerRegistration
@@ -40,7 +40,7 @@ func TestLibrary_Queue_Registration_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_QueueRegistration_Setters(t *testing.T) {
+func TestLibrary_WorkerRegistration_Setters(t *testing.T) {
 	// setup types
 	var w *WorkerRegistration
 
@@ -79,7 +79,7 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 	}
 }
 
-// testWorkerRegistration is a test helper function to register a Worker
+// testWorkerRegistration is a test helper function to register a WorkerRegistration
 // type with all fields set to a fake value.
 func testWorkerRegistration() *WorkerRegistration {
 	w := new(WorkerRegistration)

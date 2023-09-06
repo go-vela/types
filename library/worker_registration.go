@@ -18,7 +18,7 @@ type WorkerRegistration struct {
 // When the provided WorkerRegistration type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetRegistrationToken() string {
-	// return zero value if Worker type or ID field is nil
+	// return zero value if WorkerRegistration type or RegistrationToken field is nil
 	if w == nil || w.RegistrationToken == nil {
 		return ""
 	}
@@ -31,7 +31,7 @@ func (w *WorkerRegistration) GetRegistrationToken() string {
 // When the provided WorkerRegistration type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetPublicKey() string {
-	// return zero value if Worker type or ID field is nil
+	// return zero value if WorkerRegistration type or QueuePublicKey field is nil
 	if w == nil || w.QueuePublicKey == nil {
 		return ""
 	}
@@ -44,7 +44,7 @@ func (w *WorkerRegistration) GetPublicKey() string {
 // When the provided WorkerRegistration type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
 func (w *WorkerRegistration) GetQueueAddress() string {
-	// return zero value if Worker type or ID field is nil
+	// return zero value if WorkerRegistration type or QueueAddress field is nil
 	if w == nil || w.QueueAddress == nil {
 		return ""
 	}
@@ -57,7 +57,7 @@ func (w *WorkerRegistration) GetQueueAddress() string {
 // When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetRegistrationToken(v string) {
-	// return if Worker type is nil
+	// return if WorkerRegistration type is nil
 	if w == nil {
 		return
 	}
@@ -70,7 +70,7 @@ func (w *WorkerRegistration) SetRegistrationToken(v string) {
 // When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetPublicKey(v string) {
-	// return if Worker type is nil
+	// return if WorkerRegistration type is nil
 	if w == nil {
 		return
 	}
@@ -83,7 +83,7 @@ func (w *WorkerRegistration) SetPublicKey(v string) {
 // When the provided WorkerRegistration type is nil, it
 // will set nothing and immediately return.
 func (w *WorkerRegistration) SetQueueAddress(v string) {
-	// return if Worker type is nil
+	// return if WorkerRegistration type is nil
 	if w == nil {
 		return
 	}

@@ -3,7 +3,7 @@ module github.com/go-vela/types
 go 1.19
 
 require (
-	github.com/adhocore/gronx v1.6.4
+	github.com/adhocore/gronx v1.6.5
 	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 	github.com/drone/envsubst v1.0.3
 	github.com/ghodss/yaml v1.0.0

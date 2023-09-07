@@ -262,36 +262,42 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Key:    "org/repo/docker/username",
 						Engine: "native",
 						Type:   "repo",
+						Pull:   "always",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/repo/docker/password",
 						Engine: "vault",
 						Type:   "repo",
+						Pull:   "always",
 					},
 					{
 						Name:   "docker_username",
 						Key:    "org/docker/username",
 						Engine: "native",
 						Type:   "org",
+						Pull:   "always",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/docker/password",
 						Engine: "vault",
 						Type:   "org",
+						Pull:   "always",
 					},
 					{
 						Name:   "docker_username",
 						Key:    "org/team/docker/username",
 						Engine: "native",
 						Type:   "shared",
+						Pull:   "always",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/team/docker/password",
 						Engine: "vault",
 						Type:   "shared",
+						Pull:   "always",
 					},
 					{
 						Origin: Origin{

@@ -30,6 +30,7 @@ type (
 		Engine string     `json:"engine,omitempty" yaml:"engine,omitempty"`
 		Type   string     `json:"type,omitempty"   yaml:"type,omitempty"`
 		Origin *Container `json:"origin,omitempty" yaml:"origin,omitempty"`
+		Pull   string     `json:"pull,omitempty"   yaml:"pull,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation

@@ -27,6 +27,7 @@ type (
 		Engine string `yaml:"engine,omitempty" json:"engine,omitempty" jsonschema:"enum=native,enum=vault,default=native,description=Name of storage backend to fetch secret from.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/#the-engine-tag"`
 		Type   string `yaml:"type,omitempty"   json:"type,omitempty" jsonschema:"enum=repo,enum=org,enum=shared,default=repo,description=Type of secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/#the-type-tag"`
 		Origin Origin `yaml:"origin,omitempty" json:"origin,omitempty" jsonschema:"description=Declaration to pull secrets from non-internal secret providers.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/#the-origin-tag"`
+		Pull   string `yaml:"pull,omitempty"   json:"pull,omitempty" jsonschema:"default=always,description=Where to pull in secrets from storage backend."`
 	}
 
 	// Origin is the yaml representation of a method
@@ -57,6 +58,7 @@ func (s *SecretSlice) ToPipeline() *pipeline.SecretSlice {
 			Engine: secret.Engine,
 			Type:   secret.Type,
 			Origin: secret.Origin.ToPipeline(),
+			Pull:   secret.Pull,
 		})
 	}
 
@@ -94,6 +96,11 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// implicitly set `type` field if empty
 		if secret.Origin.Empty() && len(secret.Type) == 0 {
 			secret.Type = constants.SecretRepo
+		}
+
+		// implicitly set `type` field if empty
+		if secret.Origin.Empty() && len(secret.Pull) == 0 {
+			secret.Pull = constants.PullAlways
 		}
 
 		// implicitly set `pull` field if empty

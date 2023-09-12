@@ -241,7 +241,9 @@ func (u *User) Validate() error {
 	}
 
 	// verify the Favorites field is within the database constraints
-	if total > constants.FavoritesMaxSize {
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if (total + len(u.Favorites) - 1) > constants.FavoritesMaxSize {
 		return ErrExceededFavoritesLimit
 	}
 

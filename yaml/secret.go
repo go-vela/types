@@ -100,7 +100,7 @@ func (s *SecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 		// implicitly set `type` field if empty
 		if secret.Origin.Empty() && len(secret.Pull) == 0 {
-			secret.Pull = constants.PullAlways
+			secret.Pull = constants.SecretPullBuild
 		}
 
 		// implicitly set `pull` field if empty

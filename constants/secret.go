@@ -6,6 +6,9 @@ package constants
 
 // Secret types.
 const (
+	// SecretPullBuild defines the pull policy type for a secret
+	SecretPullBuild = "build_start"
+
 	// SecretOrg defines the secret type for a secret scoped to a specific org.
 	SecretOrg = "org"
 
@@ -14,6 +17,9 @@ const (
 
 	// SecretShared defines the secret type for a secret shared across the installation.
 	SecretShared = "shared"
+
+	// SecretPullStep defines the pull policy type for a secret
+	SecretPullStep = "step_start"
 
 	// SecretMask defines the secret mask to be used in place of secret values returned to users.
 	SecretMask = "[secure]"

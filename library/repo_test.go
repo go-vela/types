@@ -348,17 +348,3 @@ func testRepo() *Repo {
 
 	return r
 }
-
-func testEvents() *Events {
-	e := new(Events)
-
-	pr := new(PRActions)
-	pr.SetOpened(true)
-	pr.SetSynchronize(true)
-
-	e.SetPush(true)
-	e.SetPullRequest(pr)
-	e.SetTag(true)
-
-	return e
-}

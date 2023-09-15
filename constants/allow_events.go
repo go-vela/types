@@ -6,17 +6,12 @@ package constants
 
 // Allowed repo events.
 const (
-	AllowPush   = 1 << iota // 00000001 = 1
-	AllowPROpen             // 00000010 = 2
-	AllowPREdit             // 00000100 = 4
-	AllowPRSync             // ...
-	AllowPRLabel
-	AllowPRReviewRequest
-	AllowTag
-	AllowDeploy
+	AllowPushBranch = 1 << iota // 00000001 = 1
+	AllowPullOpen               // 00000010 = 2
+	AllowPullEdit               // 00000100 = 4
+	AllowPullSync               // ...
+	AllowPushTag
+	AllowDeployCreate
 	AllowCommentCreate
 	AllowCommentEdit
-	AllowReviewSubmit
-	AllowReviewEdit
-	AllowSchedule
 )

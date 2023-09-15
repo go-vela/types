@@ -15,20 +15,11 @@ const (
 	// ActionEdited defines the action for the editing of pull requests or issue comments.
 	ActionEdited = "edited"
 
-	// ActionLabeled defines the action for labeling a pull request.
-	ActionLabeled = "labeled"
-
 	// ActionRenamed defines the action for renaming a repository.
 	ActionRenamed = "renamed"
 
-	// ActionReviewRequested defines the action for requesting a pull request review.
-	ActionReviewRequested = "review_requested"
-
 	// ActionSynchronize defines the action for the synchronizing of pull requests.
 	ActionSynchronize = "synchronize"
-
-	// ActionSubmitted defines the action for submitting pull request reviews.
-	ActionSubmitted = "submitted"
 
 	// ActionTransferred defines the action for transferring repository ownership.
 	ActionTransferred = "transferred"

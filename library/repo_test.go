@@ -299,7 +299,6 @@ func TestLibrary_Repo_EventAllowed(t *testing.T) {
 			t.Errorf("EventAllowed is %v, want %v", got, test.want)
 		}
 	}
-
 }
 
 func TestLibrary_Repo_String(t *testing.T) {

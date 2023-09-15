@@ -266,6 +266,42 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 	}
 }
 
+func TestLibrary_Repo_EventAllowed(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		repo   *Repo
+		event  string
+		action string
+		want   bool
+	}{
+		{
+			repo:   testRepo(),
+			event:  "pull_request",
+			action: "opened",
+			want:   true,
+		},
+		{
+			repo:  testRepo(),
+			event: "deployment",
+			want:  false,
+		},
+		{
+			repo:  new(Repo),
+			event: "push",
+			want:  false,
+		},
+	}
+
+	for _, test := range tests {
+		got := test.repo.EventAllowed(test.event, test.action)
+
+		if got != test.want {
+			t.Errorf("EventAllowed is %v, want %v", got, test.want)
+		}
+	}
+
+}
+
 func TestLibrary_Repo_String(t *testing.T) {
 	// setup types
 	r := testRepo()

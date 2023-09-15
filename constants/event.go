@@ -15,9 +15,6 @@ const (
 	// EventPull defines the event type for build and repo pull_request events.
 	EventPull = "pull_request"
 
-	// EventPullReview defines the event type for build and repo pull_request_review events.
-	EventPullReview = "pull_request_review"
-
 	// EventPush defines the event type for build and repo push events.
 	EventPush = "push"
 

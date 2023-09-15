@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
-	"github.com/go-vela/types/pipeline"
 )
 
 func TestTypes_ToItem(t *testing.T) {
@@ -44,26 +43,6 @@ func TestTypes_ToItem(t *testing.T) {
 		Ref:      &str,
 		BaseRef:  &str,
 	}
-	p := &pipeline.Build{
-		Version: "v1",
-		Stages: pipeline.StageSlice{
-			&pipeline.Stage{
-				Name: str,
-				Steps: pipeline.ContainerSlice{
-					&pipeline.Container{
-						Image: "alpine",
-						Name:  str,
-					},
-				},
-			},
-		},
-		Steps: pipeline.ContainerSlice{
-			&pipeline.Container{
-				Image: "alpine",
-				Name:  str,
-			},
-		},
-	}
 	r := &library.Repo{
 		ID:          &num64,
 		UserID:      &num64,
@@ -88,26 +67,6 @@ func TestTypes_ToItem(t *testing.T) {
 		Admin:  &booL,
 	}
 	want := &Item{
-		Pipeline: &pipeline.Build{
-			Version: "v1",
-			Stages: pipeline.StageSlice{
-				&pipeline.Stage{
-					Name: str,
-					Steps: pipeline.ContainerSlice{
-						&pipeline.Container{
-							Image: "alpine",
-							Name:  str,
-						},
-					},
-				},
-			},
-			Steps: pipeline.ContainerSlice{
-				&pipeline.Container{
-					Image: "alpine",
-					Name:  str,
-				},
-			},
-		},
 		Build: &library.Build{
 			ID:       &num64,
 			RepoID:   &num64,
@@ -159,7 +118,7 @@ func TestTypes_ToItem(t *testing.T) {
 	}
 
 	// run test
-	got := ToItem(p, b, r, u)
+	got := ToItem(b, r, u)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToItem is %v, want %v", got, want)

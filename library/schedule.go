@@ -22,6 +22,7 @@ type Schedule struct {
 	UpdatedAt   *int64  `json:"updated_at,omitempty"`
 	UpdatedBy   *string `json:"updated_by,omitempty"`
 	ScheduledAt *int64  `json:"scheduled_at,omitempty"`
+	Branch      *string `json:"branch,omitempty"`
 }
 
 // GetID returns the ID field from the provided Schedule. If the object is nil,
@@ -134,6 +135,17 @@ func (s *Schedule) GetScheduledAt() int64 {
 	return *s.ScheduledAt
 }
 
+// GetBranch returns the Branch field from the provided Schedule. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (s *Schedule) GetBranch() string {
+	// return zero value if Schedule type or ScheduledAt field is nil
+	if s == nil || s.Branch == nil {
+		return ""
+	}
+
+	return *s.Branch
+}
+
 // SetID sets the ID field in the provided Schedule. If the object is nil,
 // it will set nothing and immediately return making this a no-op.
 func (s *Schedule) SetID(id int64) {
@@ -244,6 +256,17 @@ func (s *Schedule) SetScheduledAt(scheduledAt int64) {
 	s.ScheduledAt = &scheduledAt
 }
 
+// SetBranch sets the Branch field in the provided Schedule. If the object is nil,
+// it will set nothing and immediately return making this a no-op.
+func (s *Schedule) SetBranch(branch string) {
+	// return if Schedule type is nil
+	if s == nil {
+		return
+	}
+
+	s.Branch = &branch
+}
+
 // String implements the Stringer interface for the Schedule type.
 func (s *Schedule) String() string {
 	return fmt.Sprintf(`{
@@ -257,6 +280,7 @@ func (s *Schedule) String() string {
   ScheduledAt: %d,
   UpdatedAt: %d,
   UpdatedBy: %s,
+  Branch: %s,
 }`,
 		s.GetActive(),
 		s.GetCreatedAt(),
@@ -268,5 +292,6 @@ func (s *Schedule) String() string {
 		s.GetScheduledAt(),
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
+		s.GetBranch(),
 	)
 }

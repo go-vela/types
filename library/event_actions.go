@@ -34,12 +34,6 @@ type CommentActions struct {
 	Edited  *bool `json:"edited"`
 }
 
-// ScheduleActions is the library representation of the various actions associated
-// with the schedule event processed by the server.
-type ScheduleActions struct {
-	Schedule *bool `json:"schedule"`
-}
-
 // **
 // PUSH ACTIONS
 // **

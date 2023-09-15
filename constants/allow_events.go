@@ -4,7 +4,7 @@
 
 package constants
 
-// Allowed repo events.
+// Allowed repo events. NOTE: these can NOT change order.
 const (
 	AllowPushBranch = 1 << iota // 00000001 = 1
 	AllowPullOpen               // 00000010 = 2

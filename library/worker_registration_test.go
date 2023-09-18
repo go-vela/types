@@ -8,84 +8,74 @@ import (
 	"testing"
 )
 
-func TestLibrary_WorkerRegistration_Getters(t *testing.T) {
+func TestLibrary_QueueRegistration_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		wR   *WorkerRegistration
-		want *WorkerRegistration
+		qR   *QueueRegistration
+		want *QueueRegistration
 	}{
 		{
-			wR:   testWorkerRegistration(),
-			want: testWorkerRegistration(),
+			qR:   testQueueRegistration(),
+			want: testQueueRegistration(),
 		},
 		{
-			wR:   new(WorkerRegistration),
-			want: new(WorkerRegistration),
+			qR:   new(QueueRegistration),
+			want: new(QueueRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		if test.wR.GetRegistrationToken() != test.want.GetRegistrationToken() {
-			t.Errorf("GetRegistrationToken is %v, want %v", test.wR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
+			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
 		}
 
-		if test.wR.GetQueueAddress() != test.want.GetQueueAddress() {
-			t.Errorf("GetQueueAddress is %v, want %v", test.wR.GetQueueAddress(), test.want.GetQueueAddress())
-		}
-
-		if test.wR.GetPublicKey() != test.want.GetPublicKey() {
-			t.Errorf("GetPublicKey is %v, want %v", test.wR.GetPublicKey(), test.want.GetPublicKey())
+		if test.qR.GetPublicKey() != test.want.GetPublicKey() {
+			t.Errorf("GetPublicKey is %v, want %v", test.qR.GetPublicKey(), test.want.GetPublicKey())
 		}
 	}
 }
 
-func TestLibrary_WorkerRegistration_Setters(t *testing.T) {
+func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 	// setup types
-	var w *WorkerRegistration
+	var w *QueueRegistration
 
 	// setup tests
 	tests := []struct {
-		wR   *WorkerRegistration
-		want *WorkerRegistration
+		qR   *QueueRegistration
+		want *QueueRegistration
 	}{
 		{
-			wR:   testWorkerRegistration(),
-			want: testWorkerRegistration(),
+			qR:   testQueueRegistration(),
+			want: testQueueRegistration(),
 		},
 		{
-			wR:   w,
-			want: new(WorkerRegistration),
+			qR:   w,
+			want: new(QueueRegistration),
 		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		test.wR.SetRegistrationToken(test.want.GetRegistrationToken())
-		test.wR.SetQueueAddress(test.want.GetQueueAddress())
-		test.wR.SetPublicKey(test.want.GetPublicKey())
+		test.qR.SetQueueAddress(test.want.GetQueueAddress())
+		test.qR.SetPublicKey(test.want.GetPublicKey())
 
-		if test.wR.GetRegistrationToken() != test.want.GetRegistrationToken() {
-			t.Errorf("GetRegistrationToken is %v, want %v", test.wR.GetRegistrationToken(), test.want.GetRegistrationToken())
+		if test.qR.GetQueueAddress() != test.want.GetQueueAddress() {
+			t.Errorf("GetQueueAddress is %v, want %v", test.qR.GetQueueAddress(), test.want.GetQueueAddress())
 		}
 
-		if test.wR.GetQueueAddress() != test.want.GetQueueAddress() {
-			t.Errorf("GetQueueAddress is %v, want %v", test.wR.GetQueueAddress(), test.want.GetQueueAddress())
-		}
-
-		if test.wR.GetPublicKey() != test.want.GetPublicKey() {
-			t.Errorf("GetPublicKey is %v, want %v", test.wR.GetPublicKey(), test.want.GetPublicKey())
+		if test.qR.GetPublicKey() != test.want.GetPublicKey() {
+			t.Errorf("GetPublicKey is %v, want %v", test.qR.GetPublicKey(), test.want.GetPublicKey())
 		}
 	}
 }
 
-// testWorkerRegistration is a test helper function to register a WorkerRegistration
+// testQueueRegistration is a test helper function to register a QueueRegistration
 // type with all fields set to a fake value.
-func testWorkerRegistration() *WorkerRegistration {
-	w := new(WorkerRegistration)
-	w.SetRegistrationToken("1234356")
+func testQueueRegistration() *QueueRegistration {
+	w := new(QueueRegistration)
 	w.SetQueueAddress("http://localhost:8080")
-	w.SetPublicKey("isfnw1234")
+	w.SetPublicKey("CuS+EQAzofbk3tVFS3bt5f2tIb4YiJJC4nVMFQYQElg=")
 
 	return w
 }

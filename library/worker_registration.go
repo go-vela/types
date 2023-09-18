@@ -4,34 +4,20 @@
 
 package library
 
-// WorkerRegistration is the library representation of a WorkerRegistration.
+// QueueRegistration is the library representation of a QueueRegistration.
 //
-// swagger:model WorkerRegistration
-type WorkerRegistration struct {
-	RegistrationToken *string `json:"registration_token,omitempty"`
-	QueuePublicKey    *string `json:"queue_public_key,omitempty"`
-	QueueAddress      *string `json:"queue_address,omitempty"`
-}
-
-// GetRegistrationToken returns the RegistrationToken field.
-//
-// When the provided WorkerRegistration type is nil, or the field within
-// the type is nil, it returns an empty string for the field.
-func (w *WorkerRegistration) GetRegistrationToken() string {
-	// return zero value if WorkerRegistration type or RegistrationToken field is nil
-	if w == nil || w.RegistrationToken == nil {
-		return ""
-	}
-
-	return *w.RegistrationToken
+// swagger:model QueueRegistration
+type QueueRegistration struct {
+	QueuePublicKey *string `json:"queue_public_key,omitempty"`
+	QueueAddress   *string `json:"queue_address,omitempty"`
 }
 
 // GetPublicKey returns the QueuePublicKey field.
 //
-// When the provided WorkerRegistration type is nil, or the field within
+// When the provided QueueRegistration type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
-func (w *WorkerRegistration) GetPublicKey() string {
-	// return zero value if WorkerRegistration type or QueuePublicKey field is nil
+func (w *QueueRegistration) GetPublicKey() string {
+	// return zero value if QueueRegistration type or QueuePublicKey field is nil
 	if w == nil || w.QueuePublicKey == nil {
 		return ""
 	}
@@ -41,10 +27,10 @@ func (w *WorkerRegistration) GetPublicKey() string {
 
 // GetQueueAddress returns the QueueAddress field.
 //
-// When the provided WorkerRegistration type is nil, or the field within
+// When the provided QueueRegistration type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
-func (w *WorkerRegistration) GetQueueAddress() string {
-	// return zero value if WorkerRegistration type or QueueAddress field is nil
+func (w *QueueRegistration) GetQueueAddress() string {
+	// return zero value if QueueRegistration type or QueueAddress field is nil
 	if w == nil || w.QueueAddress == nil {
 		return ""
 	}
@@ -52,25 +38,12 @@ func (w *WorkerRegistration) GetQueueAddress() string {
 	return *w.QueueAddress
 }
 
-// SetRegistrationToken sets the RegistrationToken field.
-//
-// When the provided WorkerRegistration type is nil, it
-// will set nothing and immediately return.
-func (w *WorkerRegistration) SetRegistrationToken(v string) {
-	// return if WorkerRegistration type is nil
-	if w == nil {
-		return
-	}
-
-	w.RegistrationToken = &v
-}
-
 // SetPublicKey sets the QueuePublicKey field.
 //
-// When the provided WorkerRegistration type is nil, it
+// When the provided QueueRegistration type is nil, it
 // will set nothing and immediately return.
-func (w *WorkerRegistration) SetPublicKey(v string) {
-	// return if WorkerRegistration type is nil
+func (w *QueueRegistration) SetPublicKey(v string) {
+	// return if QueueRegistration type is nil
 	if w == nil {
 		return
 	}
@@ -80,10 +53,10 @@ func (w *WorkerRegistration) SetPublicKey(v string) {
 
 // SetQueueAddress sets the QueueAddress field.
 //
-// When the provided WorkerRegistration type is nil, it
+// When the provided QueueRegistration type is nil, it
 // will set nothing and immediately return.
-func (w *WorkerRegistration) SetQueueAddress(v string) {
-	// return if WorkerRegistration type is nil
+func (w *QueueRegistration) SetQueueAddress(v string) {
+	// return if QueueRegistration type is nil
 	if w == nil {
 		return
 	}

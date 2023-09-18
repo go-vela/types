@@ -4,14 +4,12 @@
 
 package library
 
-
 // QueueRegistration is the library representation of a QueueRegistration.
 //
 // swagger:model QueueRegistration
 type QueueRegistration struct {
 	QueuePublicKey *string `json:"queue_public_key,omitempty"`
 	QueueAddress   *string `json:"queue_address,omitempty"`
-
 }
 
 // GetPublicKey returns the QueuePublicKey field.
@@ -39,7 +37,6 @@ func (w *QueueRegistration) GetQueueAddress() string {
 
 	return *w.QueueAddress
 }
-
 
 // SetPublicKey sets the QueuePublicKey field.
 //

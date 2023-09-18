@@ -21,6 +21,7 @@ func TestLibrary_QueueRegistration_Getters(t *testing.T) {
 		{
 			qR:   new(QueueRegistration),
 			want: new(QueueRegistration),
+
 		},
 	}
 

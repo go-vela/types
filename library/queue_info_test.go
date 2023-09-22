@@ -8,19 +8,19 @@ import (
 	"testing"
 )
 
-func TestLibrary_QueueRegistration_Getters(t *testing.T) {
+func TestLibrary_QueueInfo_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		qR   *QueueRegistration
-		want *QueueRegistration
+		qR   *QueueInfo
+		want *QueueInfo
 	}{
 		{
-			qR:   testQueueRegistration(),
-			want: testQueueRegistration(),
+			qR:   testQueueInfo(),
+			want: testQueueInfo(),
 		},
 		{
-			qR:   new(QueueRegistration),
-			want: new(QueueRegistration),
+			qR:   new(QueueInfo),
+			want: new(QueueInfo),
 		},
 	}
 
@@ -36,22 +36,22 @@ func TestLibrary_QueueRegistration_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_QueueRegistration_Setters(t *testing.T) {
+func TestLibrary_QueueInfo_Setters(t *testing.T) {
 	// setup types
-	var w *QueueRegistration
+	var w *QueueInfo
 
 	// setup tests
 	tests := []struct {
-		qR   *QueueRegistration
-		want *QueueRegistration
+		qR   *QueueInfo
+		want *QueueInfo
 	}{
 		{
-			qR:   testQueueRegistration(),
-			want: testQueueRegistration(),
+			qR:   testQueueInfo(),
+			want: testQueueInfo(),
 		},
 		{
 			qR:   w,
-			want: new(QueueRegistration),
+			want: new(QueueInfo),
 		},
 	}
 
@@ -70,10 +70,10 @@ func TestLibrary_QueueRegistration_Setters(t *testing.T) {
 	}
 }
 
-// testQueueRegistration is a test helper function to register a QueueRegistration
+// testQueueInfo is a test helper function to register a QueueInfo
 // type with all fields set to a fake value.
-func testQueueRegistration() *QueueRegistration {
-	w := new(QueueRegistration)
+func testQueueInfo() *QueueInfo {
+	w := new(QueueInfo)
 	w.SetQueueAddress("http://localhost:8080")
 	w.SetPublicKey("CuS+EQAzofbk3tVFS3bt5f2tIb4YiJJC4nVMFQYQElg=")
 

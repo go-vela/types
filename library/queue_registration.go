@@ -4,20 +4,20 @@
 
 package library
 
-// QueueRegistration is the library representation of a QueueRegistration.
+// QueueInfo is the library representation of a QueueInfo.
 //
-// swagger:model QueueRegistration
-type QueueRegistration struct {
+// swagger:model QueueInfo
+type QueueInfo struct {
 	QueuePublicKey *string `json:"queue_public_key,omitempty"`
 	QueueAddress   *string `json:"queue_address,omitempty"`
 }
 
 // GetPublicKey returns the QueuePublicKey field.
 //
-// When the provided QueueRegistration type is nil, or the field within
+// When the provided QueueInfo type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
-func (w *QueueRegistration) GetPublicKey() string {
-	// return zero value if QueueRegistration type or QueuePublicKey field is nil
+func (w *QueueInfo) GetPublicKey() string {
+	// return zero value if QueueInfo type or QueuePublicKey field is nil
 	if w == nil || w.QueuePublicKey == nil {
 		return ""
 	}
@@ -27,10 +27,10 @@ func (w *QueueRegistration) GetPublicKey() string {
 
 // GetQueueAddress returns the QueueAddress field.
 //
-// When the provided QueueRegistration type is nil, or the field within
+// When the provided QueueInfo type is nil, or the field within
 // the type is nil, it returns an empty string for the field.
-func (w *QueueRegistration) GetQueueAddress() string {
-	// return zero value if QueueRegistration type or QueueAddress field is nil
+func (w *QueueInfo) GetQueueAddress() string {
+	// return zero value if QueueInfo type or QueueAddress field is nil
 	if w == nil || w.QueueAddress == nil {
 		return ""
 	}
@@ -40,10 +40,10 @@ func (w *QueueRegistration) GetQueueAddress() string {
 
 // SetPublicKey sets the QueuePublicKey field.
 //
-// When the provided QueueRegistration type is nil, it
+// When the provided QueueInfo type is nil, it
 // will set nothing and immediately return.
-func (w *QueueRegistration) SetPublicKey(v string) {
-	// return if QueueRegistration type is nil
+func (w *QueueInfo) SetPublicKey(v string) {
+	// return if QueueInfo type is nil
 	if w == nil {
 		return
 	}
@@ -53,10 +53,10 @@ func (w *QueueRegistration) SetPublicKey(v string) {
 
 // SetQueueAddress sets the QueueAddress field.
 //
-// When the provided QueueRegistration type is nil, it
+// When the provided QueueInfo type is nil, it
 // will set nothing and immediately return.
-func (w *QueueRegistration) SetQueueAddress(v string) {
-	// return if QueueRegistration type is nil
+func (w *QueueInfo) SetQueueAddress(v string) {
+	// return if QueueInfo type is nil
 	if w == nil {
 		return
 	}

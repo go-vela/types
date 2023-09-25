@@ -15,6 +15,7 @@ import (
 // swagger:model Deployment
 type Deployment struct {
 	ID          *int64              `json:"id,omitempty"`
+	Number      *int64              `json:"number,omitempty"`
 	RepoID      *int64              `json:"repo_id,omitempty"`
 	URL         *string             `json:"url,omitempty"`
 	User        *string             `json:"user,omitempty"`
@@ -38,6 +39,19 @@ func (d *Deployment) GetID() int64 {
 	}
 
 	return *d.ID
+}
+
+// GetNumber returns the Number field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetNumber() int64 {
+	// return zero value if Deployment type or ID field is nil
+	if d == nil || d.Number == nil {
+		return 0
+	}
+
+	return *d.Number
 }
 
 // GetRepoID returns the RepoID field.
@@ -182,6 +196,19 @@ func (d *Deployment) SetID(v int64) {
 	d.ID = &v
 }
 
+// SetNumber sets the Number field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetNumber(v int64) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.Number = &v
+}
+
 // SetRepoID sets the RepoID field.
 //
 // When the provided Deployment type is nil, it
@@ -303,13 +330,13 @@ func (d *Deployment) SetPayload(v raw.StringSliceMap) {
 //
 // When the provided Deployment type is nil, it
 // will set nothing and immediately return.
-func (d *Deployment) SetBuilds(b []Build) {
+func (d *Deployment) SetBuilds(b *[]Build) {
 	// return if Deployment type is nil
 	if d == nil {
 		return
 	}
 
-	d.Builds = &b
+	d.Builds = b
 }
 
 // String implements the Stringer interface for the Deployment type.
@@ -318,6 +345,7 @@ func (d *Deployment) String() string {
   Commit: %s,
   Description: %s,
   ID: %d,
+  Number: %d,
   Ref: %s,
   RepoID: %d,
   Target: %s,
@@ -330,6 +358,7 @@ func (d *Deployment) String() string {
 		d.GetCommit(),
 		d.GetDescription(),
 		d.GetID(),
+		d.GetNumber(),
 		d.GetRef(),
 		d.GetRepoID(),
 		d.GetTarget(),

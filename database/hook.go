@@ -31,20 +31,21 @@ var (
 
 // Hook is the database representation of a webhook for a repo.
 type Hook struct {
-	ID          sql.NullInt64  `sql:"id"`
-	RepoID      sql.NullInt64  `sql:"repo_id"`
-	BuildID     sql.NullInt64  `sql:"build_id"`
-	Number      sql.NullInt32  `sql:"number"`
-	SourceID    sql.NullString `sql:"source_id"`
-	Created     sql.NullInt64  `sql:"created"`
-	Host        sql.NullString `sql:"host"`
-	Event       sql.NullString `sql:"event"`
-	EventAction sql.NullString `sql:"event_action"`
-	Branch      sql.NullString `sql:"branch"`
-	Error       sql.NullString `sql:"error"`
-	Status      sql.NullString `sql:"status"`
-	Link        sql.NullString `sql:"link"`
-	WebhookID   sql.NullInt64  `sql:"webhook_id"`
+	ID           sql.NullInt64  `sql:"id"`
+	RepoID       sql.NullInt64  `sql:"repo_id"`
+	BuildID      sql.NullInt64  `sql:"build_id"`
+	Number       sql.NullInt32  `sql:"number"`
+	SourceID     sql.NullString `sql:"source_id"`
+	Created      sql.NullInt64  `sql:"created"`
+	Host         sql.NullString `sql:"host"`
+	Event        sql.NullString `sql:"event"`
+	EventAction  sql.NullString `sql:"event_action"`
+	Branch       sql.NullString `sql:"branch"`
+	Error        sql.NullString `sql:"error"`
+	Status       sql.NullString `sql:"status"`
+	Link         sql.NullString `sql:"link"`
+	WebhookID    sql.NullInt64  `sql:"webhook_id"`
+	DeploymentID sql.NullInt64  `sql:"deployment_id"`
 }
 
 // Nullify ensures the valid flag for
@@ -128,6 +129,11 @@ func (h *Hook) Nullify() *Hook {
 		h.WebhookID.Valid = false
 	}
 
+	// check if the DeploymentID field should be false
+	if h.DeploymentID.Int64 == 0 {
+		h.DeploymentID.Valid = false
+	}
+
 	return h
 }
 
@@ -150,6 +156,7 @@ func (h *Hook) ToLibrary() *library.Hook {
 	hook.SetStatus(h.Status.String)
 	hook.SetLink(h.Link.String)
 	hook.SetWebhookID(h.WebhookID.Int64)
+	hook.SetDeploymentID(h.DeploymentID.Int64)
 
 	return hook
 }
@@ -196,20 +203,21 @@ func (h *Hook) Validate() error {
 // to a library Hook type.
 func HookFromLibrary(h *library.Hook) *Hook {
 	hook := &Hook{
-		ID:          sql.NullInt64{Int64: h.GetID(), Valid: true},
-		RepoID:      sql.NullInt64{Int64: h.GetRepoID(), Valid: true},
-		BuildID:     sql.NullInt64{Int64: h.GetBuildID(), Valid: true},
-		Number:      sql.NullInt32{Int32: int32(h.GetNumber()), Valid: true},
-		SourceID:    sql.NullString{String: h.GetSourceID(), Valid: true},
-		Created:     sql.NullInt64{Int64: h.GetCreated(), Valid: true},
-		Host:        sql.NullString{String: h.GetHost(), Valid: true},
-		Event:       sql.NullString{String: h.GetEvent(), Valid: true},
-		EventAction: sql.NullString{String: h.GetEventAction(), Valid: true},
-		Branch:      sql.NullString{String: h.GetBranch(), Valid: true},
-		Error:       sql.NullString{String: h.GetError(), Valid: true},
-		Status:      sql.NullString{String: h.GetStatus(), Valid: true},
-		Link:        sql.NullString{String: h.GetLink(), Valid: true},
-		WebhookID:   sql.NullInt64{Int64: h.GetWebhookID(), Valid: true},
+		ID:           sql.NullInt64{Int64: h.GetID(), Valid: true},
+		RepoID:       sql.NullInt64{Int64: h.GetRepoID(), Valid: true},
+		BuildID:      sql.NullInt64{Int64: h.GetBuildID(), Valid: true},
+		Number:       sql.NullInt32{Int32: int32(h.GetNumber()), Valid: true},
+		SourceID:     sql.NullString{String: h.GetSourceID(), Valid: true},
+		Created:      sql.NullInt64{Int64: h.GetCreated(), Valid: true},
+		Host:         sql.NullString{String: h.GetHost(), Valid: true},
+		Event:        sql.NullString{String: h.GetEvent(), Valid: true},
+		EventAction:  sql.NullString{String: h.GetEventAction(), Valid: true},
+		Branch:       sql.NullString{String: h.GetBranch(), Valid: true},
+		Error:        sql.NullString{String: h.GetError(), Valid: true},
+		Status:       sql.NullString{String: h.GetStatus(), Valid: true},
+		Link:         sql.NullString{String: h.GetLink(), Valid: true},
+		WebhookID:    sql.NullInt64{Int64: h.GetWebhookID(), Valid: true},
+		DeploymentID: sql.NullInt64{Int64: h.GetDeploymentID(), Valid: true},
 	}
 
 	return hook.Nullify()

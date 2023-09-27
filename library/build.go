@@ -31,6 +31,7 @@ type Build struct {
 	Started       *int64              `json:"started,omitempty"`
 	Finished      *int64              `json:"finished,omitempty"`
 	Deploy        *string             `json:"deploy,omitempty"`
+	DeployNumber  *int64              `json:"deploy_number,omitempty"`
 	DeployPayload *raw.StringSliceMap `json:"deploy_payload,omitempty"`
 	Clone         *string             `json:"clone,omitempty"`
 	Source        *string             `json:"source,omitempty"`
@@ -379,6 +380,19 @@ func (b *Build) GetDeploy() string {
 	}
 
 	return *b.Deploy
+}
+
+// GetDeployNumber returns the DeployNumber field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetDeployNumber() int64 {
+	// return zero value if Build type or Deploy field is nil
+	if b == nil || b.DeployNumber == nil {
+		return 0
+	}
+
+	return *b.DeployNumber
 }
 
 // GetDeployPayload returns the DeployPayload field.
@@ -784,6 +798,19 @@ func (b *Build) SetDeploy(v string) {
 	b.Deploy = &v
 }
 
+// SetDeployNumber sets the DeployNumber field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetDeployNumber(v int64) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.DeployNumber = &v
+}
+
 // SetDeployPayload sets the DeployPayload field.
 //
 // When the provided Build type is nil, it
@@ -1017,6 +1044,7 @@ func (b *Build) String() string {
   Commit: %s,
   Created: %d,
   Deploy: %s,
+  DeployNumber: %d,
   DeployPayload: %s,
   Distribution: %s,
   Email: %s,
@@ -1049,6 +1077,7 @@ func (b *Build) String() string {
 		b.GetCommit(),
 		b.GetCreated(),
 		b.GetDeploy(),
+		b.GetDeployNumber(),
 		b.GetDeployPayload(),
 		b.GetDistribution(),
 		b.GetEmail(),

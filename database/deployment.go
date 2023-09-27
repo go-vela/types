@@ -17,7 +17,7 @@ import (
 var (
 	// ErrEmptyHookRepoID defines the error type when a
 	// Hook type has an empty RepoID field provided.
-	ErrEmptyDeploymentPayload = errors.New("empty deployment payload provided")
+	ErrEmptyDeploymentNumber = errors.New("empty deployment number provided")
 
 	// ErrEmptyHookSourceID defines the error type when a
 	// Hook type has an empty SourceID field provided.
@@ -37,7 +37,7 @@ type Deployment struct {
 	Target      sql.NullString     `sql:"target"`
 	Description sql.NullString     `sql:"description"`
 	Payload     raw.StringSliceMap `sql:"payload"`
-	Builds      pq.StringArray     `sql:"build_ids"`
+	Builds      pq.StringArray     `sql:"builds" gorm:"type:varchar(50)"`
 }
 
 // Nullify ensures the valid flag for
@@ -129,13 +129,13 @@ func (d *Deployment) ToLibrary(builds *[]library.Build) *library.Deployment {
 // the Deplotment type are populated correctly.
 func (d *Deployment) Validate() error {
 	// verify the RepoID field is populated
-	if len(d.Payload) <= 0 {
-		return ErrEmptyDeploymentPayload
+	if d.RepoID.Int64 <= 0 {
+		return ErrEmptyDeploymentRepoID
 	}
 
 	// verify the Number field is populated
-	if d.RepoID.Int64 <= 0 {
-		return ErrEmptyDeploymentRepoID
+	if d.Number.Int64 <= 0 {
+		return ErrEmptyDeploymentNumber
 	}
 
 	// ensure that all Hook string fields

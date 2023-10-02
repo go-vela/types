@@ -25,6 +25,7 @@ type Webhook struct {
 	Hook     *library.Hook
 	Repo     *library.Repo
 	Build    *library.Build
+	PRFork   bool
 }
 
 // ShouldSkip uses the build information

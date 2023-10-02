@@ -13,30 +13,31 @@ import (
 //
 // swagger:model Repo
 type Repo struct {
-	ID           *int64    `json:"id,omitempty"`
-	UserID       *int64    `json:"user_id,omitempty"`
-	Hash         *string   `json:"-"`
-	Org          *string   `json:"org,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	FullName     *string   `json:"full_name,omitempty"`
-	Link         *string   `json:"link,omitempty"`
-	Clone        *string   `json:"clone,omitempty"`
-	Branch       *string   `json:"branch,omitempty"`
-	Topics       *[]string `json:"topics,omitempty"`
-	BuildLimit   *int64    `json:"build_limit,omitempty"`
-	Timeout      *int64    `json:"timeout,omitempty"`
-	Counter      *int      `json:"counter,omitempty"`
-	Visibility   *string   `json:"visibility,omitempty"`
-	Private      *bool     `json:"private,omitempty"`
-	Trusted      *bool     `json:"trusted,omitempty"`
-	Active       *bool     `json:"active,omitempty"`
-	AllowPull    *bool     `json:"allow_pull,omitempty"`
-	AllowPush    *bool     `json:"allow_push,omitempty"`
-	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
-	AllowTag     *bool     `json:"allow_tag,omitempty"`
-	AllowComment *bool     `json:"allow_comment,omitempty"`
-	PipelineType *string   `json:"pipeline_type,omitempty"`
-	PreviousName *string   `json:"previous_name,omitempty"`
+	ID               *int64    `json:"id,omitempty"`
+	UserID           *int64    `json:"user_id,omitempty"`
+	Hash             *string   `json:"-"`
+	Org              *string   `json:"org,omitempty"`
+	Name             *string   `json:"name,omitempty"`
+	FullName         *string   `json:"full_name,omitempty"`
+	Link             *string   `json:"link,omitempty"`
+	Clone            *string   `json:"clone,omitempty"`
+	Branch           *string   `json:"branch,omitempty"`
+	Topics           *[]string `json:"topics,omitempty"`
+	BuildLimit       *int64    `json:"build_limit,omitempty"`
+	Timeout          *int64    `json:"timeout,omitempty"`
+	Counter          *int      `json:"counter,omitempty"`
+	Visibility       *string   `json:"visibility,omitempty"`
+	Private          *bool     `json:"private,omitempty"`
+	Trusted          *bool     `json:"trusted,omitempty"`
+	Active           *bool     `json:"active,omitempty"`
+	AllowPull        *bool     `json:"allow_pull,omitempty"`
+	AllowPush        *bool     `json:"allow_push,omitempty"`
+	AllowDeploy      *bool     `json:"allow_deploy,omitempty"`
+	AllowTag         *bool     `json:"allow_tag,omitempty"`
+	AllowComment     *bool     `json:"allow_comment,omitempty"`
+	PipelineType     *string   `json:"pipeline_type,omitempty"`
+	PreviousName     *string   `json:"previous_name,omitempty"`
+	ApproveForkBuild *string   `json:"approve_fork_build,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -395,6 +396,19 @@ func (r *Repo) GetPreviousName() string {
 	return *r.PreviousName
 }
 
+// GetApproveForkBuild returns the ApproveForkBuild field.
+//
+// When the provided Repo type is nil, or the field within
+//  the type is nil, it returns the zero value for the field.
+func (r *Repo) GetApproveForkBuild() string {
+	// return zero value if Repo type or ApproveForkBuild field is nil
+	if r == nil || r.ApproveForkBuild == nil {
+		return ""
+	}
+
+	return *r.ApproveForkBuild
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -707,6 +721,19 @@ func (r *Repo) SetPreviousName(v string) {
 	r.PreviousName = &v
 }
 
+// SetApproveForkBuild sets the ApproveForkBuild field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetApproveForkBuild(v string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.ApproveForkBuild = &v
+}
+
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -716,6 +743,7 @@ func (r *Repo) String() string {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  ApproveForkBuild: %s,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -740,6 +768,7 @@ func (r *Repo) String() string {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetApproveForkBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),

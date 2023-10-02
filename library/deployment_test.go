@@ -92,6 +92,7 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		test.deployment.SetID(test.want.GetID())
+		test.deployment.SetNumber(test.want.GetNumber())
 		test.deployment.SetRepoID(test.want.GetRepoID())
 		test.deployment.SetURL(test.want.GetURL())
 		test.deployment.SetUser(test.want.GetUser())
@@ -104,6 +105,10 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 
 		if test.deployment.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.deployment.GetID(), test.want.GetID())
+		}
+
+		if test.deployment.GetNumber() != test.want.GetNumber() {
+			t.Errorf("SetNumber is %v, want %v", test.deployment.GetNumber(), test.want.GetNumber())
 		}
 
 		if test.deployment.GetRepoID() != test.want.GetRepoID() {
@@ -152,6 +157,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
   Commit: %s,
   Description: %s,
   ID: %d,
+  Number: %d,
   Ref: %s,
   RepoID: %d,
   Target: %s,
@@ -164,6 +170,7 @@ func TestLibrary_Deployment_String(t *testing.T) {
 		d.GetCommit(),
 		d.GetDescription(),
 		d.GetID(),
+		d.GetNumber(),
 		d.GetRef(),
 		d.GetRepoID(),
 		d.GetTarget(),
@@ -188,6 +195,7 @@ func testDeployment() *Deployment {
 	d := new(Deployment)
 
 	d.SetID(1)
+	d.SetNumber(0)
 	d.SetRepoID(1)
 	d.SetURL("https://api.github.com/repos/github/octocat/deployments/1")
 	d.SetUser("octocat")

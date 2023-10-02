@@ -157,6 +157,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
 		envs["BUILD_TARGET"] = target
+		envs["VELA_DEPLOYMENT_NUMBER"] = ToString(b.GetDeployNumber())
 
 		// handle when deployment event is for a tag
 		if strings.HasPrefix(b.GetRef(), "refs/tags/") {

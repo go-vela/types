@@ -276,7 +276,7 @@ func TestDatabase_Pipeline_ToLibrary(t *testing.T) {
 	want.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	want.SetFlavor("large")
 	want.SetPlatform("docker")
-	want.SetRef("refs/heads/master")
+	want.SetRef("refs/heads/main")
 	want.SetType(constants.PipelineTypeYAML)
 	want.SetVersion("1")
 	want.SetExternalSecrets(false)
@@ -310,7 +310,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
-				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/main", Valid: true},
 				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
@@ -330,7 +330,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 			pipeline: &Pipeline{
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				Commit:  sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
-				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/main", Valid: true},
 				Type:    sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
@@ -341,7 +341,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 				ID:      sql.NullInt64{Int64: 1, Valid: true},
 				RepoID:  sql.NullInt64{Int64: 1, Valid: true},
 				Commit:  sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
-				Ref:     sql.NullString{String: "refs/heads/master", Valid: true},
+				Ref:     sql.NullString{String: "refs/heads/main", Valid: true},
 				Version: sql.NullString{String: "1", Valid: true},
 			},
 		},
@@ -351,7 +351,7 @@ func TestDatabase_Pipeline_Validate(t *testing.T) {
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
 				Commit: sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
-				Ref:    sql.NullString{String: "refs/heads/master", Valid: true},
+				Ref:    sql.NullString{String: "refs/heads/main", Valid: true},
 
 				Type: sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 			},
@@ -385,7 +385,7 @@ func TestDatabase_PipelineFromLibrary(t *testing.T) {
 	p.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	p.SetFlavor("large")
 	p.SetPlatform("docker")
-	p.SetRef("refs/heads/master")
+	p.SetRef("refs/heads/main")
 	p.SetType(constants.PipelineTypeYAML)
 	p.SetVersion("1")
 	p.SetExternalSecrets(false)
@@ -415,7 +415,7 @@ func testPipeline() *Pipeline {
 		Commit:          sql.NullString{String: "48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},
 		Flavor:          sql.NullString{String: "large", Valid: true},
 		Platform:        sql.NullString{String: "docker", Valid: true},
-		Ref:             sql.NullString{String: "refs/heads/master", Valid: true},
+		Ref:             sql.NullString{String: "refs/heads/main", Valid: true},
 		Type:            sql.NullString{String: constants.PipelineTypeYAML, Valid: true},
 		Version:         sql.NullString{String: "1", Valid: true},
 		ExternalSecrets: sql.NullBool{Bool: false, Valid: true},

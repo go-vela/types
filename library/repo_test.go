@@ -17,7 +17,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
-		"VELA_REPO_BRANCH":         "master",
+		"VELA_REPO_BRANCH":         "main",
 		"VELA_REPO_TOPICS":         "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":    "10",
 		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
@@ -36,7 +36,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",
 		"REPOSITORY_ALLOW_TAG":     "false",
-		"REPOSITORY_BRANCH":        "master",
+		"REPOSITORY_BRANCH":        "main",
 		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":     "github/octocat",
 		"REPOSITORY_LINK":          "https://github.com/github/octocat",
@@ -381,7 +381,7 @@ func testRepo() *Repo {
 	r.SetFullName("github/octocat")
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
-	r.SetBranch("master")
+	r.SetBranch("main")
 	r.SetTopics([]string{"cloud", "security"})
 	r.SetBuildLimit(10)
 	r.SetTimeout(30)

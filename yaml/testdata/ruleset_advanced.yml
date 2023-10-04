@@ -1,6 +1,6 @@
 ---
 if:
-  branch: [ master ]
+  branch: [ main ]
   event: push
   tag: "^refs/tags/(\\d+\\.)+\\d+$"
 unless:

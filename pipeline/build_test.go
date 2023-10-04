@@ -71,11 +71,11 @@ func TestPipeline_Build_Purge(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		r := &RuleData{
-			Branch: "master",
+			Branch: "main",
 			Event:  "pull_request",
 			Path:   []string{},
 			Repo:   "foo/bar",
-			Tag:    "refs/heads/master",
+			Tag:    "refs/heads/main",
 		}
 
 		got := test.pipeline.Purge(r)

@@ -1,6 +1,4 @@
-// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -65,6 +63,9 @@ func TestLibrary_Schedule_Getters(t *testing.T) {
 			}
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("GetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
+			}
+			if test.schedule.GetBranch() != test.want.GetBranch() {
+				t.Errorf("GetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
 			}
 		})
 	}
@@ -136,6 +137,10 @@ func TestLibrary_Schedule_Setters(t *testing.T) {
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("SetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
 			}
+			test.schedule.SetBranch(test.want.GetBranch())
+			if test.schedule.GetBranch() != test.want.GetBranch() {
+				t.Errorf("SetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
+			}
 		})
 	}
 }
@@ -154,6 +159,7 @@ func TestLibrary_Schedule_String(t *testing.T) {
   ScheduledAt: %d,
   UpdatedAt: %d,
   UpdatedBy: %s,
+  Branch: %s,
 }`,
 		s.GetActive(),
 		s.GetCreatedAt(),
@@ -165,6 +171,7 @@ func TestLibrary_Schedule_String(t *testing.T) {
 		s.GetScheduledAt(),
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
+		s.GetBranch(),
 	)
 
 	got := s.String()
@@ -186,6 +193,7 @@ func testSchedule() *Schedule {
 	s.SetUpdatedAt(time.Now().Add(time.Hour * 1).UTC().Unix())
 	s.SetUpdatedBy("user2")
 	s.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
+	s.SetBranch("main")
 
 	return s
 }

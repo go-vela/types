@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -54,6 +52,8 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
 	s4 := "SOME_SECRET=((%.YY245***pP.><@@}}"
 	s4Masked := "SOME_SECRET=***"
+	s5 := "www.example.com?username=secret&password=extrasecret"
+	s5Masked := "www.example.com?username=***&password=***"
 
 	tests := []struct {
 		want    []byte
@@ -78,6 +78,11 @@ func TestLibrary_Log_MaskData(t *testing.T) {
 		{ // secret with leading =
 			want:    []byte(s4Masked),
 			log:     []byte(s4),
+			secrets: sVals,
+		},
+		{ // secret baked in URL query params
+			want:    []byte(s5Masked),
+			log:     []byte(s5),
 			secrets: sVals,
 		},
 		{ // empty secrets slice

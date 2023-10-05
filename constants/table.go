@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package constants
 
@@ -8,6 +6,9 @@ package constants
 const (
 	// TableBuild defines the table type for the database builds table.
 	TableBuild = "builds"
+
+	// TableBuildExecutable defines the table type for the database build_executables table.
+	TableBuildExecutable = "build_executables"
 
 	// TableHook defines the table type for the database hooks table.
 	TableHook = "hooks"

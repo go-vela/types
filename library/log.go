@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -56,7 +54,8 @@ func (l *Log) MaskData(secrets []string) {
 		// create regexp to match secrets in the log data surrounded by regexp metacharacters
 		//
 		// https://pkg.go.dev/regexp#MustCompile
-		re := regexp.MustCompile((`(\s|^|=|"|:|'|\.|,)` + escaped + `(\s|$|"|:|'|\.|,)`))
+		buffer := `(\s|^|=|"|\?|:|'|\.|,|&|$|;)`
+		re := regexp.MustCompile((buffer + escaped + buffer))
 
 		// create a mask for the secret
 		mask := fmt.Sprintf("$1%s$2", constants.SecretLogMask)

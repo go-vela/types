@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -43,7 +41,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{ // test matching secret events
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push"}},
 			want: true,
@@ -51,7 +49,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "pull_request"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "pull_request"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"pull_request"}},
 			want: true,
@@ -59,7 +57,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "tag"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "tag"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"tag"}},
 			want: true,
@@ -67,7 +65,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "deployment"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "deployment"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"deployment"}},
 			want: true,
@@ -75,7 +73,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "comment"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "comment"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"comment"}},
 			want: true,
@@ -83,7 +81,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "fake_event"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "fake_event"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push"}},
 			want: false,
@@ -91,16 +89,24 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push", "pull_request"}},
+			want: true,
+		},
+		{
+			step: &pipeline.Container{
+				Image:       "alpine:latest",
+				Environment: map[string]string{"VELA_BUILD_EVENT": "schedule"},
+			},
+			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push", "pull_request", "schedule"}},
 			want: true,
 		},
 
 		{ // test matching secret images
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{}},
 			want: true,
@@ -108,7 +114,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{}},
 			want: true,
@@ -116,7 +122,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:1"}, Events: &[]string{}},
 			want: false,
@@ -124,7 +130,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine", "centos"}, Events: &[]string{}},
 			want: true,
@@ -133,7 +139,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{ // test matching secret events and images
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}},
 			want: true,
@@ -141,7 +147,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{"push"}},
 			want: true,
@@ -149,7 +155,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:1"}, Events: &[]string{"push"}},
 			want: false,
@@ -157,7 +163,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "pull_request"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "pull_request"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{"push"}},
 			want: false,
@@ -165,7 +171,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
 			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine", "centos"}, Events: &[]string{"push"}},
 			want: true,
@@ -174,7 +180,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{ // test build events with image ACLs and rulesets
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 				Ruleset: pipeline.Ruleset{
 					If: pipeline.Rules{
 						Event: []string{"push"},
@@ -187,7 +193,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
-				Environment: map[string]string{"BUILD_EVENT": "push"},
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 				Ruleset: pipeline.Ruleset{
 					If: pipeline.Rules{
 						Event: []string{"push"},

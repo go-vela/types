@@ -32,11 +32,11 @@ func TestPipeline_SecretSlice_Purge(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		r := &RuleData{
-			Branch: "master",
+			Branch: "main",
 			Event:  "push",
 			Path:   []string{},
 			Repo:   "foo/bar",
-			Tag:    "refs/heads/master",
+			Tag:    "refs/heads/main",
 		}
 
 		got := test.secrets.Purge(r)

@@ -32,11 +32,11 @@ func TestPipeline_ContainerSlice_Purge(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		r := &RuleData{
-			Branch: "master",
+			Branch: "main",
 			Event:  "pull_request",
 			Path:   []string{},
 			Repo:   "foo/bar",
-			Tag:    "refs/heads/master",
+			Tag:    "refs/heads/main",
 		}
 
 		got := test.containers.Purge(r)
@@ -155,7 +155,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -170,7 +170,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -185,7 +185,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 			},
 			ruleData: &RuleData{
-				Branch:  "master",
+				Branch:  "main",
 				Event:   "push",
 				Repo:    "foo/bar",
 				Status:  "failure",
@@ -205,7 +205,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch:  "master",
+				Branch:  "main",
 				Event:   "push",
 				Repo:    "foo/bar",
 				Status:  "running",
@@ -225,7 +225,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -244,7 +244,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -263,7 +263,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -282,7 +282,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -301,7 +301,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -315,13 +315,13 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -335,13 +335,13 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -355,14 +355,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -376,14 +376,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -397,14 +397,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -481,14 +481,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -502,14 +502,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -523,14 +523,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -544,7 +544,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					If: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
@@ -552,7 +552,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -573,7 +573,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "tag",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -595,7 +595,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "tag",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -617,7 +617,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "tag",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -637,7 +637,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "running",
@@ -656,7 +656,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -675,7 +675,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "failure",
@@ -689,14 +689,14 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				Commands: []string{"echo \"Hey Vela\""},
 				Ruleset: Ruleset{
 					Unless: Rules{
-						Branch: []string{"master"},
+						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "push",
 				Repo:   "foo/bar",
 				Status: "success",
@@ -717,7 +717,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 				},
 			},
 			ruleData: &RuleData{
-				Branch: "master",
+				Branch: "main",
 				Event:  "pull_request",
 				Repo:   "foo/bar",
 				Status: "failure",

@@ -20,7 +20,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 		{
 			ruleset: &Ruleset{
 				If: Rules{
-					Branch:  []string{"master"},
+					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
 					Event:   []string{"push"},
 					Path:    []string{"foo.txt"},
@@ -30,7 +30,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 					Target:  []string{"production"},
 				},
 				Unless: Rules{
-					Branch:  []string{"master"},
+					Branch:  []string{"main"},
 					Comment: []string{"real comment"},
 					Event:   []string{"pull_request"},
 					Path:    []string{"bar.txt"},
@@ -45,7 +45,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 			},
 			want: &pipeline.Ruleset{
 				If: pipeline.Rules{
-					Branch:  []string{"master"},
+					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
 					Event:   []string{"push"},
 					Path:    []string{"foo.txt"},
@@ -55,7 +55,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 					Target:  []string{"production"},
 				},
 				Unless: pipeline.Rules{
-					Branch:  []string{"master"},
+					Branch:  []string{"main"},
 					Comment: []string{"real comment"},
 					Event:   []string{"pull_request"},
 					Path:    []string{"bar.txt"},
@@ -91,7 +91,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 			file: "testdata/ruleset_simple.yml",
 			want: &Ruleset{
 				If: Rules{
-					Branch:  []string{"master"},
+					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
 					Event:   []string{"push"},
 					Path:    []string{"foo.txt"},
@@ -109,7 +109,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 			file: "testdata/ruleset_advanced.yml",
 			want: &Ruleset{
 				If: Rules{
-					Branch: []string{"master"},
+					Branch: []string{"main"},
 					Event:  []string{"push"},
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
@@ -126,7 +126,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 			file: "testdata/ruleset_regex.yml",
 			want: &Ruleset{
 				If: Rules{
-					Branch: []string{"master"},
+					Branch: []string{"main"},
 					Event:  []string{"tag"},
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
@@ -165,7 +165,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 	}{
 		{
 			rules: &Rules{
-				Branch:  []string{"master"},
+				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
 				Event:   []string{"push"},
 				Path:    []string{"foo.txt"},
@@ -175,7 +175,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 				Target:  []string{"production"},
 			},
 			want: &pipeline.Rules{
-				Branch:  []string{"master"},
+				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
 				Event:   []string{"push"},
 				Path:    []string{"foo.txt"},
@@ -214,7 +214,7 @@ func TestYaml_Rules_UnmarshalYAML(t *testing.T) {
 			failure: false,
 			file:    "testdata/ruleset_simple.yml",
 			want: &Rules{
-				Branch:  []string{"master"},
+				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
 				Event:   []string{"push"},
 				Path:    []string{"foo.txt"},

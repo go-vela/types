@@ -32,7 +32,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Pull:        "not_present",
 					Ruleset: Ruleset{
 						If: Rules{
-							Branch:  []string{"master"},
+							Branch:  []string{"main"},
 							Comment: []string{"test comment"},
 							Event:   []string{"push"},
 							Path:    []string{"foo.txt"},
@@ -42,7 +42,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 							Target:  []string{"production"},
 						},
 						Unless: Rules{
-							Branch:  []string{"master"},
+							Branch:  []string{"main"},
 							Comment: []string{"real comment"},
 							Event:   []string{"pull_request"},
 							Path:    []string{"bar.txt"},
@@ -88,7 +88,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Pull:        "not_present",
 					Ruleset: pipeline.Ruleset{
 						If: pipeline.Rules{
-							Branch:  []string{"master"},
+							Branch:  []string{"main"},
 							Comment: []string{"test comment"},
 							Event:   []string{"push"},
 							Path:    []string{"foo.txt"},
@@ -98,7 +98,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 							Target:  []string{"production"},
 						},
 						Unless: pipeline.Rules{
-							Branch:  []string{"master"},
+							Branch:  []string{"main"},
 							Comment: []string{"real comment"},
 							Event:   []string{"pull_request"},
 							Path:    []string{"bar.txt"},

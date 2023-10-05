@@ -237,7 +237,7 @@ func testHook() *Hook {
 	h.SetHost("github.com")
 	h.SetEvent("push")
 	h.SetEventAction("")
-	h.SetBranch("master")
+	h.SetBranch("main")
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")

@@ -238,7 +238,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "plugins/docker:18.09",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Branch: []string{"master"}, Event: []string{"push"}},
+							If:       Rules{Branch: []string{"main"}, Event: []string{"push"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},

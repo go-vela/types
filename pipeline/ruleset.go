@@ -3,6 +3,7 @@
 package pipeline
 
 import (
+	"fmt"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -369,7 +370,7 @@ func (r *Ruletype) MatchAnd(data, matcher string) (bool, error) {
 		case constants.MatcherRegex, "regex":
 			regExpPattern, err := regexp.Compile(pattern)
 			if err != nil {
-				return false, err
+				return false, fmt.Errorf("error in regex pattern %s: %w", pattern, err)
 			}
 
 			// return true if the regexp pattern matches the ruledata
@@ -407,7 +408,7 @@ func (r *Ruletype) MatchOr(data, matcher string) (bool, error) {
 		case constants.MatcherRegex, "regex":
 			regExpPattern, err := regexp.Compile(pattern)
 			if err != nil {
-				return false, err
+				return false, fmt.Errorf("error in regex pattern %s: %w", pattern, err)
 			}
 
 			// return true if the regexp pattern matches the ruledata

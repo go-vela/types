@@ -45,7 +45,7 @@ func (s *StageSlice) Purge(r *RuleData) (*StageSlice, error) {
 		for _, step := range stage.Steps {
 			match, err := step.Ruleset.Match(r)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("unable to process ruleset for step %s: %w", step.Name, err)
 			}
 
 			// verify ruleset matches

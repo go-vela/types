@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package pipeline
 
@@ -34,11 +32,11 @@ func TestPipeline_SecretSlice_Purge(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		r := &RuleData{
-			Branch: "master",
+			Branch: "main",
 			Event:  "push",
 			Path:   []string{},
 			Repo:   "foo/bar",
-			Tag:    "refs/heads/master",
+			Tag:    "refs/heads/main",
 		}
 
 		got := test.secrets.Purge(r)

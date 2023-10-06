@@ -1,5 +1,5 @@
 ---
-branch: master
+branch: main
 comment: "test comment"
 continue: true
 event: push

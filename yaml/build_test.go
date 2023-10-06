@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package yaml
 
@@ -240,7 +238,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "plugins/docker:18.09",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Branch: []string{"master"}, Event: []string{"push"}},
+							If:       Rules{Branch: []string{"main"}, Event: []string{"push"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},

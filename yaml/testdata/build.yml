@@ -93,7 +93,7 @@ steps:
     pull: true
     ruleset:
       if:
-        branch: master
+        branch: main
         event: push
       operator: and
     secrets:

@@ -78,7 +78,7 @@ func TestPipeline_Build_Purge(t *testing.T) {
 			Tag:    "refs/heads/main",
 		}
 
-		got := test.pipeline.Purge(r)
+		got, _ := test.pipeline.Purge(r)
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Purge is %v, want %v", got, test.want)

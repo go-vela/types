@@ -56,14 +56,19 @@ type (
 
 // Purge removes the Containers that have a ruleset
 // that do not match the provided ruledata.
-func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
+func (c *ContainerSlice) Purge(r *RuleData) (*ContainerSlice, error) {
 	counter := 1
 	containers := new(ContainerSlice)
 
 	// iterate through each Container in the pipeline
 	for _, container := range *c {
 		// verify ruleset matches
-		if container.Ruleset.Match(r) {
+		match, err := container.Ruleset.Match(r)
+		if err != nil {
+			return nil, fmt.Errorf("unable to process ruleset for step %s: %w", container.Name, err)
+		}
+
+		if match {
 			// overwrite the Container number with the Container counter
 			container.Number = counter
 
@@ -76,7 +81,7 @@ func (c *ContainerSlice) Purge(r *RuleData) *ContainerSlice {
 	}
 
 	// return the new slice of Containers
-	return containers
+	return containers, nil
 }
 
 // Sanitize cleans the fields for every step in the pipeline so they
@@ -138,10 +143,10 @@ func (c *Container) Empty() bool {
 
 // Execute returns true when the provided ruledata matches
 // the conditions when we should be running the container on the worker.
-func (c *Container) Execute(r *RuleData) bool {
+func (c *Container) Execute(r *RuleData) (bool, error) {
 	// return false if the container is nil
 	if c == nil {
-		return false
+		return false, nil
 	}
 	// skip evaluating path in ruleset
 	//
@@ -189,11 +194,16 @@ func (c *Container) Execute(r *RuleData) bool {
 		// disregard the need to run the container
 		execute = false
 
+		match, err := c.Ruleset.Match(r)
+		if err != nil {
+			return false, err
+		}
+
 		// check if you need to run a status failure ruleset
 
 		if ((!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) &&
 			!(c.Ruleset.If.NoStatus() && c.Ruleset.Unless.NoStatus())) || c.Ruleset.If.Parallel) &&
-			c.Ruleset.Match(r) {
+			match {
 			// approve the need to run the container
 			execute = true
 		}
@@ -201,19 +211,29 @@ func (c *Container) Execute(r *RuleData) bool {
 
 	r.Status = constants.StatusFailure
 
+	match, err := c.Ruleset.Match(r)
+	if err != nil {
+		return false, err
+	}
+
 	// check if you need to skip a status failure ruleset
 	if strings.EqualFold(status, constants.StatusSuccess) &&
 		!(c.Ruleset.If.NoStatus() && c.Ruleset.Unless.NoStatus()) &&
-		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && c.Ruleset.Match(r) {
+		!(c.Ruleset.If.Empty() && c.Ruleset.Unless.Empty()) && match {
 		r.Status = constants.StatusSuccess
 
-		if !c.Ruleset.Match(r) {
+		match, err = c.Ruleset.Match(r)
+		if err != nil {
+			return false, err
+		}
+
+		if !match {
 			// disregard the need to run the container
 			execute = false
 		}
 	}
 
-	return execute
+	return execute, nil
 }
 
 // MergeEnv takes a list of environment variables and attempts

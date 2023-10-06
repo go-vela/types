@@ -33,7 +33,7 @@ type (
 // a ruleset that do not match the provided ruledata.
 // If all steps from a stage are removed, then the
 // entire stage is removed from the pipeline.
-func (s *StageSlice) Purge(r *RuleData) *StageSlice {
+func (s *StageSlice) Purge(r *RuleData) (*StageSlice, error) {
 	counter := 1
 	stages := new(StageSlice)
 
@@ -43,8 +43,13 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 
 		// iterate through each step for the stage in the pipeline
 		for _, step := range stage.Steps {
+			match, err := step.Ruleset.Match(r)
+			if err != nil {
+				return nil, err
+			}
+
 			// verify ruleset matches
-			if step.Ruleset.Match(r) {
+			if match {
 				// overwrite the step number with the step counter
 				step.Number = counter
 
@@ -69,7 +74,7 @@ func (s *StageSlice) Purge(r *RuleData) *StageSlice {
 	}
 
 	// return the new slice of stages
-	return stages
+	return stages, nil
 }
 
 // Sanitize cleans the fields for every step in each stage so they

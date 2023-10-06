@@ -203,7 +203,7 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 func (r *Ruletype) Match(data, matcher, logic string) (bool, error) {
 	// return true if an empty ruletype is provided
 	if len(*r) == 0 {
-		return strings.EqualFold(logic, "and"), nil
+		return strings.EqualFold(logic, constants.OperatorAnd), nil
 	}
 
 	// iterate through each pattern in the ruletype

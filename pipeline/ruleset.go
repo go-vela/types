@@ -125,65 +125,22 @@ func (r *Rules) Empty() bool {
 // ruletypes from the rules match the provided ruledata. For
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
-//
-//nolint:gocyclo // accepting complexity in this case
 func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
-	// set defaults
-	status := true
-
 	var err error
 
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
 		// if the "or" operator is provided in the ruleset
 		if strings.EqualFold(op, constants.OperatorOr) {
-			// override the default to the "or"
-			if len(from.Status) != 0 {
-				status, err = r.Status.MatchOr(from.Status, matcher)
-				if err != nil {
-					return false, err
-				}
-			}
-
 			// iterate through each path in the ruletype
 			for _, p := range from.Path {
-				matchBranch, err := r.Branch.MatchOr(from.Branch, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchComment, err := r.Comment.MatchOr(from.Comment, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchEvent, err := r.Event.MatchOr(from.Event, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchPath, err := r.Path.MatchOr(p, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchRepo, err := r.Repo.MatchOr(from.Repo, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchTag, err := r.Tag.MatchOr(from.Tag, matcher)
-				if err != nil {
-					return false, err
-				}
-
-				matchTarget, err := r.Target.MatchOr(from.Target, matcher)
+				matches, err := matches(r, from, matcher, p, constants.OperatorOr)
 				if err != nil {
 					return false, err
 				}
 
 				// return true if any ruletype matches the ruledata
-				if matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || status {
+				if matches {
 					return true, nil
 				}
 			}
@@ -192,53 +149,15 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 			return false, nil
 		}
 
-		// override the default to the "and"
-		if len(from.Status) != 0 {
-			status, err = r.Status.MatchAnd(from.Status, matcher)
-			if err != nil {
-				return false, err
-			}
-		}
-
 		// iterate through each path in the ruletype
 		for _, p := range from.Path {
-			matchBranch, err := r.Branch.MatchAnd(from.Branch, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchComment, err := r.Comment.MatchAnd(from.Comment, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchEvent, err := r.Event.MatchAnd(from.Event, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchPath, err := r.Path.MatchAnd(p, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchRepo, err := r.Repo.MatchAnd(from.Repo, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchTag, err := r.Tag.MatchAnd(from.Tag, matcher)
-			if err != nil {
-				return false, err
-			}
-
-			matchTarget, err := r.Target.MatchAnd(from.Target, matcher)
+			matches, err := matches(r, from, matcher, p, constants.OperatorAnd)
 			if err != nil {
 				return false, err
 			}
 
 			// return true if any ruletype matches the ruledata
-			if matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && status {
+			if matches {
 				return true, nil
 			}
 		}
@@ -249,52 +168,14 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 
 	// if the "or" operator is provided in the ruleset
 	if strings.EqualFold(op, constants.OperatorOr) {
-		// override the default to the "or"
-		if len(from.Status) != 0 {
-			status, err = r.Status.MatchOr(from.Status, matcher)
-			if err != nil {
-				return false, nil
-			}
-		}
-
 		// return true if any ruletype matches the ruledata
-		matchBranch, err := r.Branch.MatchOr(from.Branch, matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchComment, err := r.Comment.MatchOr(from.Comment, matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchEvent, err := r.Event.MatchOr(from.Event, matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchPath, err := r.Path.MatchOr("", matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchRepo, err := r.Repo.MatchOr(from.Repo, matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchTag, err := r.Tag.MatchOr(from.Tag, matcher)
-		if err != nil {
-			return false, err
-		}
-
-		matchTarget, err := r.Target.MatchOr(from.Target, matcher)
+		matches, err := matches(r, from, matcher, "", constants.OperatorOr)
 		if err != nil {
 			return false, err
 		}
 
 		// return true if any ruletype matches the ruledata
-		if matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || status {
+		if matches {
 			return true, nil
 		}
 
@@ -302,51 +183,13 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 		return false, nil
 	}
 
-	// override the default to the "and"
-	if len(from.Status) != 0 {
-		status, err = r.Status.MatchAnd(from.Status, matcher)
-		if err != nil {
-			return false, err
-		}
-	}
-
-	matchBranch, err := r.Branch.MatchAnd(from.Branch, matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchComment, err := r.Comment.MatchAnd(from.Comment, matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchEvent, err := r.Event.MatchAnd(from.Event, matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchPath, err := r.Path.MatchAnd("", matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchRepo, err := r.Repo.MatchAnd(from.Repo, matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchTag, err := r.Tag.MatchAnd(from.Tag, matcher)
-	if err != nil {
-		return false, err
-	}
-
-	matchTarget, err := r.Target.MatchAnd(from.Target, matcher)
+	matches, err := matches(r, from, matcher, "", constants.OperatorAnd)
 	if err != nil {
 		return false, err
 	}
 
 	// return true if any ruletype matches the ruledata
-	if matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && status {
+	if matches {
 		return true, nil
 	}
 
@@ -357,10 +200,10 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 // MatchAnd returns true when the provided ruletype
 // matches the provided ruledata. When the provided
 // ruletype is empty, the function returns true.
-func (r *Ruletype) MatchAnd(data, matcher string) (bool, error) {
+func (r *Ruletype) Match(data, matcher, logic string) (bool, error) {
 	// return true if an empty ruletype is provided
 	if len(*r) == 0 {
-		return true, nil
+		return strings.EqualFold(logic, "and"), nil
 	}
 
 	// iterate through each pattern in the ruletype
@@ -392,40 +235,58 @@ func (r *Ruletype) MatchAnd(data, matcher string) (bool, error) {
 	return false, nil
 }
 
-// MatchOr returns true when the provided ruletype
-// matches the provided ruledata. When the provided
-// ruletype is empty, the function returns false.
-func (r *Ruletype) MatchOr(data, matcher string) (bool, error) {
-	// return false if an empty ruletype is provided
-	if len(*r) == 0 {
-		return false, nil
-	}
+func matches(r *Rules, from *RuleData, matcher, path, logic string) (bool, error) {
+	status := true
 
-	// iterate through each pattern in the ruletype
-	for _, pattern := range *r {
-		// handle the pattern based off the matcher provided
-		switch matcher {
-		case constants.MatcherRegex, "regex":
-			regExpPattern, err := regexp.Compile(pattern)
-			if err != nil {
-				return false, fmt.Errorf("error in regex pattern %s: %w", pattern, err)
-			}
+	var err error
 
-			// return true if the regexp pattern matches the ruledata
-			if regExpPattern.MatchString(data) {
-				return true, nil
-			}
-		case constants.MatcherFilepath:
-			fallthrough
-		default:
-			// return true if the pattern matches the ruledata
-			ok, _ := filepath.Match(pattern, data)
-			if ok {
-				return true, nil
-			}
+	// override the default to the "or"
+	if len(from.Status) != 0 {
+		status, err = r.Status.Match(from.Status, matcher, logic)
+		if err != nil {
+			return false, err
 		}
 	}
+	// return true if any ruletype matches the ruledata
+	matchBranch, err := r.Branch.Match(from.Branch, matcher, logic)
+	if err != nil {
+		return false, err
+	}
 
-	// return false if no match is found
-	return false, nil
+	matchComment, err := r.Comment.Match(from.Comment, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	matchEvent, err := r.Event.Match(from.Event, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	matchPath, err := r.Path.Match(path, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	matchRepo, err := r.Repo.Match(from.Repo, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	matchTag, err := r.Tag.Match(from.Tag, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	matchTarget, err := r.Target.Match(from.Target, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
+	switch logic {
+	case constants.OperatorAnd:
+		return (matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && status), nil
+	default:
+		return (matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || status), nil
+	}
 }

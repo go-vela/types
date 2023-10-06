@@ -4,6 +4,8 @@ package pipeline
 
 import (
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestPipeline_Ruleset_Match(t *testing.T) {
@@ -527,7 +529,7 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got, _ := test.rule.MatchAnd(test.pattern, test.matcher)
+		got, _ := test.rule.Match(test.pattern, test.matcher, constants.OperatorAnd)
 
 		if got != test.want {
 			t.Errorf("MatchAnd for %s matcher is %v, want %v", test.matcher, got, test.want)
@@ -601,7 +603,7 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got, _ := test.rule.MatchOr(test.pattern, test.matcher)
+		got, _ := test.rule.Match(test.pattern, test.matcher, constants.OperatorOr)
 
 		if got != test.want {
 			t.Errorf("MatchOr for %s matcher is %v, want %v", test.matcher, got, test.want)

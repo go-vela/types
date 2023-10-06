@@ -1,0 +1,34 @@
+func (r *Ruletype) MatchAnd(data, matcher string) (bool, error) {
+	// return true if an empty ruletype is provided
+	if len(*r) == 0 {
+		return true, nil
+	}
+
+	// iterate through each pattern in the ruletype
+	for _, pattern := range *r {
+		// handle the pattern based off the matcher provided
+		switch matcher {
+		case constants.MatcherRegex, "regex":
+			regExpPattern, err := regexp.Compile(pattern)
+			if err != nil {
+				return false, fmt.Errorf("error in regex pattern %s: %w", pattern, err)
+			}
+
+			// return true if the regexp pattern matches the ruledata
+			if regExpPattern.MatchString(data) {
+				return true, nil
+			}
+		case constants.MatcherFilepath:
+			fallthrough
+		default:
+			// return true if the pattern matches the ruledata
+			ok, _ := filepath.Match(pattern, data)
+			if ok {
+				return true, nil
+			}
+		}
+	}
+
+	// return false if no match is found
+	return false, nil
+}

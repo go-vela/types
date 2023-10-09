@@ -197,11 +197,12 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 	return false, nil
 }
 
-// MatchAnd returns true when the provided ruletype
+// Match returns true when the provided ruletype
 // matches the provided ruledata. When the provided
-// ruletype is empty, the function returns true.
+// ruletype is empty, the function returns true for
+// the `and` operator and false for the `or` operator.
 func (r *Ruletype) Match(data, matcher, logic string) (bool, error) {
-	// return true if an empty ruletype is provided
+	// return true for `and`, false for `or` if an empty ruletype is provided
 	if len(*r) == 0 {
 		return strings.EqualFold(logic, constants.OperatorAnd), nil
 	}
@@ -235,6 +236,8 @@ func (r *Ruletype) Match(data, matcher, logic string) (bool, error) {
 	return false, nil
 }
 
+// matches is a helper function which leverages the Match method for all rules
+// and returns `true` if the ruleset is indeed a match.
 func matches(r *Rules, from *RuleData, matcher, path, logic string) (bool, error) {
 	status := true
 

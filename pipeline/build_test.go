@@ -21,6 +21,7 @@ func TestPipeline_Build_Purge(t *testing.T) {
 	tests := []struct {
 		pipeline *Build
 		want     *Build
+		wantErr  bool
 	}{
 		{
 			pipeline: testBuildStages(),
@@ -64,7 +65,39 @@ func TestPipeline_Build_Purge(t *testing.T) {
 					},
 				},
 			},
-			want: nil,
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			pipeline: &Build{
+				Steps: ContainerSlice{
+					{
+						ID:          "step_github octocat._1_init",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "#init",
+						Name:        "init",
+						Number:      1,
+						Pull:        "always",
+					},
+					{
+						ID:          "step_github octocat._1_bad_regexp",
+						Directory:   "/home/github/octocat",
+						Environment: map[string]string{"FOO": "bar"},
+						Image:       "alpine",
+						Name:        "bad_regexp",
+						Number:      2,
+						Pull:        "always",
+						Ruleset: Ruleset{
+							If:       Rules{Event: []string{"push"}, Branch: []string{"*-dev"}},
+							Operator: "and",
+							Matcher:  "regexp",
+						},
+					},
+				},
+			},
+			want:    nil,
+			wantErr: true,
 		},
 	}
 
@@ -78,7 +111,11 @@ func TestPipeline_Build_Purge(t *testing.T) {
 			Tag:    "refs/heads/main",
 		}
 
-		got, _ := test.pipeline.Purge(r)
+		got, err := test.pipeline.Purge(r)
+
+		if test.wantErr && err == nil {
+			t.Errorf("Purge should have returned an error, got: %v", got)
+		}
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Purge is %v, want %v", got, test.want)

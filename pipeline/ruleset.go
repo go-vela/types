@@ -243,14 +243,13 @@ func matches(r *Rules, from *RuleData, matcher, path, logic string) (bool, error
 
 	var err error
 
-	// override the default to the "or"
 	if len(from.Status) != 0 {
 		status, err = r.Status.Match(from.Status, matcher, logic)
 		if err != nil {
 			return false, err
 		}
 	}
-	// return true if any ruletype matches the ruledata
+
 	matchBranch, err := r.Branch.Match(from.Branch, matcher, logic)
 	if err != nil {
 		return false, err

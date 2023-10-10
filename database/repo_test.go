@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 )
 
@@ -106,18 +107,19 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 	var r *Repo
 
 	want := &Repo{
-		ID:           sql.NullInt64{Int64: 0, Valid: false},
-		UserID:       sql.NullInt64{Int64: 0, Valid: false},
-		Hash:         sql.NullString{String: "", Valid: false},
-		Org:          sql.NullString{String: "", Valid: false},
-		Name:         sql.NullString{String: "", Valid: false},
-		FullName:     sql.NullString{String: "", Valid: false},
-		Link:         sql.NullString{String: "", Valid: false},
-		Clone:        sql.NullString{String: "", Valid: false},
-		Branch:       sql.NullString{String: "", Valid: false},
-		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
-		Visibility:   sql.NullString{String: "", Valid: false},
-		PipelineType: sql.NullString{String: "", Valid: false},
+		ID:               sql.NullInt64{Int64: 0, Valid: false},
+		UserID:           sql.NullInt64{Int64: 0, Valid: false},
+		Hash:             sql.NullString{String: "", Valid: false},
+		Org:              sql.NullString{String: "", Valid: false},
+		Name:             sql.NullString{String: "", Valid: false},
+		FullName:         sql.NullString{String: "", Valid: false},
+		Link:             sql.NullString{String: "", Valid: false},
+		Clone:            sql.NullString{String: "", Valid: false},
+		Branch:           sql.NullString{String: "", Valid: false},
+		Timeout:          sql.NullInt64{Int64: 0, Valid: false},
+		Visibility:       sql.NullString{String: "", Valid: false},
+		PipelineType:     sql.NullString{String: "", Valid: false},
+		ApproveForkBuild: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -177,6 +179,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
+	want.SetApproveForkBuild(constants.ApproveNever)
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -330,6 +333,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
+	r.SetApproveForkBuild(constants.ApproveNever)
 
 	want := testRepo()
 
@@ -345,29 +349,30 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testRepo() *Repo {
 	return &Repo{
-		ID:           sql.NullInt64{Int64: 1, Valid: true},
-		UserID:       sql.NullInt64{Int64: 1, Valid: true},
-		Hash:         sql.NullString{String: "superSecretHash", Valid: true},
-		Org:          sql.NullString{String: "github", Valid: true},
-		Name:         sql.NullString{String: "octocat", Valid: true},
-		FullName:     sql.NullString{String: "github/octocat", Valid: true},
-		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
-		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
-		Branch:       sql.NullString{String: "main", Valid: true},
-		Topics:       []string{"cloud", "security"},
-		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
-		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
-		Counter:      sql.NullInt32{Int32: 0, Valid: true},
-		Visibility:   sql.NullString{String: "public", Valid: true},
-		Private:      sql.NullBool{Bool: false, Valid: true},
-		Trusted:      sql.NullBool{Bool: false, Valid: true},
-		Active:       sql.NullBool{Bool: true, Valid: true},
-		AllowPull:    sql.NullBool{Bool: false, Valid: true},
-		AllowPush:    sql.NullBool{Bool: true, Valid: true},
-		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
-		AllowTag:     sql.NullBool{Bool: false, Valid: true},
-		AllowComment: sql.NullBool{Bool: false, Valid: true},
-		PipelineType: sql.NullString{String: "yaml", Valid: true},
-		PreviousName: sql.NullString{String: "oldName", Valid: true},
+		ID:               sql.NullInt64{Int64: 1, Valid: true},
+		UserID:           sql.NullInt64{Int64: 1, Valid: true},
+		Hash:             sql.NullString{String: "superSecretHash", Valid: true},
+		Org:              sql.NullString{String: "github", Valid: true},
+		Name:             sql.NullString{String: "octocat", Valid: true},
+		FullName:         sql.NullString{String: "github/octocat", Valid: true},
+		Link:             sql.NullString{String: "https://github.com/github/octocat", Valid: true},
+		Clone:            sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
+		Branch:           sql.NullString{String: "main", Valid: true},
+		Topics:           []string{"cloud", "security"},
+		BuildLimit:       sql.NullInt64{Int64: 10, Valid: true},
+		Timeout:          sql.NullInt64{Int64: 30, Valid: true},
+		Counter:          sql.NullInt32{Int32: 0, Valid: true},
+		Visibility:       sql.NullString{String: "public", Valid: true},
+		Private:          sql.NullBool{Bool: false, Valid: true},
+		Trusted:          sql.NullBool{Bool: false, Valid: true},
+		Active:           sql.NullBool{Bool: true, Valid: true},
+		AllowPull:        sql.NullBool{Bool: false, Valid: true},
+		AllowPush:        sql.NullBool{Bool: true, Valid: true},
+		AllowDeploy:      sql.NullBool{Bool: false, Valid: true},
+		AllowTag:         sql.NullBool{Bool: false, Valid: true},
+		AllowComment:     sql.NullBool{Bool: false, Valid: true},
+		PipelineType:     sql.NullString{String: "yaml", Valid: true},
+		PreviousName:     sql.NullString{String: "oldName", Valid: true},
+		ApproveForkBuild: sql.NullString{String: constants.ApproveNever, Valid: true},
 	}
 }

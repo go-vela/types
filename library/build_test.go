@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -91,7 +89,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
-				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_BRANCH":       "main",
 				"VELA_BUILD_CHANNEL":      "TODO",
 				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -105,7 +103,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_MESSAGE":      "First commit...",
 				"VELA_BUILD_NUMBER":       "1",
 				"VELA_BUILD_PARENT":       "1",
-				"VELA_BUILD_REF":          "refs/heads/master",
+				"VELA_BUILD_REF":          "refs/heads/main",
 				"VELA_BUILD_RUNTIME":      "docker",
 				"VELA_BUILD_SENDER":       "OctoKitty",
 				"VELA_BUILD_STARTED":      "1563474078",
@@ -116,7 +114,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":            "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
 				"BUILD_BASE_REF":          "",
-				"BUILD_BRANCH":            "master",
+				"BUILD_BRANCH":            "main",
 				"BUILD_CHANNEL":           "TODO",
 				"BUILD_CLONE":             "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -128,7 +126,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_MESSAGE":           "First commit...",
 				"BUILD_NUMBER":            "1",
 				"BUILD_PARENT":            "1",
-				"BUILD_REF":               "refs/heads/master",
+				"BUILD_REF":               "refs/heads/main",
 				"BUILD_SENDER":            "OctoKitty",
 				"BUILD_STARTED":           "1563474078",
 				"BUILD_SOURCE":            "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -143,7 +141,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
-				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -170,7 +168,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
 				"BUILD_BASE_REF":            "",
-				"BUILD_BRANCH":              "master",
+				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -198,7 +196,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
-				"VELA_BUILD_BRANCH":        "master",
+				"VELA_BUILD_BRANCH":        "main",
 				"VELA_BUILD_CHANNEL":       "TODO",
 				"VELA_BUILD_CLONE":         "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":        "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -212,7 +210,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_MESSAGE":       "First commit...",
 				"VELA_BUILD_NUMBER":        "1",
 				"VELA_BUILD_PARENT":        "1",
-				"VELA_BUILD_REF":           "refs/heads/master",
+				"VELA_BUILD_REF":           "refs/heads/main",
 				"VELA_BUILD_RUNTIME":       "docker",
 				"VELA_BUILD_SENDER":        "OctoKitty",
 				"VELA_BUILD_STARTED":       "1563474078",
@@ -226,7 +224,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
 				"BUILD_BASE_REF":           "",
-				"BUILD_BRANCH":             "master",
+				"BUILD_BRANCH":             "main",
 				"BUILD_CHANNEL":            "TODO",
 				"BUILD_CLONE":              "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":             "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -238,7 +236,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_MESSAGE":            "First commit...",
 				"BUILD_NUMBER":             "1",
 				"BUILD_PARENT":             "1",
-				"BUILD_REF":                "refs/heads/master",
+				"BUILD_REF":                "refs/heads/main",
 				"BUILD_SENDER":             "OctoKitty",
 				"BUILD_STARTED":            "1563474078",
 				"BUILD_SOURCE":             "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -255,7 +253,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
-				"VELA_BUILD_BRANCH":        "master",
+				"VELA_BUILD_BRANCH":        "main",
 				"VELA_BUILD_CHANNEL":       "TODO",
 				"VELA_BUILD_CLONE":         "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":        "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -283,7 +281,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
 				"BUILD_BASE_REF":           "",
-				"BUILD_BRANCH":             "master",
+				"BUILD_BRANCH":             "main",
 				"BUILD_CHANNEL":            "TODO",
 				"BUILD_CLONE":              "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":             "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -314,7 +312,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
-				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -343,7 +341,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
 				"BUILD_BASE_REF":            "",
-				"BUILD_BRANCH":              "master",
+				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -371,7 +369,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
-				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_BRANCH":       "main",
 				"VELA_BUILD_CHANNEL":      "TODO",
 				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -397,7 +395,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":            "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
 				"BUILD_BASE_REF":          "",
-				"BUILD_BRANCH":            "master",
+				"BUILD_BRANCH":            "main",
 				"BUILD_CHANNEL":           "TODO",
 				"BUILD_CLONE":             "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -860,8 +858,8 @@ func testBuild() *Build {
 	b.SetAuthor("OctoKitty")
 	b.SetEmail("OctoKitty@github.com")
 	b.SetLink("https://example.company.com/github/octocat/1")
-	b.SetBranch("master")
-	b.SetRef("refs/heads/master")
+	b.SetBranch("main")
+	b.SetRef("refs/heads/main")
 	b.SetBaseRef("")
 	b.SetHeadRef("changes")
 	b.SetHost("example.company.com")

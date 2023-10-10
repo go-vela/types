@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package database
 
@@ -75,7 +73,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 	want.SetHost("github.com")
 	want.SetEvent("push")
 	want.SetEventAction("")
-	want.SetBranch("master")
+	want.SetBranch("main")
 	want.SetError("")
 	want.SetStatus("success")
 	want.SetLink("https://github.com/github/octocat/settings/hooks/1")
@@ -91,7 +89,7 @@ func TestDatabase_Hook_ToLibrary(t *testing.T) {
 		Host:        sql.NullString{String: "github.com", Valid: true},
 		Event:       sql.NullString{String: "push", Valid: true},
 		EventAction: sql.NullString{String: "", Valid: true},
-		Branch:      sql.NullString{String: "master", Valid: true},
+		Branch:      sql.NullString{String: "main", Valid: true},
 		Error:       sql.NullString{String: "", Valid: true},
 		Status:      sql.NullString{String: "success", Valid: true},
 		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
@@ -184,7 +182,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 		Host:        sql.NullString{String: "github.com", Valid: true},
 		Event:       sql.NullString{String: "pull_request", Valid: true},
 		EventAction: sql.NullString{String: "opened", Valid: true},
-		Branch:      sql.NullString{String: "master", Valid: true},
+		Branch:      sql.NullString{String: "main", Valid: true},
 		Error:       sql.NullString{String: "", Valid: false},
 		Status:      sql.NullString{String: "success", Valid: true},
 		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},
@@ -201,7 +199,7 @@ func TestDatabase_HookFromLibrary(t *testing.T) {
 	h.SetHost("github.com")
 	h.SetEvent("pull_request")
 	h.SetEventAction("opened")
-	h.SetBranch("master")
+	h.SetBranch("main")
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
@@ -228,7 +226,7 @@ func testHook() *Hook {
 		Host:        sql.NullString{String: "github.com", Valid: true},
 		Event:       sql.NullString{String: "push", Valid: true},
 		EventAction: sql.NullString{String: "", Valid: false},
-		Branch:      sql.NullString{String: "master", Valid: true},
+		Branch:      sql.NullString{String: "main", Valid: true},
 		Error:       sql.NullString{String: "", Valid: false},
 		Status:      sql.NullString{String: "success", Valid: true},
 		Link:        sql.NullString{String: "https://github.com/github/octocat/settings/hooks/1", Valid: true},

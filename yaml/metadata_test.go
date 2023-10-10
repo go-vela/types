@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package yaml
 
@@ -24,11 +22,21 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 				Template:    false,
 				Clone:       &fBool,
 				Environment: []string{"steps", "services", "secrets"},
+				AutoCancel: &CancelOptions{
+					Pending:       &tBool,
+					Running:       &tBool,
+					DefaultBranch: &fBool,
+				},
 			},
 			want: &pipeline.Metadata{
 				Template:    false,
 				Clone:       false,
 				Environment: []string{"steps", "services", "secrets"},
+				AutoCancel: &pipeline.CancelOptions{
+					Pending:       true,
+					Running:       true,
+					DefaultBranch: false,
+				},
 			},
 		},
 		{
@@ -41,6 +49,11 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 				Template:    false,
 				Clone:       true,
 				Environment: []string{"steps", "services"},
+				AutoCancel: &pipeline.CancelOptions{
+					Pending:       false,
+					Running:       false,
+					DefaultBranch: false,
+				},
 			},
 		},
 		{
@@ -48,11 +61,20 @@ func TestYaml_Metadata_ToPipeline(t *testing.T) {
 				Template:    false,
 				Clone:       nil,
 				Environment: []string{"steps"},
+				AutoCancel: &CancelOptions{
+					Running:       &tBool,
+					DefaultBranch: &tBool,
+				},
 			},
 			want: &pipeline.Metadata{
 				Template:    false,
 				Clone:       true,
 				Environment: []string{"steps"},
+				AutoCancel: &pipeline.CancelOptions{
+					Pending:       true,
+					Running:       true,
+					DefaultBranch: true,
+				},
 			},
 		},
 	}

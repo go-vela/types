@@ -126,8 +126,6 @@ func (r *Rules) Empty() bool {
 // both operators, when none of the ruletypes from the rules
 // match the provided ruledata, the function returns false.
 func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
-	var err error
-
 	// if the path ruletype is provided
 	if len(from.Path) > 0 {
 		// if the "or" operator is provided in the ruleset
@@ -169,32 +167,10 @@ func (r *Rules) Match(from *RuleData, matcher, op string) (bool, error) {
 	// if the "or" operator is provided in the ruleset
 	if strings.EqualFold(op, constants.OperatorOr) {
 		// return true if any ruletype matches the ruledata
-		matches, err := matches(r, from, matcher, "", constants.OperatorOr)
-		if err != nil {
-			return false, err
-		}
-
-		// return true if any ruletype matches the ruledata
-		if matches {
-			return true, nil
-		}
-
-		// return false if no match is found
-		return false, nil
+		return matches(r, from, matcher, "", constants.OperatorOr)
 	}
 
-	matches, err := matches(r, from, matcher, "", constants.OperatorAnd)
-	if err != nil {
-		return false, err
-	}
-
-	// return true if any ruletype matches the ruledata
-	if matches {
-		return true, nil
-	}
-
-	// return false if no match is found
-	return false, nil
+	return matches(r, from, matcher, "", constants.OperatorAnd)
 }
 
 // Match returns true when the provided ruletype

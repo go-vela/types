@@ -39,7 +39,7 @@ func TestPipeline_ContainerSlice_Purge(t *testing.T) {
 			Tag:    "refs/heads/main",
 		}
 
-		got := test.containers.Purge(r)
+		got, _ := test.containers.Purge(r)
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Purge is %v, want %v", got, test.want)
@@ -728,7 +728,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 
 	// run tests
 	for _, test := range tests {
-		got := test.container.Execute(test.ruleData)
+		got, _ := test.container.Execute(test.ruleData)
 
 		if got != test.want {
 			t.Errorf("Container Execute %s is %v, want %v", test.container.Name, got, test.want)

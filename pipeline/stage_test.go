@@ -39,7 +39,7 @@ func TestPipeline_StageSlice_Purge(t *testing.T) {
 			Tag:    "refs/heads/main",
 		}
 
-		got := test.stages.Purge(r)
+		got, _ := test.stages.Purge(r)
 
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("Purge is %v, want %v", got, test.want)

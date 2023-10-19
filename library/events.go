@@ -2,24 +2,27 @@
 
 package library
 
-import "github.com/go-vela/types/constants"
+import (
+	"github.com/go-vela/types/constants"
+	"github.com/go-vela/types/library/actions"
+)
 
 // Events is the library representation of the various events that generate a
 // webhook from the SCM.
 type Events struct {
-	Push        *PushActions    `json:"push"`
-	PullRequest *PullActions    `json:"pull_request"`
-	Deployment  *DeployActions  `json:"deployment"`
-	Comment     *CommentActions `json:"comment"`
+	Push        *actions.Push    `json:"push"`
+	PullRequest *actions.Pull    `json:"pull_request"`
+	Deployment  *actions.Deploy  `json:"deployment"`
+	Comment     *actions.Comment `json:"comment"`
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that
 // takes in an event mask integer value and populates the nested Events struct.
 func NewEventsFromMask(mask int64) *Events {
-	pushActions := new(PushActions).FromMask(mask)
-	pullActions := new(PullActions).FromMask(mask)
-	deployActions := new(DeployActions).FromMask(mask)
-	commentActions := new(CommentActions).FromMask(mask)
+	pushActions := new(actions.Push).FromMask(mask)
+	pullActions := new(actions.Pull).FromMask(mask)
+	deployActions := new(actions.Deploy).FromMask(mask)
+	commentActions := new(actions.Comment).FromMask(mask)
 
 	e := new(Events)
 
@@ -78,10 +81,10 @@ func (e *Events) ToDatabase() int64 {
 
 // GetPush returns the Push field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
-func (e *Events) GetPush() *PushActions {
+func (e *Events) GetPush() *actions.Push {
 	// return zero value if Events type or Push field is nil
 	if e == nil || e.Push == nil {
-		return new(PushActions)
+		return new(actions.Push)
 	}
 
 	return e.Push
@@ -89,10 +92,10 @@ func (e *Events) GetPush() *PushActions {
 
 // GetPullRequest returns the PullRequest field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
-func (e *Events) GetPullRequest() *PullActions {
+func (e *Events) GetPullRequest() *actions.Pull {
 	// return zero value if Events type or PullRequest field is nil
 	if e == nil || e.PullRequest == nil {
-		return new(PullActions)
+		return new(actions.Pull)
 	}
 
 	return e.PullRequest
@@ -100,10 +103,10 @@ func (e *Events) GetPullRequest() *PullActions {
 
 // GetDeployment returns the Deployment field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
-func (e *Events) GetDeployment() *DeployActions {
+func (e *Events) GetDeployment() *actions.Deploy {
 	// return zero value if Events type or Deployment field is nil
 	if e == nil || e.Deployment == nil {
-		return new(DeployActions)
+		return new(actions.Deploy)
 	}
 
 	return e.Deployment
@@ -111,10 +114,10 @@ func (e *Events) GetDeployment() *DeployActions {
 
 // GetComment returns the Comment field from the provided Events. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
-func (e *Events) GetComment() *CommentActions {
+func (e *Events) GetComment() *actions.Comment {
 	// return zero value if Events type or Comment field is nil
 	if e == nil || e.Comment == nil {
-		return new(CommentActions)
+		return new(actions.Comment)
 	}
 
 	return e.Comment
@@ -124,7 +127,7 @@ func (e *Events) GetComment() *CommentActions {
 //
 // When the provided Events type is nil, it
 // will set nothing and immediately return.
-func (e *Events) SetPush(v *PushActions) {
+func (e *Events) SetPush(v *actions.Push) {
 	// return if Events type is nil
 	if e == nil {
 		return
@@ -137,7 +140,7 @@ func (e *Events) SetPush(v *PushActions) {
 //
 // When the provided Events type is nil, it
 // will set nothing and immediately return.
-func (e *Events) SetPullRequest(v *PullActions) {
+func (e *Events) SetPullRequest(v *actions.Pull) {
 	// return if Events type is nil
 	if e == nil {
 		return
@@ -150,7 +153,7 @@ func (e *Events) SetPullRequest(v *PullActions) {
 //
 // When the provided Events type is nil, it
 // will set nothing and immediately return.
-func (e *Events) SetDeployment(v *DeployActions) {
+func (e *Events) SetDeployment(v *actions.Deploy) {
 	// return if Events type is nil
 	if e == nil {
 		return
@@ -163,7 +166,7 @@ func (e *Events) SetDeployment(v *DeployActions) {
 //
 // When the provided Events type is nil, it
 // will set nothing and immediately return.
-func (e *Events) SetComment(v *CommentActions) {
+func (e *Events) SetComment(v *actions.Comment) {
 	// return if Events type is nil
 	if e == nil {
 		return

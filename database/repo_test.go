@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/library/actions"
 )
 
 func TestDatabase_Repo_Decrypt(t *testing.T) {
@@ -304,7 +305,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	// setup types
 	r := new(library.Repo)
 	e := new(library.Events)
-	e.SetPush(new(library.PushActions).FromMask(1))
+	e.SetPush(new(actions.Push).FromMask(1))
 
 	r.SetID(1)
 	r.SetUserID(1)

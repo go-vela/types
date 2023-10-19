@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/constants"
+	"github.com/go-vela/types/library/actions"
 )
 
 func TestLibrary_Events_Getters(t *testing.T) {
@@ -120,19 +121,19 @@ func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
 func testEvents() *Events {
 	e := new(Events)
 
-	pr := new(PullActions)
+	pr := new(actions.Pull)
 	pr.SetOpened(true)
 	pr.SetSynchronize(true)
 	pr.SetEdited(false)
 
-	push := new(PushActions)
+	push := new(actions.Push)
 	push.SetBranch(true)
 	push.SetTag(true)
 
-	deploy := new(DeployActions)
+	deploy := new(actions.Deploy)
 	deploy.SetCreated(false)
 
-	comment := new(CommentActions)
+	comment := new(actions.Comment)
 	comment.SetCreated(false)
 	comment.SetEdited(false)
 

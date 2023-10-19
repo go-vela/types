@@ -398,7 +398,7 @@ func (r *Repo) GetPreviousName() string {
 // GetApproveForkBuild returns the ApproveForkBuild field.
 //
 // When the provided Repo type is nil, or the field within
-//  the type is nil, it returns the zero value for the field.
+// the type is nil, it returns the zero value for the field.
 func (r *Repo) GetApproveForkBuild() string {
 	// return zero value if Repo type or ApproveForkBuild field is nil
 	if r == nil || r.ApproveForkBuild == nil {

@@ -4,6 +4,8 @@ package pipeline
 
 import (
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestPipeline_Ruleset_Match(t *testing.T) {
@@ -12,6 +14,7 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 		ruleset *Ruleset
 		data    *RuleData
 		want    bool
+		wantErr bool
 	}{
 		// Empty
 		{ruleset: &Ruleset{}, data: &RuleData{Branch: "main"}, want: true},
@@ -188,11 +191,31 @@ func TestPipeline_Ruleset_Match(t *testing.T) {
 			data: &RuleData{Branch: "main", Comment: "rerun", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/main", Target: ""},
 			want: false,
 		},
+		// Bad regexp
+		{
+			ruleset: &Ruleset{If: Rules{Branch: []string{"*-dev"}}, Matcher: "regexp"},
+			data:    &RuleData{Branch: "main", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/main", Target: ""},
+			wantErr: true,
+		},
+		{
+			ruleset: &Ruleset{Unless: Rules{Branch: []string{"*-dev"}, Event: []string{"push"}}, Operator: "or", Matcher: "regexp"},
+			data:    &RuleData{Branch: "main", Comment: "rerun", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/main", Target: ""},
+			wantErr: true,
+		},
 	}
 
 	// run test
 	for _, test := range tests {
-		got := test.ruleset.Match(test.data)
+		got, err := test.ruleset.Match(test.data)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Ruleset Match for %s operator returned err: %s", test.ruleset.Operator, err)
+			}
+		} else {
+			if test.wantErr {
+				t.Errorf("Ruleset Match should have returned an error")
+			}
+		}
 
 		if got != test.want {
 			t.Errorf("Ruleset Match for %s operator is %v, want %v", test.ruleset.Operator, got, test.want)
@@ -284,7 +307,7 @@ func TestPipeline_Rules_Match_Regex_Tag(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rules.Match(test.data, "regexp", test.operator)
+		got, _ := test.rules.Match(test.data, "regexp", test.operator)
 
 		if got != test.want {
 			t.Errorf("Rules Match for %s operator is %v, want %v", test.operator, got, test.want)
@@ -416,7 +439,7 @@ func TestPipeline_Rules_Match(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rules.Match(test.data, "filepath", test.operator)
+		got, _ := test.rules.Match(test.data, "filepath", test.operator)
 
 		if got != test.want {
 			t.Errorf("Rules Match for %s operator is %v, want %v", test.operator, got, test.want)
@@ -506,7 +529,7 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rule.MatchAnd(test.pattern, test.matcher)
+		got, _ := test.rule.Match(test.pattern, test.matcher, constants.OperatorAnd)
 
 		if got != test.want {
 			t.Errorf("MatchAnd for %s matcher is %v, want %v", test.matcher, got, test.want)
@@ -580,7 +603,7 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 
 	// run test
 	for _, test := range tests {
-		got := test.rule.MatchOr(test.pattern, test.matcher)
+		got, _ := test.rule.Match(test.pattern, test.matcher, constants.OperatorOr)
 
 		if got != test.want {
 			t.Errorf("MatchOr for %s matcher is %v, want %v", test.matcher, got, test.want)

@@ -539,7 +539,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "repo",
 			Origin: &Container{},
-			Pull:   "build_start",
+			Pull:   "always",
 		},
 		{
 			Engine: "native",
@@ -547,7 +547,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "org",
 			Origin: &Container{},
-			Pull:   "build_start",
+			Pull:   "always",
 		},
 		{
 			Engine: "native",
@@ -555,7 +555,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "shared",
 			Origin: &Container{},
-			Pull:   "build_start",
+			Pull:   "always",
 		},
 		{
 			Name: "",
@@ -566,7 +566,7 @@ func testSecrets() *SecretSlice {
 				Image:       "vault:latest",
 				Name:        "vault",
 				Number:      1,
-				Pull:        "build_start",
+				Pull:        "always",
 				Ruleset: Ruleset{
 					If:       Rules{Event: []string{"push"}},
 					Operator: "and",
@@ -581,7 +581,7 @@ func testSecrets() *SecretSlice {
 				Image:       "vault:latest",
 				Name:        "vault",
 				Number:      2,
-				Pull:        "build_start",
+				Pull:        "always",
 				Ruleset: Ruleset{
 					If:       Rules{Event: []string{"pull_request"}},
 					Operator: "and",

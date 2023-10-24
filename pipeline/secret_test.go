@@ -539,7 +539,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "repo",
 			Origin: &Container{},
-			Pull:   "always",
+			Pull:   "build_start",
 		},
 		{
 			Engine: "native",
@@ -547,7 +547,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "org",
 			Origin: &Container{},
-			Pull:   "always",
+			Pull:   "build_start",
 		},
 		{
 			Engine: "native",
@@ -555,7 +555,7 @@ func testSecrets() *SecretSlice {
 			Name:   "foobar",
 			Type:   "shared",
 			Origin: &Container{},
-			Pull:   "always",
+			Pull:   "build_start",
 		},
 		{
 			Name: "",

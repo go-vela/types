@@ -28,6 +28,7 @@ type (
 		Engine string     `json:"engine,omitempty" yaml:"engine,omitempty"`
 		Type   string     `json:"type,omitempty"   yaml:"type,omitempty"`
 		Origin *Container `json:"origin,omitempty" yaml:"origin,omitempty"`
+		Pull   string     `json:"pull,omitempty"   yaml:"pull,omitempty"`
 	}
 
 	// StepSecretSlice is the pipeline representation
@@ -69,7 +70,7 @@ var (
 
 // Purge removes the secrets that have a ruleset
 // that do not match the provided ruledata.
-func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
+func (s *SecretSlice) Purge(r *RuleData) (*SecretSlice, error) {
 	counter := 1
 	secrets := new(SecretSlice)
 
@@ -82,8 +83,13 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 			continue
 		}
 
+		match, err := secret.Origin.Ruleset.Match(r)
+		if err != nil {
+			return nil, fmt.Errorf("unable to process ruleset for secret %s: %w", secret.Name, err)
+		}
+
 		// verify ruleset matches
-		if secret.Origin.Ruleset.Match(r) {
+		if match {
 			// overwrite the Container number with the Container counter
 			secret.Origin.Number = counter
 
@@ -95,7 +101,7 @@ func (s *SecretSlice) Purge(r *RuleData) *SecretSlice {
 		}
 	}
 
-	return secrets
+	return secrets, nil
 }
 
 // ParseOrg returns the parts (org, key) of the secret path

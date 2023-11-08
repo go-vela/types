@@ -54,7 +54,7 @@ func (l *Log) MaskData(secrets []string) {
 		// create regexp to match secrets in the log data surrounded by regexp metacharacters
 		//
 		// https://pkg.go.dev/regexp#MustCompile
-		buffer := `(\s|^|=|"|\?|:|'|\.|,|&|$|;)`
+		buffer := `(\s|^|=|"|\?|:|'|\.|,|&|$|;|\[|\])`
 		re := regexp.MustCompile((buffer + escaped + buffer))
 
 		// create a mask for the secret

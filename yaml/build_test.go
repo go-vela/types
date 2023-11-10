@@ -164,7 +164,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -193,7 +193,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -223,7 +223,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "plugins/docker:18.09",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -260,36 +260,42 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Key:    "org/repo/docker/username",
 						Engine: "native",
 						Type:   "repo",
+						Pull:   "build_start",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/repo/docker/password",
 						Engine: "vault",
 						Type:   "repo",
+						Pull:   "build_start",
 					},
 					{
 						Name:   "docker_username",
 						Key:    "org/docker/username",
 						Engine: "native",
 						Type:   "org",
+						Pull:   "build_start",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/docker/password",
 						Engine: "vault",
 						Type:   "org",
+						Pull:   "build_start",
 					},
 					{
 						Name:   "docker_username",
 						Key:    "org/team/docker/username",
 						Engine: "native",
 						Type:   "shared",
+						Pull:   "build_start",
 					},
 					{
 						Name:   "docker_password",
 						Key:    "org/team/docker/password",
 						Engine: "vault",
 						Type:   "shared",
+						Pull:   "build_start",
 					},
 					{
 						Origin: Origin{
@@ -345,7 +351,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Name:  "install",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -381,7 +387,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Image: "openjdk:latest",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -417,7 +423,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Image: "openjdk:latest",
 								Pull:  "always",
 								Ruleset: Ruleset{
-									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+									If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 									Matcher:  "filepath",
 									Operator: "and",
 								},
@@ -461,7 +467,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -490,7 +496,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -519,7 +525,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Image: "openjdk:latest",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},
@@ -567,7 +573,7 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Name:  "install",
 						Pull:  "always",
 						Ruleset: Ruleset{
-							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize"}},
+							If:       Rules{Event: []string{"push", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened"}},
 							Matcher:  "filepath",
 							Operator: "and",
 						},

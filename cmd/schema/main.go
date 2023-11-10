@@ -98,6 +98,7 @@ func main() {
 			"pull_request:opened",
 			"pull_request:synchronize",
 			"push",
+			"schedule",
 			"tag",
 		},
 		"path":   {},

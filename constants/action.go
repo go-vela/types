@@ -16,6 +16,9 @@ const (
 	// ActionRenamed defines the action for renaming a repository.
 	ActionRenamed = "renamed"
 
+	// ActionReopened defines the action for re-opening a pull request (or issue).
+	ActionReopened = "reopened"
+
 	// ActionSynchronize defines the action for the synchronizing of pull requests.
 	ActionSynchronize = "synchronize"
 

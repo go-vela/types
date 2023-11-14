@@ -55,6 +55,10 @@ func TestTypes_ToItem(t *testing.T) {
 		Private:     &booL,
 		Trusted:     &booL,
 		Active:      &booL,
+		AllowPull:   &booL,
+		AllowPush:   &booL,
+		AllowDeploy: &booL,
+		AllowTag:    &booL,
 		AllowEvents: e,
 	}
 	u := &library.User{
@@ -103,6 +107,10 @@ func TestTypes_ToItem(t *testing.T) {
 			Private:     &booL,
 			Trusted:     &booL,
 			Active:      &booL,
+			AllowPull:   &booL,
+			AllowPush:   &booL,
+			AllowDeploy: &booL,
+			AllowTag:    &booL,
 			AllowEvents: e,
 		},
 		User: &library.User{

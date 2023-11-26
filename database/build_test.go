@@ -139,6 +139,8 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
 	want.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	want.SetApprovedAt(1563474076)
+	want.SetApprovedBy("OctoCat")
 
 	// run test
 	got := testBuild().ToLibrary()
@@ -228,6 +230,8 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
 	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	b.SetApprovedAt(1563474076)
+	b.SetApprovedBy("OctoCat")
 
 	want := testBuild()
 
@@ -286,5 +290,7 @@ func testBuild() *Build {
 		Host:          sql.NullString{String: "example.company.com", Valid: true},
 		Runtime:       sql.NullString{String: "docker", Valid: true},
 		Distribution:  sql.NullString{String: "linux", Valid: true},
+		ApprovedAt:    sql.NullInt64{Int64: 1563474076, Valid: true},
+		ApprovedBy:    sql.NullString{String: "OctoCat", Valid: true},
 	}
 }

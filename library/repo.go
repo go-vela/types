@@ -11,57 +11,57 @@ import (
 //
 // swagger:model Repo
 type Repo struct {
-	ID               *int64    `json:"id,omitempty"`
-	UserID           *int64    `json:"user_id,omitempty"`
-	Hash             *string   `json:"-"`
-	Org              *string   `json:"org,omitempty"`
-	Name             *string   `json:"name,omitempty"`
-	FullName         *string   `json:"full_name,omitempty"`
-	Link             *string   `json:"link,omitempty"`
-	Clone            *string   `json:"clone,omitempty"`
-	Branch           *string   `json:"branch,omitempty"`
-	Topics           *[]string `json:"topics,omitempty"`
-	BuildLimit       *int64    `json:"build_limit,omitempty"`
-	Timeout          *int64    `json:"timeout,omitempty"`
-	Counter          *int      `json:"counter,omitempty"`
-	Visibility       *string   `json:"visibility,omitempty"`
-	Private          *bool     `json:"private,omitempty"`
-	Trusted          *bool     `json:"trusted,omitempty"`
-	Active           *bool     `json:"active,omitempty"`
-	AllowPull        *bool     `json:"allow_pull,omitempty"`
-	AllowPush        *bool     `json:"allow_push,omitempty"`
-	AllowDeploy      *bool     `json:"allow_deploy,omitempty"`
-	AllowTag         *bool     `json:"allow_tag,omitempty"`
-	AllowComment     *bool     `json:"allow_comment,omitempty"`
-	PipelineType     *string   `json:"pipeline_type,omitempty"`
-	PreviousName     *string   `json:"previous_name,omitempty"`
-	ApproveForkBuild *string   `json:"approve_fork_build,omitempty"`
+	ID           *int64    `json:"id,omitempty"`
+	UserID       *int64    `json:"user_id,omitempty"`
+	Hash         *string   `json:"-"`
+	Org          *string   `json:"org,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	FullName     *string   `json:"full_name,omitempty"`
+	Link         *string   `json:"link,omitempty"`
+	Clone        *string   `json:"clone,omitempty"`
+	Branch       *string   `json:"branch,omitempty"`
+	Topics       *[]string `json:"topics,omitempty"`
+	BuildLimit   *int64    `json:"build_limit,omitempty"`
+	Timeout      *int64    `json:"timeout,omitempty"`
+	Counter      *int      `json:"counter,omitempty"`
+	Visibility   *string   `json:"visibility,omitempty"`
+	Private      *bool     `json:"private,omitempty"`
+	Trusted      *bool     `json:"trusted,omitempty"`
+	Active       *bool     `json:"active,omitempty"`
+	AllowPull    *bool     `json:"allow_pull,omitempty"`
+	AllowPush    *bool     `json:"allow_push,omitempty"`
+	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
+	AllowTag     *bool     `json:"allow_tag,omitempty"`
+	AllowComment *bool     `json:"allow_comment,omitempty"`
+	PipelineType *string   `json:"pipeline_type,omitempty"`
+	PreviousName *string   `json:"previous_name,omitempty"`
+	ApproveBuild *string   `json:"approve_build,omitempty"`
 }
 
 // Environment returns a list of environment variables
 // provided from the fields of the Repo type.
 func (r *Repo) Environment() map[string]string {
 	return map[string]string{
-		"VELA_REPO_ACTIVE":             ToString(r.GetActive()),
-		"VELA_REPO_ALLOW_COMMENT":      ToString(r.GetAllowComment()),
-		"VELA_REPO_ALLOW_DEPLOY":       ToString(r.GetAllowDeploy()),
-		"VELA_REPO_ALLOW_PULL":         ToString(r.GetAllowPull()),
-		"VELA_REPO_ALLOW_PUSH":         ToString(r.GetAllowPush()),
-		"VELA_REPO_ALLOW_TAG":          ToString(r.GetAllowTag()),
-		"VELA_REPO_BRANCH":             ToString(r.GetBranch()),
-		"VELA_REPO_TOPICS":             strings.Join(r.GetTopics()[:], ","),
-		"VELA_REPO_BUILD_LIMIT":        ToString(r.GetBuildLimit()),
-		"VELA_REPO_CLONE":              ToString(r.GetClone()),
-		"VELA_REPO_FULL_NAME":          ToString(r.GetFullName()),
-		"VELA_REPO_LINK":               ToString(r.GetLink()),
-		"VELA_REPO_NAME":               ToString(r.GetName()),
-		"VELA_REPO_ORG":                ToString(r.GetOrg()),
-		"VELA_REPO_PRIVATE":            ToString(r.GetPrivate()),
-		"VELA_REPO_TIMEOUT":            ToString(r.GetTimeout()),
-		"VELA_REPO_TRUSTED":            ToString(r.GetTrusted()),
-		"VELA_REPO_VISIBILITY":         ToString(r.GetVisibility()),
-		"VELA_REPO_PIPELINE_TYPE":      ToString(r.GetPipelineType()),
-		"VELA_REPO_APPROVE_FORK_BUILD": ToString(r.GetApproveForkBuild()),
+		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
+		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
+		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
+		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
+		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
+		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
+		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
+		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
+		"VELA_REPO_CLONE":         ToString(r.GetClone()),
+		"VELA_REPO_FULL_NAME":     ToString(r.GetFullName()),
+		"VELA_REPO_LINK":          ToString(r.GetLink()),
+		"VELA_REPO_NAME":          ToString(r.GetName()),
+		"VELA_REPO_ORG":           ToString(r.GetOrg()),
+		"VELA_REPO_PRIVATE":       ToString(r.GetPrivate()),
+		"VELA_REPO_TIMEOUT":       ToString(r.GetTimeout()),
+		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
+		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
+		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
+		"VELA_REPO_APPROVE_BUILD": ToString(r.GetApproveBuild()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
@@ -395,17 +395,17 @@ func (r *Repo) GetPreviousName() string {
 	return *r.PreviousName
 }
 
-// GetApproveForkBuild returns the ApproveForkBuild field.
+// GetApproveBuild returns the ApproveBuild field.
 //
 // When the provided Repo type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (r *Repo) GetApproveForkBuild() string {
-	// return zero value if Repo type or ApproveForkBuild field is nil
-	if r == nil || r.ApproveForkBuild == nil {
+func (r *Repo) GetApproveBuild() string {
+	// return zero value if Repo type or ApproveBuild field is nil
+	if r == nil || r.ApproveBuild == nil {
 		return ""
 	}
 
-	return *r.ApproveForkBuild
+	return *r.ApproveBuild
 }
 
 // SetID sets the ID field.
@@ -720,17 +720,17 @@ func (r *Repo) SetPreviousName(v string) {
 	r.PreviousName = &v
 }
 
-// SetApproveForkBuild sets the ApproveForkBuild field.
+// SetApproveBuild sets the ApproveBuild field.
 //
 // When the provided Repo type is nil, it
 // will set nothing and immediately return.
-func (r *Repo) SetApproveForkBuild(v string) {
+func (r *Repo) SetApproveBuild(v string) {
 	// return if Repo type is nil
 	if r == nil {
 		return
 	}
 
-	r.ApproveForkBuild = &v
+	r.ApproveBuild = &v
 }
 
 // String implements the Stringer interface for the Repo type.
@@ -742,7 +742,7 @@ func (r *Repo) String() string {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
-  ApproveForkBuild: %s,
+  ApproveBuild: %s,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -767,7 +767,7 @@ func (r *Repo) String() string {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
-		r.GetApproveForkBuild(),
+		r.GetApproveBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),

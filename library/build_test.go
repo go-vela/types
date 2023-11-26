@@ -86,6 +86,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: testBuild(),
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":  "1563474076",
+				"VELA_BUILD_APPROVED_BY":  "OctoCat",
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
@@ -138,6 +140,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _comment,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":    "1563474076",
+				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
@@ -193,6 +197,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _deploy,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":   "1563474076",
+				"VELA_BUILD_APPROVED_BY":   "OctoCat",
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
@@ -250,6 +256,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _deployTag,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":   "1563474076",
+				"VELA_BUILD_APPROVED_BY":   "OctoCat",
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
@@ -309,6 +317,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _pull,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":    "1563474076",
+				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
@@ -366,6 +376,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _tag,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":  "1563474076",
+				"VELA_BUILD_APPROVED_BY":  "OctoCat",
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
@@ -570,6 +582,14 @@ func TestLibrary_Build_Getters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("GetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetApprovedAt() != test.want.GetApprovedAt() {
+			t.Errorf("GetApprovedAt is %v, want %v", test.build.GetApprovedAt(), test.want.GetApprovedAt())
+		}
+
+		if test.build.GetApprovedBy() != test.want.GetApprovedBy() {
+			t.Errorf("GetApprovedBy is %v, want %v", test.build.GetApprovedBy(), test.want.GetApprovedBy())
+		}
 	}
 }
 
@@ -625,6 +645,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetHost(test.want.GetHost())
 		test.build.SetRuntime(test.want.GetRuntime())
 		test.build.SetDistribution(test.want.GetDistribution())
+		test.build.SetApprovedAt(test.want.GetApprovedAt())
+		test.build.SetApprovedBy(test.want.GetApprovedBy())
 
 		if test.build.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.build.GetID(), test.want.GetID())
@@ -749,6 +771,14 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("SetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetApprovedAt() != test.want.GetApprovedAt() {
+			t.Errorf("SetApprovedAt is %v, want %v", test.build.GetApprovedAt(), test.want.GetApprovedAt())
+		}
+
+		if test.build.GetApprovedBy() != test.want.GetApprovedBy() {
+			t.Errorf("SetApprovedBy is %v, want %v", test.build.GetApprovedBy(), test.want.GetApprovedBy())
+		}
 	}
 }
 
@@ -757,6 +787,8 @@ func TestLibrary_Build_String(t *testing.T) {
 	b := testBuild()
 
 	want := fmt.Sprintf(`{
+  ApprovedAt: %d,
+  ApprovedBy: %s,
   Author: %s,
   BaseRef: %s,
   Branch: %s,
@@ -789,6 +821,8 @@ func TestLibrary_Build_String(t *testing.T) {
   Status: %s,
   Title: %s,
 }`,
+		b.GetApprovedAt(),
+		b.GetApprovedBy(),
 		b.GetAuthor(),
 		b.GetBaseRef(),
 		b.GetBranch(),
@@ -865,6 +899,8 @@ func testBuild() *Build {
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
+	b.SetApprovedAt(1563474076)
+	b.SetApprovedBy("OctoCat")
 
 	return b
 }

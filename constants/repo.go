@@ -17,15 +17,15 @@ const (
 	PipelineTypeStarlark = "starlark"
 )
 
-// Repo ApproveForkBuild types.
+// Repo ApproveBuild types.
 const (
-	// ApproveAlways defines the CI strategy of having a repo administrator approve
+	// ApproveForkAlways defines the CI strategy of having a repo administrator approve
 	// all builds triggered from a forked PR.
-	ApproveAlways = "always"
+	ApproveForkAlways = "fork-always"
 
-	// ApproveNoWrite defines the CI strategy of having a repo administrator approve
+	// ApproveForkNoWrite defines the CI strategy of having a repo administrator approve
 	// all builds triggered from a forked PR where the author does not have write access.
-	ApproveNoWrite = "no-write"
+	ApproveForkNoWrite = "fork-no-write"
 
 	// ApproveOnce defines the CI strategy of having a repo administrator approve
 	// all builds triggered from an outside contributor if this is their first time contributing.

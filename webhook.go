@@ -17,9 +17,9 @@ var (
 // PullRequest defines the data pulled from PRs while
 // processing a webhook.
 type PullRequest struct {
-	Comment string
-	Number  int
-	IsFork  bool
+	Comment    string
+	Number     int
+	IsFromFork bool
 }
 
 // Webhook defines a struct that is used to return

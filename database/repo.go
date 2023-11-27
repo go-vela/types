@@ -68,6 +68,7 @@ type Repo struct {
 	AllowComment sql.NullBool   `sql:"allow_comment"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
+	ApproveBuild sql.NullString `sql:"approve_build"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -198,6 +199,11 @@ func (r *Repo) Nullify() *Repo {
 		r.PreviousName.Valid = false
 	}
 
+	// check if the ApproveForkBuild field should be false
+	if len(r.ApproveBuild.String) == 0 {
+		r.ApproveBuild.Valid = false
+	}
+
 	return r
 }
 
@@ -230,6 +236,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowComment(r.AllowComment.Bool)
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
+	repo.SetApproveBuild(r.ApproveBuild.String)
 
 	return repo
 }
@@ -325,6 +332,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
+		ApproveBuild: sql.NullString{String: r.GetApproveBuild(), Valid: true},
 	}
 
 	return repo.Nullify()

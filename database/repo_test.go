@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 )
 
@@ -118,6 +119,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
 		Visibility:   sql.NullString{String: "", Valid: false},
 		PipelineType: sql.NullString{String: "", Valid: false},
+		ApproveBuild: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -177,6 +179,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
+	want.SetApproveBuild(constants.ApproveNever)
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -330,6 +333,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
+	r.SetApproveBuild(constants.ApproveNever)
 
 	want := testRepo()
 
@@ -369,5 +373,6 @@ func testRepo() *Repo {
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},
+		ApproveBuild: sql.NullString{String: constants.ApproveNever, Valid: true},
 	}
 }

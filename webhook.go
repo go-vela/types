@@ -14,16 +14,22 @@ var (
 	skipDirectiveMsg   = "skip ci directive found in commit title/message"
 )
 
+// PullRequest defines the data pulled from PRs while
+// processing a webhook.
+type PullRequest struct {
+	Comment string
+	Number  int
+	IsFork  bool
+}
+
 // Webhook defines a struct that is used to return
 // the required data when processing webhook event
 // a for a source provider event.
 type Webhook struct {
-	Comment  string
-	PRNumber int
-	Hook     *library.Hook
-	Repo     *library.Repo
-	Build    *library.Build
-	PRFork   bool
+	Hook        *library.Hook
+	Repo        *library.Repo
+	Build       *library.Build
+	PullRequest PullRequest
 }
 
 // ShouldSkip uses the build information

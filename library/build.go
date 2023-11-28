@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -49,6 +47,8 @@ type Build struct {
 	Host          *string             `json:"host,omitempty"`
 	Runtime       *string             `json:"runtime,omitempty"`
 	Distribution  *string             `json:"distribution,omitempty"`
+	ApprovedAt    *int64              `json:"approved_at,omitempty"`
+	ApprovedBy    *string             `json:"approved_by,omitempty"`
 }
 
 // Duration calculates and returns the total amount of
@@ -86,6 +86,8 @@ func (b *Build) Duration() string {
 // provided from the fields of the Build type.
 func (b *Build) Environment(workspace, channel string) map[string]string {
 	envs := map[string]string{
+		"VELA_BUILD_APPROVED_AT":  ToString(b.GetApprovedAt()),
+		"VELA_BUILD_APPROVED_BY":  ToString(b.GetApprovedBy()),
 		"VELA_BUILD_AUTHOR":       ToString(b.GetAuthor()),
 		"VELA_BUILD_AUTHOR_EMAIL": ToString(b.GetEmail()),
 		"VELA_BUILD_BASE_REF":     ToString(b.GetBaseRef()),
@@ -617,6 +619,32 @@ func (b *Build) GetDistribution() string {
 	return *b.Distribution
 }
 
+// GetApprovedAt returns the ApprovedAt field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetApprovedAt() int64 {
+	// return zero value if Build type or ApprovedAt field is nil
+	if b == nil || b.ApprovedAt == nil {
+		return 0
+	}
+
+	return *b.ApprovedAt
+}
+
+// GetApprovedBy returns the ApprovedBy field.
+//
+// When the provided Build type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *Build) GetApprovedBy() string {
+	// return zero value if Build type or ApprovedBy field is nil
+	if b == nil || b.ApprovedBy == nil {
+		return ""
+	}
+
+	return *b.ApprovedBy
+}
+
 // SetID sets the ID field.
 //
 // When the provided Build type is nil, it
@@ -1033,11 +1061,39 @@ func (b *Build) SetDistribution(v string) {
 	b.Distribution = &v
 }
 
+// SetApprovedAt sets the ApprovedAt field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetApprovedAt(v int64) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.ApprovedAt = &v
+}
+
+// SetApprovedBy sets the ApprovedBy field.
+//
+// When the provided Build type is nil, it
+// will set nothing and immediately return.
+func (b *Build) SetApprovedBy(v string) {
+	// return if Build type is nil
+	if b == nil {
+		return
+	}
+
+	b.ApprovedBy = &v
+}
+
 // String implements the Stringer interface for the Build type.
 //
 //nolint:dupl // this is duplicated in the test
 func (b *Build) String() string {
 	return fmt.Sprintf(`{
+  ApprovedAt: %d,
+  ApprovedBy: %s,
   Author: %s,
   BaseRef: %s,
   Branch: %s,
@@ -1071,6 +1127,8 @@ func (b *Build) String() string {
   Status: %s,
   Title: %s,
 }`,
+		b.GetApprovedAt(),
+		b.GetApprovedBy(),
 		b.GetAuthor(),
 		b.GetBaseRef(),
 		b.GetBranch(),

@@ -1,11 +1,15 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package constants
 
 // Secret types.
 const (
+	// SecretPullBuild defines the pull policy type for a secret.
+	SecretPullBuild = "build_start"
+
+	// SecretPullStep defines the pull policy type for a secret.
+	SecretPullStep = "step_start"
+
 	// SecretOrg defines the secret type for a secret scoped to a specific org.
 	SecretOrg = "org"
 

@@ -1,6 +1,4 @@
-// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package yaml
 
@@ -153,7 +151,8 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			case constants.EventPull:
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,
-					constants.EventPull+":"+constants.ActionSynchronize)
+					constants.EventPull+":"+constants.ActionSynchronize,
+					constants.EventPull+":"+constants.ActionReopened)
 			case constants.EventComment:
 				events = append(events,
 					constants.EventComment+":"+constants.ActionCreated,

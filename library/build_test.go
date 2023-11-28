@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -90,10 +88,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: testBuild(),
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":  "1563474076",
+				"VELA_BUILD_APPROVED_BY":  "OctoCat",
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
-				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_BRANCH":       "main",
 				"VELA_BUILD_CHANNEL":      "TODO",
 				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -107,7 +107,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_MESSAGE":      "First commit...",
 				"VELA_BUILD_NUMBER":       "1",
 				"VELA_BUILD_PARENT":       "1",
-				"VELA_BUILD_REF":          "refs/heads/master",
+				"VELA_BUILD_REF":          "refs/heads/main",
 				"VELA_BUILD_RUNTIME":      "docker",
 				"VELA_BUILD_SENDER":       "OctoKitty",
 				"VELA_BUILD_STARTED":      "1563474078",
@@ -118,7 +118,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":            "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
 				"BUILD_BASE_REF":          "",
-				"BUILD_BRANCH":            "master",
+				"BUILD_BRANCH":            "main",
 				"BUILD_CHANNEL":           "TODO",
 				"BUILD_CLONE":             "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -130,7 +130,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_MESSAGE":           "First commit...",
 				"BUILD_NUMBER":            "1",
 				"BUILD_PARENT":            "1",
-				"BUILD_REF":               "refs/heads/master",
+				"BUILD_REF":               "refs/heads/main",
 				"BUILD_SENDER":            "OctoKitty",
 				"BUILD_STARTED":           "1563474078",
 				"BUILD_SOURCE":            "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -142,10 +142,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _comment,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":    "1563474076",
+				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
-				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -172,7 +174,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
 				"BUILD_BASE_REF":            "",
-				"BUILD_BRANCH":              "master",
+				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -197,10 +199,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _deploy,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":   "1563474076",
+				"VELA_BUILD_APPROVED_BY":   "OctoCat",
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
-				"VELA_BUILD_BRANCH":        "master",
+				"VELA_BUILD_BRANCH":        "main",
 				"VELA_BUILD_CHANNEL":       "TODO",
 				"VELA_BUILD_CLONE":         "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":        "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -214,7 +218,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_MESSAGE":       "First commit...",
 				"VELA_BUILD_NUMBER":        "1",
 				"VELA_BUILD_PARENT":        "1",
-				"VELA_BUILD_REF":           "refs/heads/master",
+				"VELA_BUILD_REF":           "refs/heads/main",
 				"VELA_BUILD_RUNTIME":       "docker",
 				"VELA_BUILD_SENDER":        "OctoKitty",
 				"VELA_BUILD_STARTED":       "1563474078",
@@ -229,7 +233,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
 				"BUILD_BASE_REF":           "",
-				"BUILD_BRANCH":             "master",
+				"BUILD_BRANCH":             "main",
 				"BUILD_CHANNEL":            "TODO",
 				"BUILD_CLONE":              "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":             "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -241,7 +245,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_MESSAGE":            "First commit...",
 				"BUILD_NUMBER":             "1",
 				"BUILD_PARENT":             "1",
-				"BUILD_REF":                "refs/heads/master",
+				"BUILD_REF":                "refs/heads/main",
 				"BUILD_SENDER":             "OctoKitty",
 				"BUILD_STARTED":            "1563474078",
 				"BUILD_SOURCE":             "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -255,10 +259,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _deployTag,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":   "1563474076",
+				"VELA_BUILD_APPROVED_BY":   "OctoCat",
 				"VELA_BUILD_AUTHOR":        "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":  "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":      "",
-				"VELA_BUILD_BRANCH":        "master",
+				"VELA_BUILD_BRANCH":        "main",
 				"VELA_BUILD_CHANNEL":       "TODO",
 				"VELA_BUILD_CLONE":         "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":        "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -287,7 +293,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
 				"BUILD_BASE_REF":           "",
-				"BUILD_BRANCH":             "master",
+				"BUILD_BRANCH":             "main",
 				"BUILD_CHANNEL":            "TODO",
 				"BUILD_CLONE":              "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":             "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -315,10 +321,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _pull,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":    "1563474076",
+				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":       "",
-				"VELA_BUILD_BRANCH":         "master",
+				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":         "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -347,7 +355,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
 				"BUILD_BASE_REF":            "",
-				"BUILD_BRANCH":              "master",
+				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":              "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -372,10 +380,12 @@ func TestLibrary_Build_Environment(t *testing.T) {
 		{
 			build: _tag,
 			want: map[string]string{
+				"VELA_BUILD_APPROVED_AT":  "1563474076",
+				"VELA_BUILD_APPROVED_BY":  "OctoCat",
 				"VELA_BUILD_AUTHOR":       "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL": "OctoKitty@github.com",
 				"VELA_BUILD_BASE_REF":     "",
-				"VELA_BUILD_BRANCH":       "master",
+				"VELA_BUILD_BRANCH":       "main",
 				"VELA_BUILD_CHANNEL":      "TODO",
 				"VELA_BUILD_CLONE":        "https://github.com/github/octocat.git",
 				"VELA_BUILD_COMMIT":       "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -401,7 +411,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"BUILD_AUTHOR":            "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":      "OctoKitty@github.com",
 				"BUILD_BASE_REF":          "",
-				"BUILD_BRANCH":            "master",
+				"BUILD_BRANCH":            "main",
 				"BUILD_CHANNEL":           "TODO",
 				"BUILD_CLONE":             "https://github.com/github/octocat.git",
 				"BUILD_COMMIT":            "48afb5bdc41ad69bf22588491333f7cf71135163",
@@ -580,6 +590,14 @@ func TestLibrary_Build_Getters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("GetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetApprovedAt() != test.want.GetApprovedAt() {
+			t.Errorf("GetApprovedAt is %v, want %v", test.build.GetApprovedAt(), test.want.GetApprovedAt())
+		}
+
+		if test.build.GetApprovedBy() != test.want.GetApprovedBy() {
+			t.Errorf("GetApprovedBy is %v, want %v", test.build.GetApprovedBy(), test.want.GetApprovedBy())
+		}
 	}
 }
 
@@ -636,6 +654,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetHost(test.want.GetHost())
 		test.build.SetRuntime(test.want.GetRuntime())
 		test.build.SetDistribution(test.want.GetDistribution())
+		test.build.SetApprovedAt(test.want.GetApprovedAt())
+		test.build.SetApprovedBy(test.want.GetApprovedBy())
 
 		if test.build.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.build.GetID(), test.want.GetID())
@@ -764,6 +784,14 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		if test.build.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("SetDistribution is %v, want %v", test.build.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.build.GetApprovedAt() != test.want.GetApprovedAt() {
+			t.Errorf("SetApprovedAt is %v, want %v", test.build.GetApprovedAt(), test.want.GetApprovedAt())
+		}
+
+		if test.build.GetApprovedBy() != test.want.GetApprovedBy() {
+			t.Errorf("SetApprovedBy is %v, want %v", test.build.GetApprovedBy(), test.want.GetApprovedBy())
+		}
 	}
 }
 
@@ -772,6 +800,8 @@ func TestLibrary_Build_String(t *testing.T) {
 	b := testBuild()
 
 	want := fmt.Sprintf(`{
+  ApprovedAt: %d,
+  ApprovedBy: %s,
   Author: %s,
   BaseRef: %s,
   Branch: %s,
@@ -805,6 +835,8 @@ func TestLibrary_Build_String(t *testing.T) {
   Status: %s,
   Title: %s,
 }`,
+		b.GetApprovedAt(),
+		b.GetApprovedBy(),
 		b.GetAuthor(),
 		b.GetBaseRef(),
 		b.GetBranch(),
@@ -876,13 +908,15 @@ func testBuild() *Build {
 	b.SetAuthor("OctoKitty")
 	b.SetEmail("OctoKitty@github.com")
 	b.SetLink("https://example.company.com/github/octocat/1")
-	b.SetBranch("master")
-	b.SetRef("refs/heads/master")
+	b.SetBranch("main")
+	b.SetRef("refs/heads/main")
 	b.SetBaseRef("")
 	b.SetHeadRef("changes")
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
+	b.SetApprovedAt(1563474076)
+	b.SetApprovedBy("OctoCat")
 
 	return b
 }

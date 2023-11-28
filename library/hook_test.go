@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -246,7 +244,7 @@ func testHook() *Hook {
 	h.SetHost("github.com")
 	h.SetEvent("push")
 	h.SetEventAction("")
-	h.SetBranch("master")
+	h.SetBranch("main")
 	h.SetError("")
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")

@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package yaml
 
@@ -110,6 +108,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Engine: "native",
 					Type:   "repo",
 					Origin: Origin{},
+					Pull:   "build_start",
 				},
 				{
 					Name:   "docker_username",
@@ -141,6 +140,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 							},
 						},
 					},
+					Pull: "build_start",
 				},
 			},
 			want: &pipeline.SecretSlice{
@@ -150,6 +150,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 					Engine: "native",
 					Type:   "repo",
 					Origin: &pipeline.Container{},
+					Pull:   "build_start",
 				},
 				{
 					Name:   "docker_username",
@@ -178,6 +179,7 @@ func TestYaml_SecretSlice_ToPipeline(t *testing.T) {
 							},
 						},
 					},
+					Pull: "build_start",
 				},
 			},
 		},
@@ -209,30 +211,35 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 					Key:    "bar",
 					Engine: "native",
 					Type:   "repo",
+					Pull:   "build_start",
 				},
 				{
 					Name:   "noKey",
 					Key:    "noKey",
 					Engine: "native",
 					Type:   "repo",
+					Pull:   "build_start",
 				},
 				{
 					Name:   "noType",
 					Key:    "bar",
 					Engine: "native",
 					Type:   "repo",
+					Pull:   "build_start",
 				},
 				{
 					Name:   "noEngine",
 					Key:    "bar",
 					Engine: "native",
 					Type:   "repo",
+					Pull:   "build_start",
 				},
 				{
 					Name:   "noKeyEngineAndType",
 					Key:    "noKeyEngineAndType",
 					Engine: "native",
 					Type:   "repo",
+					Pull:   "build_start",
 				},
 				{
 					Name:   "externalSecret",
@@ -264,6 +271,7 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 							},
 						},
 					},
+					Pull: "",
 				},
 				{
 					Name:   "",
@@ -295,6 +303,7 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 							},
 						},
 					},
+					Pull: "",
 				},
 			},
 		},

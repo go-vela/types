@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package types
 
@@ -16,15 +14,22 @@ var (
 	skipDirectiveMsg   = "skip ci directive found in commit title/message"
 )
 
+// PullRequest defines the data pulled from PRs while
+// processing a webhook.
+type PullRequest struct {
+	Comment    string
+	Number     int
+	IsFromFork bool
+}
+
 // Webhook defines a struct that is used to return
 // the required data when processing webhook event
 // a for a source provider event.
 type Webhook struct {
-	Comment  string
-	PRNumber int
-	Hook     *library.Hook
-	Repo     *library.Repo
-	Build    *library.Build
+	Hook        *library.Hook
+	Repo        *library.Repo
+	Build       *library.Build
+	PullRequest PullRequest
 }
 
 // ShouldSkip uses the build information

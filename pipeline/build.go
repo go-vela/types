@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package pipeline
 
@@ -35,34 +33,54 @@ type Build struct {
 // function will remove the steps that have a ruleset that do not
 // match the provided ruledata. If both stages and steps are
 // provided, then an empty pipeline is returned.
-func (b *Build) Purge(r *RuleData) *Build {
+func (b *Build) Purge(r *RuleData) (*Build, error) {
 	// return an empty pipeline if both stages and steps are provided
 	if len(b.Stages) > 0 && len(b.Steps) > 0 {
-		return nil
+		return nil, fmt.Errorf("cannot have both stages and steps at the top level of pipeline")
 	}
 
 	// purge stages pipeline if stages are provided
 	if len(b.Stages) > 0 {
-		b.Stages = *b.Stages.Purge(r)
+		pStages, err := b.Stages.Purge(r)
+		if err != nil {
+			return nil, err
+		}
+
+		b.Stages = *pStages
 	}
 
 	// purge steps pipeline if steps are provided
 	if len(b.Steps) > 0 {
-		b.Steps = *b.Steps.Purge(r)
+		pSteps, err := b.Steps.Purge(r)
+		if err != nil {
+			return nil, err
+		}
+
+		b.Steps = *pSteps
 	}
 
 	// purge services in pipeline if services are provided
 	if len(b.Services) > 0 {
-		b.Services = *b.Services.Purge(r)
+		pServices, err := b.Services.Purge(r)
+		if err != nil {
+			return nil, err
+		}
+
+		b.Services = *pServices
 	}
 
 	// purge secrets in pipeline if secrets are provided
 	if len(b.Secrets) > 0 {
-		b.Secrets = *b.Secrets.Purge(r)
+		pSecrets, err := b.Secrets.Purge(r)
+		if err != nil {
+			return nil, err
+		}
+
+		b.Secrets = *pSecrets
 	}
 
 	// return the purged pipeline
-	return b
+	return b, nil
 }
 
 // Sanitize cleans the fields for every step in each stage so they

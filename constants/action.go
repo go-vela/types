@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package constants
 
@@ -17,6 +15,9 @@ const (
 
 	// ActionRenamed defines the action for renaming a repository.
 	ActionRenamed = "renamed"
+
+	// ActionReopened defines the action for re-opening a pull request (or issue).
+	ActionReopened = "reopened"
 
 	// ActionSynchronize defines the action for the synchronizing of pull requests.
 	ActionSynchronize = "synchronize"

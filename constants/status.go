@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package constants
 
@@ -20,6 +18,9 @@ const (
 
 	// StatusPending defines the status type for build and step pending statuses.
 	StatusPending = "pending"
+
+	// StatusPendingApproval defines the status type for a build waiting to be approved to run.
+	StatusPendingApproval = "pending approval"
 
 	// StatusRunning defines the status type for build and step running statuses.
 	StatusRunning = "running"

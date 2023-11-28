@@ -1,6 +1,4 @@
-// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package database
 
@@ -9,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 )
 
@@ -120,6 +119,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
 		Visibility:   sql.NullString{String: "", Valid: false},
 		PipelineType: sql.NullString{String: "", Valid: false},
+		ApproveBuild: sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -163,7 +163,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetFullName("github/octocat")
 	want.SetLink("https://github.com/github/octocat")
 	want.SetClone("https://github.com/github/octocat.git")
-	want.SetBranch("master")
+	want.SetBranch("main")
 	want.SetTopics([]string{"cloud", "security"})
 	want.SetBuildLimit(10)
 	want.SetTimeout(30)
@@ -179,6 +179,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowComment(false)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
+	want.SetApproveBuild(constants.ApproveNever)
 
 	// run test
 	got := testRepo().ToLibrary()
@@ -316,7 +317,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetFullName("github/octocat")
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
-	r.SetBranch("master")
+	r.SetBranch("main")
 	r.SetTopics([]string{"cloud", "security"})
 	r.SetBuildLimit(10)
 	r.SetTimeout(30)
@@ -332,6 +333,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowComment(false)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
+	r.SetApproveBuild(constants.ApproveNever)
 
 	want := testRepo()
 
@@ -355,7 +357,7 @@ func testRepo() *Repo {
 		FullName:     sql.NullString{String: "github/octocat", Valid: true},
 		Link:         sql.NullString{String: "https://github.com/github/octocat", Valid: true},
 		Clone:        sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
-		Branch:       sql.NullString{String: "master", Valid: true},
+		Branch:       sql.NullString{String: "main", Valid: true},
 		Topics:       []string{"cloud", "security"},
 		BuildLimit:   sql.NullInt64{Int64: 10, Valid: true},
 		Timeout:      sql.NullInt64{Int64: 30, Valid: true},
@@ -371,5 +373,6 @@ func testRepo() *Repo {
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},
+		ApproveBuild: sql.NullString{String: constants.ApproveNever, Valid: true},
 	}
 }

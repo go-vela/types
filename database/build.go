@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package database
 
@@ -65,6 +63,8 @@ type Build struct {
 	Host          sql.NullString     `sql:"host"`
 	Runtime       sql.NullString     `sql:"runtime"`
 	Distribution  sql.NullString     `sql:"distribution"`
+	ApprovedAt    sql.NullInt64      `sql:"approved_at"`
+	ApprovedBy    sql.NullString     `sql:"approved_by"`
 }
 
 // Crop prepares the Build type for inserting into the database by
@@ -95,7 +95,7 @@ func (b *Build) Crop() *Build {
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
 //
-//nolint:gocyclo // ignore cyclomatic complexity due to number of fields
+//nolint:gocyclo,funlen // ignore cyclomatic complexity due to number of fields
 func (b *Build) Nullify() *Build {
 	if b == nil {
 		return nil
@@ -256,6 +256,16 @@ func (b *Build) Nullify() *Build {
 		b.Distribution.Valid = false
 	}
 
+	// check if the ApprovedAt field should be false
+	if b.ApprovedAt.Int64 == 0 {
+		b.ApprovedAt.Valid = false
+	}
+
+	// check if the ApprovedBy field should be false
+	if len(b.ApprovedBy.String) == 0 {
+		b.ApprovedBy.Valid = false
+	}
+
 	return b
 }
 
@@ -296,6 +306,8 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetHost(b.Host.String)
 	build.SetRuntime(b.Runtime.String)
 	build.SetDistribution(b.Distribution.String)
+	build.SetApprovedAt(b.ApprovedAt.Int64)
+	build.SetApprovedBy(b.ApprovedBy.String)
 
 	return build
 }
@@ -337,6 +349,7 @@ func (b *Build) Validate() error {
 	b.Host = sql.NullString{String: sanitize(b.Host.String), Valid: b.Host.Valid}
 	b.Runtime = sql.NullString{String: sanitize(b.Runtime.String), Valid: b.Runtime.Valid}
 	b.Distribution = sql.NullString{String: sanitize(b.Distribution.String), Valid: b.Distribution.Valid}
+	b.ApprovedBy = sql.NullString{String: sanitize(b.ApprovedBy.String), Valid: b.ApprovedBy.Valid}
 
 	return nil
 }
@@ -377,6 +390,8 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Host:          sql.NullString{String: b.GetHost(), Valid: true},
 		Runtime:       sql.NullString{String: b.GetRuntime(), Valid: true},
 		Distribution:  sql.NullString{String: b.GetDistribution(), Valid: true},
+		ApprovedAt:    sql.NullInt64{Int64: b.GetApprovedAt(), Valid: true},
+		ApprovedBy:    sql.NullString{String: b.GetApprovedBy(), Valid: true},
 	}
 
 	return build.Nullify()

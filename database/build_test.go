@@ -1,6 +1,4 @@
-// Copyright (c) 2022 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package database
 
@@ -135,14 +133,16 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetAuthor("OctoKitty")
 	want.SetEmail("OctoKitty@github.com")
 	want.SetLink("https://example.company.com/github/octocat/1")
-	want.SetBranch("master")
-	want.SetRef("refs/heads/master")
+	want.SetBranch("main")
+	want.SetRef("refs/heads/main")
 	want.SetBaseRef("")
 	want.SetHeadRef("")
 	want.SetHost("example.company.com")
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
 	want.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	want.SetApprovedAt(1563474076)
+	want.SetApprovedBy("OctoCat")
 
 	// run test
 	got := testBuild().ToLibrary()
@@ -225,14 +225,16 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetAuthor("OctoKitty")
 	b.SetEmail("OctoKitty@github.com")
 	b.SetLink("https://example.company.com/github/octocat/1")
-	b.SetBranch("master")
-	b.SetRef("refs/heads/master")
+	b.SetBranch("main")
+	b.SetRef("refs/heads/main")
 	b.SetBaseRef("")
 	b.SetHeadRef("")
 	b.SetHost("example.company.com")
 	b.SetRuntime("docker")
 	b.SetDistribution("linux")
 	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	b.SetApprovedAt(1563474076)
+	b.SetApprovedBy("OctoCat")
 
 	want := testBuild()
 
@@ -285,12 +287,14 @@ func testBuild() *Build {
 		Author:        sql.NullString{String: "OctoKitty", Valid: true},
 		Email:         sql.NullString{String: "OctoKitty@github.com", Valid: true},
 		Link:          sql.NullString{String: "https://example.company.com/github/octocat/1", Valid: true},
-		Branch:        sql.NullString{String: "master", Valid: true},
-		Ref:           sql.NullString{String: "refs/heads/master", Valid: true},
+		Branch:        sql.NullString{String: "main", Valid: true},
+		Ref:           sql.NullString{String: "refs/heads/main", Valid: true},
 		BaseRef:       sql.NullString{String: "", Valid: false},
 		HeadRef:       sql.NullString{String: "", Valid: false},
 		Host:          sql.NullString{String: "example.company.com", Valid: true},
 		Runtime:       sql.NullString{String: "docker", Valid: true},
 		Distribution:  sql.NullString{String: "linux", Valid: true},
+		ApprovedAt:    sql.NullInt64{Int64: 1563474076, Valid: true},
+		ApprovedBy:    sql.NullString{String: "OctoCat", Valid: true},
 	}
 }

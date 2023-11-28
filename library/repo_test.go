@@ -1,6 +1,4 @@
-// Copyright (c) 2023 Target Brands, Inc. All rights reserved.
-//
-// Use of this source code is governed by the LICENSE file in this repository.
+// SPDX-License-Identifier: Apache-2.0
 
 package library
 
@@ -8,6 +6,8 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestLibrary_Repo_Environment(t *testing.T) {
@@ -19,7 +19,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
-		"VELA_REPO_BRANCH":         "master",
+		"VELA_REPO_BRANCH":         "main",
 		"VELA_REPO_TOPICS":         "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":    "10",
 		"VELA_REPO_CLONE":          "https://github.com/github/octocat.git",
@@ -32,13 +32,14 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_TRUSTED":        "false",
 		"VELA_REPO_VISIBILITY":     "public",
 		"VELA_REPO_PIPELINE_TYPE":  "",
+		"VELA_REPO_APPROVE_BUILD":  "never",
 		"REPOSITORY_ACTIVE":        "true",
 		"REPOSITORY_ALLOW_COMMENT": "false",
 		"REPOSITORY_ALLOW_DEPLOY":  "false",
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",
 		"REPOSITORY_ALLOW_TAG":     "false",
-		"REPOSITORY_BRANCH":        "master",
+		"REPOSITORY_BRANCH":        "main",
 		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":     "github/octocat",
 		"REPOSITORY_LINK":          "https://github.com/github/octocat",
@@ -167,6 +168,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
 			t.Errorf("GetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
+
+		if test.repo.GetApproveBuild() != test.want.GetApproveBuild() {
+			t.Errorf("GetApproveForkBuild is %v, want %v", test.repo.GetApproveBuild(), test.want.GetApproveBuild())
+		}
 	}
 }
 
@@ -215,6 +220,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowComment(test.want.GetAllowComment())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
+		test.repo.SetApproveBuild(test.want.GetApproveBuild())
 
 		if test.repo.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.repo.GetID(), test.want.GetID())
@@ -307,6 +313,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		if !reflect.DeepEqual(test.repo.GetPreviousName(), test.want.GetPreviousName()) {
 			t.Errorf("SetPreviousName is %v, want %v", test.repo.GetPreviousName(), test.want.GetPreviousName())
 		}
+
+		if test.repo.GetApproveBuild() != test.want.GetApproveBuild() {
+			t.Errorf("SetApproveForkBuild is %v, want %v", test.repo.GetApproveBuild(), test.want.GetApproveBuild())
+		}
 	}
 }
 
@@ -321,6 +331,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  ApproveBuild: %s,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -345,6 +356,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetApproveBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),
@@ -383,7 +395,7 @@ func testRepo() *Repo {
 	r.SetFullName("github/octocat")
 	r.SetLink("https://github.com/github/octocat")
 	r.SetClone("https://github.com/github/octocat.git")
-	r.SetBranch("master")
+	r.SetBranch("main")
 	r.SetTopics([]string{"cloud", "security"})
 	r.SetBuildLimit(10)
 	r.SetTimeout(30)
@@ -399,6 +411,7 @@ func testRepo() *Repo {
 	r.SetAllowComment(false)
 	r.SetPipelineType("")
 	r.SetPreviousName("")
+	r.SetApproveBuild(constants.ApproveNever)
 
 	return r
 }

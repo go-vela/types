@@ -19,6 +19,9 @@ const (
 	// StatusPending defines the status type for build and step pending statuses.
 	StatusPending = "pending"
 
+	// StatusPendingApproval defines the status type for a build waiting to be approved to run.
+	StatusPendingApproval = "pending approval"
+
 	// StatusRunning defines the status type for build and step running statuses.
 	StatusRunning = "running"
 

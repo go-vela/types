@@ -38,6 +38,7 @@ type Repo struct {
 	AllowEvents  *Events   `json:"allow_events,omitempty"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
+	ApproveBuild *string   `json:"approve_build,omitempty"`
 }
 
 // Environment returns a list of environment variables
@@ -64,6 +65,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_TRUSTED":       ToString(r.GetTrusted()),
 		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
 		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
+		"VELA_REPO_APPROVE_BUILD": ToString(r.GetApproveBuild()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
@@ -411,6 +413,19 @@ func (r *Repo) GetPreviousName() string {
 	return *r.PreviousName
 }
 
+// GetApproveBuild returns the ApproveBuild field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetApproveBuild() string {
+	// return zero value if Repo type or ApproveBuild field is nil
+	if r == nil || r.ApproveBuild == nil {
+		return ""
+	}
+
+	return *r.ApproveBuild
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -736,6 +751,19 @@ func (r *Repo) SetPreviousName(v string) {
 	r.PreviousName = &v
 }
 
+// SetApproveBuild sets the ApproveBuild field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetApproveBuild(v string) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.ApproveBuild = &v
+}
+
 // EventAllowed determines whether or not an event is allowed based on the repository settings.
 func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 	allowed = false
@@ -767,6 +795,8 @@ func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 }
 
 // String implements the Stringer interface for the Repo type.
+//
+//nolint:dupl // ignore duplicate with test func
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
@@ -776,6 +806,7 @@ func (r *Repo) String() string {
   AllowPush: %t,
   AllowTag: %t,
   AllowEvents: %s,
+  ApproveBuild: %s,
   Branch: %s,
   BuildLimit: %d,
   Clone: %s,
@@ -801,6 +832,7 @@ func (r *Repo) String() string {
 		r.GetAllowPush(),
 		r.GetAllowTag(),
 		r.GetAllowEvents().List(),
+		r.GetApproveBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
 		r.GetClone(),

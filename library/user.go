@@ -298,7 +298,8 @@ func (u *User) SetDefaultDashboard(d Dashboard) {
 	dID := d.GetID()
 
 	for a, dashboard := range u.GetDashboards() {
-		if dashboard == strconv.FormatInt(dID, 10) {
+		oldID, _ := strconv.ParseInt(dashboard, 10, 64)
+		if oldID == dID {
 			hold := dashboards[0]
 			dashboards[0] = dashboard
 			dashboards[a] = hold

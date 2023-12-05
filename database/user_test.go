@@ -161,7 +161,7 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 	want.SetDashboards(nil)
 
 	// run test
-	got := testUser().ToLibrary(nil)
+	got := testUser().ToLibrary()
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)

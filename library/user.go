@@ -4,6 +4,7 @@ package library
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/go-vela/types/constants"
 )
@@ -12,15 +13,15 @@ import (
 //
 // swagger:model User
 type User struct {
-	ID           *int64       `json:"id,omitempty"`
-	Name         *string      `json:"name,omitempty"`
-	RefreshToken *string      `json:"-"`
-	Token        *string      `json:"-"`
-	Hash         *string      `json:"-"` // deprecated
-	Favorites    *[]string    `json:"favorites,omitempty"`
-	Active       *bool        `json:"active,omitempty"`
-	Admin        *bool        `json:"admin,omitempty"`
-	Dashboards   *[]Dashboard `json:"dashboards,omitempty"`
+	ID           *int64    `json:"id,omitempty"`
+	Name         *string   `json:"name,omitempty"`
+	RefreshToken *string   `json:"-"`
+	Token        *string   `json:"-"`
+	Hash         *string   `json:"-"` // deprecated
+	Favorites    *[]string `json:"favorites,omitempty"`
+	Active       *bool     `json:"active,omitempty"`
+	Admin        *bool     `json:"admin,omitempty"`
+	Dashboards   *[]string `json:"dashboards,omitempty"`
 }
 
 // Sanitize creates a duplicate of the User without the token values.
@@ -162,10 +163,10 @@ func (u *User) GetFavorites() []string {
 //
 // When the provided User type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (u *User) GetDashboards() []Dashboard {
+func (u *User) GetDashboards() []string {
 	// return zero value if User type or Favorites field is nil
 	if u == nil || u.Dashboards == nil {
-		return []Dashboard{}
+		return []string{}
 	}
 
 	return *u.Dashboards
@@ -279,7 +280,7 @@ func (u *User) SetFavorites(v []string) {
 //
 // When the provided User type is nil, it
 // will set nothing and immediately return.
-func (u *User) SetDashboards(v []Dashboard) {
+func (u *User) SetDashboards(v []string) {
 	// return if User type is nil
 	if u == nil {
 		return
@@ -297,7 +298,7 @@ func (u *User) SetDefaultDashboard(d Dashboard) {
 	dID := d.GetID()
 
 	for a, dashboard := range u.GetDashboards() {
-		if dashboard.GetID() == dID {
+		if dashboard == strconv.FormatInt(dID, 10) {
 			hold := dashboards[0]
 			dashboards[0] = dashboard
 			dashboards[a] = hold
@@ -312,7 +313,7 @@ func (u *User) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
   Admin: %t,
-  Dashboards: %d,
+  Dashboards: %s,
   Favorites: %s,
   ID: %d,
   Name: %s,
@@ -320,7 +321,7 @@ func (u *User) String() string {
 }`,
 		u.GetActive(),
 		u.GetAdmin(),
-		len(u.GetDashboards()),
+		u.GetDashboards(),
 		u.GetFavorites(),
 		u.GetID(),
 		u.GetName(),

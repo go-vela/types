@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"regexp"
 
 	"github.com/go-vela/types/constants"
@@ -50,7 +49,7 @@ type User struct {
 	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
 	Active       sql.NullBool   `sql:"active"`
 	Admin        sql.NullBool   `sql:"admin"`
-	Dashboards   pq.StringArray `sql:"dashboards"`
+	Dashboards   pq.StringArray `sql:"dashboards" gorm:"type:varchar(5000)"`
 }
 
 // Decrypt will manipulate the existing user tokens by
@@ -201,7 +200,7 @@ func (u *User) Nullify() *User {
 
 // ToLibrary converts the User type
 // to a library User type.
-func (u *User) ToLibrary(dashboards []library.Dashboard) *library.User {
+func (u *User) ToLibrary() *library.User {
 	user := new(library.User)
 
 	user.SetID(u.ID.Int64)
@@ -212,7 +211,7 @@ func (u *User) ToLibrary(dashboards []library.Dashboard) *library.User {
 	user.SetActive(u.Active.Bool)
 	user.SetAdmin(u.Admin.Bool)
 	user.SetFavorites(u.Favorites)
-	user.SetDashboards(dashboards)
+	user.SetDashboards(u.Dashboards)
 
 	return user
 }
@@ -265,11 +264,6 @@ func (u *User) Validate() error {
 // UserFromLibrary converts the library User type
 // to a database User type.
 func UserFromLibrary(u *library.User) *User {
-	dahsboardIDs := []string{}
-	for _, dashboard := range u.GetDashboards() {
-		dahsboardIDs = append(dahsboardIDs, fmt.Sprint(dashboard.GetID()))
-	}
-
 	user := &User{
 		ID:           sql.NullInt64{Int64: u.GetID(), Valid: true},
 		Name:         sql.NullString{String: u.GetName(), Valid: true},
@@ -279,7 +273,7 @@ func UserFromLibrary(u *library.User) *User {
 		Active:       sql.NullBool{Bool: u.GetActive(), Valid: true},
 		Admin:        sql.NullBool{Bool: u.GetAdmin(), Valid: true},
 		Favorites:    pq.StringArray(u.GetFavorites()),
-		Dashboards:   dahsboardIDs,
+		Dashboards:   pq.StringArray(u.GetDashboards()),
 	}
 
 	return user.Nullify()

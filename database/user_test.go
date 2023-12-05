@@ -114,6 +114,7 @@ func TestDatabase_User_Nullify(t *testing.T) {
 		Hash:         sql.NullString{String: "", Valid: false},
 		Active:       sql.NullBool{Bool: false, Valid: false},
 		Admin:        sql.NullBool{Bool: false, Valid: false},
+		Dashboards:   nil,
 	}
 
 	// setup tests
@@ -157,9 +158,10 @@ func TestDatabase_User_ToLibrary(t *testing.T) {
 	want.SetFavorites([]string{"github/octocat"})
 	want.SetActive(true)
 	want.SetAdmin(false)
+	want.SetDashboards(nil)
 
 	// run test
-	got := testUser().ToLibrary()
+	got := testUser().ToLibrary(nil)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("ToLibrary is %v, want %v", got, want)
@@ -244,6 +246,7 @@ func TestDatabase_UserFromLibrary(t *testing.T) {
 	u.SetFavorites([]string{"github/octocat"})
 	u.SetActive(true)
 	u.SetAdmin(false)
+	u.SetDashboards(nil)
 
 	want := testUser()
 
@@ -267,6 +270,7 @@ func testUser() *User {
 		Favorites:    []string{"github/octocat"},
 		Active:       sql.NullBool{Bool: true, Valid: true},
 		Admin:        sql.NullBool{Bool: false, Valid: true},
+		Dashboards:   nil,
 	}
 }
 

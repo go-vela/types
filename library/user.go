@@ -12,14 +12,15 @@ import (
 //
 // swagger:model User
 type User struct {
-	ID           *int64    `json:"id,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	RefreshToken *string   `json:"-"`
-	Token        *string   `json:"-"`
-	Hash         *string   `json:"-"` // deprecated
-	Favorites    *[]string `json:"favorites,omitempty"`
-	Active       *bool     `json:"active,omitempty"`
-	Admin        *bool     `json:"admin,omitempty"`
+	ID           *int64       `json:"id,omitempty"`
+	Name         *string      `json:"name,omitempty"`
+	RefreshToken *string      `json:"-"`
+	Token        *string      `json:"-"`
+	Hash         *string      `json:"-"` // deprecated
+	Favorites    *[]string    `json:"favorites,omitempty"`
+	Active       *bool        `json:"active,omitempty"`
+	Admin        *bool        `json:"admin,omitempty"`
+	Dashboards   *[]Dashboard `json:"dashboards,omitempty"`
 }
 
 // Sanitize creates a duplicate of the User without the token values.
@@ -38,6 +39,7 @@ func (u *User) Sanitize() *User {
 		Favorites:    u.Favorites,
 		Active:       u.Active,
 		Admin:        u.Admin,
+		Dashboards:   u.Dashboards,
 	}
 }
 
@@ -156,6 +158,19 @@ func (u *User) GetFavorites() []string {
 	return *u.Favorites
 }
 
+// GetDashboards returns the Dashboards field.
+//
+// When the provided User type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (u *User) GetDashboards() []Dashboard {
+	// return zero value if User type or Favorites field is nil
+	if u == nil || u.Dashboards == nil {
+		return []Dashboard{}
+	}
+
+	return *u.Dashboards
+}
+
 // SetID sets the ID field.
 //
 // When the provided User type is nil, it
@@ -260,11 +275,44 @@ func (u *User) SetFavorites(v []string) {
 	u.Favorites = &v
 }
 
+// SetDashboard sets the Dashboard field.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
+func (u *User) SetDashboards(v []Dashboard) {
+	// return if User type is nil
+	if u == nil {
+		return
+	}
+
+	u.Dashboards = &v
+}
+
+// SetDefaultDashboard sets the default Dashboard.
+//
+// When the provided User type is nil, it
+// will set nothing and immediately return.
+func (u *User) SetDefaultDashboard(d Dashboard) {
+	dashboards := *u.Dashboards
+	dID := d.GetID()
+
+	for a, dashboard := range u.GetDashboards() {
+		if dashboard.GetID() == dID {
+			hold := dashboards[0]
+			dashboards[0] = dashboard
+			dashboards[a] = hold
+		}
+	}
+
+	u.Dashboards = &dashboards
+}
+
 // String implements the Stringer interface for the User type.
 func (u *User) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
   Admin: %t,
+  Dashboards: %d,
   Favorites: %s,
   ID: %d,
   Name: %s,
@@ -272,6 +320,7 @@ func (u *User) String() string {
 }`,
 		u.GetActive(),
 		u.GetAdmin(),
+		len(u.GetDashboards()),
 		u.GetFavorites(),
 		u.GetID(),
 		u.GetName(),

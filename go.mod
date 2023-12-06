@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/google/uuid v1.4.0
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	golang.org/x/net v0.17.0 // indirect

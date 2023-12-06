@@ -4,7 +4,6 @@ package library
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/go-vela/types/constants"
 )
@@ -287,26 +286,6 @@ func (u *User) SetDashboards(v []string) {
 	}
 
 	u.Dashboards = &v
-}
-
-// SetDefaultDashboard sets the default Dashboard.
-//
-// When the provided User type is nil, it
-// will set nothing and immediately return.
-func (u *User) SetDefaultDashboard(d Dashboard) {
-	dashboards := *u.Dashboards
-	dID := d.GetID()
-
-	for a, dashboard := range u.GetDashboards() {
-		oldID, _ := strconv.ParseInt(dashboard, 10, 64)
-		if oldID == dID {
-			hold := dashboards[0]
-			dashboards[0] = dashboard
-			dashboards[a] = hold
-		}
-	}
-
-	u.Dashboards = &dashboards
 }
 
 // String implements the Stringer interface for the User type.

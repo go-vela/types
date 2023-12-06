@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
@@ -25,7 +26,7 @@ var (
 
 // Dashboard is the database representation of a user.
 type Dashboard struct {
-	ID        sql.NullInt64  `sql:"id"`
+	ID        uuid.UUID      `gorm:"type:uuid;default:uuid_generate_v4()"`
 	Name      sql.NullString `sql:"name"`
 	CreatedAt sql.NullInt64  `sql:"created_at"`
 	CreatedBy sql.NullString `sql:"created_by"`
@@ -57,11 +58,6 @@ func (r *DashReposJSON) Scan(value interface{}) error {
 func (d *Dashboard) Nullify() *Dashboard {
 	if d == nil {
 		return nil
-	}
-
-	// check if the ID field should be false
-	if d.ID.Int64 == 0 {
-		d.ID.Valid = false
 	}
 
 	// check if the Name field should be false
@@ -97,7 +93,7 @@ func (d *Dashboard) Nullify() *Dashboard {
 func (d *Dashboard) ToLibrary() *library.Dashboard {
 	dashboard := new(library.Dashboard)
 
-	dashboard.SetID(d.ID.Int64)
+	dashboard.SetID(d.ID.String())
 	dashboard.SetName(d.Name.String)
 	dashboard.SetAdmins(d.Admins)
 	dashboard.SetCreatedAt(d.CreatedAt.Int64)
@@ -148,7 +144,6 @@ func (d *Dashboard) Validate() error {
 // to a database Dashboard type.
 func DashboardFromLibrary(d *library.Dashboard) *Dashboard {
 	user := &Dashboard{
-		ID:        sql.NullInt64{Int64: d.GetID(), Valid: true},
 		Name:      sql.NullString{String: d.GetName(), Valid: true},
 		CreatedAt: sql.NullInt64{Int64: d.GetCreatedAt(), Valid: true},
 		CreatedBy: sql.NullString{String: d.GetCreatedBy(), Valid: true},

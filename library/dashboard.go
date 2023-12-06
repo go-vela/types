@@ -10,7 +10,7 @@ import (
 //
 // swagger:model Dashboard
 type Dashboard struct {
-	ID        *int64           `json:"id,omitempty"`
+	ID        *string          `json:"id,omitempty"`
 	Name      *string          `json:"name,omitempty"`
 	CreatedAt *int64           `json:"created_at,omitempty"`
 	CreatedBy *string          `json:"created_by,omitempty"`
@@ -24,10 +24,10 @@ type Dashboard struct {
 //
 // When the provided Dashboard type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (d *Dashboard) GetID() int64 {
+func (d *Dashboard) GetID() string {
 	// return zero value if Dashboard type or ID field is nil
 	if d == nil || d.ID == nil {
-		return 0
+		return ""
 	}
 
 	return *d.ID
@@ -128,7 +128,7 @@ func (d *Dashboard) GetRepos() []*DashboardRepo {
 //
 // When the provided Dashboard type is nil, it
 // will set nothing and immediately return.
-func (d *Dashboard) SetID(v int64) {
+func (d *Dashboard) SetID(v string) {
 	// return if Dashboard type is nil
 	if d == nil {
 		return

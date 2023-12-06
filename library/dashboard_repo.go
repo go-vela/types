@@ -19,7 +19,7 @@ type DashboardRepo struct {
 // the type is nil, it returns the zero value for the field.
 func (d *DashboardRepo) GetID() int64 {
 	// return zero value if Dashboard type or ID field is nil
-	if d == nil {
+	if d == nil || d.ID == nil {
 		return 0
 	}
 
@@ -32,7 +32,7 @@ func (d *DashboardRepo) GetID() int64 {
 // the type is nil, it returns the zero value for the field.
 func (d *DashboardRepo) GetName() string {
 	// return zero value if Dashboard type or ID field is nil
-	if d == nil {
+	if d == nil || d.Name == nil {
 		return ""
 	}
 

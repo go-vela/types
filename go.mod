@@ -11,6 +11,8 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 )
 
+require github.com/google/go-cmp v0.5.9
+
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/google/uuid v1.4.0

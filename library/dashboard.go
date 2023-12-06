@@ -232,7 +232,7 @@ func (d *Dashboard) SetRepos(v []*DashboardRepo) {
 func (d *Dashboard) String() string {
 	return fmt.Sprintf(`{
   Name: %s,
-  ID: %d,
+  ID: %s,
   Admins: %v,
   CreatedAt: %d,
   CreatedBy: %s,

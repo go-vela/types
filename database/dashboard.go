@@ -122,7 +122,7 @@ func (d *Dashboard) Validate() error {
 	// verify the Favorites field is within the database constraints
 	// len is to factor in number of comma separators included in the database field,
 	// removing 1 due to the last item not having an appended comma
-	if (total + len(d.Admins) - 1) > constants.FavoritesMaxSize {
+	if (total + len(d.Admins) - 1) > constants.DashboardAdminMaxSize {
 		return ErrExceededAdminLimit
 	}
 

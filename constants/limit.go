@@ -25,6 +25,9 @@ const (
 	// FavoritesMaxSize defines the maximum size in characters for user favorites.
 	FavoritesMaxSize = 5000
 
+	// DashboardAdminMaxSize defines the maximum size in characters for dashboard admins.
+	DashboardAdminMaxSize = 5000
+
 	// RunningBuildIDsMaxSize defines the maximum size in characters for worker RunningBuildIDs.
 	RunningBuildIDsMaxSize = 500
 

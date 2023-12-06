@@ -6,7 +6,7 @@ package constants
 const (
 	AllowPushBranch = 1 << iota // 00000001 = 1
 	AllowPushTag                // 00000010 = 2
-	AllowPullOpen               // 00000010 = 4
+	AllowPullOpen               // 00000100 = 4
 	AllowPullEdit               // ...
 	AllowPullSync
 	_ // AllowPullAssigned - Not Implemented

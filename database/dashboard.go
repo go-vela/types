@@ -143,7 +143,22 @@ func (d *Dashboard) Validate() error {
 // DashboardFromLibrary converts the library Dashboard type
 // to a database Dashboard type.
 func DashboardFromLibrary(d *library.Dashboard) *Dashboard {
+	var (
+		id  uuid.UUID
+		err error
+	)
+
+	if d.GetID() == "" {
+		id = uuid.New()
+	} else {
+		id, err = uuid.Parse(d.GetID())
+		if err != nil {
+			return nil
+		}
+	}
+
 	user := &Dashboard{
+		ID:        id,
 		Name:      sql.NullString{String: d.GetName(), Valid: true},
 		CreatedAt: sql.NullInt64{Int64: d.GetCreatedAt(), Valid: true},
 		CreatedBy: sql.NullString{String: d.GetCreatedBy(), Valid: true},

@@ -168,6 +168,7 @@ func TestDatabase_DashboardFromLibrary(t *testing.T) {
 		t.Errorf("DashboardFromLibrary() mismatch (-want +got):\n%s", diff)
 	}
 
+	// test empty uuid results in generated uuid
 	d.SetID("")
 
 	//nolint:staticcheck // linter is lying
@@ -177,6 +178,7 @@ func TestDatabase_DashboardFromLibrary(t *testing.T) {
 		t.Errorf("Length is %d", len(got.ID))
 	}
 
+	// test poorly formed uuid results in nil dashboard
 	d.SetID("123-abc")
 
 	got = DashboardFromLibrary(d)

@@ -7,6 +7,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
@@ -46,7 +47,14 @@ func (r DashReposJSON) Value() (driver.Value, error) {
 
 // Scan - Implement the database/sql scanner interface for DashReposJSON.
 func (r *DashReposJSON) Scan(value interface{}) error {
-	return json.Unmarshal(value.([]byte), &r)
+	switch v := value.(type) {
+	case []byte:
+		return json.Unmarshal(v, &r)
+	case string:
+		return json.Unmarshal([]byte(v), &r)
+	default:
+		return fmt.Errorf("wrong type for repos: %T", v)
+	}
 }
 
 // Nullify ensures the valid flag for

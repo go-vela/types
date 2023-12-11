@@ -106,7 +106,13 @@ func TestLibrary_Events_List(t *testing.T) {
 
 func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
 	// setup mask
-	mask := int64(constants.AllowPushBranch | constants.AllowPushTag | constants.AllowPullOpen | constants.AllowPullSync)
+	mask := int64(
+		constants.AllowPushBranch |
+			constants.AllowPushTag |
+			constants.AllowPullOpen |
+			constants.AllowPullSync |
+			constants.AllowPullReopen,
+	)
 
 	want := testEvents()
 
@@ -125,6 +131,7 @@ func testEvents() *Events {
 	pr.SetOpened(true)
 	pr.SetSynchronize(true)
 	pr.SetEdited(false)
+	pr.SetReopened(true)
 
 	push := new(actions.Push)
 	push.SetBranch(true)

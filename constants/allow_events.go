@@ -14,7 +14,7 @@ const (
 	_ // AllowPullLabel - Not Implemented
 	_ // AllowPullLocked - Not Implemented
 	_ // AllowPullReady - Not Implemented
-	_ // AllowPullReopen - Not Implemented
+	AllowPullReopen
 	_ // AllowPullReviewRequest - Not Implemented
 	_ // AllowPullClosed - Not Implemented
 	AllowDeployCreate

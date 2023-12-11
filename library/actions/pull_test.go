@@ -38,6 +38,10 @@ func TestLibrary_Pull_Getters(t *testing.T) {
 		if test.actions.GetEdited() != test.want.GetEdited() {
 			t.Errorf("GetEdited is %v, want %v", test.actions.GetEdited(), test.want.GetEdited())
 		}
+
+		if test.actions.GetReopened() != test.want.GetReopened() {
+			t.Errorf("GetReopened is %v, want %v", test.actions.GetReopened(), test.want.GetReopened())
+		}
 	}
 }
 
@@ -65,6 +69,7 @@ func TestLibrary_Pull_Setters(t *testing.T) {
 		test.actions.SetOpened(test.want.GetOpened())
 		test.actions.SetSynchronize(test.want.GetSynchronize())
 		test.actions.SetEdited(test.want.GetEdited())
+		test.actions.SetReopened(test.want.GetReopened())
 
 		if test.actions.GetOpened() != test.want.GetOpened() {
 			t.Errorf("SetOpened is %v, want %v", test.actions.GetOpened(), test.want.GetOpened())
@@ -76,6 +81,10 @@ func TestLibrary_Pull_Setters(t *testing.T) {
 
 		if test.actions.GetEdited() != test.want.GetEdited() {
 			t.Errorf("SetEdited is %v, want %v", test.actions.GetEdited(), test.want.GetEdited())
+		}
+
+		if test.actions.GetReopened() != test.want.GetReopened() {
+			t.Errorf("SetReopened is %v, want %v", test.actions.GetReopened(), test.want.GetReopened())
 		}
 	}
 }
@@ -98,7 +107,7 @@ func TestLibrary_Pull_ToMask(t *testing.T) {
 	// setup types
 	actions := testPull()
 
-	want := int64(constants.AllowPullOpen | constants.AllowPullSync)
+	want := int64(constants.AllowPullOpen | constants.AllowPullSync | constants.AllowPullReopen)
 
 	// run test
 	got := actions.ToMask()
@@ -113,6 +122,7 @@ func testPull() *Pull {
 	pr.SetOpened(true)
 	pr.SetSynchronize(true)
 	pr.SetEdited(false)
+	pr.SetReopened(true)
 
 	return pr
 }

@@ -108,5 +108,13 @@ func testPush() *Push {
 }
 
 func testMask() int64 {
-	return int64(constants.AllowPushBranch | constants.AllowPushTag | constants.AllowPullOpen | constants.AllowPullSync | constants.AllowDeployCreate | constants.AllowCommentCreate)
+	return int64(
+		constants.AllowPushBranch |
+			constants.AllowPushTag |
+			constants.AllowPullOpen |
+			constants.AllowPullSync |
+			constants.AllowPullReopen |
+			constants.AllowDeployCreate |
+			constants.AllowCommentCreate,
+	)
 }

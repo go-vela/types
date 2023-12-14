@@ -14,6 +14,7 @@ type Events struct {
 	PullRequest *actions.Pull    `json:"pull_request"`
 	Deployment  *actions.Deploy  `json:"deployment"`
 	Comment     *actions.Comment `json:"comment"`
+	Delete      *actions.Delete  `json:"delete"`
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that

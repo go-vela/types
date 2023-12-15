@@ -120,7 +120,6 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		test.hook.SetStatus(test.want.GetStatus())
 		test.hook.SetLink(test.want.GetLink())
 		test.hook.SetWebhookID(test.want.GetWebhookID())
-		test.hook.SetDeploymentID(test.want.GetDeploymentID())
 
 		if test.hook.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.hook.GetID(), test.want.GetID())
@@ -178,9 +177,6 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 			t.Errorf("SetWebhookID is %v, want %v", test.hook.GetWebhookID(), test.want.GetWebhookID())
 		}
 
-		if test.hook.GetDeploymentID() != test.want.GetDeploymentID() {
-			t.Errorf("SetDeploymentID is %v, want %v", test.hook.GetDeploymentID(), test.want.GetDeploymentID())
-		}
 	}
 }
 
@@ -203,7 +199,6 @@ func TestLibrary_Hook_String(t *testing.T) {
   SourceID: %s,
   Status: %s,
   WebhookID: %d,
-  DeploymentID: %d,
 }`,
 		h.GetBranch(),
 		h.GetBuildID(),
@@ -219,7 +214,6 @@ func TestLibrary_Hook_String(t *testing.T) {
 		h.GetSourceID(),
 		h.GetStatus(),
 		h.GetWebhookID(),
-		h.GetDeploymentID(),
 	)
 
 	// run test
@@ -249,7 +243,6 @@ func testHook() *Hook {
 	h.SetStatus("success")
 	h.SetLink("https://github.com/github/octocat/settings/hooks/1")
 	h.SetWebhookID(123456)
-	h.SetWebhookID(0)
 
 	return h
 }

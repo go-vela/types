@@ -26,10 +26,11 @@ type PullRequest struct {
 // the required data when processing webhook event
 // a for a source provider event.
 type Webhook struct {
-	Hook        *library.Hook
-	Repo        *library.Repo
-	Build       *library.Build
-	PullRequest PullRequest
+	Hook         *library.Hook
+	Repo         *library.Repo
+	Build        *library.Build
+	PullRequest  PullRequest
+	DeploymentID *int64
 }
 
 // ShouldSkip uses the build information

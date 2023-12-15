@@ -15,6 +15,8 @@ func TestTypes_ToItem(t *testing.T) {
 	num := 1
 	num64 := int64(num)
 	str := "foo"
+	e := new(library.Events)
+
 	b := &library.Build{
 		ID:       &num64,
 		RepoID:   &num64,
@@ -57,6 +59,7 @@ func TestTypes_ToItem(t *testing.T) {
 		AllowPush:   &booL,
 		AllowDeploy: &booL,
 		AllowTag:    &booL,
+		AllowEvents: e,
 	}
 	u := &library.User{
 		ID:     &num64,
@@ -108,6 +111,7 @@ func TestTypes_ToItem(t *testing.T) {
 			AllowPush:   &booL,
 			AllowDeploy: &booL,
 			AllowTag:    &booL,
+			AllowEvents: e,
 		},
 		User: &library.User{
 			ID:     &num64,

@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/library/actions"
 )
 
 func TestDatabase_Repo_Decrypt(t *testing.T) {
@@ -117,6 +118,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 		Clone:        sql.NullString{String: "", Valid: false},
 		Branch:       sql.NullString{String: "", Valid: false},
 		Timeout:      sql.NullInt64{Int64: 0, Valid: false},
+		AllowEvents:  sql.NullInt64{Int64: 0, Valid: false},
 		Visibility:   sql.NullString{String: "", Valid: false},
 		PipelineType: sql.NullString{String: "", Valid: false},
 		ApproveBuild: sql.NullString{String: "", Valid: false},
@@ -154,6 +156,7 @@ func TestDatabase_Repo_Nullify(t *testing.T) {
 func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	// setup types
 	want := new(library.Repo)
+	e := library.NewEventsFromMask(1)
 
 	want.SetID(1)
 	want.SetUserID(1)
@@ -177,6 +180,7 @@ func TestDatabase_Repo_ToLibrary(t *testing.T) {
 	want.SetAllowDeploy(false)
 	want.SetAllowTag(false)
 	want.SetAllowComment(false)
+	want.SetAllowEvents(e)
 	want.SetPipelineType("yaml")
 	want.SetPreviousName("oldName")
 	want.SetApproveBuild(constants.ApproveNever)
@@ -308,6 +312,8 @@ func TestDatabase_Repo_Validate(t *testing.T) {
 func TestDatabase_RepoFromLibrary(t *testing.T) {
 	// setup types
 	r := new(library.Repo)
+	e := new(library.Events)
+	e.SetPush(new(actions.Push).FromMask(1))
 
 	r.SetID(1)
 	r.SetUserID(1)
@@ -331,6 +337,7 @@ func TestDatabase_RepoFromLibrary(t *testing.T) {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
+	r.SetAllowEvents(e)
 	r.SetPipelineType("yaml")
 	r.SetPreviousName("oldName")
 	r.SetApproveBuild(constants.ApproveNever)
@@ -371,6 +378,7 @@ func testRepo() *Repo {
 		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
+		AllowEvents:  sql.NullInt64{Int64: 1, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},
 		ApproveBuild: sql.NullString{String: constants.ApproveNever, Valid: true},

@@ -66,6 +66,7 @@ type Repo struct {
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
+	AllowEvents  sql.NullInt64  `sql:"allow_events"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
 	ApproveBuild sql.NullString `sql:"approve_build"`
@@ -184,6 +185,11 @@ func (r *Repo) Nullify() *Repo {
 		r.Timeout.Valid = false
 	}
 
+	// check if the AllowEvents field should be false
+	if r.AllowEvents.Int64 == 0 {
+		r.AllowEvents.Valid = false
+	}
+
 	// check if the Visibility field should be false
 	if len(r.Visibility.String) == 0 {
 		r.Visibility.Valid = false
@@ -234,6 +240,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
+	repo.SetAllowEvents(library.NewEventsFromMask(r.AllowEvents.Int64))
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
 	repo.SetApproveBuild(r.ApproveBuild.String)
@@ -330,6 +337,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
+		AllowEvents:  sql.NullInt64{Int64: r.GetAllowEvents().ToDatabase(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
 		ApproveBuild: sql.NullString{String: r.GetApproveBuild(), Valid: true},

@@ -124,7 +124,7 @@ func (d *Deployment) ToLibrary(builds *[]library.Build) *library.Deployment {
 }
 
 // Validate verifies the necessary fields for
-// the Deplotment type are populated correctly.
+// the Deployment type are populated correctly.
 func (d *Deployment) Validate() error {
 	// verify the RepoID field is populated
 	if d.RepoID.Int64 <= 0 {

@@ -92,14 +92,14 @@ func TestDatabase_Deployment_Validate(t *testing.T) {
 			failure:    false,
 			deployment: testDeployment(),
 		},
-		{ // no number set for secret
+		{ // no number set for deployment
 			failure: true,
 			deployment: &Deployment{
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
 			},
 		},
-		{ // no repoID set for secret
+		{ // no repoID set for deployment
 			failure: true,
 			deployment: &Deployment{
 				ID:     sql.NullInt64{Int64: 1, Valid: true},

@@ -13,12 +13,12 @@ import (
 )
 
 var (
-	// ErrEmptyHookRepoID defines the error type when a
-	// Hook type has an empty RepoID field provided.
+	// ErrEmptyDeploymentNumber defines the error type when a
+	// Deployment type has an empty Number field provided.
 	ErrEmptyDeploymentNumber = errors.New("empty deployment number provided")
 
-	// ErrEmptyHookSourceID defines the error type when a
-	// Hook type has an empty SourceID field provided.
+	// ErrEmptyDeploymentRepoID defines the error type when a
+	// Deployment type has an empty RepoID field provided.
 	ErrEmptyDeploymentRepoID = errors.New("empty deployment repo_id provided")
 )
 
@@ -41,7 +41,7 @@ type Deployment struct {
 // Nullify ensures the valid flag for
 // the sql.Null types are properly set.
 //
-// When a field within the Hook type is the zero
+// When a field within the Deployment type is the zero
 // value for the field, the valid flag is set to
 // false causing it to be NULL in the database.
 func (d *Deployment) Nullify() *Deployment {
@@ -136,7 +136,7 @@ func (d *Deployment) Validate() error {
 		return ErrEmptyDeploymentNumber
 	}
 
-	// ensure that all Hook string fields
+	// ensure that all Deployment string fields
 	// that can be returned as JSON are sanitized
 	// to avoid unsafe HTML content
 	d.User = sql.NullString{String: sanitize(d.User.String), Valid: d.User.Valid}

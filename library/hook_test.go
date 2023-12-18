@@ -176,7 +176,6 @@ func TestLibrary_Hook_Setters(t *testing.T) {
 		if test.hook.GetWebhookID() != test.want.GetWebhookID() {
 			t.Errorf("SetWebhookID is %v, want %v", test.hook.GetWebhookID(), test.want.GetWebhookID())
 		}
-
 	}
 }
 

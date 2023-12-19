@@ -6,6 +6,9 @@ import (
 	"fmt"
 )
 
+// DashboardRepo is the library representation of a repo belonging to a Dashboard.
+//
+// swagger:model DashboardRepo
 type DashboardRepo struct {
 	ID       *int64    `json:"id,omitempty"`
 	Name     *string   `json:"name,omitempty"`

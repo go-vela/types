@@ -5,6 +5,8 @@ package library
 import (
 	"fmt"
 	"strings"
+
+	"github.com/go-vela/types/constants"
 )
 
 // Repo is the library representation of a repo.
@@ -33,6 +35,7 @@ type Repo struct {
 	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
 	AllowTag     *bool     `json:"allow_tag,omitempty"`
 	AllowComment *bool     `json:"allow_comment,omitempty"`
+	AllowEvents  *Events   `json:"allow_events,omitempty"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
 	ApproveBuild *string   `json:"approve_build,omitempty"`
@@ -48,6 +51,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
 		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"VELA_REPO_ALLOW_EVENTS":  strings.Join(r.GetAllowEvents().List()[:], ","),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
 		"VELA_REPO_BUILD_LIMIT":   ToString(r.GetBuildLimit()),
@@ -70,6 +74,7 @@ func (r *Repo) Environment() map[string]string {
 		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
 		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
+		"REPOSITORY_ALLOW_EVENTS":  strings.Join(r.GetAllowEvents().List()[:], ","),
 		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
 		"REPOSITORY_CLONE":         ToString(r.GetClone()),
 		"REPOSITORY_FULL_NAME":     ToString(r.GetFullName()),
@@ -367,6 +372,19 @@ func (r *Repo) GetAllowComment() bool {
 	}
 
 	return *r.AllowComment
+}
+
+// GetAllowEvents returns the AllowEvents field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetAllowEvents() *Events {
+	// return zero value if Repo type or AllowPull field is nil
+	if r == nil || r.AllowEvents == nil {
+		return new(Events)
+	}
+
+	return r.AllowEvents
 }
 
 // GetPipelineType returns the PipelineType field.
@@ -694,6 +712,19 @@ func (r *Repo) SetAllowComment(v bool) {
 	r.AllowComment = &v
 }
 
+// SetAllowEvents sets the AllowEvents field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetAllowEvents(v *Events) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.AllowEvents = v
+}
+
 // SetPipelineType sets the PipelineType field.
 //
 // When the provided Repo type is nil, it
@@ -733,7 +764,39 @@ func (r *Repo) SetApproveBuild(v string) {
 	r.ApproveBuild = &v
 }
 
+// EventAllowed determines whether or not an event is allowed based on the repository settings.
+func (r *Repo) EventAllowed(event, action string) (allowed bool) {
+	allowed = false
+
+	if len(action) > 0 {
+		event = event + ":" + action
+	}
+
+	switch event {
+	case constants.EventPush:
+		allowed = r.GetAllowEvents().GetPush().GetBranch()
+	case constants.EventPull + ":" + constants.ActionOpened:
+		allowed = r.GetAllowEvents().GetPullRequest().GetOpened()
+	case constants.EventPull + ":" + constants.ActionSynchronize:
+		allowed = r.GetAllowEvents().GetPullRequest().GetSynchronize()
+	case constants.EventPull + ":" + constants.ActionEdited:
+		allowed = r.GetAllowEvents().GetPullRequest().GetEdited()
+	case constants.EventTag:
+		allowed = r.GetAllowEvents().GetPush().GetTag()
+	case constants.EventComment + ":" + constants.ActionCreated:
+		allowed = r.GetAllowEvents().GetComment().GetCreated()
+	case constants.EventComment + ":" + constants.ActionEdited:
+		allowed = r.GetAllowEvents().GetComment().GetEdited()
+	case constants.EventDeploy:
+		allowed = r.GetAllowEvents().GetDeployment().GetCreated()
+	}
+
+	return
+}
+
 // String implements the Stringer interface for the Repo type.
+//
+//nolint:dupl // ignore duplicate with test func
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
@@ -742,6 +805,7 @@ func (r *Repo) String() string {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  AllowEvents: %s,
   ApproveBuild: %s,
   Branch: %s,
   BuildLimit: %d,
@@ -767,6 +831,7 @@ func (r *Repo) String() string {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetAllowEvents().List(),
 		r.GetApproveBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),

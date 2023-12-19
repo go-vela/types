@@ -19,6 +19,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
+		"VELA_REPO_ALLOW_EVENTS":   "push,pull_request:opened,pull_request:synchronize,tag",
 		"VELA_REPO_BRANCH":         "main",
 		"VELA_REPO_TOPICS":         "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":    "10",
@@ -39,6 +40,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",
 		"REPOSITORY_ALLOW_TAG":     "false",
+		"REPOSITORY_ALLOW_EVENTS":  "push,pull_request:opened,pull_request:synchronize,tag",
 		"REPOSITORY_BRANCH":        "main",
 		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":     "github/octocat",
@@ -161,6 +163,10 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
+		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
+		}
+
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("GetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
@@ -218,6 +224,7 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
+		test.repo.SetAllowEvents(test.want.GetAllowEvents())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
 		test.repo.SetApproveBuild(test.want.GetApproveBuild())
@@ -306,6 +313,10 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
+		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
+		}
+
 		if test.repo.GetPipelineType() != test.want.GetPipelineType() {
 			t.Errorf("SetPipelineType is %v, want %v", test.repo.GetPipelineType(), test.want.GetPipelineType())
 		}
@@ -316,6 +327,41 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 
 		if test.repo.GetApproveBuild() != test.want.GetApproveBuild() {
 			t.Errorf("SetApproveForkBuild is %v, want %v", test.repo.GetApproveBuild(), test.want.GetApproveBuild())
+		}
+	}
+}
+
+func TestLibrary_Repo_EventAllowed(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		repo   *Repo
+		event  string
+		action string
+		want   bool
+	}{
+		{
+			repo:   testRepo(),
+			event:  "pull_request",
+			action: "opened",
+			want:   true,
+		},
+		{
+			repo:  testRepo(),
+			event: "deployment",
+			want:  false,
+		},
+		{
+			repo:  new(Repo),
+			event: "push",
+			want:  false,
+		},
+	}
+
+	for _, test := range tests {
+		got := test.repo.EventAllowed(test.event, test.action)
+
+		if got != test.want {
+			t.Errorf("EventAllowed is %v, want %v", got, test.want)
 		}
 	}
 }
@@ -331,6 +377,7 @@ func TestLibrary_Repo_String(t *testing.T) {
   AllowPull: %t,
   AllowPush: %t,
   AllowTag: %t,
+  AllowEvents: %s,
   ApproveBuild: %s,
   Branch: %s,
   BuildLimit: %d,
@@ -356,6 +403,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 		r.GetAllowPull(),
 		r.GetAllowPush(),
 		r.GetAllowTag(),
+		r.GetAllowEvents().List(),
 		r.GetApproveBuild(),
 		r.GetBranch(),
 		r.GetBuildLimit(),
@@ -389,6 +437,8 @@ func TestLibrary_Repo_String(t *testing.T) {
 func testRepo() *Repo {
 	r := new(Repo)
 
+	e := testEvents()
+
 	r.SetID(1)
 	r.SetOrg("github")
 	r.SetName("octocat")
@@ -409,6 +459,7 @@ func testRepo() *Repo {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
+	r.SetAllowEvents(e)
 	r.SetPipelineType("")
 	r.SetPreviousName("")
 	r.SetApproveBuild(constants.ApproveNever)

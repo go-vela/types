@@ -38,10 +38,6 @@ func TestLibrary_Deployment_Getters(t *testing.T) {
 			t.Errorf("GetURL is %v, want %v", test.deployment.GetURL(), test.want.GetURL())
 		}
 
-		if test.deployment.GetUser() != test.want.GetUser() {
-			t.Errorf("GetUser is %v, want %v", test.deployment.GetUser(), test.want.GetUser())
-		}
-
 		if test.deployment.GetCommit() != test.want.GetCommit() {
 			t.Errorf("GetCommit is %v, want %v", test.deployment.GetCommit(), test.want.GetCommit())
 		}
@@ -101,7 +97,6 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		test.deployment.SetNumber(test.want.GetNumber())
 		test.deployment.SetRepoID(test.want.GetRepoID())
 		test.deployment.SetURL(test.want.GetURL())
-		test.deployment.SetUser(test.want.GetUser())
 		test.deployment.SetCommit(test.want.GetCommit())
 		test.deployment.SetRef(test.want.GetRef())
 		test.deployment.SetTask(test.want.GetTask())
@@ -125,10 +120,6 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 
 		if test.deployment.GetURL() != test.want.GetURL() {
 			t.Errorf("SetURL is %v, want %v", test.deployment.GetURL(), test.want.GetURL())
-		}
-
-		if test.deployment.GetUser() != test.want.GetUser() {
-			t.Errorf("SetUser is %v, want %v", test.deployment.GetUser(), test.want.GetUser())
 		}
 
 		if test.deployment.GetCommit() != test.want.GetCommit() {
@@ -181,7 +172,6 @@ func TestLibrary_Deployment_String(t *testing.T) {
   Target: %s,
   Task: %s,
   URL: %s,
-  User: %s,
   Payload: %s,
   Builds: %d,
 }`,
@@ -196,7 +186,6 @@ func TestLibrary_Deployment_String(t *testing.T) {
 		d.GetTarget(),
 		d.GetTask(),
 		d.GetURL(),
-		d.GetUser(),
 		d.GetPayload(),
 		len(d.GetBuilds()),
 	)
@@ -218,7 +207,6 @@ func testDeployment() *Deployment {
 	d.SetNumber(0)
 	d.SetRepoID(1)
 	d.SetURL("https://api.github.com/repos/github/octocat/deployments/1")
-	d.SetUser("octocat")
 	d.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	d.SetRef("refs/heads/main")
 	d.SetTask("vela-deploy")

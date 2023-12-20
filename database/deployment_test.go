@@ -22,7 +22,6 @@ func TestDatabase_Deployment_Nullify(t *testing.T) {
 		Number:      sql.NullInt64{Int64: 0, Valid: false},
 		RepoID:      sql.NullInt64{Int64: 0, Valid: false},
 		URL:         sql.NullString{String: "", Valid: false},
-		User:        sql.NullString{String: "", Valid: false},
 		Commit:      sql.NullString{String: "", Valid: false},
 		Ref:         sql.NullString{String: "", Valid: false},
 		Task:        sql.NullString{String: "", Valid: false},
@@ -69,7 +68,6 @@ func TestDatabase_Deployment_ToLibrary(t *testing.T) {
 	want.SetNumber(1)
 	want.SetRepoID(1)
 	want.SetURL("https://github.com/github/octocat/deployments/1")
-	want.SetUser("octocat")
 	want.SetCommit("1234")
 	want.SetRef("refs/heads/main")
 	want.SetTask("deploy:vela")
@@ -136,7 +134,6 @@ func TestDatabase_DeploymentFromLibrary(t *testing.T) {
 	d.SetNumber(1)
 	d.SetRepoID(1)
 	d.SetURL("https://github.com/github/octocat/deployments/1")
-	d.SetUser("octocat")
 	d.SetCommit("1234")
 	d.SetRef("refs/heads/main")
 	d.SetTask("deploy:vela")
@@ -164,7 +161,6 @@ func testDeployment() *Deployment {
 		Number:      sql.NullInt64{Int64: 1, Valid: true},
 		RepoID:      sql.NullInt64{Int64: 1, Valid: true},
 		URL:         sql.NullString{String: "https://github.com/github/octocat/deployments/1", Valid: true},
-		User:        sql.NullString{String: "octocat", Valid: true},
 		Commit:      sql.NullString{String: "1234", Valid: true},
 		Ref:         sql.NullString{String: "refs/heads/main", Valid: true},
 		Task:        sql.NullString{String: "deploy:vela", Valid: true},

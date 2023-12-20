@@ -16,7 +16,6 @@ type Deployment struct {
 	Number      *int64              `json:"number,omitempty"`
 	RepoID      *int64              `json:"repo_id,omitempty"`
 	URL         *string             `json:"url,omitempty"`
-	User        *string             `json:"user,omitempty"`
 	Commit      *string             `json:"commit,omitempty"`
 	Ref         *string             `json:"ref,omitempty"`
 	Task        *string             `json:"task,omitempty"`
@@ -78,19 +77,6 @@ func (d *Deployment) GetURL() string {
 	}
 
 	return *d.URL
-}
-
-// GetUser returns the User field.
-//
-// When the provided Deployment type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (d *Deployment) GetUser() string {
-	// return zero value if Deployment type or User field is nil
-	if d == nil || d.User == nil {
-		return ""
-	}
-
-	return *d.User
 }
 
 // GetCommit returns the Commit field.
@@ -261,19 +247,6 @@ func (d *Deployment) SetURL(v string) {
 	d.URL = &v
 }
 
-// SetUser sets the User field.
-//
-// When the provided Deployment type is nil, it
-// will set nothing and immediately return.
-func (d *Deployment) SetUser(v string) {
-	// return if Deployment type is nil
-	if d == nil {
-		return
-	}
-
-	d.User = &v
-}
-
 // SetCommit sets the Commit field.
 //
 // When the provided Deployment type is nil, it
@@ -405,7 +378,6 @@ func (d *Deployment) String() string {
   Target: %s,
   Task: %s,
   URL: %s,
-  User: %s,
   Payload: %s,
   Builds: %d,
 }`,
@@ -420,7 +392,6 @@ func (d *Deployment) String() string {
 		d.GetTarget(),
 		d.GetTask(),
 		d.GetURL(),
-		d.GetUser(),
 		d.GetPayload(),
 		len(d.GetBuilds()),
 	)

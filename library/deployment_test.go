@@ -65,6 +65,14 @@ func TestLibrary_Deployment_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
 			t.Errorf("GetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
 		}
+
+		if test.deployment.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("GetCreatedAt is %v, want %v", test.deployment.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+
+		if test.deployment.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("GetCreatedBy is %v, want %v", test.deployment.GetCreatedBy(), test.want.GetCreatedBy())
+		}
 	}
 }
 
@@ -100,6 +108,8 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		test.deployment.SetTarget(test.want.GetTarget())
 		test.deployment.SetDescription(test.want.GetDescription())
 		test.deployment.SetPayload(test.want.GetPayload())
+		test.deployment.SetCreatedAt(test.want.GetCreatedAt())
+		test.deployment.SetCreatedBy(test.want.GetCreatedBy())
 
 		if test.deployment.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.deployment.GetID(), test.want.GetID())
@@ -144,6 +154,14 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
 			t.Errorf("SetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
 		}
+
+		if test.deployment.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("SetCreatedAt is %v, want %v", test.deployment.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+
+		if test.deployment.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("SetCreatedBy is %v, want %v", test.deployment.GetCreatedBy(), test.want.GetCreatedBy())
+		}
 	}
 }
 
@@ -153,6 +171,8 @@ func TestLibrary_Deployment_String(t *testing.T) {
 
 	want := fmt.Sprintf(`{
   Commit: %s,
+  CreatedAt: %d,
+  CreatedBy: %s,
   Description: %s,
   ID: %d,
   Number: %d,
@@ -166,6 +186,8 @@ func TestLibrary_Deployment_String(t *testing.T) {
   Builds: %d,
 }`,
 		d.GetCommit(),
+		d.GetCreatedAt(),
+		d.GetCreatedBy(),
 		d.GetDescription(),
 		d.GetID(),
 		d.GetNumber(),
@@ -205,6 +227,8 @@ func testDeployment() *Deployment {
 	d.SetPayload(map[string]string{
 		"foo": "test1",
 	})
+	d.SetCreatedAt(1)
+	d.SetCreatedBy("octocat")
 
 	return d
 }

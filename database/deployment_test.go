@@ -29,6 +29,8 @@ func TestDatabase_Deployment_Nullify(t *testing.T) {
 		Target:      sql.NullString{String: "", Valid: false},
 		Description: sql.NullString{String: "", Valid: false},
 		Payload:     nil,
+		CreatedAt:   sql.NullInt64{Int64: 0, Valid: false},
+		CreatedBy:   sql.NullString{String: "", Valid: false},
 		Builds:      nil,
 	}
 
@@ -74,6 +76,8 @@ func TestDatabase_Deployment_ToLibrary(t *testing.T) {
 	want.SetTarget("production")
 	want.SetDescription("Deployment request from Vela")
 	want.SetPayload(raw.StringSliceMap{"foo": "test1"})
+	want.SetCreatedAt(1)
+	want.SetCreatedBy("octocat")
 	want.SetBuilds(nil)
 
 	got := testDeployment().ToLibrary(nil)
@@ -139,6 +143,8 @@ func TestDatabase_DeploymentFromLibrary(t *testing.T) {
 	d.SetTarget("production")
 	d.SetDescription("Deployment request from Vela")
 	d.SetPayload(raw.StringSliceMap{"foo": "test1"})
+	d.SetCreatedAt(1)
+	d.SetCreatedBy("octocat")
 	d.SetBuilds(nil)
 
 	want := testDeployment()
@@ -165,6 +171,8 @@ func testDeployment() *Deployment {
 		Target:      sql.NullString{String: "production", Valid: true},
 		Description: sql.NullString{String: "Deployment request from Vela", Valid: true},
 		Payload:     raw.StringSliceMap{"foo": "test1"},
+		CreatedAt:   sql.NullInt64{Int64: 1, Valid: true},
+		CreatedBy:   sql.NullString{String: "octocat", Valid: true},
 		Builds:      pq.StringArray{},
 	}
 }

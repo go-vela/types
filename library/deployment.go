@@ -23,6 +23,8 @@ type Deployment struct {
 	Target      *string             `json:"target,omitempty"`
 	Description *string             `json:"description,omitempty"`
 	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
+	CreatedAt   *int64              `json:"created_at,omitempty"`
+	CreatedBy   *string             `json:"created_by,omitempty"`
 	Builds      *[]Build            `json:"builds,omitempty"`
 }
 
@@ -167,6 +169,32 @@ func (d *Deployment) GetPayload() map[string]string {
 	}
 
 	return *d.Payload
+}
+
+// GetCreatedAt returns the CreatedAt field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetCreatedAt() int64 {
+	// return zero value if Deployment type or CreatedAt field is nil
+	if d == nil || d.CreatedAt == nil {
+		return 0
+	}
+
+	return *d.CreatedAt
+}
+
+// GetCreatedBy returns the CreatedBy field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetCreatedBy() string {
+	// return zero value if Deployment type or CreatedBy field is nil
+	if d == nil || d.CreatedBy == nil {
+		return ""
+	}
+
+	return *d.CreatedBy
 }
 
 // GetBuilds returns the Builds field.
@@ -324,6 +352,32 @@ func (d *Deployment) SetPayload(v raw.StringSliceMap) {
 	d.Payload = &v
 }
 
+// SetCreatedAt sets the CreatedAt field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetCreatedAt(v int64) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.CreatedAt = &v
+}
+
+// SetCreatedBy sets the CreatedBy field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetCreatedBy(v string) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.CreatedBy = &v
+}
+
 // SetBuilds sets the Builds field.
 //
 // When the provided Deployment type is nil, it
@@ -341,6 +395,8 @@ func (d *Deployment) SetBuilds(b *[]Build) {
 func (d *Deployment) String() string {
 	return fmt.Sprintf(`{
   Commit: %s,
+  CreatedAt: %d,
+  CreatedBy: %s,
   Description: %s,
   ID: %d,
   Number: %d,
@@ -354,6 +410,8 @@ func (d *Deployment) String() string {
   Builds: %d,
 }`,
 		d.GetCommit(),
+		d.GetCreatedAt(),
+		d.GetCreatedBy(),
 		d.GetDescription(),
 		d.GetID(),
 		d.GetNumber(),

@@ -35,6 +35,8 @@ type Deployment struct {
 	Target      sql.NullString     `sql:"target"`
 	Description sql.NullString     `sql:"description"`
 	Payload     raw.StringSliceMap `sql:"payload"`
+	CreatedAt   sql.NullInt64      `sql:"created_at"`
+	CreatedBy   sql.NullString     `sql:"created_by"`
 	Builds      pq.StringArray     `sql:"builds" gorm:"type:varchar(50)"`
 }
 
@@ -99,6 +101,16 @@ func (d *Deployment) Nullify() *Deployment {
 		d.Description.Valid = false
 	}
 
+	// check if the CreatedAt field should be false
+	if d.CreatedAt.Int64 == 0 {
+		d.CreatedAt.Valid = false
+	}
+
+	// check if the CreatedBy field should be false
+	if len(d.CreatedBy.String) == 0 {
+		d.CreatedBy.Valid = false
+	}
+
 	return d
 }
 
@@ -118,6 +130,8 @@ func (d *Deployment) ToLibrary(builds *[]library.Build) *library.Deployment {
 	deployment.SetTarget(d.Target.String)
 	deployment.SetDescription(d.Description.String)
 	deployment.SetPayload(d.Payload)
+	deployment.SetCreatedAt(d.CreatedAt.Int64)
+	deployment.SetCreatedBy(d.CreatedBy.String)
 	deployment.SetBuilds(builds)
 
 	return deployment
@@ -169,6 +183,8 @@ func DeploymentFromLibrary(d *library.Deployment) *Deployment {
 		Target:      sql.NullString{String: d.GetTarget(), Valid: true},
 		Description: sql.NullString{String: d.GetDescription(), Valid: true},
 		Payload:     d.GetPayload(),
+		CreatedAt:   sql.NullInt64{Int64: d.GetCreatedAt(), Valid: true},
+		CreatedBy:   sql.NullString{String: d.GetCreatedBy(), Valid: true},
 		Builds:      buildIDs,
 	}
 

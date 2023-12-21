@@ -55,7 +55,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_deploy := testBuild()
 	_deploy.SetEvent("deployment")
 	_deploy.SetDeploy("production")
-	_deploy.SetDeployNumber(0)
+	_deploy.SetDeploymentID(0)
 	_deploy.SetDeployPayload(map[string]string{
 		"foo": "test1",
 		"bar": "test2",
@@ -65,7 +65,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_deployTag.SetRef("refs/tags/v0.1.0")
 	_deployTag.SetEvent("deployment")
 	_deployTag.SetDeploy("production")
-	_deployTag.SetDeployNumber(0)
+	_deployTag.SetDeploymentID(0)
 	_deployTag.SetDeployPayload(map[string]string{
 		"foo": "test1",
 		"bar": "test2",
@@ -519,8 +519,8 @@ func TestLibrary_Build_Getters(t *testing.T) {
 			t.Errorf("GetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
 		}
 
-		if test.build.GetDeployNumber() != test.want.GetDeployNumber() {
-			t.Errorf("GetDeployNumber is %v, want %v", test.build.GetDeployNumber(), test.want.GetDeployNumber())
+		if test.build.GetDeploymentID() != test.want.GetDeploymentID() {
+			t.Errorf("GetDeploymentID is %v, want %v", test.build.GetDeploymentID(), test.want.GetDeploymentID())
 		}
 
 		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
@@ -636,7 +636,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetStarted(test.want.GetStarted())
 		test.build.SetFinished(test.want.GetFinished())
 		test.build.SetDeploy(test.want.GetDeploy())
-		test.build.SetDeployNumber(test.want.GetDeployNumber())
+		test.build.SetDeploymentID(test.want.GetDeploymentID())
 		test.build.SetDeployPayload(test.want.GetDeployPayload())
 		test.build.SetClone(test.want.GetClone())
 		test.build.SetSource(test.want.GetSource())
@@ -713,8 +713,8 @@ func TestLibrary_Build_Setters(t *testing.T) {
 			t.Errorf("SetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
 		}
 
-		if test.build.GetDeployNumber() != test.want.GetDeployNumber() {
-			t.Errorf("SetDeployNumber is %v, want %v", test.build.GetDeployNumber(), test.want.GetDeployNumber())
+		if test.build.GetDeploymentID() != test.want.GetDeploymentID() {
+			t.Errorf("SetDeploymentID is %v, want %v", test.build.GetDeploymentID(), test.want.GetDeploymentID())
 		}
 
 		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
@@ -809,7 +809,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Commit: %s,
   Created: %d,
   Deploy: %s,
-  DeployNumber: %d,
+  DeploymentID: %d,
   DeployPayload: %s,
   Distribution: %s,
   Email: %s,
@@ -844,7 +844,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetCommit(),
 		b.GetCreated(),
 		b.GetDeploy(),
-		b.GetDeployNumber(),
+		b.GetDeploymentID(),
 		b.GetDeployPayload(),
 		b.GetDistribution(),
 		b.GetEmail(),
@@ -897,7 +897,7 @@ func testBuild() *Build {
 	b.SetStarted(1563474078)
 	b.SetFinished(1563474079)
 	b.SetDeploy("")
-	b.SetDeployNumber(0)
+	b.SetDeploymentID(0)
 	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1"})
 	b.SetClone("https://github.com/github/octocat.git")
 	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")

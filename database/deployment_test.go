@@ -4,7 +4,6 @@ package database
 
 import (
 	"database/sql"
-	"reflect"
 	"testing"
 
 	"github.com/go-vela/types/library"
@@ -56,13 +55,54 @@ func TestDatabase_Deployment_Nullify(t *testing.T) {
 	for _, test := range tests {
 		got := test.deployment.Nullify()
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("Nullify is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("(ToLibrary: -want +got):\n%s", diff)
 		}
 	}
 }
 
 func TestDatabase_Deployment_ToLibrary(t *testing.T) {
+	builds := []*library.Build{}
+
+	buildOne := new(library.Build)
+	buildOne.SetID(1)
+	buildOne.SetRepoID(1)
+	buildOne.SetPipelineID(1)
+	buildOne.SetNumber(1)
+	buildOne.SetParent(1)
+	buildOne.SetEvent("push")
+	buildOne.SetEventAction("")
+	buildOne.SetStatus("running")
+	buildOne.SetError("")
+	buildOne.SetEnqueued(1563474077)
+	buildOne.SetCreated(1563474076)
+	buildOne.SetStarted(1563474078)
+	buildOne.SetFinished(1563474079)
+	buildOne.SetDeploy("")
+	buildOne.SetDeployID(0)
+	buildOne.SetDeployPayload(nil)
+	buildOne.SetClone("https://github.com/github/octocat.git")
+	buildOne.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
+	buildOne.SetTitle("push received from https://github.com/github/octocat")
+	buildOne.SetMessage("First commit...")
+	buildOne.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
+	buildOne.SetSender("OctoKitty")
+	buildOne.SetAuthor("OctoKitty")
+	buildOne.SetEmail("OctoKitty@github.com")
+	buildOne.SetLink("https://example.company.com/github/octocat/1")
+	buildOne.SetBranch("main")
+	buildOne.SetRef("refs/heads/main")
+	buildOne.SetBaseRef("")
+	buildOne.SetHeadRef("")
+	buildOne.SetHost("example.company.com")
+	buildOne.SetRuntime("docker")
+	buildOne.SetDistribution("linux")
+	buildOne.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	buildOne.SetApprovedAt(1563474076)
+	buildOne.SetApprovedBy("OctoCat")
+
+	builds = append(builds, buildOne)
+
 	want := new(library.Deployment)
 	want.SetID(1)
 	want.SetNumber(1)
@@ -76,10 +116,10 @@ func TestDatabase_Deployment_ToLibrary(t *testing.T) {
 	want.SetPayload(raw.StringSliceMap{"foo": "test1"})
 	want.SetCreatedAt(1)
 	want.SetCreatedBy("octocat")
-	want.SetBuilds(nil)
+	want.SetBuilds(builds)
 
-	got := testDeployment().ToLibrary(nil)
-	if diff := cmp.Diff(got, want); diff != "" {
+	got := testDeployment().ToLibrary(builds)
+	if diff := cmp.Diff(want, got); diff != "" {
 		t.Errorf("(ToLibrary: -want +got):\n%s", diff)
 	}
 }
@@ -129,6 +169,47 @@ func TestDatabase_Deployment_Validate(t *testing.T) {
 }
 
 func TestDatabase_DeploymentFromLibrary(t *testing.T) {
+	builds := []*library.Build{}
+
+	buildOne := new(library.Build)
+	buildOne.SetID(1)
+	buildOne.SetRepoID(1)
+	buildOne.SetPipelineID(1)
+	buildOne.SetNumber(1)
+	buildOne.SetParent(1)
+	buildOne.SetEvent("push")
+	buildOne.SetEventAction("")
+	buildOne.SetStatus("running")
+	buildOne.SetError("")
+	buildOne.SetEnqueued(1563474077)
+	buildOne.SetCreated(1563474076)
+	buildOne.SetStarted(1563474078)
+	buildOne.SetFinished(1563474079)
+	buildOne.SetDeploy("")
+	buildOne.SetDeployID(0)
+	buildOne.SetDeployPayload(nil)
+	buildOne.SetClone("https://github.com/github/octocat.git")
+	buildOne.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
+	buildOne.SetTitle("push received from https://github.com/github/octocat")
+	buildOne.SetMessage("First commit...")
+	buildOne.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
+	buildOne.SetSender("OctoKitty")
+	buildOne.SetAuthor("OctoKitty")
+	buildOne.SetEmail("OctoKitty@github.com")
+	buildOne.SetLink("https://example.company.com/github/octocat/1")
+	buildOne.SetBranch("main")
+	buildOne.SetRef("refs/heads/main")
+	buildOne.SetBaseRef("")
+	buildOne.SetHeadRef("")
+	buildOne.SetHost("example.company.com")
+	buildOne.SetRuntime("docker")
+	buildOne.SetDistribution("linux")
+	buildOne.SetDeployPayload(raw.StringSliceMap{"foo": "test1", "bar": "test2"})
+	buildOne.SetApprovedAt(1563474076)
+	buildOne.SetApprovedBy("OctoCat")
+
+	builds = append(builds, buildOne)
+
 	d := new(library.Deployment)
 	d.SetID(1)
 	d.SetNumber(1)
@@ -142,14 +223,14 @@ func TestDatabase_DeploymentFromLibrary(t *testing.T) {
 	d.SetPayload(raw.StringSliceMap{"foo": "test1"})
 	d.SetCreatedAt(1)
 	d.SetCreatedBy("octocat")
-	d.SetBuilds(nil)
+	d.SetBuilds(builds)
 
 	want := testDeployment()
 
 	// run test
 	got := DeploymentFromLibrary(d)
 
-	if diff := cmp.Diff(got, want); diff != "" {
+	if diff := cmp.Diff(want, got); diff != "" {
 		t.Errorf("(-want +got):\n%s", diff)
 	}
 }
@@ -169,6 +250,6 @@ func testDeployment() *Deployment {
 		Payload:     raw.StringSliceMap{"foo": "test1"},
 		CreatedAt:   sql.NullInt64{Int64: 1, Valid: true},
 		CreatedBy:   sql.NullString{String: "octocat", Valid: true},
-		Builds:      pq.StringArray{},
+		Builds:      pq.StringArray{"1"},
 	}
 }

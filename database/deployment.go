@@ -155,8 +155,8 @@ func (d *Deployment) Validate() error {
 	return nil
 }
 
-// DeploymentFromLibrary converts the Deployment type
-// to a library Deployment type.
+// DeploymentFromLibrary converts the library Deployment type
+// to a database Deployment type.
 func DeploymentFromLibrary(d *library.Deployment) *Deployment {
 	buildIDs := []string{}
 	for _, build := range d.GetBuilds() {

@@ -24,7 +24,7 @@ type Deployment struct {
 	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
 	CreatedAt   *int64              `json:"created_at,omitempty"`
 	CreatedBy   *string             `json:"created_by,omitempty"`
-	Builds      *[]Build            `json:"builds,omitempty"`
+	Builds      []*Build            `json:"builds,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -187,12 +187,12 @@ func (d *Deployment) GetCreatedBy() string {
 //
 // When the provided Deployment type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (d *Deployment) GetBuilds() []Build {
+func (d *Deployment) GetBuilds() []*Build {
 	if d == nil || d.Builds == nil {
-		return []Build{}
+		return []*Build{}
 	}
 
-	return *d.Builds
+	return d.Builds
 }
 
 // SetID sets the ID field.
@@ -355,7 +355,7 @@ func (d *Deployment) SetCreatedBy(v string) {
 //
 // When the provided Deployment type is nil, it
 // will set nothing and immediately return.
-func (d *Deployment) SetBuilds(b *[]Build) {
+func (d *Deployment) SetBuilds(b []*Build) {
 	// return if Deployment type is nil
 	if d == nil {
 		return

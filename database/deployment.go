@@ -110,7 +110,7 @@ func (d *Deployment) Nullify() *Deployment {
 
 // ToLibrary converts the Deployment type
 // to a library Deployment type.
-func (d *Deployment) ToLibrary(builds *[]library.Build) *library.Deployment {
+func (d *Deployment) ToLibrary(builds []*library.Build) *library.Deployment {
 	deployment := new(library.Deployment)
 
 	deployment.SetID(d.ID.Int64)

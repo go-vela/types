@@ -13,16 +13,18 @@ import (
 // swagger:model Deployment
 type Deployment struct {
 	ID          *int64              `json:"id,omitempty"`
+	Number      *int64              `json:"number,omitempty"`
 	RepoID      *int64              `json:"repo_id,omitempty"`
 	URL         *string             `json:"url,omitempty"`
-	User        *string             `json:"user,omitempty"`
 	Commit      *string             `json:"commit,omitempty"`
 	Ref         *string             `json:"ref,omitempty"`
 	Task        *string             `json:"task,omitempty"`
 	Target      *string             `json:"target,omitempty"`
 	Description *string             `json:"description,omitempty"`
 	Payload     *raw.StringSliceMap `json:"payload,omitempty"`
-	Builds      *[]Build            `json:"builds,omitempty"`
+	CreatedAt   *int64              `json:"created_at,omitempty"`
+	CreatedBy   *string             `json:"created_by,omitempty"`
+	Builds      []*Build            `json:"builds,omitempty"`
 }
 
 // GetID returns the ID field.
@@ -36,6 +38,19 @@ func (d *Deployment) GetID() int64 {
 	}
 
 	return *d.ID
+}
+
+// GetNumber returns the Number field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetNumber() int64 {
+	// return zero value if Deployment type or ID field is nil
+	if d == nil || d.Number == nil {
+		return 0
+	}
+
+	return *d.Number
 }
 
 // GetRepoID returns the RepoID field.
@@ -62,19 +77,6 @@ func (d *Deployment) GetURL() string {
 	}
 
 	return *d.URL
-}
-
-// GetUser returns the User field.
-//
-// When the provided Deployment type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (d *Deployment) GetUser() string {
-	// return zero value if Deployment type or User field is nil
-	if d == nil || d.User == nil {
-		return ""
-	}
-
-	return *d.User
 }
 
 // GetCommit returns the Commit field.
@@ -155,16 +157,42 @@ func (d *Deployment) GetPayload() map[string]string {
 	return *d.Payload
 }
 
+// GetCreatedAt returns the CreatedAt field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetCreatedAt() int64 {
+	// return zero value if Deployment type or CreatedAt field is nil
+	if d == nil || d.CreatedAt == nil {
+		return 0
+	}
+
+	return *d.CreatedAt
+}
+
+// GetCreatedBy returns the CreatedBy field.
+//
+// When the provided Deployment type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (d *Deployment) GetCreatedBy() string {
+	// return zero value if Deployment type or CreatedBy field is nil
+	if d == nil || d.CreatedBy == nil {
+		return ""
+	}
+
+	return *d.CreatedBy
+}
+
 // GetBuilds returns the Builds field.
 //
 // When the provided Deployment type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (d *Deployment) GetBuilds() []Build {
+func (d *Deployment) GetBuilds() []*Build {
 	if d == nil || d.Builds == nil {
-		return []Build{}
+		return []*Build{}
 	}
 
-	return *d.Builds
+	return d.Builds
 }
 
 // SetID sets the ID field.
@@ -178,6 +206,19 @@ func (d *Deployment) SetID(v int64) {
 	}
 
 	d.ID = &v
+}
+
+// SetNumber sets the Number field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetNumber(v int64) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.Number = &v
 }
 
 // SetRepoID sets the RepoID field.
@@ -204,19 +245,6 @@ func (d *Deployment) SetURL(v string) {
 	}
 
 	d.URL = &v
-}
-
-// SetUser sets the User field.
-//
-// When the provided Deployment type is nil, it
-// will set nothing and immediately return.
-func (d *Deployment) SetUser(v string) {
-	// return if Deployment type is nil
-	if d == nil {
-		return
-	}
-
-	d.User = &v
 }
 
 // SetCommit sets the Commit field.
@@ -297,43 +325,73 @@ func (d *Deployment) SetPayload(v raw.StringSliceMap) {
 	d.Payload = &v
 }
 
-// SetBuilds sets the Builds field.
+// SetCreatedAt sets the CreatedAt field.
 //
 // When the provided Deployment type is nil, it
 // will set nothing and immediately return.
-func (d *Deployment) SetBuilds(b []Build) {
+func (d *Deployment) SetCreatedAt(v int64) {
 	// return if Deployment type is nil
 	if d == nil {
 		return
 	}
 
-	d.Builds = &b
+	d.CreatedAt = &v
+}
+
+// SetCreatedBy sets the CreatedBy field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetCreatedBy(v string) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.CreatedBy = &v
+}
+
+// SetBuilds sets the Builds field.
+//
+// When the provided Deployment type is nil, it
+// will set nothing and immediately return.
+func (d *Deployment) SetBuilds(b []*Build) {
+	// return if Deployment type is nil
+	if d == nil {
+		return
+	}
+
+	d.Builds = b
 }
 
 // String implements the Stringer interface for the Deployment type.
 func (d *Deployment) String() string {
 	return fmt.Sprintf(`{
   Commit: %s,
+  CreatedAt: %d,
+  CreatedBy: %s,
   Description: %s,
   ID: %d,
+  Number: %d,
   Ref: %s,
   RepoID: %d,
   Target: %s,
   Task: %s,
   URL: %s,
-  User: %s,
   Payload: %s,
   Builds: %d,
 }`,
 		d.GetCommit(),
+		d.GetCreatedAt(),
+		d.GetCreatedBy(),
 		d.GetDescription(),
 		d.GetID(),
+		d.GetNumber(),
 		d.GetRef(),
 		d.GetRepoID(),
 		d.GetTarget(),
 		d.GetTask(),
 		d.GetURL(),
-		d.GetUser(),
 		d.GetPayload(),
 		len(d.GetBuilds()),
 	)

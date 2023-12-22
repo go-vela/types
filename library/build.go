@@ -29,7 +29,7 @@ type Build struct {
 	Started       *int64              `json:"started,omitempty"`
 	Finished      *int64              `json:"finished,omitempty"`
 	Deploy        *string             `json:"deploy,omitempty"`
-	DeployID      *int64              `json:"deploy_id,omitempty"`
+	DeployNumber  *int64              `json:"deploy_number,omitempty"`
 	DeployPayload *raw.StringSliceMap `json:"deploy_payload,omitempty"`
 	Clone         *string             `json:"clone,omitempty"`
 	Source        *string             `json:"source,omitempty"`
@@ -159,6 +159,7 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_BUILD_TARGET"] = target
 		envs["VELA_DEPLOYMENT"] = target
 		envs["BUILD_TARGET"] = target
+		envs["VELA_DEPLOYMENT_NUMBER"] = ToString(b.GetDeployNumber())
 
 		// handle when deployment event is for a tag
 		if strings.HasPrefix(b.GetRef(), "refs/tags/") {
@@ -384,17 +385,17 @@ func (b *Build) GetDeploy() string {
 	return *b.Deploy
 }
 
-// GetDeployID returns the DeployID field.
+// GetDeployNumber returns the DeployNumber field.
 //
 // When the provided Build type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (b *Build) GetDeployID() int64 {
+func (b *Build) GetDeployNumber() int64 {
 	// return zero value if Build type or Deploy field is nil
-	if b == nil || b.DeployID == nil {
+	if b == nil || b.DeployNumber == nil {
 		return 0
 	}
 
-	return *b.DeployID
+	return *b.DeployNumber
 }
 
 // GetDeployPayload returns the DeployPayload field.
@@ -826,17 +827,17 @@ func (b *Build) SetDeploy(v string) {
 	b.Deploy = &v
 }
 
-// SetDeployID sets the DeployID field.
+// SetDeployNumber sets the DeployNumber field.
 //
 // When the provided Build type is nil, it
 // will set nothing and immediately return.
-func (b *Build) SetDeployID(v int64) {
+func (b *Build) SetDeployNumber(v int64) {
 	// return if Build type is nil
 	if b == nil {
 		return
 	}
 
-	b.DeployID = &v
+	b.DeployNumber = &v
 }
 
 // SetDeployPayload sets the DeployPayload field.
@@ -1100,7 +1101,7 @@ func (b *Build) String() string {
   Commit: %s,
   Created: %d,
   Deploy: %s,
-  DeployID: %d,
+  DeployNumber: %d,
   DeployPayload: %s,
   Distribution: %s,
   Email: %s,
@@ -1135,7 +1136,7 @@ func (b *Build) String() string {
 		b.GetCommit(),
 		b.GetCreated(),
 		b.GetDeploy(),
-		b.GetDeployID(),
+		b.GetDeployNumber(),
 		b.GetDeployPayload(),
 		b.GetDistribution(),
 		b.GetEmail(),

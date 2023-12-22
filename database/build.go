@@ -45,7 +45,7 @@ type Build struct {
 	Started       sql.NullInt64      `sql:"started"`
 	Finished      sql.NullInt64      `sql:"finished"`
 	Deploy        sql.NullString     `sql:"deploy"`
-	DeployID      sql.NullInt64      `sql:"deploy_id"`
+	DeployNumber  sql.NullInt64      `sql:"deploy_number"`
 	DeployPayload raw.StringSliceMap `sql:"deploy_payload" gorm:"type:varchar(2000)"`
 	Clone         sql.NullString     `sql:"clone"`
 	Source        sql.NullString     `sql:"source"`
@@ -171,8 +171,8 @@ func (b *Build) Nullify() *Build {
 		b.Deploy.Valid = false
 	}
 
-	// check if the DeployID field should be false
-	if b.DeployID.Int64 == 0 {
+	// check if the DeployNumber field should be false
+	if b.DeployNumber.Int64 == 0 {
 		b.Deploy.Valid = false
 	}
 
@@ -288,7 +288,7 @@ func (b *Build) ToLibrary() *library.Build {
 	build.SetStarted(b.Started.Int64)
 	build.SetFinished(b.Finished.Int64)
 	build.SetDeploy(b.Deploy.String)
-	build.SetDeployID(b.DeployID.Int64)
+	build.SetDeployNumber(b.DeployNumber.Int64)
 	build.SetDeployPayload(b.DeployPayload)
 	build.SetClone(b.Clone.String)
 	build.SetSource(b.Source.String)
@@ -372,7 +372,7 @@ func BuildFromLibrary(b *library.Build) *Build {
 		Started:       sql.NullInt64{Int64: b.GetStarted(), Valid: true},
 		Finished:      sql.NullInt64{Int64: b.GetFinished(), Valid: true},
 		Deploy:        sql.NullString{String: b.GetDeploy(), Valid: true},
-		DeployID:      sql.NullInt64{Int64: b.GetDeployID(), Valid: true},
+		DeployNumber:  sql.NullInt64{Int64: b.GetDeployNumber(), Valid: true},
 		DeployPayload: b.GetDeployPayload(),
 		Clone:         sql.NullString{String: b.GetClone(), Valid: true},
 		Source:        sql.NullString{String: b.GetSource(), Valid: true},

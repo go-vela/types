@@ -24,6 +24,7 @@ func NewEventsFromMask(mask int64) *Events {
 	pullActions := new(actions.Pull).FromMask(mask)
 	deployActions := new(actions.Deploy).FromMask(mask)
 	commentActions := new(actions.Comment).FromMask(mask)
+	deleteActions := new(actions.Delete).FromMask(mask)
 
 	e := new(Events)
 
@@ -31,6 +32,7 @@ func NewEventsFromMask(mask int64) *Events {
 	e.SetPullRequest(pullActions)
 	e.SetDeployment(deployActions)
 	e.SetComment(commentActions)
+	e.SetDelete(deleteActions)
 
 	return e
 }
@@ -72,12 +74,20 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventComment+":"+constants.ActionEdited)
 	}
 
+	if e.GetDelete().GetBranch() {
+		eventSlice = append(eventSlice, constants.EventDelete)
+	}
+
+	if e.GetDelete().GetTag() {
+		eventSlice = append(eventSlice, constants.EventDelete)
+	}
+
 	return eventSlice
 }
 
 // ToDatabase is an Events method that converts a nested Events struct into an integer event mask.
 func (e *Events) ToDatabase() int64 {
-	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask()
+	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask() | e.GetDelete().ToMask()
 }
 
 // GetPush returns the Push field from the provided Events. If the object is nil,
@@ -122,6 +132,17 @@ func (e *Events) GetComment() *actions.Comment {
 	}
 
 	return e.Comment
+}
+
+// GetDelete returns the Delete field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (e *Events) GetDelete() *actions.Delete {
+	// return zero value if Events type or Comment field is nil
+	if e == nil || e.Delete == nil {
+		return new(actions.Delete)
+	}
+
+	return e.Delete
 }
 
 // SetPush sets the Events Push field.
@@ -174,4 +195,17 @@ func (e *Events) SetComment(v *actions.Comment) {
 	}
 
 	e.Comment = v
+}
+
+// SetDelete sets the Events Delete field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
+func (e *Events) SetDelete(v *actions.Delete) {
+	// return if Events type is nil
+	if e == nil {
+		return
+	}
+
+	e.Delete = v
 }

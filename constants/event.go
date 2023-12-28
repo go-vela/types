@@ -7,6 +7,9 @@ const (
 	// EventComment defines the event type for comments added to a pull request.
 	EventComment = "comment"
 
+	// EventDelete defines the event type for build and repo delete events.
+	EventDelete = "delete"
+
 	// EventDeploy defines the event type for build and repo deployment events.
 	EventDeploy = "deployment"
 

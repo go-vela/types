@@ -818,6 +818,8 @@ func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 		allowed = r.GetAllowEvents().GetComment().GetEdited()
 	case constants.EventDeploy:
 		allowed = r.GetAllowEvents().GetDeployment().GetCreated()
+	case constants.EventDelete:
+		allowed = r.GetAllowEvents().GetDelete().GetBranch()
 	}
 
 	return

@@ -4,7 +4,7 @@ package actions
 
 import "github.com/go-vela/types/constants"
 
-// Pull is the library representation of the various actions associated
+// Delete is the library representation of the various actions associated
 // with the delete event webhook from the SCM.
 type Delete struct {
 	Branch *bool `json:"branch"`

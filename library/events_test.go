@@ -103,7 +103,7 @@ func TestLibrary_Events_List(t *testing.T) {
 	// setup types
 	e := testEvents()
 
-	want := []string{"push", "pull_request:opened", "pull_request:synchronize", "tag"}
+	want := []string{"push", "pull_request:opened", "pull_request:synchronize", "tag", "delete:branch", "delete:tag"}
 
 	// run test
 	got := e.List()
@@ -120,7 +120,9 @@ func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
 			constants.AllowPushTag |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
-			constants.AllowPullReopen,
+			constants.AllowPullReopen |
+			constants.AllowDeleteBranch |
+			constants.AllowDeleteTag,
 	)
 
 	want := testEvents()

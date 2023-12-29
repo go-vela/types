@@ -75,11 +75,11 @@ func (e *Events) List() []string {
 	}
 
 	if e.GetDelete().GetBranch() {
-		eventSlice = append(eventSlice, constants.EventDelete)
+		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionBranch)
 	}
 
 	if e.GetDelete().GetTag() {
-		eventSlice = append(eventSlice, constants.EventDelete)
+		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionTag)
 	}
 
 	return eventSlice

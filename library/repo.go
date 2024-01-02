@@ -35,7 +35,6 @@ type Repo struct {
 	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
 	AllowTag     *bool     `json:"allow_tag,omitempty"`
 	AllowComment *bool     `json:"allow_comment,omitempty"`
-	AllowDelete  *bool     `json:"allow_delete,omitempty"`
 	AllowEvents  *Events   `json:"allow_events,omitempty"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
@@ -48,7 +47,6 @@ func (r *Repo) Environment() map[string]string {
 	return map[string]string{
 		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
 		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"VELA_REPO_ALLOW_DELETE":  ToString(r.GetAllowDelete()),
 		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
 		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
@@ -72,7 +70,6 @@ func (r *Repo) Environment() map[string]string {
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
 		"REPOSITORY_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"REPOSITORY_ALLOW_DELETE":  ToString(r.GetAllowDelete()),
 		"REPOSITORY_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
 		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
 		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
@@ -375,19 +372,6 @@ func (r *Repo) GetAllowComment() bool {
 	}
 
 	return *r.AllowComment
-}
-
-// GetAllowDelete returns the AllowDelete field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowDelete() bool {
-	// return zero value if Repo type or AllowDelete field is nil
-	if r == nil || r.AllowDelete == nil {
-		return false
-	}
-
-	return *r.AllowDelete
 }
 
 // GetAllowEvents returns the AllowEvents field.
@@ -728,19 +712,6 @@ func (r *Repo) SetAllowComment(v bool) {
 	r.AllowComment = &v
 }
 
-// SetAllowDelete sets the AllowDelete field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowDelete(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowDelete = &v
-}
-
 // SetAllowEvents sets the AllowEvents field.
 //
 // When the provided Repo type is nil, it
@@ -794,8 +765,6 @@ func (r *Repo) SetApproveBuild(v string) {
 }
 
 // EventAllowed determines whether or not an event is allowed based on the repository settings.
-//
-//nolint:nakedret // not necessary to watch for here
 func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 	allowed = false
 
@@ -826,7 +795,7 @@ func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 		allowed = r.GetAllowEvents().GetDelete().GetTag()
 	}
 
-	return
+	return allowed
 }
 
 // String implements the Stringer interface for the Repo type.
@@ -836,7 +805,6 @@ func (r *Repo) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
   AllowComment: %t,
-  AllowDelete: %t,
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
@@ -863,7 +831,6 @@ func (r *Repo) String() string {
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
-		r.GetAllowDelete(),
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),

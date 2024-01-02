@@ -380,7 +380,6 @@ func testRepo() *Repo {
 		AllowDeploy:  sql.NullBool{Bool: false, Valid: true},
 		AllowTag:     sql.NullBool{Bool: false, Valid: true},
 		AllowComment: sql.NullBool{Bool: false, Valid: true},
-		AllowDelete:  sql.NullBool{Bool: false, Valid: true},
 		AllowEvents:  sql.NullInt64{Int64: 1, Valid: true},
 		PipelineType: sql.NullString{String: "yaml", Valid: true},
 		PreviousName: sql.NullString{String: "oldName", Valid: true},

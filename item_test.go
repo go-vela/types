@@ -59,7 +59,6 @@ func TestTypes_ToItem(t *testing.T) {
 		AllowPush:   &booL,
 		AllowDeploy: &booL,
 		AllowTag:    &booL,
-		AllowDelete: &booL,
 		AllowEvents: e,
 	}
 	u := &library.User{
@@ -112,7 +111,6 @@ func TestTypes_ToItem(t *testing.T) {
 			AllowPush:   &booL,
 			AllowDeploy: &booL,
 			AllowTag:    &booL,
-			AllowDelete: &booL,
 			AllowEvents: e,
 		},
 		User: &library.User{

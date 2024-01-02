@@ -165,10 +165,6 @@ func TestLibrary_Repo_Getters(t *testing.T) {
 			t.Errorf("GetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
-		if test.repo.GetAllowDelete() != test.want.GetAllowDelete() {
-			t.Errorf("GetAllowDelete is %v, want %v", test.repo.GetAllowDelete(), test.want.GetAllowDelete())
-		}
-
 		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
 			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
 		}
@@ -230,7 +226,6 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 		test.repo.SetAllowDeploy(test.want.GetAllowDeploy())
 		test.repo.SetAllowTag(test.want.GetAllowTag())
 		test.repo.SetAllowComment(test.want.GetAllowComment())
-		test.repo.SetAllowDelete(test.want.GetAllowDelete())
 		test.repo.SetAllowEvents(test.want.GetAllowEvents())
 		test.repo.SetPipelineType(test.want.GetPipelineType())
 		test.repo.SetPreviousName(test.want.GetPreviousName())
@@ -320,10 +315,6 @@ func TestLibrary_Repo_Setters(t *testing.T) {
 			t.Errorf("SetAllowComment is %v, want %v", test.repo.GetAllowComment(), test.want.GetAllowComment())
 		}
 
-		if test.repo.GetAllowDelete() != test.want.GetAllowDelete() {
-			t.Errorf("SetAllowDelete is %v, want %v", test.repo.GetAllowDelete(), test.want.GetAllowDelete())
-		}
-
 		if !reflect.DeepEqual(test.repo.GetAllowEvents(), test.want.GetAllowEvents()) {
 			t.Errorf("GetRepo is %v, want %v", test.repo.GetAllowEvents(), test.want.GetAllowEvents())
 		}
@@ -384,7 +375,6 @@ func TestLibrary_Repo_String(t *testing.T) {
 	want := fmt.Sprintf(`{
   Active: %t,
   AllowComment: %t,
-  AllowDelete: %t,
   AllowDeploy: %t,
   AllowPull: %t,
   AllowPush: %t,
@@ -411,7 +401,6 @@ func TestLibrary_Repo_String(t *testing.T) {
 }`,
 		r.GetActive(),
 		r.GetAllowComment(),
-		r.GetAllowDelete(),
 		r.GetAllowDeploy(),
 		r.GetAllowPull(),
 		r.GetAllowPush(),
@@ -472,7 +461,6 @@ func testRepo() *Repo {
 	r.SetAllowDeploy(false)
 	r.SetAllowTag(false)
 	r.SetAllowComment(false)
-	r.SetAllowDelete(false)
 	r.SetAllowEvents(e)
 	r.SetPipelineType("")
 	r.SetPreviousName("")

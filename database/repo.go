@@ -66,7 +66,6 @@ type Repo struct {
 	AllowDeploy  sql.NullBool   `sql:"allow_deploy"`
 	AllowTag     sql.NullBool   `sql:"allow_tag"`
 	AllowComment sql.NullBool   `sql:"allow_comment"`
-	AllowDelete  sql.NullBool   `sql:"allow_delete"`
 	AllowEvents  sql.NullInt64  `sql:"allow_events"`
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
@@ -241,7 +240,6 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetAllowDeploy(r.AllowDeploy.Bool)
 	repo.SetAllowTag(r.AllowTag.Bool)
 	repo.SetAllowComment(r.AllowComment.Bool)
-	repo.SetAllowDelete(r.AllowDelete.Bool)
 	repo.SetAllowEvents(library.NewEventsFromMask(r.AllowEvents.Int64))
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
@@ -339,7 +337,6 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		AllowDeploy:  sql.NullBool{Bool: r.GetAllowDeploy(), Valid: true},
 		AllowTag:     sql.NullBool{Bool: r.GetAllowTag(), Valid: true},
 		AllowComment: sql.NullBool{Bool: r.GetAllowComment(), Valid: true},
-		AllowDelete:  sql.NullBool{Bool: r.GetAllowDelete(), Valid: true},
 		AllowEvents:  sql.NullInt64{Int64: r.GetAllowEvents().ToDatabase(), Valid: true},
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},

@@ -71,16 +71,24 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 	switch from.Environment["VELA_BUILD_EVENT"] {
 	case constants.EventPush:
 		eACL = checkEvent(events, constants.EventPush)
-	case constants.EventPull:
-		eACL = checkEvent(events, constants.EventPull)
+	case constants.EventPull + ":" + constants.ActionOpened:
+		eACL = checkEvent(events, constants.EventPull+":"+constants.ActionOpened)
+	case constants.EventPull + ":" + constants.ActionSynchronize:
+		eACL = checkEvent(events, constants.EventPull+":"+constants.ActionSynchronize)
+	case constants.EventPull + ":" + constants.ActionEdited:
+		eACL = checkEvent(events, constants.EventPull+":"+constants.ActionEdited)
 	case constants.EventTag:
 		eACL = checkEvent(events, constants.EventTag)
 	case constants.EventDeploy:
 		eACL = checkEvent(events, constants.EventDeploy)
-	case constants.EventComment:
-		eACL = checkEvent(events, constants.EventComment)
-	case constants.EventDelete:
-		eACL = checkEvent(events, constants.EventDelete)
+	case constants.EventComment + ":" + constants.ActionCreated:
+		eACL = checkEvent(events, constants.EventComment+":"+constants.ActionCreated)
+	case constants.EventComment + ":" + constants.ActionEdited:
+		eACL = checkEvent(events, constants.EventComment+":"+constants.ActionEdited)
+	case constants.EventDelete + ":" + constants.ActionBranch:
+		eACL = checkEvent(events, constants.EventDelete+":"+constants.ActionBranch)
+	case constants.EventDelete + ":" + constants.ActionTag:
+		eACL = checkEvent(events, constants.EventDelete+":"+constants.ActionTag)
 	case constants.EventSchedule:
 		eACL = checkEvent(events, constants.EventSchedule)
 	}

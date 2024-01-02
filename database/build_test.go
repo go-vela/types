@@ -55,6 +55,7 @@ func TestDatabase_Build_Nullify(t *testing.T) {
 		Started:       sql.NullInt64{Int64: 0, Valid: false},
 		Finished:      sql.NullInt64{Int64: 0, Valid: false},
 		Deploy:        sql.NullString{String: "", Valid: false},
+		DeployNumber:  sql.NullInt64{Int64: 0, Valid: false},
 		DeployPayload: nil,
 		Clone:         sql.NullString{String: "", Valid: false},
 		Source:        sql.NullString{String: "", Valid: false},
@@ -121,6 +122,7 @@ func TestDatabase_Build_ToLibrary(t *testing.T) {
 	want.SetStarted(1563474078)
 	want.SetFinished(1563474079)
 	want.SetDeploy("")
+	want.SetDeployNumber(0)
 	want.SetDeployPayload(nil)
 	want.SetClone("https://github.com/github/octocat.git")
 	want.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
@@ -212,6 +214,7 @@ func TestDatabase_BuildFromLibrary(t *testing.T) {
 	b.SetStarted(1563474078)
 	b.SetFinished(1563474079)
 	b.SetDeploy("")
+	b.SetDeployNumber(0)
 	b.SetDeployPayload(nil)
 	b.SetClone("https://github.com/github/octocat.git")
 	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")
@@ -273,6 +276,7 @@ func testBuild() *Build {
 		Started:       sql.NullInt64{Int64: 1563474078, Valid: true},
 		Finished:      sql.NullInt64{Int64: 1563474079, Valid: true},
 		Deploy:        sql.NullString{String: "", Valid: false},
+		DeployNumber:  sql.NullInt64{Int64: 0, Valid: true},
 		DeployPayload: raw.StringSliceMap{"foo": "test1", "bar": "test2"},
 		Clone:         sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Source:        sql.NullString{String: "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},

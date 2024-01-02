@@ -30,6 +30,7 @@ type Webhook struct {
 	Repo        *library.Repo
 	Build       *library.Build
 	PullRequest PullRequest
+	Deployment  *library.Deployment
 }
 
 // ShouldSkip uses the build information

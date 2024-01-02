@@ -794,6 +794,8 @@ func (r *Repo) SetApproveBuild(v string) {
 }
 
 // EventAllowed determines whether or not an event is allowed based on the repository settings.
+//
+//nolint:nakedret // not necessary to watch for here
 func (r *Repo) EventAllowed(event, action string) (allowed bool) {
 	allowed = false
 

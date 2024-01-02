@@ -100,9 +100,9 @@ func TestLibrary_Delete_ToMask(t *testing.T) {
 }
 
 func testDelete() *Delete {
-	delete := new(Delete)
-	delete.SetBranch(true)
-	delete.SetTag(true)
+	deletion := new(Delete)
+	deletion.SetBranch(true)
+	deletion.SetTag(true)
 
-	return delete
+	return deletion
 }

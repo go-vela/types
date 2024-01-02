@@ -155,15 +155,15 @@ func testEvents() *Events {
 	comment.SetCreated(false)
 	comment.SetEdited(false)
 
-	delete := new(actions.Delete)
-	delete.SetBranch(true)
-	delete.SetTag(true)
+	deletion := new(actions.Delete)
+	deletion.SetBranch(true)
+	deletion.SetTag(true)
 
 	e.SetPush(push)
 	e.SetPullRequest(pr)
 	e.SetDeployment(deploy)
 	e.SetComment(comment)
-	e.SetDelete(delete)
+	e.SetDelete(deletion)
 
 	return e
 }

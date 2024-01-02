@@ -15,7 +15,6 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 	want := map[string]string{
 		"VELA_REPO_ACTIVE":         "true",
 		"VELA_REPO_ALLOW_COMMENT":  "false",
-		"VELA_REPO_ALLOW_DELETE":   "false",
 		"VELA_REPO_ALLOW_DEPLOY":   "false",
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
@@ -37,7 +36,6 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_APPROVE_BUILD":  "never",
 		"REPOSITORY_ACTIVE":        "true",
 		"REPOSITORY_ALLOW_COMMENT": "false",
-		"REPOSITORY_ALLOW_DELETE":  "false",
 		"REPOSITORY_ALLOW_DEPLOY":  "false",
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",

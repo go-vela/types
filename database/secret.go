@@ -51,6 +51,7 @@ type Secret struct {
 	Type         sql.NullString `sql:"type"`
 	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
 	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
+	AllowEvents  sql.NullInt64  `sql:"allow_events"`
 	AllowCommand sql.NullBool   `sql:"allow_command"`
 	CreatedAt    sql.NullInt64  `sql:"created_at"`
 	CreatedBy    sql.NullString `sql:"created_by"`
@@ -151,6 +152,11 @@ func (s *Secret) Nullify() *Secret {
 		s.Type.Valid = false
 	}
 
+	// check if the AllowEvents field should be false
+	if s.AllowEvents.Int64 == 0 {
+		s.AllowEvents.Valid = false
+	}
+
 	// check if the CreatedAt field should be false
 	if s.CreatedAt.Int64 == 0 {
 		s.CreatedAt.Valid = false
@@ -188,6 +194,7 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetType(s.Type.String)
 	secret.SetImages(s.Images)
 	secret.SetEvents(s.Events)
+	secret.SetAllowEvents(library.NewEventsFromMask(s.AllowEvents.Int64))
 	secret.SetAllowCommand(s.AllowCommand.Bool)
 	secret.SetCreatedAt(s.CreatedAt.Int64)
 	secret.SetCreatedBy(s.CreatedBy.String)
@@ -274,6 +281,7 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Type:         sql.NullString{String: s.GetType(), Valid: true},
 		Images:       pq.StringArray(s.GetImages()),
 		Events:       pq.StringArray(s.GetEvents()),
+		AllowEvents:  sql.NullInt64{Int64: s.GetAllowEvents().ToDatabase(), Valid: true},
 		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
 		CreatedAt:    sql.NullInt64{Int64: s.GetCreatedAt(), Valid: true},
 		CreatedBy:    sql.NullString{String: s.GetCreatedBy(), Valid: true},

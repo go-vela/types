@@ -23,6 +23,7 @@ type Secret struct {
 	Type         *string   `json:"type,omitempty"`
 	Images       *[]string `json:"images,omitempty"`
 	Events       *[]string `json:"events,omitempty"`
+	AllowEvents  *Events   `json:"allow_events,omitempty"`
 	AllowCommand *bool     `json:"allow_command,omitempty"`
 	CreatedAt    *int64    `json:"created_at,omitempty"`
 	CreatedBy    *string   `json:"created_by,omitempty"`
@@ -47,6 +48,7 @@ func (s *Secret) Sanitize() *Secret {
 		Type:         s.Type,
 		Images:       s.Images,
 		Events:       s.Events,
+		AllowEvents:  s.AllowEvents,
 		AllowCommand: s.AllowCommand,
 		CreatedAt:    s.CreatedAt,
 		CreatedBy:    s.CreatedBy,
@@ -60,28 +62,17 @@ func (s *Secret) Sanitize() *Secret {
 // resource.
 func (s *Secret) Match(from *pipeline.Container) bool {
 	eACL, iACL := false, false
-	events, images, commands := s.GetEvents(), s.GetImages(), s.GetAllowCommand()
+	images, commands := s.GetImages(), s.GetAllowCommand()
 
 	// check if commands are utilized when not allowed
 	if !commands && len(from.Commands) > 0 {
 		return false
 	}
 
-	// check incoming events
-	switch from.Environment["VELA_BUILD_EVENT"] {
-	case constants.EventPush:
-		eACL = checkEvent(events, constants.EventPush)
-	case constants.EventPull:
-		eACL = checkEvent(events, constants.EventPull)
-	case constants.EventTag:
-		eACL = checkEvent(events, constants.EventTag)
-	case constants.EventDeploy:
-		eACL = checkEvent(events, constants.EventDeploy)
-	case constants.EventComment:
-		eACL = checkEvent(events, constants.EventComment)
-	case constants.EventSchedule:
-		eACL = checkEvent(events, constants.EventSchedule)
-	}
+	eACL = s.GetAllowEvents().Allowed(
+		from.Environment["VELA_BUILD_EVENT"],
+		from.Environment["VELA_BUILD_EVENT_ACTION"],
+	)
 
 	// check images whitelist
 	for _, i := range images {
@@ -93,8 +84,6 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 
 	// inject secrets into environment
 	switch {
-	case iACL && (len(events) == 0):
-		return true
 	case eACL && (len(images) == 0):
 		return true
 	case eACL && iACL:
@@ -220,6 +209,19 @@ func (s *Secret) GetEvents() []string {
 	}
 
 	return *s.Events
+}
+
+// GetAllowEvents returns the AllowEvents field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetAllowEvents() *Events {
+	// return zero value if Secret type or AllowEvents field is nil
+	if s == nil || s.AllowEvents == nil {
+		return new(Events)
+	}
+
+	return s.AllowEvents
 }
 
 // GetAllowCommand returns the AllowCommand field.
@@ -404,6 +406,19 @@ func (s *Secret) SetEvents(v []string) {
 	s.Events = &v
 }
 
+// SetAllowEvents sets the AllowEvents field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetAllowEvents(v *Events) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.AllowEvents = v
+}
+
 // SetAllowCommand sets the AllowCommand field.
 //
 // When the provided Secret type is nil, it
@@ -473,6 +488,7 @@ func (s *Secret) SetUpdatedBy(v string) {
 func (s *Secret) String() string {
 	return fmt.Sprintf(`{
 	AllowCommand: %t,
+	AllowEvents: %s,
 	Events: %s,
 	ID: %d,
 	Images: %s,
@@ -488,6 +504,7 @@ func (s *Secret) String() string {
 	UpdatedBy: %s,
 }`,
 		s.GetAllowCommand(),
+		s.GetAllowEvents().List(),
 		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),

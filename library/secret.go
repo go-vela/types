@@ -520,15 +520,3 @@ func (s *Secret) String() string {
 		s.GetUpdatedBy(),
 	)
 }
-
-// checkEvent implements a function that iterates through
-// a list to check the event is a member of the list.
-func checkEvent(events []string, event string) bool {
-	for _, e := range events {
-		if e == event {
-			return true
-		}
-	}
-
-	return false
-}

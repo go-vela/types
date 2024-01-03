@@ -5,9 +5,9 @@ package actions
 import "github.com/go-vela/types/constants"
 
 // Schedule is the library representation of the various actions associated
-// with the deploy event webhook from the SCM.
+// with the schedule event.
 type Schedule struct {
-	Run *bool `json:"created"`
+	Run *bool `json:"run"`
 }
 
 // FromMask returns the Schedule type resulting from the provided integer mask.

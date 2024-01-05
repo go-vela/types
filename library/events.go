@@ -10,12 +10,12 @@ import (
 // Events is the library representation of the various events that generate a
 // webhook from the SCM.
 type Events struct {
-	Push        *actions.Push    `json:"push"`
-	PullRequest *actions.Pull    `json:"pull_request"`
-	Deployment  *actions.Deploy  `json:"deployment"`
-	Comment     *actions.Comment `json:"comment"`
+	Push        *actions.Push     `json:"push"`
+	PullRequest *actions.Pull     `json:"pull_request"`
+	Deployment  *actions.Deploy   `json:"deployment"`
+	Comment     *actions.Comment  `json:"comment"`
 	Schedule    *actions.Schedule `json:"schedule"`
-	Delete      *actions.Delete  `json:"delete"`
+	Delete      *actions.Delete   `json:"delete"`
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that
@@ -119,6 +119,7 @@ func (e *Events) List() []string {
 
 	if e.GetDelete().GetTag() {
 		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionTag)
+	}
 
 	return eventSlice
 }

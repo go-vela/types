@@ -135,6 +135,41 @@ func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
 	}
 }
 
+func TestLibrary_Events_Allowed(t *testing.T) {
+	// setup tests
+	tests := []struct {
+		events *Events
+		event  string
+		action string
+		want   bool
+	}{
+		{
+			events: testEvents(),
+			event:  "pull_request",
+			action: "opened",
+			want:   true,
+		},
+		{
+			events: testEvents(),
+			event:  "deployment",
+			want:   false,
+		},
+		{
+			events: testEvents(),
+			event:  "push",
+			want:   true,
+		},
+	}
+
+	for _, test := range tests {
+		got := test.events.Allowed(test.event, test.action)
+
+		if got != test.want {
+			t.Errorf("Allowed is %v, want %v", got, test.want)
+		}
+	}
+}
+
 func testEvents() *Events {
 	e := new(Events)
 
@@ -155,6 +190,9 @@ func testEvents() *Events {
 	comment.SetCreated(false)
 	comment.SetEdited(false)
 
+	schedule := new(actions.Schedule)
+	schedule.SetRun(false)
+
 	deletion := new(actions.Delete)
 	deletion.SetBranch(true)
 	deletion.SetTag(true)
@@ -163,6 +201,7 @@ func testEvents() *Events {
 	e.SetPullRequest(pr)
 	e.SetDeployment(deploy)
 	e.SetComment(comment)
+	e.SetSchedule(schedule)
 	e.SetDelete(deletion)
 
 	return e

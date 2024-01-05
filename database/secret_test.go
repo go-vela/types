@@ -113,17 +113,18 @@ func TestDatabase_Secret_Nullify(t *testing.T) {
 	var s *Secret
 
 	want := &Secret{
-		ID:        sql.NullInt64{Int64: 0, Valid: false},
-		Org:       sql.NullString{String: "", Valid: false},
-		Repo:      sql.NullString{String: "", Valid: false},
-		Team:      sql.NullString{String: "", Valid: false},
-		Name:      sql.NullString{String: "", Valid: false},
-		Value:     sql.NullString{String: "", Valid: false},
-		Type:      sql.NullString{String: "", Valid: false},
-		CreatedAt: sql.NullInt64{Int64: 0, Valid: false},
-		CreatedBy: sql.NullString{String: "", Valid: false},
-		UpdatedAt: sql.NullInt64{Int64: 0, Valid: false},
-		UpdatedBy: sql.NullString{String: "", Valid: false},
+		ID:          sql.NullInt64{Int64: 0, Valid: false},
+		Org:         sql.NullString{String: "", Valid: false},
+		Repo:        sql.NullString{String: "", Valid: false},
+		Team:        sql.NullString{String: "", Valid: false},
+		Name:        sql.NullString{String: "", Valid: false},
+		Value:       sql.NullString{String: "", Valid: false},
+		Type:        sql.NullString{String: "", Valid: false},
+		AllowEvents: sql.NullInt64{Int64: 0, Valid: false},
+		CreatedAt:   sql.NullInt64{Int64: 0, Valid: false},
+		CreatedBy:   sql.NullString{String: "", Valid: false},
+		UpdatedAt:   sql.NullInt64{Int64: 0, Valid: false},
+		UpdatedBy:   sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -168,6 +169,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetType("repo")
 	want.SetImages([]string{"alpine"})
 	want.SetEvents([]string{"push", "tag", "deployment"})
+	want.SetAllowEvents(library.NewEventsFromMask(1))
 	want.SetAllowCommand(true)
 	want.SetCreatedAt(tsCreate)
 	want.SetCreatedBy("octocat")
@@ -291,6 +293,7 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetType("repo")
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
+	s.SetAllowEvents(library.NewEventsFromMask(1))
 	s.SetAllowCommand(true)
 	s.SetCreatedAt(tsCreate)
 	s.SetCreatedBy("octocat")
@@ -320,6 +323,7 @@ func testSecret() *Secret {
 		Type:         sql.NullString{String: "repo", Valid: true},
 		Images:       []string{"alpine"},
 		Events:       []string{"push", "tag", "deployment"},
+		AllowEvents:  sql.NullInt64{Int64: 1, Valid: true},
 		AllowCommand: sql.NullBool{Bool: true, Valid: true},
 		CreatedAt:    sql.NullInt64{Int64: tsCreate, Valid: true},
 		CreatedBy:    sql.NullString{String: "octocat", Valid: true},

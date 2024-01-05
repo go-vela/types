@@ -9,7 +9,9 @@ import (
 	"time"
 
 	"github.com/go-vela/types/constants"
+	"github.com/go-vela/types/library/actions"
 	"github.com/go-vela/types/pipeline"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Secret_Sanitize(t *testing.T) {
@@ -30,154 +32,290 @@ func TestLibrary_Secret_Sanitize(t *testing.T) {
 func TestLibrary_Secret_Match(t *testing.T) {
 	// setup types
 	v := "foo"
-	booL := false
+	fBool := false
+	tBool := true
+
+	testEvents := &Events{
+		Push: &actions.Push{
+			Branch: &tBool,
+			Tag:    &tBool,
+		},
+		PullRequest: &actions.Pull{
+			Opened:      &fBool,
+			Synchronize: &tBool,
+			Edited:      &fBool,
+		},
+		Deployment: &actions.Deploy{
+			Created: &tBool,
+		},
+		Comment: &actions.Comment{
+			Created: &tBool,
+			Edited:  &tBool,
+		},
+		Schedule: &actions.Schedule{
+			Run: &tBool,
+		},
+	}
 
 	// setup tests
 	tests := []struct {
+		name string
 		step *pipeline.Container
 		sec  *Secret
 		want bool
 	}{
 		{ // test matching secret events
+			name: "push",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push"}},
-			want: true,
-		},
-		{
-			step: &pipeline.Container{
-				Image:       "alpine:latest",
-				Environment: map[string]string{"VELA_BUILD_EVENT": "pull_request"},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"pull_request"}},
 			want: true,
 		},
 		{
+			name: "pull request opened fail",
+			step: &pipeline.Container{
+				Image: "alpine:latest",
+				Environment: map[string]string{
+					"VELA_BUILD_EVENT":        "pull_request",
+					"VELA_BUILD_EVENT_ACTION": "opened",
+				},
+			},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
+			want: false,
+		},
+		{
+			name: "tag",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "tag"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"tag"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "deployment",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "deployment"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"deployment"}},
-			want: true,
-		},
-		{
-			step: &pipeline.Container{
-				Image:       "alpine:latest",
-				Environment: map[string]string{"VELA_BUILD_EVENT": "comment"},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"comment"}},
 			want: true,
 		},
 		{
+			name: "comment created",
+			step: &pipeline.Container{
+				Image: "alpine:latest",
+				Environment: map[string]string{
+					"VELA_BUILD_EVENT":        "comment",
+					"VELA_BUILD_EVENT_ACTION": "created",
+				},
+			},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
+			want: true,
+		},
+		{
+			name: "fake event",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "fake_event"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
 			want: false,
 		},
 		{
+			name: "push with empty image constraint",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push", "pull_request"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "schedule",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "schedule"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{}, Events: &[]string{"push", "pull_request", "schedule"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 
 		{ // test matching secret images
+			name: "image basic",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "image and tag",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine:latest"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "mismatch tag with same image",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:1"}, Events: &[]string{}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine:1"},
+				AllowEvents: testEvents,
+			},
 			want: false,
 		},
 		{
+			name: "multiple allowed images",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine", "centos"}, Events: &[]string{}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine", "centos"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 
 		{ // test matching secret events and images
+			name: "push and image pass",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "push and image tag pass",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{"push"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine:latest"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "push and bad image tag",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:1"}, Events: &[]string{"push"}},
-			want: false,
-		},
-		{
-			step: &pipeline.Container{
-				Image:       "alpine:latest",
-				Environment: map[string]string{"VELA_BUILD_EVENT": "pull_request"},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine:1"},
+				AllowEvents: testEvents,
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine:latest"}, Events: &[]string{"push"}},
 			want: false,
 		},
 		{
+			name: "mismatch event and match image",
+			step: &pipeline.Container{
+				Image: "alpine:latest",
+				Environment: map[string]string{
+					"VELA_BUILD_EVENT":        "pull_request",
+					"VELA_BUILD_EVENT_ACTION": "edited",
+				},
+			},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine:latest"},
+				AllowEvents: testEvents,
+			},
+			want: false,
+		},
+		{
+			name: "event and multi image allowed pass",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine", "centos"}, Events: &[]string{"push"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine", "centos"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 
 		{ // test build events with image ACLs and rulesets
+			name: "rulesets and push pass",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
@@ -187,10 +325,16 @@ func TestLibrary_Secret_Match(t *testing.T) {
 					},
 				},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}},
+			sec: &Secret{
+				Name:        &v,
+				Value:       &v,
+				Images:      &[]string{"alpine"},
+				AllowEvents: testEvents,
+			},
 			want: true,
 		},
 		{
+			name: "no commands allowed",
 			step: &pipeline.Container{
 				Image:       "alpine:latest",
 				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
@@ -201,7 +345,13 @@ func TestLibrary_Secret_Match(t *testing.T) {
 				},
 				Commands: []string{"echo hi"},
 			},
-			sec:  &Secret{Name: &v, Value: &v, Images: &[]string{"alpine"}, Events: &[]string{"push"}, AllowCommand: &booL},
+			sec: &Secret{
+				Name:         &v,
+				Value:        &v,
+				Images:       &[]string{"alpine"},
+				AllowEvents:  testEvents,
+				AllowCommand: &fBool,
+			},
 			want: false,
 		},
 	}
@@ -211,7 +361,7 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		got := test.sec.Match(test.step)
 
 		if got != test.want {
-			t.Errorf("Match is %v, want %v", got, test.want)
+			t.Errorf("Match for %s is %v, want %v", test.name, got, test.want)
 		}
 	}
 }
@@ -270,6 +420,10 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 			t.Errorf("GetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
 		}
 
+		if !reflect.DeepEqual(test.secret.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("GetAllowEvents is %v, want %v", test.secret.GetAllowEvents(), test.want.GetAllowEvents())
+		}
+
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
@@ -322,6 +476,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetType(test.want.GetType())
 		test.secret.SetImages(test.want.GetImages())
 		test.secret.SetEvents(test.want.GetEvents())
+		test.secret.SetAllowEvents(test.want.GetAllowEvents())
 		test.secret.SetAllowCommand(test.want.GetAllowCommand())
 		test.secret.SetCreatedAt(test.want.GetCreatedAt())
 		test.secret.SetCreatedBy(test.want.GetCreatedBy())
@@ -364,6 +519,10 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 			t.Errorf("SetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
 		}
 
+		if !reflect.DeepEqual(test.secret.GetAllowEvents(), test.want.GetAllowEvents()) {
+			t.Errorf("SetAllowEvents is %v, want %v", test.secret.GetAllowEvents(), test.want.GetAllowEvents())
+		}
+
 		if test.secret.GetAllowCommand() != test.want.GetAllowCommand() {
 			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
@@ -392,6 +551,7 @@ func TestLibrary_Secret_String(t *testing.T) {
 
 	want := fmt.Sprintf(`{
 	AllowCommand: %t,
+	AllowEvents: %v,
 	Events: %s,
 	ID: %d,
 	Images: %s,
@@ -407,6 +567,7 @@ func TestLibrary_Secret_String(t *testing.T) {
 	UpdatedBy: %s,
 }`,
 		s.GetAllowCommand(),
+		s.GetAllowEvents().List(),
 		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),
@@ -425,8 +586,8 @@ func TestLibrary_Secret_String(t *testing.T) {
 	// run test
 	got := s.String()
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("String is %v, want %v", got, want)
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("String Mismatch: -want +got):\n%s", diff)
 	}
 }
 
@@ -447,6 +608,7 @@ func testSecret() *Secret {
 	s.SetType("repo")
 	s.SetImages([]string{"alpine"})
 	s.SetEvents([]string{"push", "tag", "deployment"})
+	s.SetAllowEvents(NewEventsFromMask(1))
 	s.SetAllowCommand(true)
 	s.SetCreatedAt(tsCreate)
 	s.SetCreatedBy("octocat")

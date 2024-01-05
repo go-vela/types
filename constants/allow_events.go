@@ -20,6 +20,7 @@ const (
 	AllowDeployCreate
 	AllowCommentCreate
 	AllowCommentEdit
+	AllowSchedule
 	AllowDeleteBranch
 	AllowDeleteTag
 )

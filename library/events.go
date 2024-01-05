@@ -14,6 +14,7 @@ type Events struct {
 	PullRequest *actions.Pull    `json:"pull_request"`
 	Deployment  *actions.Deploy  `json:"deployment"`
 	Comment     *actions.Comment `json:"comment"`
+	Schedule    *actions.Schedule `json:"schedule"`
 	Delete      *actions.Delete  `json:"delete"`
 }
 
@@ -24,6 +25,7 @@ func NewEventsFromMask(mask int64) *Events {
 	pullActions := new(actions.Pull).FromMask(mask)
 	deployActions := new(actions.Deploy).FromMask(mask)
 	commentActions := new(actions.Comment).FromMask(mask)
+	scheduleActions := new(actions.Schedule).FromMask(mask)
 	deleteActions := new(actions.Delete).FromMask(mask)
 
 	e := new(Events)
@@ -32,9 +34,42 @@ func NewEventsFromMask(mask int64) *Events {
 	e.SetPullRequest(pullActions)
 	e.SetDeployment(deployActions)
 	e.SetComment(commentActions)
+	e.SetSchedule(scheduleActions)
 	e.SetDelete(deleteActions)
 
 	return e
+}
+
+// EventAllowed determines whether or not an event is allowed based on the repository settings.
+func (e *Events) Allowed(event, action string) bool {
+	allowed := false
+
+	if len(action) > 0 {
+		event = event + ":" + action
+	}
+
+	switch event {
+	case constants.EventPush:
+		allowed = e.GetPush().GetBranch()
+	case constants.EventPull + ":" + constants.ActionOpened:
+		allowed = e.GetPullRequest().GetOpened()
+	case constants.EventPull + ":" + constants.ActionSynchronize:
+		allowed = e.GetPullRequest().GetSynchronize()
+	case constants.EventPull + ":" + constants.ActionEdited:
+		allowed = e.GetPullRequest().GetEdited()
+	case constants.EventTag:
+		allowed = e.GetPush().GetTag()
+	case constants.EventComment + ":" + constants.ActionCreated:
+		allowed = e.GetComment().GetCreated()
+	case constants.EventComment + ":" + constants.ActionEdited:
+		allowed = e.GetComment().GetEdited()
+	case constants.EventDeploy:
+		allowed = e.GetDeployment().GetCreated()
+	case constants.EventSchedule:
+		allowed = e.GetSchedule().GetRun()
+	}
+
+	return allowed
 }
 
 // List is an Events method that generates a comma-separated list of event:action
@@ -74,13 +109,16 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventComment+":"+constants.ActionEdited)
 	}
 
+	if e.GetSchedule().GetRun() {
+		eventSlice = append(eventSlice, constants.EventSchedule)
+	}
+
 	if e.GetDelete().GetBranch() {
 		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionBranch)
 	}
 
 	if e.GetDelete().GetTag() {
 		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionTag)
-	}
 
 	return eventSlice
 }
@@ -132,6 +170,17 @@ func (e *Events) GetComment() *actions.Comment {
 	}
 
 	return e.Comment
+}
+
+// GetSchedule returns the Schedule field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (e *Events) GetSchedule() *actions.Schedule {
+	// return zero value if Events type or Schedule field is nil
+	if e == nil || e.Schedule == nil {
+		return new(actions.Schedule)
+	}
+
+	return e.Schedule
 }
 
 // GetDelete returns the Delete field from the provided Events. If the object is nil,
@@ -195,6 +244,19 @@ func (e *Events) SetComment(v *actions.Comment) {
 	}
 
 	e.Comment = v
+}
+
+// SetSchedule sets the Events Schedule field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
+func (e *Events) SetSchedule(v *actions.Schedule) {
+	// return if Events type is nil
+	if e == nil {
+		return
+	}
+
+	e.Schedule = v
 }
 
 // SetDelete sets the Events Delete field.

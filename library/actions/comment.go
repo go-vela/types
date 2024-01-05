@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-//
-//nolint:dupl // ignore dup code
+
 package actions
 
 import "github.com/go-vela/types/constants"

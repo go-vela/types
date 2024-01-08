@@ -159,10 +159,6 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				events = append(events,
 					constants.EventComment+":"+constants.ActionCreated,
 					constants.EventComment+":"+constants.ActionEdited)
-			case constants.EventDelete:
-				events = append(events,
-					constants.EventDelete+":"+constants.ActionBranch,
-					constants.EventDelete+":"+constants.ActionTag)
 			default:
 				events = append(events, e)
 			}

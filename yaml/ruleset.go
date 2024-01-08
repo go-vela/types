@@ -149,7 +149,6 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			// backwards compatibility
 			// pull_request = pull_request:opened + pull_request:synchronize + pull_request:reopened
 			// comment = comment:created + comment:edited
-			// delete = delete:branch + delete:tag
 			case constants.EventPull:
 				events = append(events,
 					constants.EventPull+":"+constants.ActionOpened,

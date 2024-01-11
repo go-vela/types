@@ -9,19 +9,19 @@ import (
 	"github.com/go-vela/types/constants"
 )
 
-func TestLibrary_Push_Getters(t *testing.T) {
+func TestLibrary_Delete_Getters(t *testing.T) {
 	// setup tests
 	tests := []struct {
-		actions *Push
-		want    *Push
+		actions *Delete
+		want    *Delete
 	}{
 		{
-			actions: testPush(),
-			want:    testPush(),
+			actions: testDelete(),
+			want:    testDelete(),
 		},
 		{
-			actions: new(Push),
-			want:    new(Push),
+			actions: new(Delete),
+			want:    new(Delete),
 		},
 	}
 
@@ -37,22 +37,22 @@ func TestLibrary_Push_Getters(t *testing.T) {
 	}
 }
 
-func TestLibrary_Push_Setters(t *testing.T) {
+func TestLibrary_Delete_Setters(t *testing.T) {
 	// setup types
-	var a *Push
+	var a *Delete
 
 	// setup tests
 	tests := []struct {
-		actions *Push
-		want    *Push
+		actions *Delete
+		want    *Delete
 	}{
 		{
-			actions: testPush(),
-			want:    testPush(),
+			actions: testDelete(),
+			want:    testDelete(),
 		},
 		{
 			actions: a,
-			want:    new(Push),
+			want:    new(Delete),
 		},
 	}
 
@@ -71,25 +71,25 @@ func TestLibrary_Push_Setters(t *testing.T) {
 	}
 }
 
-func TestLibrary_Push_FromMask(t *testing.T) {
+func TestLibrary_Delete_FromMask(t *testing.T) {
 	// setup types
 	mask := testMask()
 
-	want := testPush()
+	want := testDelete()
 
 	// run test
-	got := new(Push).FromMask(mask)
+	got := new(Delete).FromMask(mask)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("FromMask is %v, want %v", got, want)
 	}
 }
 
-func TestLibrary_Push_ToMask(t *testing.T) {
+func TestLibrary_Delete_ToMask(t *testing.T) {
 	// setup types
-	actions := testPush()
+	actions := testDelete()
 
-	want := int64(constants.AllowPushBranch | constants.AllowPushTag)
+	want := int64(constants.AllowDeleteBranch | constants.AllowDeleteTag)
 
 	// run test
 	got := actions.ToMask()
@@ -99,25 +99,10 @@ func TestLibrary_Push_ToMask(t *testing.T) {
 	}
 }
 
-func testPush() *Push {
-	push := new(Push)
-	push.SetBranch(true)
-	push.SetTag(true)
+func testDelete() *Delete {
+	deletion := new(Delete)
+	deletion.SetBranch(true)
+	deletion.SetTag(true)
 
-	return push
-}
-
-func testMask() int64 {
-	return int64(
-		constants.AllowPushBranch |
-			constants.AllowPushTag |
-			constants.AllowPullOpen |
-			constants.AllowPullSync |
-			constants.AllowPullReopen |
-			constants.AllowDeployCreate |
-			constants.AllowCommentCreate |
-			constants.AllowSchedule |
-			constants.AllowDeleteBranch |
-			constants.AllowDeleteTag,
-	)
+	return deletion
 }

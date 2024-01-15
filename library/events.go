@@ -67,6 +67,10 @@ func (e *Events) Allowed(event, action string) bool {
 		allowed = e.GetDeployment().GetCreated()
 	case constants.EventSchedule:
 		allowed = e.GetSchedule().GetRun()
+	case constants.EventDelete + ":" + constants.ActionBranch:
+		allowed = e.GetDelete().GetBranch()
+	case constants.EventDelete + ":" + constants.ActionTag:
+		allowed = e.GetDelete().GetTag()
 	}
 
 	return allowed

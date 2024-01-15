@@ -40,10 +40,12 @@ func NewEventsFromMask(mask int64) *Events {
 	return e
 }
 
-// EventAllowed determines whether or not an event is allowed based on the repository settings.
+// Allowed determines whether or not an event + action is allowed based on whether
+// its event:action is set to true in the Events struct.
 func (e *Events) Allowed(event, action string) bool {
 	allowed := false
 
+	// if there is an action, create `event:action` comparator string
 	if len(action) > 0 {
 		event = event + ":" + action
 	}

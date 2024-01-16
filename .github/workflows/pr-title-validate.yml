@@ -1,0 +1,14 @@
+# trigger on pull_request events of the opened & edited type.
+on:
+  pull_request:
+    types: [ opened, edited ]
+
+# pipeline to execute
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: validate
+      run: |
+        echo "${{ github.event.pull_request.title }}" | grep -Eq '^(feat|fix|chore|refactor|enhance)\(.*\):.*$' && (echo "Pass"; exit 0) || (echo "Incorrect Format"; exit 1)

@@ -59,6 +59,8 @@ func (e *Events) Allowed(event, action string) bool {
 		allowed = e.GetPullRequest().GetSynchronize()
 	case constants.EventPull + ":" + constants.ActionEdited:
 		allowed = e.GetPullRequest().GetEdited()
+	case constants.EventPull + ":" + constants.ActionReopened:
+		allowed = e.GetPullRequest().GetReopened()
 	case constants.EventTag:
 		allowed = e.GetPush().GetTag()
 	case constants.EventComment + ":" + constants.ActionCreated:
@@ -99,6 +101,10 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionEdited)
 	}
 
+	if e.GetPullRequest().GetReopened() {
+		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionReopened)
+	}
+
 	if e.GetPush().GetTag() {
 		eventSlice = append(eventSlice, constants.EventTag)
 	}
@@ -132,7 +138,13 @@ func (e *Events) List() []string {
 
 // ToDatabase is an Events method that converts a nested Events struct into an integer event mask.
 func (e *Events) ToDatabase() int64 {
-	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask() | e.GetDelete().ToMask()
+	return 0 |
+		e.GetPush().ToMask() |
+		e.GetPullRequest().ToMask() |
+		e.GetComment().ToMask() |
+		e.GetDeployment().ToMask() |
+		e.GetSchedule().ToMask() |
+		e.GetDelete().ToMask()
 }
 
 // GetPush returns the Push field from the provided Events. If the object is nil,

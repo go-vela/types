@@ -4,7 +4,7 @@ name: validate PR title
 # trigger on pull_request events of the opened & edited type.
 on:
   pull_request:
-    types: [ opened, edited ]
+    types: [ opened, synchronize, edited, reopened ]
 
 # pipeline to execute
 jobs:

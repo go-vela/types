@@ -1,3 +1,6 @@
+# name of the action
+name: validate PR title
+
 # trigger on pull_request events of the opened & edited type.
 on:
   pull_request:

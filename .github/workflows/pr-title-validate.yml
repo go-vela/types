@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: validate
+    - name: validate title
       run: |
         echo "${{ github.event.pull_request.title }}" | grep -Eq '^(feat|fix|chore|refactor|enhance|test|docs)\(.*\):.*$' && (echo "Pass"; exit 0) || (echo "Incorrect Format. Please see https://go-vela.github.io/docs/community/contributing_guidelines/#development-workflow"; exit 1)

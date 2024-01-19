@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-
+//
+//nolint:dupl // similar code to schedule.go
 package actions
 
 import "github.com/go-vela/types/constants"

@@ -72,7 +72,7 @@ func (a *Push) GetTag() bool {
 // GetDeleteBranch returns the DeleteBranch field from the provided Push. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
 func (a *Push) GetDeleteBranch() bool {
-	// return zero value if Push type or Tag field is nil
+	// return zero value if Push type or DeleteBranch field is nil
 	if a == nil || a.DeleteBranch == nil {
 		return false
 	}
@@ -83,7 +83,7 @@ func (a *Push) GetDeleteBranch() bool {
 // GetDeleteTag returns the DeleteTag field from the provided Push. If the object is nil,
 // or the field within the object is nil, it returns the zero value instead.
 func (a *Push) GetDeleteTag() bool {
-	// return zero value if Push type or Tag field is nil
+	// return zero value if Push type or DeleteTag field is nil
 	if a == nil || a.DeleteTag == nil {
 		return false
 	}

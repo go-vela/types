@@ -155,7 +155,6 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 		constants.AllowPushBranch |
 			constants.AllowPushTag |
 			constants.AllowPushDeleteBranch |
-			constants.AllowPushDeleteTag |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
 			constants.AllowPullReopen |
@@ -164,7 +163,8 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 	)
 
 	maskTwo := int64(
-		constants.AllowPullEdit |
+		constants.AllowPushDeleteTag |
+			constants.AllowPullEdit |
 			constants.AllowCommentEdit |
 			constants.AllowDeployCreate,
 	)
@@ -242,7 +242,7 @@ func testEvents() (*Events, *Events) {
 			Branch:       &tBool,
 			Tag:          &tBool,
 			DeleteBranch: &tBool,
-			DeleteTag:    &tBool,
+			DeleteTag:    &fBool,
 		},
 		PullRequest: &actions.Pull{
 			Opened:      &tBool,
@@ -267,7 +267,7 @@ func testEvents() (*Events, *Events) {
 			Branch:       &fBool,
 			Tag:          &fBool,
 			DeleteBranch: &fBool,
-			DeleteTag:    &fBool,
+			DeleteTag:    &tBool,
 		},
 		PullRequest: &actions.Pull{
 			Opened:      &fBool,

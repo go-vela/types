@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/go-vela/types/constants"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Repo_Environment(t *testing.T) {
@@ -19,7 +20,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"VELA_REPO_ALLOW_PULL":     "false",
 		"VELA_REPO_ALLOW_PUSH":     "true",
 		"VELA_REPO_ALLOW_TAG":      "false",
-		"VELA_REPO_ALLOW_EVENTS":   "push,pull_request:opened,pull_request:synchronize,tag,delete:branch,delete:tag",
+		"VELA_REPO_ALLOW_EVENTS":   "push,pull_request:opened,pull_request:synchronize,pull_request:reopened,tag,comment:created,schedule,delete:branch",
 		"VELA_REPO_BRANCH":         "main",
 		"VELA_REPO_TOPICS":         "cloud,security",
 		"VELA_REPO_BUILD_LIMIT":    "10",
@@ -40,7 +41,7 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 		"REPOSITORY_ALLOW_PULL":    "false",
 		"REPOSITORY_ALLOW_PUSH":    "true",
 		"REPOSITORY_ALLOW_TAG":     "false",
-		"REPOSITORY_ALLOW_EVENTS":  "push,pull_request:opened,pull_request:synchronize,tag,delete:branch,delete:tag",
+		"REPOSITORY_ALLOW_EVENTS":  "push,pull_request:opened,pull_request:synchronize,pull_request:reopened,tag,comment:created,schedule,delete:branch",
 		"REPOSITORY_BRANCH":        "main",
 		"REPOSITORY_CLONE":         "https://github.com/github/octocat.git",
 		"REPOSITORY_FULL_NAME":     "github/octocat",
@@ -56,8 +57,8 @@ func TestLibrary_Repo_Environment(t *testing.T) {
 	// run test
 	got := testRepo().Environment()
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("Environment is %v, want %v", got, want)
+	if diff := cmp.Diff(want, got); diff != "" {
+		t.Errorf("(Environment: -want +got):\n%s", diff)
 	}
 }
 
@@ -402,7 +403,7 @@ func TestLibrary_Repo_String(t *testing.T) {
 func testRepo() *Repo {
 	r := new(Repo)
 
-	e := testEvents()
+	e, _ := testEvents()
 
 	r.SetID(1)
 	r.SetOrg("github")

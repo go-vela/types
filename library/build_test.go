@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-vela/types/raw"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Build_Duration(t *testing.T) {
@@ -51,6 +52,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_comment.SetEvent("comment")
 	_comment.SetEventAction("created")
 	_comment.SetRef("refs/pulls/1/head")
+	_comment.SetHeadRef("dev")
+	_comment.SetBaseRef("main")
 
 	_deploy := testBuild()
 	_deploy.SetEvent("deployment")
@@ -146,7 +149,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
-				"VELA_BUILD_BASE_REF":       "",
+				"VELA_BUILD_BASE_REF":       "main",
 				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
@@ -171,9 +174,11 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":          "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":      "TODO",
 				"VELA_PULL_REQUEST":         "1",
+				"VELA_PULL_REQUEST_SOURCE":  "dev",
+				"VELA_PULL_REQUEST_TARGET":  "main",
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
-				"BUILD_BASE_REF":            "",
+				"BUILD_BASE_REF":            "main",
 				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
@@ -439,8 +444,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	for _, test := range tests {
 		got := test.build.Environment("TODO", "TODO")
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("Environment is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("(Environment: -want +got):\n%s", diff)
 		}
 	}
 }

@@ -148,6 +148,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["BUILD_PULL_REQUEST_NUMBER"] = number
 		envs["VELA_BUILD_PULL_REQUEST"] = number
 		envs["VELA_PULL_REQUEST"] = number
+		envs["VELA_PULL_REQUEST_SOURCE"] = b.GetHeadRef()
+		envs["VELA_PULL_REQUEST_TARGET"] = b.GetBaseRef()
 	}
 
 	// check if the Build event is deployment

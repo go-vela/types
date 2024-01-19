@@ -43,10 +43,6 @@ func TestLibrary_Events_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.events.GetComment(), test.want.GetComment()) {
 			t.Errorf("GetComment is %v, want %v", test.events.GetPush(), test.want.GetPush())
 		}
-
-		if !reflect.DeepEqual(test.events.GetDelete(), test.want.GetDelete()) {
-			t.Errorf("GetDelete is %v, want %v", test.events.GetDelete(), test.want.GetDelete())
-		}
 	}
 }
 
@@ -75,7 +71,6 @@ func TestLibrary_Events_Setters(t *testing.T) {
 		test.events.SetPullRequest(test.want.GetPullRequest())
 		test.events.SetDeployment(test.want.GetDeployment())
 		test.events.SetComment(test.want.GetComment())
-		test.events.SetDelete(test.want.GetDelete())
 
 		if !reflect.DeepEqual(test.events.GetPush(), test.want.GetPush()) {
 			t.Errorf("SetPush is %v, want %v", test.events.GetPush(), test.want.GetPush())
@@ -91,10 +86,6 @@ func TestLibrary_Events_Setters(t *testing.T) {
 
 		if !reflect.DeepEqual(test.events.GetComment(), test.want.GetComment()) {
 			t.Errorf("SetComment is %v, want %v", test.events.GetComment(), test.want.GetComment())
-		}
-
-		if !reflect.DeepEqual(test.events.GetDelete(), test.want.GetDelete()) {
-			t.Errorf("SetDelete is %v, want %v", test.events.GetDelete(), test.want.GetDelete())
 		}
 	}
 }
@@ -118,11 +109,11 @@ func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
 	mask := int64(
 		constants.AllowPushBranch |
 			constants.AllowPushTag |
+			constants.AllowPushDeleteBranch |
+			constants.AllowPushDeleteTag |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
-			constants.AllowPullReopen |
-			constants.AllowDeleteBranch |
-			constants.AllowDeleteTag,
+			constants.AllowPullReopen,
 	)
 
 	want := testEvents()
@@ -182,6 +173,8 @@ func testEvents() *Events {
 	push := new(actions.Push)
 	push.SetBranch(true)
 	push.SetTag(true)
+	push.SetDeleteBranch(true)
+	push.SetDeleteTag(true)
 
 	deploy := new(actions.Deploy)
 	deploy.SetCreated(false)
@@ -193,16 +186,11 @@ func testEvents() *Events {
 	schedule := new(actions.Schedule)
 	schedule.SetRun(false)
 
-	deletion := new(actions.Delete)
-	deletion.SetBranch(true)
-	deletion.SetTag(true)
-
 	e.SetPush(push)
 	e.SetPullRequest(pr)
 	e.SetDeployment(deploy)
 	e.SetComment(comment)
 	e.SetSchedule(schedule)
-	e.SetDelete(deletion)
 
 	return e
 }

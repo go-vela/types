@@ -15,7 +15,6 @@ type Events struct {
 	Deployment  *actions.Deploy   `json:"deployment"`
 	Comment     *actions.Comment  `json:"comment"`
 	Schedule    *actions.Schedule `json:"schedule"`
-	Delete      *actions.Delete   `json:"delete"`
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that
@@ -26,7 +25,6 @@ func NewEventsFromMask(mask int64) *Events {
 	deployActions := new(actions.Deploy).FromMask(mask)
 	commentActions := new(actions.Comment).FromMask(mask)
 	scheduleActions := new(actions.Schedule).FromMask(mask)
-	deleteActions := new(actions.Delete).FromMask(mask)
 
 	e := new(Events)
 
@@ -35,7 +33,6 @@ func NewEventsFromMask(mask int64) *Events {
 	e.SetDeployment(deployActions)
 	e.SetComment(commentActions)
 	e.SetSchedule(scheduleActions)
-	e.SetDelete(deleteActions)
 
 	return e
 }
@@ -68,9 +65,9 @@ func (e *Events) Allowed(event, action string) bool {
 	case constants.EventSchedule:
 		allowed = e.GetSchedule().GetRun()
 	case constants.EventDelete + ":" + constants.ActionBranch:
-		allowed = e.GetDelete().GetBranch()
+		allowed = e.GetPush().GetDeleteBranch()
 	case constants.EventDelete + ":" + constants.ActionTag:
-		allowed = e.GetDelete().GetTag()
+		allowed = e.GetPush().GetDeleteTag()
 	}
 
 	return allowed
@@ -117,11 +114,11 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventSchedule)
 	}
 
-	if e.GetDelete().GetBranch() {
+	if e.GetPush().GetDeleteBranch() {
 		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionBranch)
 	}
 
-	if e.GetDelete().GetTag() {
+	if e.GetPush().GetDeleteTag() {
 		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionTag)
 	}
 
@@ -130,7 +127,7 @@ func (e *Events) List() []string {
 
 // ToDatabase is an Events method that converts a nested Events struct into an integer event mask.
 func (e *Events) ToDatabase() int64 {
-	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask() | e.GetDelete().ToMask()
+	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask()
 }
 
 // GetPush returns the Push field from the provided Events. If the object is nil,
@@ -186,17 +183,6 @@ func (e *Events) GetSchedule() *actions.Schedule {
 	}
 
 	return e.Schedule
-}
-
-// GetDelete returns the Delete field from the provided Events. If the object is nil,
-// or the field within the object is nil, it returns the zero value instead.
-func (e *Events) GetDelete() *actions.Delete {
-	// return zero value if Events type or Comment field is nil
-	if e == nil || e.Delete == nil {
-		return new(actions.Delete)
-	}
-
-	return e.Delete
 }
 
 // SetPush sets the Events Push field.
@@ -262,17 +248,4 @@ func (e *Events) SetSchedule(v *actions.Schedule) {
 	}
 
 	e.Schedule = v
-}
-
-// SetDelete sets the Events Delete field.
-//
-// When the provided Events type is nil, it
-// will set nothing and immediately return.
-func (e *Events) SetDelete(v *actions.Delete) {
-	// return if Events type is nil
-	if e == nil {
-		return
-	}
-
-	e.Delete = v
 }

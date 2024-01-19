@@ -42,11 +42,6 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, false)},
-			true,
-			skipDeleteEventMsg,
-		},
-		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, true)},
 			false,
 			"",
@@ -75,11 +70,6 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag, true)},
 			true,
 			skipDirectiveMsg,
-		},
-		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, false)},
-			true,
-			skipDeleteEventMsg,
 		},
 		{
 			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, true)},

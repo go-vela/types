@@ -21,6 +21,6 @@ const (
 	AllowCommentCreate
 	AllowCommentEdit
 	AllowSchedule
-	AllowDeleteBranch
-	AllowDeleteTag
+	AllowPushDeleteBranch
+	AllowPushDeleteTag
 )

@@ -10,8 +10,7 @@ import (
 )
 
 var (
-	skipDeleteEventMsg = "tag/branch delete event"
-	skipDirectiveMsg   = "skip ci directive found in commit title/message"
+	skipDirectiveMsg = "skip ci directive found in commit title/message"
 )
 
 // PullRequest defines the data pulled from PRs while
@@ -39,13 +38,6 @@ type Webhook struct {
 func (w *Webhook) ShouldSkip() (bool, string) {
 	// push or tag event
 	if strings.EqualFold(constants.EventPush, w.Build.GetEvent()) || strings.EqualFold(constants.EventTag, w.Build.GetEvent()) {
-		// the head commit will return null in the hook
-		// payload from the scm when the event is
-		// associated with a branch/tag delete
-		if len(w.Build.GetCommit()) == 0 {
-			return true, skipDeleteEventMsg
-		}
-
 		// check for skip ci directive in message or title
 		if hasSkipDirective(w.Build.GetMessage()) ||
 			hasSkipDirective(w.Build.GetTitle()) {

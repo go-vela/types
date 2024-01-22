@@ -202,6 +202,17 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 		envs["VELA_BUILD_TAG"] = tag
 	}
 
+	// check if the Build event is delete:tag
+	if strings.EqualFold(b.GetEvent(), constants.EventDelete) && strings.EqualFold(b.GetEventAction(), constants.ActionTag) {
+		// capture the tag reference, which has been stored in the Branch variable due to issues that arose
+		// when the Ref is set to the deleted tag
+		tag := b.GetBranch()
+
+		// add the tag reference to the list
+		envs["BUILD_TAG"] = tag
+		envs["VELA_BUILD_TAG"] = tag
+	}
+
 	return envs
 }
 

@@ -55,10 +55,6 @@ func TestLibrary_Events_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.events.GetSchedule(), test.want.GetSchedule()) {
 			t.Errorf("GetSchedule is %v, want %v", test.events.GetSchedule(), test.want.GetSchedule())
 		}
-
-		if !reflect.DeepEqual(test.events.GetDelete(), test.want.GetDelete()) {
-			t.Errorf("GetDelete is %v, want %v", test.events.GetDelete(), test.want.GetDelete())
-		}
 	}
 }
 
@@ -94,7 +90,6 @@ func TestLibrary_Events_Setters(t *testing.T) {
 		test.events.SetDeployment(test.want.GetDeployment())
 		test.events.SetComment(test.want.GetComment())
 		test.events.SetSchedule(test.want.GetSchedule())
-		test.events.SetDelete(test.want.GetDelete())
 
 		if !reflect.DeepEqual(test.events.GetPush(), test.want.GetPush()) {
 			t.Errorf("SetPush is %v, want %v", test.events.GetPush(), test.want.GetPush())
@@ -114,10 +109,6 @@ func TestLibrary_Events_Setters(t *testing.T) {
 
 		if !reflect.DeepEqual(test.events.GetSchedule(), test.want.GetSchedule()) {
 			t.Errorf("SetSchedule is %v, want %v", test.events.GetSchedule(), test.want.GetSchedule())
-		}
-
-		if !reflect.DeepEqual(test.events.GetDelete(), test.want.GetDelete()) {
-			t.Errorf("SetDelete is %v, want %v", test.events.GetDelete(), test.want.GetDelete())
 		}
 	}
 }
@@ -163,19 +154,19 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 	maskOne := int64(
 		constants.AllowPushBranch |
 			constants.AllowPushTag |
+			constants.AllowPushDeleteBranch |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
 			constants.AllowPullReopen |
 			constants.AllowCommentCreate |
-			constants.AllowSchedule |
-			constants.AllowDeleteBranch,
+			constants.AllowSchedule,
 	)
 
 	maskTwo := int64(
-		constants.AllowPullEdit |
+		constants.AllowPushDeleteTag |
+			constants.AllowPullEdit |
 			constants.AllowCommentEdit |
-			constants.AllowDeployCreate |
-			constants.AllowDeleteTag,
+			constants.AllowDeployCreate,
 	)
 
 	wantOne, wantTwo := testEvents()
@@ -248,8 +239,10 @@ func testEvents() (*Events, *Events) {
 
 	e1 := &Events{
 		Push: &actions.Push{
-			Branch: &tBool,
-			Tag:    &tBool,
+			Branch:       &tBool,
+			Tag:          &tBool,
+			DeleteBranch: &tBool,
+			DeleteTag:    &fBool,
 		},
 		PullRequest: &actions.Pull{
 			Opened:      &tBool,
@@ -267,16 +260,14 @@ func testEvents() (*Events, *Events) {
 		Schedule: &actions.Schedule{
 			Run: &tBool,
 		},
-		Delete: &actions.Delete{
-			Branch: &tBool,
-			Tag:    &fBool,
-		},
 	}
 
 	e2 := &Events{
 		Push: &actions.Push{
-			Branch: &fBool,
-			Tag:    &fBool,
+			Branch:       &fBool,
+			Tag:          &fBool,
+			DeleteBranch: &fBool,
+			DeleteTag:    &tBool,
 		},
 		PullRequest: &actions.Pull{
 			Opened:      &fBool,
@@ -293,10 +284,6 @@ func testEvents() (*Events, *Events) {
 		},
 		Schedule: &actions.Schedule{
 			Run: &fBool,
-		},
-		Delete: &actions.Delete{
-			Branch: &fBool,
-			Tag:    &tBool,
 		},
 	}
 

@@ -17,72 +17,62 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 		wantString string
 	}{
 		{
-			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventPush)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventPush)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventPush)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventPush)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventPush)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, false)},
-			true,
-			skipDeleteEventMsg,
-		},
-		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush, true)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventPush)},
 			false,
 			"",
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing [SKIP CI]", "", constants.EventTag)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [ci skip]", constants.EventTag)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing [skip VELA]", "", constants.EventTag)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing", "wip [vela skip]", constants.EventTag)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing ***NO_CI*** ok", "nothing", constants.EventTag)},
 			true,
 			skipDirectiveMsg,
 		},
 		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, false)},
-			true,
-			skipDeleteEventMsg,
-		},
-		{
-			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag, true)},
+			&Webhook{Build: testPushBuild("testing ok", "nothing", constants.EventTag)},
 			false,
 			"",
 		},
@@ -102,7 +92,7 @@ func TestWebhook_ShouldSkip(t *testing.T) {
 	}
 }
 
-func testPushBuild(message, title, event string, hasCommit bool) *library.Build {
+func testPushBuild(message, title, event string) *library.Build {
 	b := new(library.Build)
 
 	b.SetEvent(event)
@@ -115,9 +105,7 @@ func testPushBuild(message, title, event string, hasCommit bool) *library.Build 
 		b.SetTitle(title)
 	}
 
-	if hasCommit {
-		b.SetCommit("deadbeef")
-	}
+	b.SetCommit("deadbeef")
 
 	return b
 }

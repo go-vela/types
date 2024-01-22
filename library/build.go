@@ -204,7 +204,8 @@ func (b *Build) Environment(workspace, channel string) map[string]string {
 
 	// check if the Build event is delete:tag
 	if strings.EqualFold(b.GetEvent(), constants.EventDelete) && strings.EqualFold(b.GetEventAction(), constants.ActionTag) {
-		// capture the tag reference
+		// capture the tag reference, which has been stored in the Branch variable due to issues that arose
+		// when the Ref is set to the deleted tag
 		tag := b.GetBranch()
 
 		// add the tag reference to the list

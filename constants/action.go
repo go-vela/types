@@ -24,4 +24,10 @@ const (
 
 	// ActionTransferred defines the action for transferring repository ownership.
 	ActionTransferred = "transferred"
+
+	// ActionBranch defines the action for deleting a branch.
+	ActionBranch = "branch"
+
+	// ActionTag defines the action for deleting a tag.
+	ActionTag = "tag"
 )

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-vela/types/raw"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Build_Duration(t *testing.T) {
@@ -51,10 +52,13 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_comment.SetEvent("comment")
 	_comment.SetEventAction("created")
 	_comment.SetRef("refs/pulls/1/head")
+	_comment.SetHeadRef("dev")
+	_comment.SetBaseRef("main")
 
 	_deploy := testBuild()
 	_deploy.SetEvent("deployment")
 	_deploy.SetDeploy("production")
+	_deploy.SetDeployNumber(0)
 	_deploy.SetDeployPayload(map[string]string{
 		"foo": "test1",
 		"bar": "test2",
@@ -64,6 +68,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	_deployTag.SetRef("refs/tags/v0.1.0")
 	_deployTag.SetEvent("deployment")
 	_deployTag.SetDeploy("production")
+	_deployTag.SetDeployNumber(0)
 	_deployTag.SetDeployPayload(map[string]string{
 		"foo": "test1",
 		"bar": "test2",
@@ -144,7 +149,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_APPROVED_BY":    "OctoCat",
 				"VELA_BUILD_AUTHOR":         "OctoKitty",
 				"VELA_BUILD_AUTHOR_EMAIL":   "OctoKitty@github.com",
-				"VELA_BUILD_BASE_REF":       "",
+				"VELA_BUILD_BASE_REF":       "main",
 				"VELA_BUILD_BRANCH":         "main",
 				"VELA_BUILD_CHANNEL":        "TODO",
 				"VELA_BUILD_CLONE":          "https://github.com/github/octocat.git",
@@ -169,9 +174,11 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":          "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":      "TODO",
 				"VELA_PULL_REQUEST":         "1",
+				"VELA_PULL_REQUEST_SOURCE":  "dev",
+				"VELA_PULL_REQUEST_TARGET":  "main",
 				"BUILD_AUTHOR":              "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":        "OctoKitty@github.com",
-				"BUILD_BASE_REF":            "",
+				"BUILD_BASE_REF":            "main",
 				"BUILD_BRANCH":              "main",
 				"BUILD_CHANNEL":             "TODO",
 				"BUILD_CLONE":               "https://github.com/github/octocat.git",
@@ -226,6 +233,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":         "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":     "TODO",
 				"VELA_DEPLOYMENT":          "production",
+				"VELA_DEPLOYMENT_NUMBER":   "0",
 				"BUILD_TARGET":             "production",
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
@@ -286,6 +294,7 @@ func TestLibrary_Build_Environment(t *testing.T) {
 				"VELA_BUILD_TITLE":         "push received from https://github.com/github/octocat",
 				"VELA_BUILD_WORKSPACE":     "TODO",
 				"VELA_DEPLOYMENT":          "production",
+				"VELA_DEPLOYMENT_NUMBER":   "0",
 				"BUILD_AUTHOR":             "OctoKitty",
 				"BUILD_AUTHOR_EMAIL":       "OctoKitty@github.com",
 				"BUILD_BASE_REF":           "",
@@ -435,8 +444,8 @@ func TestLibrary_Build_Environment(t *testing.T) {
 	for _, test := range tests {
 		got := test.build.Environment("TODO", "TODO")
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("Environment is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("(Environment: -want +got):\n%s", diff)
 		}
 	}
 }
@@ -513,6 +522,10 @@ func TestLibrary_Build_Getters(t *testing.T) {
 
 		if test.build.GetDeploy() != test.want.GetDeploy() {
 			t.Errorf("GetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
+		}
+
+		if test.build.GetDeployNumber() != test.want.GetDeployNumber() {
+			t.Errorf("GetDeployNumber is %v, want %v", test.build.GetDeployNumber(), test.want.GetDeployNumber())
 		}
 
 		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
@@ -628,6 +641,7 @@ func TestLibrary_Build_Setters(t *testing.T) {
 		test.build.SetStarted(test.want.GetStarted())
 		test.build.SetFinished(test.want.GetFinished())
 		test.build.SetDeploy(test.want.GetDeploy())
+		test.build.SetDeployNumber(test.want.GetDeployNumber())
 		test.build.SetDeployPayload(test.want.GetDeployPayload())
 		test.build.SetClone(test.want.GetClone())
 		test.build.SetSource(test.want.GetSource())
@@ -702,6 +716,10 @@ func TestLibrary_Build_Setters(t *testing.T) {
 
 		if test.build.GetDeploy() != test.want.GetDeploy() {
 			t.Errorf("SetDeploy is %v, want %v", test.build.GetDeploy(), test.want.GetDeploy())
+		}
+
+		if test.build.GetDeployNumber() != test.want.GetDeployNumber() {
+			t.Errorf("SetDeployNumber is %v, want %v", test.build.GetDeployNumber(), test.want.GetDeployNumber())
 		}
 
 		if !reflect.DeepEqual(test.build.GetDeployPayload(), test.want.GetDeployPayload()) {
@@ -796,6 +814,7 @@ func TestLibrary_Build_String(t *testing.T) {
   Commit: %s,
   Created: %d,
   Deploy: %s,
+  DeployNumber: %d,
   DeployPayload: %s,
   Distribution: %s,
   Email: %s,
@@ -830,6 +849,7 @@ func TestLibrary_Build_String(t *testing.T) {
 		b.GetCommit(),
 		b.GetCreated(),
 		b.GetDeploy(),
+		b.GetDeployNumber(),
 		b.GetDeployPayload(),
 		b.GetDistribution(),
 		b.GetEmail(),
@@ -882,6 +902,7 @@ func testBuild() *Build {
 	b.SetStarted(1563474078)
 	b.SetFinished(1563474079)
 	b.SetDeploy("")
+	b.SetDeployNumber(0)
 	b.SetDeployPayload(raw.StringSliceMap{"foo": "test1"})
 	b.SetClone("https://github.com/github/octocat.git")
 	b.SetSource("https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163")

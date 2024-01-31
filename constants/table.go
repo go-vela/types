@@ -13,6 +13,9 @@ const (
 	// TableDashboard defines the table type for the database dashboards table.
 	TableDashboard = "dashboards"
 
+	// TableDeployment defines the table type for the database deployments table.
+	TableDeployment = "deployments"
+
 	// TableHook defines the table type for the database hooks table.
 	TableHook = "hooks"
 

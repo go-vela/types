@@ -60,6 +60,8 @@ func TestLibrary_Push_Setters(t *testing.T) {
 	for _, test := range tests {
 		test.actions.SetBranch(test.want.GetBranch())
 		test.actions.SetTag(test.want.GetTag())
+		test.actions.SetDeleteBranch(test.want.GetDeleteBranch())
+		test.actions.SetDeleteTag(test.want.GetDeleteTag())
 
 		if test.actions.GetBranch() != test.want.GetBranch() {
 			t.Errorf("SetBranch is %v, want %v", test.actions.GetBranch(), test.want.GetBranch())
@@ -67,6 +69,14 @@ func TestLibrary_Push_Setters(t *testing.T) {
 
 		if test.actions.GetTag() != test.want.GetTag() {
 			t.Errorf("SetTag is %v, want %v", test.actions.GetTag(), test.want.GetTag())
+		}
+
+		if test.actions.GetDeleteBranch() != test.want.GetDeleteBranch() {
+			t.Errorf("SetDeleteBranch is %v, want %v", test.actions.GetDeleteBranch(), test.want.GetDeleteBranch())
+		}
+
+		if test.actions.GetDeleteTag() != test.want.GetDeleteTag() {
+			t.Errorf("SetDeleteTag is %v, want %v", test.actions.GetDeleteTag(), test.want.GetDeleteTag())
 		}
 	}
 }
@@ -89,7 +99,7 @@ func TestLibrary_Push_ToMask(t *testing.T) {
 	// setup types
 	actions := testPush()
 
-	want := int64(constants.AllowPushBranch | constants.AllowPushTag)
+	want := int64(constants.AllowPushBranch | constants.AllowPushTag | constants.AllowPushDeleteBranch | constants.AllowPushDeleteTag)
 
 	// run test
 	got := actions.ToMask()
@@ -103,6 +113,8 @@ func testPush() *Push {
 	push := new(Push)
 	push.SetBranch(true)
 	push.SetTag(true)
+	push.SetDeleteBranch(true)
+	push.SetDeleteTag(true)
 
 	return push
 }
@@ -111,10 +123,13 @@ func testMask() int64 {
 	return int64(
 		constants.AllowPushBranch |
 			constants.AllowPushTag |
+			constants.AllowPushDeleteBranch |
+			constants.AllowPushDeleteTag |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
 			constants.AllowPullReopen |
 			constants.AllowDeployCreate |
-			constants.AllowCommentCreate,
+			constants.AllowCommentCreate |
+			constants.AllowSchedule,
 	)
 }

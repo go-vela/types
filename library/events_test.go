@@ -8,17 +8,25 @@ import (
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Events_Getters(t *testing.T) {
+	// setup types
+	eventsOne, eventsTwo := testEvents()
+
 	// setup tests
 	tests := []struct {
 		events *Events
 		want   *Events
 	}{
 		{
-			events: testEvents(),
-			want:   testEvents(),
+			events: eventsOne,
+			want:   eventsOne,
+		},
+		{
+			events: eventsTwo,
+			want:   eventsTwo,
 		},
 		{
 			events: new(Events),
@@ -43,6 +51,10 @@ func TestLibrary_Events_Getters(t *testing.T) {
 		if !reflect.DeepEqual(test.events.GetComment(), test.want.GetComment()) {
 			t.Errorf("GetComment is %v, want %v", test.events.GetPush(), test.want.GetPush())
 		}
+
+		if !reflect.DeepEqual(test.events.GetSchedule(), test.want.GetSchedule()) {
+			t.Errorf("GetSchedule is %v, want %v", test.events.GetSchedule(), test.want.GetSchedule())
+		}
 	}
 }
 
@@ -50,14 +62,20 @@ func TestLibrary_Events_Setters(t *testing.T) {
 	// setup types
 	var e *Events
 
+	eventsOne, eventsTwo := testEvents()
+
 	// setup tests
 	tests := []struct {
 		events *Events
 		want   *Events
 	}{
 		{
-			events: testEvents(),
-			want:   testEvents(),
+			events: eventsOne,
+			want:   eventsOne,
+		},
+		{
+			events: eventsTwo,
+			want:   eventsTwo,
 		},
 		{
 			events: e,
@@ -71,6 +89,7 @@ func TestLibrary_Events_Setters(t *testing.T) {
 		test.events.SetPullRequest(test.want.GetPullRequest())
 		test.events.SetDeployment(test.want.GetDeployment())
 		test.events.SetComment(test.want.GetComment())
+		test.events.SetSchedule(test.want.GetSchedule())
 
 		if !reflect.DeepEqual(test.events.GetPush(), test.want.GetPush()) {
 			t.Errorf("SetPush is %v, want %v", test.events.GetPush(), test.want.GetPush())
@@ -87,67 +106,186 @@ func TestLibrary_Events_Setters(t *testing.T) {
 		if !reflect.DeepEqual(test.events.GetComment(), test.want.GetComment()) {
 			t.Errorf("SetComment is %v, want %v", test.events.GetComment(), test.want.GetComment())
 		}
+
+		if !reflect.DeepEqual(test.events.GetSchedule(), test.want.GetSchedule()) {
+			t.Errorf("SetSchedule is %v, want %v", test.events.GetSchedule(), test.want.GetSchedule())
+		}
 	}
 }
 
 func TestLibrary_Events_List(t *testing.T) {
 	// setup types
-	e := testEvents()
+	eventsOne, eventsTwo := testEvents()
 
-	want := []string{"push", "pull_request:opened", "pull_request:synchronize", "tag"}
+	wantOne := []string{
+		"push",
+		"pull_request:opened",
+		"pull_request:synchronize",
+		"pull_request:reopened",
+		"tag",
+		"comment:created",
+		"schedule",
+		"delete:branch",
+	}
+
+	wantTwo := []string{
+		"pull_request:edited",
+		"deployment",
+		"comment:edited",
+		"delete:tag",
+	}
 
 	// run test
-	got := e.List()
+	gotOne := eventsOne.List()
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("List is %v, want %v", got, want)
+	if diff := cmp.Diff(wantOne, gotOne); diff != "" {
+		t.Errorf("(List: -want +got):\n%s", diff)
+	}
+
+	gotTwo := eventsTwo.List()
+
+	if diff := cmp.Diff(wantTwo, gotTwo); diff != "" {
+		t.Errorf("(List Inverse: -want +got):\n%s", diff)
 	}
 }
 
-func TestLibrary_Events_NewEventsFromMask(t *testing.T) {
+func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 	// setup mask
-	mask := int64(
+	maskOne := int64(
 		constants.AllowPushBranch |
 			constants.AllowPushTag |
+			constants.AllowPushDeleteBranch |
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
-			constants.AllowPullReopen,
+			constants.AllowPullReopen |
+			constants.AllowCommentCreate |
+			constants.AllowSchedule,
 	)
 
-	want := testEvents()
+	maskTwo := int64(
+		constants.AllowPushDeleteTag |
+			constants.AllowPullEdit |
+			constants.AllowCommentEdit |
+			constants.AllowDeployCreate,
+	)
+
+	wantOne, wantTwo := testEvents()
 
 	// run test
-	got := NewEventsFromMask(mask)
+	gotOne := NewEventsFromMask(maskOne)
 
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("NewEventsFromMask is %v, want %v", got, want)
+	if diff := cmp.Diff(wantOne, gotOne); diff != "" {
+		t.Errorf("(NewEventsFromMask: -want +got):\n%s", diff)
+	}
+
+	gotTwo := NewEventsFromMask(maskTwo)
+
+	if diff := cmp.Diff(wantTwo, gotTwo); diff != "" {
+		t.Errorf("(NewEventsFromMask Inverse: -want +got):\n%s", diff)
+	}
+
+	// ensure ToDatabase maps back to masks
+	if gotOne.ToDatabase() != maskOne {
+		t.Errorf("ToDatabase returned %d, want %d", gotOne.ToDatabase(), maskOne)
+	}
+
+	if gotTwo.ToDatabase() != maskTwo {
+		t.Errorf("ToDatabase returned %d, want %d", gotTwo.ToDatabase(), maskTwo)
 	}
 }
 
-func testEvents() *Events {
-	e := new(Events)
+func TestLibrary_Events_Allowed(t *testing.T) {
+	// setup types
+	eventsOne, eventsTwo := testEvents()
 
-	pr := new(actions.Pull)
-	pr.SetOpened(true)
-	pr.SetSynchronize(true)
-	pr.SetEdited(false)
-	pr.SetReopened(true)
+	// setup tests
+	tests := []struct {
+		event  string
+		action string
+		want   bool
+	}{
+		{event: "push", want: true},
+		{event: "tag", want: true},
+		{event: "pull_request", action: "opened", want: true},
+		{event: "pull_request", action: "synchronize", want: true},
+		{event: "pull_request", action: "edited", want: false},
+		{event: "pull_request", action: "reopened", want: true},
+		{event: "deployment", want: false},
+		{event: "comment", action: "created", want: true},
+		{event: "comment", action: "edited", want: false},
+		{event: "schedule", want: true},
+		{event: "delete", action: "branch", want: true},
+		{event: "delete", action: "tag", want: false},
+	}
 
-	push := new(actions.Push)
-	push.SetBranch(true)
-	push.SetTag(true)
+	for _, test := range tests {
+		gotOne := eventsOne.Allowed(test.event, test.action)
+		gotTwo := eventsTwo.Allowed(test.event, test.action)
 
-	deploy := new(actions.Deploy)
-	deploy.SetCreated(false)
+		if gotOne != test.want {
+			t.Errorf("Allowed for %s/%s is %v, want %v", test.event, test.action, gotOne, test.want)
+		}
 
-	comment := new(actions.Comment)
-	comment.SetCreated(false)
-	comment.SetEdited(false)
+		if gotTwo == test.want {
+			t.Errorf("Allowed Inverse for %s/%s is %v, want %v", test.event, test.action, gotTwo, !test.want)
+		}
+	}
+}
 
-	e.SetPush(push)
-	e.SetPullRequest(pr)
-	e.SetDeployment(deploy)
-	e.SetComment(comment)
+// testEvents is a helper test function that returns an Events struct and its inverse for unit test coverage.
+func testEvents() (*Events, *Events) {
+	tBool := true
+	fBool := false
 
-	return e
+	e1 := &Events{
+		Push: &actions.Push{
+			Branch:       &tBool,
+			Tag:          &tBool,
+			DeleteBranch: &tBool,
+			DeleteTag:    &fBool,
+		},
+		PullRequest: &actions.Pull{
+			Opened:      &tBool,
+			Synchronize: &tBool,
+			Edited:      &fBool,
+			Reopened:    &tBool,
+		},
+		Deployment: &actions.Deploy{
+			Created: &fBool,
+		},
+		Comment: &actions.Comment{
+			Created: &tBool,
+			Edited:  &fBool,
+		},
+		Schedule: &actions.Schedule{
+			Run: &tBool,
+		},
+	}
+
+	e2 := &Events{
+		Push: &actions.Push{
+			Branch:       &fBool,
+			Tag:          &fBool,
+			DeleteBranch: &fBool,
+			DeleteTag:    &tBool,
+		},
+		PullRequest: &actions.Pull{
+			Opened:      &fBool,
+			Synchronize: &fBool,
+			Edited:      &tBool,
+			Reopened:    &fBool,
+		},
+		Deployment: &actions.Deploy{
+			Created: &tBool,
+		},
+		Comment: &actions.Comment{
+			Created: &fBool,
+			Edited:  &tBool,
+		},
+		Schedule: &actions.Schedule{
+			Run: &fBool,
+		},
+	}
+
+	return e1, e2
 }

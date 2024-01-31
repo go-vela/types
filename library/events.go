@@ -10,10 +10,11 @@ import (
 // Events is the library representation of the various events that generate a
 // webhook from the SCM.
 type Events struct {
-	Push        *actions.Push    `json:"push"`
-	PullRequest *actions.Pull    `json:"pull_request"`
-	Deployment  *actions.Deploy  `json:"deployment"`
-	Comment     *actions.Comment `json:"comment"`
+	Push        *actions.Push     `json:"push"`
+	PullRequest *actions.Pull     `json:"pull_request"`
+	Deployment  *actions.Deploy   `json:"deployment"`
+	Comment     *actions.Comment  `json:"comment"`
+	Schedule    *actions.Schedule `json:"schedule"`
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that
@@ -23,6 +24,7 @@ func NewEventsFromMask(mask int64) *Events {
 	pullActions := new(actions.Pull).FromMask(mask)
 	deployActions := new(actions.Deploy).FromMask(mask)
 	commentActions := new(actions.Comment).FromMask(mask)
+	scheduleActions := new(actions.Schedule).FromMask(mask)
 
 	e := new(Events)
 
@@ -30,8 +32,49 @@ func NewEventsFromMask(mask int64) *Events {
 	e.SetPullRequest(pullActions)
 	e.SetDeployment(deployActions)
 	e.SetComment(commentActions)
+	e.SetSchedule(scheduleActions)
 
 	return e
+}
+
+// Allowed determines whether or not an event + action is allowed based on whether
+// its event:action is set to true in the Events struct.
+func (e *Events) Allowed(event, action string) bool {
+	allowed := false
+
+	// if there is an action, create `event:action` comparator string
+	if len(action) > 0 {
+		event = event + ":" + action
+	}
+
+	switch event {
+	case constants.EventPush:
+		allowed = e.GetPush().GetBranch()
+	case constants.EventPull + ":" + constants.ActionOpened:
+		allowed = e.GetPullRequest().GetOpened()
+	case constants.EventPull + ":" + constants.ActionSynchronize:
+		allowed = e.GetPullRequest().GetSynchronize()
+	case constants.EventPull + ":" + constants.ActionEdited:
+		allowed = e.GetPullRequest().GetEdited()
+	case constants.EventPull + ":" + constants.ActionReopened:
+		allowed = e.GetPullRequest().GetReopened()
+	case constants.EventTag:
+		allowed = e.GetPush().GetTag()
+	case constants.EventComment + ":" + constants.ActionCreated:
+		allowed = e.GetComment().GetCreated()
+	case constants.EventComment + ":" + constants.ActionEdited:
+		allowed = e.GetComment().GetEdited()
+	case constants.EventDeploy:
+		allowed = e.GetDeployment().GetCreated()
+	case constants.EventSchedule:
+		allowed = e.GetSchedule().GetRun()
+	case constants.EventDelete + ":" + constants.ActionBranch:
+		allowed = e.GetPush().GetDeleteBranch()
+	case constants.EventDelete + ":" + constants.ActionTag:
+		allowed = e.GetPush().GetDeleteTag()
+	}
+
+	return allowed
 }
 
 // List is an Events method that generates a comma-separated list of event:action
@@ -55,6 +98,10 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionEdited)
 	}
 
+	if e.GetPullRequest().GetReopened() {
+		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionReopened)
+	}
+
 	if e.GetPush().GetTag() {
 		eventSlice = append(eventSlice, constants.EventTag)
 	}
@@ -71,12 +118,29 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventComment+":"+constants.ActionEdited)
 	}
 
+	if e.GetSchedule().GetRun() {
+		eventSlice = append(eventSlice, constants.EventSchedule)
+	}
+
+	if e.GetPush().GetDeleteBranch() {
+		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionBranch)
+	}
+
+	if e.GetPush().GetDeleteTag() {
+		eventSlice = append(eventSlice, constants.EventDelete+":"+constants.ActionTag)
+	}
+
 	return eventSlice
 }
 
 // ToDatabase is an Events method that converts a nested Events struct into an integer event mask.
 func (e *Events) ToDatabase() int64 {
-	return 0 | e.GetPush().ToMask() | e.GetPullRequest().ToMask() | e.GetComment().ToMask() | e.GetDeployment().ToMask()
+	return 0 |
+		e.GetPush().ToMask() |
+		e.GetPullRequest().ToMask() |
+		e.GetComment().ToMask() |
+		e.GetDeployment().ToMask() |
+		e.GetSchedule().ToMask()
 }
 
 // GetPush returns the Push field from the provided Events. If the object is nil,
@@ -121,6 +185,17 @@ func (e *Events) GetComment() *actions.Comment {
 	}
 
 	return e.Comment
+}
+
+// GetSchedule returns the Schedule field from the provided Events. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (e *Events) GetSchedule() *actions.Schedule {
+	// return zero value if Events type or Schedule field is nil
+	if e == nil || e.Schedule == nil {
+		return new(actions.Schedule)
+	}
+
+	return e.Schedule
 }
 
 // SetPush sets the Events Push field.
@@ -173,4 +248,17 @@ func (e *Events) SetComment(v *actions.Comment) {
 	}
 
 	e.Comment = v
+}
+
+// SetSchedule sets the Events Schedule field.
+//
+// When the provided Events type is nil, it
+// will set nothing and immediately return.
+func (e *Events) SetSchedule(v *actions.Schedule) {
+	// return if Events type is nil
+	if e == nil {
+		return
+	}
+
+	e.Schedule = v
 }

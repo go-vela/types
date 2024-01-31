@@ -38,10 +38,6 @@ func TestLibrary_Deployment_Getters(t *testing.T) {
 			t.Errorf("GetURL is %v, want %v", test.deployment.GetURL(), test.want.GetURL())
 		}
 
-		if test.deployment.GetUser() != test.want.GetUser() {
-			t.Errorf("GetUser is %v, want %v", test.deployment.GetUser(), test.want.GetUser())
-		}
-
 		if test.deployment.GetCommit() != test.want.GetCommit() {
 			t.Errorf("GetCommit is %v, want %v", test.deployment.GetCommit(), test.want.GetCommit())
 		}
@@ -64,6 +60,14 @@ func TestLibrary_Deployment_Getters(t *testing.T) {
 
 		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
 			t.Errorf("GetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
+		}
+
+		if test.deployment.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("GetCreatedAt is %v, want %v", test.deployment.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+
+		if test.deployment.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("GetCreatedBy is %v, want %v", test.deployment.GetCreatedBy(), test.want.GetCreatedBy())
 		}
 	}
 }
@@ -90,18 +94,24 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 	// run tests
 	for _, test := range tests {
 		test.deployment.SetID(test.want.GetID())
+		test.deployment.SetNumber(test.want.GetNumber())
 		test.deployment.SetRepoID(test.want.GetRepoID())
 		test.deployment.SetURL(test.want.GetURL())
-		test.deployment.SetUser(test.want.GetUser())
 		test.deployment.SetCommit(test.want.GetCommit())
 		test.deployment.SetRef(test.want.GetRef())
 		test.deployment.SetTask(test.want.GetTask())
 		test.deployment.SetTarget(test.want.GetTarget())
 		test.deployment.SetDescription(test.want.GetDescription())
 		test.deployment.SetPayload(test.want.GetPayload())
+		test.deployment.SetCreatedAt(test.want.GetCreatedAt())
+		test.deployment.SetCreatedBy(test.want.GetCreatedBy())
 
 		if test.deployment.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.deployment.GetID(), test.want.GetID())
+		}
+
+		if test.deployment.GetNumber() != test.want.GetNumber() {
+			t.Errorf("SetNumber is %v, want %v", test.deployment.GetNumber(), test.want.GetNumber())
 		}
 
 		if test.deployment.GetRepoID() != test.want.GetRepoID() {
@@ -110,10 +120,6 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 
 		if test.deployment.GetURL() != test.want.GetURL() {
 			t.Errorf("SetURL is %v, want %v", test.deployment.GetURL(), test.want.GetURL())
-		}
-
-		if test.deployment.GetUser() != test.want.GetUser() {
-			t.Errorf("SetUser is %v, want %v", test.deployment.GetUser(), test.want.GetUser())
 		}
 
 		if test.deployment.GetCommit() != test.want.GetCommit() {
@@ -139,6 +145,14 @@ func TestLibrary_Deployment_Setters(t *testing.T) {
 		if !reflect.DeepEqual(test.deployment.GetPayload(), test.want.GetPayload()) {
 			t.Errorf("SetPayload is %v, want %v", test.deployment.GetPayload(), test.want.GetPayload())
 		}
+
+		if test.deployment.GetCreatedAt() != test.want.GetCreatedAt() {
+			t.Errorf("SetCreatedAt is %v, want %v", test.deployment.GetCreatedAt(), test.want.GetCreatedAt())
+		}
+
+		if test.deployment.GetCreatedBy() != test.want.GetCreatedBy() {
+			t.Errorf("SetCreatedBy is %v, want %v", test.deployment.GetCreatedBy(), test.want.GetCreatedBy())
+		}
 	}
 }
 
@@ -148,26 +162,30 @@ func TestLibrary_Deployment_String(t *testing.T) {
 
 	want := fmt.Sprintf(`{
   Commit: %s,
+  CreatedAt: %d,
+  CreatedBy: %s,
   Description: %s,
   ID: %d,
+  Number: %d,
   Ref: %s,
   RepoID: %d,
   Target: %s,
   Task: %s,
   URL: %s,
-  User: %s,
   Payload: %s,
   Builds: %d,
 }`,
 		d.GetCommit(),
+		d.GetCreatedAt(),
+		d.GetCreatedBy(),
 		d.GetDescription(),
 		d.GetID(),
+		d.GetNumber(),
 		d.GetRef(),
 		d.GetRepoID(),
 		d.GetTarget(),
 		d.GetTask(),
 		d.GetURL(),
-		d.GetUser(),
 		d.GetPayload(),
 		len(d.GetBuilds()),
 	)
@@ -186,9 +204,9 @@ func testDeployment() *Deployment {
 	d := new(Deployment)
 
 	d.SetID(1)
+	d.SetNumber(0)
 	d.SetRepoID(1)
 	d.SetURL("https://api.github.com/repos/github/octocat/deployments/1")
-	d.SetUser("octocat")
 	d.SetCommit("48afb5bdc41ad69bf22588491333f7cf71135163")
 	d.SetRef("refs/heads/main")
 	d.SetTask("vela-deploy")
@@ -197,6 +215,8 @@ func testDeployment() *Deployment {
 	d.SetPayload(map[string]string{
 		"foo": "test1",
 	})
+	d.SetCreatedAt(1)
+	d.SetCreatedBy("octocat")
 
 	return d
 }

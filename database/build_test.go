@@ -276,7 +276,7 @@ func testBuild() *Build {
 		Started:       sql.NullInt64{Int64: 1563474078, Valid: true},
 		Finished:      sql.NullInt64{Int64: 1563474079, Valid: true},
 		Deploy:        sql.NullString{String: "", Valid: false},
-		DeployNumber:  sql.NullInt64{Int64: 0, Valid: true},
+		DeployNumber:  sql.NullInt64{Int64: 0, Valid: false},
 		DeployPayload: raw.StringSliceMap{"foo": "test1", "bar": "test2"},
 		Clone:         sql.NullString{String: "https://github.com/github/octocat.git", Valid: true},
 		Source:        sql.NullString{String: "https://github.com/github/octocat/48afb5bdc41ad69bf22588491333f7cf71135163", Valid: true},

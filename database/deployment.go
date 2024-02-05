@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
 	"github.com/go-vela/types/raw"
 	"github.com/lib/pq"
@@ -151,6 +152,22 @@ func (d *Deployment) Validate() error {
 	d.Task = sql.NullString{String: sanitize(d.Task.String), Valid: d.Task.Valid}
 	d.Target = sql.NullString{String: sanitize(d.Target.String), Valid: d.Target.Valid}
 	d.Description = sql.NullString{String: sanitize(d.Description.String), Valid: d.Description.Valid}
+
+	// calculate total size of builds
+	total := 0
+	for _, b := range d.Builds {
+		total += len(b)
+	}
+
+	// verify the Builds field is within the database constraints and evict if not
+	// len is to factor in number of comma separators included in the database field,
+	// removing 1 due to the last item not having an appended comma
+	if diff := (total + len(d.Builds) - 1) - constants.DeployBuildsMaxSize; diff > 0 {
+		for diff > 0 {
+			diff = diff - (len(d.Builds[0]) + 1)
+			d.Builds = d.Builds[1:]
+		}
+	}
 
 	return nil
 }

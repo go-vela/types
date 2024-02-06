@@ -30,4 +30,7 @@ const (
 
 	// TopicsMaxSize defines the maximum size in characters for repo topics. Ex: GitHub has a 20-topic, 50-char limit.
 	TopicsMaxSize = 1020
+
+	// DeployBuildsMaxSize defines the maximum size in characters for deployment builds.
+	DeployBuildsMaxSize = 500
 )

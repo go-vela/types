@@ -129,6 +129,7 @@ func TestDatabase_Deployment_Validate(t *testing.T) {
 	tests := []struct {
 		failure    bool
 		deployment *Deployment
+		want       *Deployment
 	}{
 		{
 			failure:    false,
@@ -140,12 +141,46 @@ func TestDatabase_Deployment_Validate(t *testing.T) {
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
 				RepoID: sql.NullInt64{Int64: 1, Valid: true},
 			},
+			want: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+			},
 		},
 		{ // no repoID set for deployment
 			failure: true,
 			deployment: &Deployment{
 				ID:     sql.NullInt64{Int64: 1, Valid: true},
 				Number: sql.NullInt64{Int64: 1, Valid: true},
+			},
+			want: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+			},
+		},
+		{ // too many builds
+			failure: true,
+			deployment: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt64{Int64: 1, Valid: true},
+				Builds: generateBuilds(100),
+			},
+			want: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Builds: generateBuilds(50),
+			},
+		},
+		{ // acceptable builds
+			failure: true,
+			deployment: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				Number: sql.NullInt64{Int64: 1, Valid: true},
+				Builds: generateBuilds(30),
+			},
+			want: &Deployment{
+				ID:     sql.NullInt64{Int64: 1, Valid: true},
+				RepoID: sql.NullInt64{Int64: 1, Valid: true},
+				Builds: generateBuilds(30),
 			},
 		},
 	}
@@ -252,4 +287,16 @@ func testDeployment() *Deployment {
 		CreatedBy:   sql.NullString{String: "octocat", Valid: true},
 		Builds:      pq.StringArray{"1"},
 	}
+}
+
+// generateBuilds returns a list of valid builds that exceed the maximum size.
+func generateBuilds(amount int) []string {
+	// initialize empty builds
+	builds := []string{}
+
+	for i := 0; i < amount; i++ {
+		builds = append(builds, "123456789")
+	}
+
+	return builds
 }

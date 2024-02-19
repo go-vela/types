@@ -173,7 +173,7 @@ func (b *Build) Nullify() *Build {
 
 	// check if the DeployNumber field should be false
 	if b.DeployNumber.Int64 == 0 {
-		b.Deploy.Valid = false
+		b.DeployNumber.Valid = false
 	}
 
 	// check if the Clone field should be false

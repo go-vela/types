@@ -10,8 +10,10 @@ import (
 //
 // swagger:model BuildExecutable
 type BuildExecutable struct {
-	ID      *int64 `json:"id,omitempty"`
-	BuildID *int64 `json:"build_id,omitempty"`
+	ID        *int64 `json:"id,omitempty"`
+	BuildID   *int64 `json:"build_id,omitempty"`
+	RepoID    *int64 `json:"repo_id,omitempty"`
+	CreatedAt *int64 `json:"created_at,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }
@@ -40,6 +42,32 @@ func (b *BuildExecutable) GetBuildID() int64 {
 	}
 
 	return *b.BuildID
+}
+
+// GetRepoID returns the RepoID field.
+//
+// When the provided BuildExecutable type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *BuildExecutable) GetRepoID() int64 {
+	// return zero value if BuildExecutable type or RepoID field is nil
+	if b == nil || b.RepoID == nil {
+		return 0
+	}
+
+	return *b.RepoID
+}
+
+// GetCreatedAt returns the CreatedAt field.
+//
+// When the provided BuildExecutable type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (b *BuildExecutable) GetCreatedAt() int64 {
+	// return zero value if BuildExecutable type or CreatedAt field is nil
+	if b == nil || b.CreatedAt == nil {
+		return 0
+	}
+
+	return *b.CreatedAt
 }
 
 // GetData returns the Data field.
@@ -79,6 +107,32 @@ func (b *BuildExecutable) SetBuildID(v int64) {
 	}
 
 	b.BuildID = &v
+}
+
+// SetRepoID sets the RepoID field.
+//
+// When the provided BuildExecutable type is nil, it
+// will set nothing and immediately return.
+func (b *BuildExecutable) SetRepoID(v int64) {
+	// return if BuildExecutable type is nil
+	if b == nil {
+		return
+	}
+
+	b.RepoID = &v
+}
+
+// SetCreatedAt sets the CreatedAt field.
+//
+// When the provided BuildExecutable type is nil, it
+// will set nothing and immediately return.
+func (b *BuildExecutable) SetCreatedAt(v int64) {
+	// return if BuildExecutable type is nil
+	if b == nil {
+		return
+	}
+
+	b.CreatedAt = &v
 }
 
 // SetData sets the Data field.

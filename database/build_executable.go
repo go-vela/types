@@ -14,13 +14,19 @@ var (
 	// ErrEmptyBuildExecutableBuildID defines the error type when a
 	// BuildExecutable type has an empty BuildID field provided.
 	ErrEmptyBuildExecutableBuildID = errors.New("empty build_executable build_id provided")
+
+	// ErrEmptyBuildExecutableRepoID defines the error type when a
+	// BuildExecutable type has an empty RepoID field provided.
+	ErrEmptyBuildExecutableRepoID = errors.New("empty build_executable repo_id provided")
 )
 
 // BuildExecutable is the database representation of a BuildExecutable.
 type BuildExecutable struct {
-	ID      sql.NullInt64 `sql:"id"`
-	BuildID sql.NullInt64 `sql:"build_id"`
-	Data    []byte        `sql:"data"`
+	ID        sql.NullInt64 `sql:"id"`
+	BuildID   sql.NullInt64 `sql:"build_id"`
+	RepoID    sql.NullInt64 `sql:"repo_id"`
+	CreatedAt sql.NullInt64 `sql:"created_at"`
+	Data      []byte        `sql:"data"`
 }
 
 // Compress will manipulate the existing data for the
@@ -126,6 +132,11 @@ func (b *BuildExecutable) Nullify() *BuildExecutable {
 		b.BuildID.Valid = false
 	}
 
+	// check if the RepoID field should be false
+	if b.RepoID.Int64 == 0 {
+		b.RepoID.Valid = false
+	}
+
 	return b
 }
 
@@ -136,6 +147,8 @@ func (b *BuildExecutable) ToLibrary() *library.BuildExecutable {
 
 	buildExecutable.SetID(b.ID.Int64)
 	buildExecutable.SetBuildID(b.BuildID.Int64)
+	buildExecutable.SetRepoID(b.RepoID.Int64)
+	buildExecutable.SetCreatedAt(b.CreatedAt.Int64)
 	buildExecutable.SetData(b.Data)
 
 	return buildExecutable
@@ -149,6 +162,11 @@ func (b *BuildExecutable) Validate() error {
 		return ErrEmptyBuildExecutableBuildID
 	}
 
+	// verify the RepoID field is populated
+	if b.RepoID.Int64 <= 0 {
+		return ErrEmptyBuildExecutableRepoID
+	}
+
 	return nil
 }
 
@@ -156,9 +174,11 @@ func (b *BuildExecutable) Validate() error {
 // to a database BuildExecutable type.
 func BuildExecutableFromLibrary(c *library.BuildExecutable) *BuildExecutable {
 	buildExecutable := &BuildExecutable{
-		ID:      sql.NullInt64{Int64: c.GetID(), Valid: true},
-		BuildID: sql.NullInt64{Int64: c.GetBuildID(), Valid: true},
-		Data:    c.GetData(),
+		ID:        sql.NullInt64{Int64: c.GetID(), Valid: true},
+		BuildID:   sql.NullInt64{Int64: c.GetBuildID(), Valid: true},
+		RepoID:    sql.NullInt64{Int64: c.GetRepoID(), Valid: true},
+		CreatedAt: sql.NullInt64{Int64: c.GetCreatedAt(), Valid: true},
+		Data:      c.GetData(),
 	}
 
 	return buildExecutable.Nullify()

@@ -31,6 +31,7 @@ type Step struct {
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
+	CheckID      *int64  `json:"check_id,omitempty"`
 }
 
 // Duration calculates and returns the total amount of
@@ -78,6 +79,7 @@ func (s *Step) Environment() map[string]string {
 		"VELA_STEP_STAGE":        ToString(s.GetStage()),
 		"VELA_STEP_STARTED":      ToString(s.GetStarted()),
 		"VELA_STEP_STATUS":       ToString(s.GetStatus()),
+		"VELA_STEP_CHECK_ID":     ToString(s.GetCheckID()),
 	}
 }
 
@@ -289,6 +291,19 @@ func (s *Step) GetDistribution() string {
 	return *s.Distribution
 }
 
+// GetCheckID returns the CheckID field.
+//
+// When the provided Step type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Step) GetCheckID() int64 {
+	// return zero value if Step type or CheckID field is nil
+	if s == nil || s.CheckID == nil {
+		return 0
+	}
+
+	return *s.CheckID
+}
+
 // SetID sets the ID field.
 //
 // When the provided Step type is nil, it
@@ -497,6 +512,19 @@ func (s *Step) SetDistribution(v string) {
 	s.Distribution = &v
 }
 
+// SetCheckID sets the CheckID field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
+func (s *Step) SetCheckID(v int64) {
+	// return if Step type is nil
+	if s == nil {
+		return
+	}
+
+	s.CheckID = &v
+}
+
 // String implements the Stringer interface for the Step type.
 func (s *Step) String() string {
 	return fmt.Sprintf(`{
@@ -512,6 +540,7 @@ func (s *Step) String() string {
   Name: %s,
   Number: %d,
   RepoID: %d,
+  CheckID: %d,
   Runtime: %s,
   Stage: %s,
   Started: %d,
@@ -529,6 +558,7 @@ func (s *Step) String() string {
 		s.GetName(),
 		s.GetNumber(),
 		s.GetRepoID(),
+		s.GetCheckID(),
 		s.GetRuntime(),
 		s.GetStage(),
 		s.GetStarted(),

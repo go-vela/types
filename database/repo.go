@@ -70,6 +70,7 @@ type Repo struct {
 	PipelineType sql.NullString `sql:"pipeline_type"`
 	PreviousName sql.NullString `sql:"previous_name"`
 	ApproveBuild sql.NullString `sql:"approve_build"`
+	InstallID    sql.NullInt64  `sql:"install_id"`
 }
 
 // Decrypt will manipulate the existing repo hash by
@@ -210,6 +211,11 @@ func (r *Repo) Nullify() *Repo {
 		r.ApproveBuild.Valid = false
 	}
 
+	// check if the InstallID field should be false
+	if r.InstallID.Int64 == 0 {
+		r.InstallID.Valid = false
+	}
+
 	return r
 }
 
@@ -244,6 +250,7 @@ func (r *Repo) ToLibrary() *library.Repo {
 	repo.SetPipelineType(r.PipelineType.String)
 	repo.SetPreviousName(r.PreviousName.String)
 	repo.SetApproveBuild(r.ApproveBuild.String)
+	repo.SetInstallID(r.InstallID.Int64)
 
 	return repo
 }
@@ -341,6 +348,7 @@ func RepoFromLibrary(r *library.Repo) *Repo {
 		PipelineType: sql.NullString{String: r.GetPipelineType(), Valid: true},
 		PreviousName: sql.NullString{String: r.GetPreviousName(), Valid: true},
 		ApproveBuild: sql.NullString{String: r.GetApproveBuild(), Valid: true},
+		InstallID:    sql.NullInt64{Int64: r.GetInstallID(), Valid: true},
 	}
 
 	return repo.Nullify()

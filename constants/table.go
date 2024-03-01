@@ -10,6 +10,9 @@ const (
 	// TableBuildExecutable defines the table type for the database build_executables table.
 	TableBuildExecutable = "build_executables"
 
+	// TableDashboard defines the table type for the database dashboards table.
+	TableDashboard = "dashboards"
+
 	// TableDeployment defines the table type for the database deployments table.
 	TableDeployment = "deployments"
 

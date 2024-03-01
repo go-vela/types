@@ -49,6 +49,7 @@ type User struct {
 	Favorites    pq.StringArray `sql:"favorites" gorm:"type:varchar(5000)"`
 	Active       sql.NullBool   `sql:"active"`
 	Admin        sql.NullBool   `sql:"admin"`
+	Dashboards   pq.StringArray `sql:"dashboards" gorm:"type:varchar(5000)"`
 }
 
 // Decrypt will manipulate the existing user tokens by
@@ -210,6 +211,7 @@ func (u *User) ToLibrary() *library.User {
 	user.SetActive(u.Active.Bool)
 	user.SetAdmin(u.Admin.Bool)
 	user.SetFavorites(u.Favorites)
+	user.SetDashboards(u.Dashboards)
 
 	return user
 }
@@ -271,6 +273,7 @@ func UserFromLibrary(u *library.User) *User {
 		Active:       sql.NullBool{Bool: u.GetActive(), Valid: true},
 		Admin:        sql.NullBool{Bool: u.GetAdmin(), Valid: true},
 		Favorites:    pq.StringArray(u.GetFavorites()),
+		Dashboards:   pq.StringArray(u.GetDashboards()),
 	}
 
 	return user.Nullify()

@@ -167,6 +167,7 @@ func TestLibrary_User_String(t *testing.T) {
 	want := fmt.Sprintf(`{
   Active: %t,
   Admin: %t,
+  Dashboards: %s,
   Favorites: %s,
   ID: %d,
   Name: %s,
@@ -174,6 +175,7 @@ func TestLibrary_User_String(t *testing.T) {
 }`,
 		u.GetActive(),
 		u.GetAdmin(),
+		u.GetDashboards(),
 		u.GetFavorites(),
 		u.GetID(),
 		u.GetName(),

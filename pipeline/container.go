@@ -52,6 +52,7 @@ type (
 		Volumes      VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
 		User         string            `json:"user,omitempty"        yaml:"user,omitempty"`
 		ReportStatus bool              `json:"report_status,omitempty" yaml:"report_status,omitempty"`
+		ReportPath   string            `json:"report_path,omitempty"  yaml:"report_path,omitempty"`
 	}
 )
 

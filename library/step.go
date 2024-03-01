@@ -32,6 +32,7 @@ type Step struct {
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
 	CheckID      *int64  `json:"check_id,omitempty"`
+	Report       *Report `json:"report,omitempty"`
 }
 
 // Duration calculates and returns the total amount of
@@ -304,6 +305,19 @@ func (s *Step) GetCheckID() int64 {
 	return *s.CheckID
 }
 
+// GetReport returns the Report field.
+//
+// When the provided Step type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Step) GetReport() *Report {
+	// return zero value if Report type is nil
+	if s == nil {
+		return nil
+	}
+
+	return s.Report
+}
+
 // SetID sets the ID field.
 //
 // When the provided Step type is nil, it
@@ -523,6 +537,19 @@ func (s *Step) SetCheckID(v int64) {
 	}
 
 	s.CheckID = &v
+}
+
+// SetReport sets the Report field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
+func (s *Step) SetReport(v *Report) {
+	// return if Report type is nil
+	if s == nil {
+		return
+	}
+
+	s.Report = v
 }
 
 // String implements the Stringer interface for the Step type.

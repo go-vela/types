@@ -35,6 +35,7 @@ type (
 		Privileged   bool                   `yaml:"privileged,omitempty"  json:"privileged,omitempty" jsonschema:"description=Run the container with extra privileges.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-privileged-tag"`
 		User         string                 `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Set the user for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-tag"`
 		ReportStatus bool                   `yaml:"report_status,omitempty" json:"report_status,omitempty" jsonschema:"description=Report the status of the container to the SCM.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-report_status-tag"`
+		ReportPath   string                 `yaml:"report_path,omitempty"  json:"report_path,omitempty" jsonschema:"description=Path to the file containing the status report.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-report_path-tag"`
 	}
 )
 
@@ -62,6 +63,7 @@ func (s *StepSlice) ToPipeline() *pipeline.ContainerSlice {
 			Volumes:      *step.Volumes.ToPipeline(),
 			User:         step.User,
 			ReportStatus: step.ReportStatus,
+			ReportPath:   step.ReportPath,
 		})
 	}
 
@@ -109,6 +111,10 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// a `false` pull policy equates to `not_present`
 		if strings.EqualFold(step.Pull, "false") {
 			step.Pull = constants.PullNotPresent
+		}
+
+		if len(step.ReportPath) > 0 && !strings.HasSuffix(step.ReportPath, ".json") && !strings.HasSuffix(step.ReportPath, ".JSON") {
+			step.ReportPath = fmt.Sprintf("%s.json", step.ReportPath)
 		}
 	}
 

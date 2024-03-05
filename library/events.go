@@ -58,6 +58,8 @@ func (e *Events) Allowed(event, action string) bool {
 		allowed = e.GetPullRequest().GetEdited()
 	case constants.EventPull + ":" + constants.ActionReopened:
 		allowed = e.GetPullRequest().GetReopened()
+	case constants.EventPull + ":" + constants.ActionLabeled:
+		allowed = e.GetPullRequest().GetLabeled()
 	case constants.EventTag:
 		allowed = e.GetPush().GetTag()
 	case constants.EventComment + ":" + constants.ActionCreated:

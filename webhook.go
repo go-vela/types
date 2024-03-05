@@ -19,6 +19,7 @@ type PullRequest struct {
 	Comment    string
 	Number     int
 	IsFromFork bool
+	Label      string
 }
 
 // Webhook defines a struct that is used to return

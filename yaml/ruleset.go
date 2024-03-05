@@ -30,6 +30,7 @@ type (
 		Status  []string `yaml:"status,omitempty,flow"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Tag     []string `yaml:"tag,omitempty,flow"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Target  []string `yaml:"target,omitempty,flow"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Label   []string `yaml:"label,omitempty,flow"   json:"label,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 	}
 )
 
@@ -84,6 +85,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	advanced.If.Status = append(advanced.If.Status, simple.Status...)
 	advanced.If.Tag = append(advanced.If.Tag, simple.Tag...)
 	advanced.If.Target = append(advanced.If.Target, simple.Target...)
+	advanced.If.Label = append(advanced.If.Label, simple.Label...)
 
 	// set ruleset `if` to advanced `if` rules
 	r.If = advanced.If
@@ -113,6 +115,7 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 		Status:  r.Status,
 		Tag:     r.Tag,
 		Target:  r.Target,
+		Label:   r.Label,
 	}
 }
 
@@ -128,6 +131,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		Status  raw.StringSlice
 		Tag     raw.StringSlice
 		Target  raw.StringSlice
+		Label   raw.StringSlice
 	})
 
 	// attempt to unmarshal rules
@@ -140,6 +144,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		r.Status = rules.Status
 		r.Tag = rules.Tag
 		r.Target = rules.Target
+		r.Label = rules.Label
 
 		// account for users who use non-scoped pull_request event
 		events := []string{}

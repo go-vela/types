@@ -38,6 +38,7 @@ type (
 		Tag      Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
 		Parallel bool     `json:"-"                 yaml:"-"`
+		Label    Ruletype `json:"label,omitempty"   yaml:"label,omitempty"`
 	}
 
 	// Ruletype is the pipeline representation of an element
@@ -58,6 +59,7 @@ type (
 		Tag      string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   string   `json:"target,omitempty"  yaml:"target,omitempty"`
 		Parallel bool     `json:"-"                 yaml:"-"`
+		Label    string   `json:"label,omitempty"   yaml:"label,omitempty"`
 	}
 )
 
@@ -111,7 +113,8 @@ func (r *Rules) Empty() bool {
 		len(r.Repo) == 0 &&
 		len(r.Status) == 0 &&
 		len(r.Tag) == 0 &&
-		len(r.Target) == 0 {
+		len(r.Target) == 0 &&
+		len(r.Label) == 0 {
 		return true
 	}
 
@@ -261,10 +264,15 @@ func matches(r *Rules, from *RuleData, matcher, path, logic string) (bool, error
 		return false, err
 	}
 
+	matchLabel, err := r.Label.Match(from.Label, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
 	switch logic {
 	case constants.OperatorAnd:
-		return (matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && status), nil
+		return (matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && matchLabel && status), nil
 	default:
-		return (matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || status), nil
+		return (matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || matchLabel || status), nil
 	}
 }

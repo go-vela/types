@@ -171,6 +171,7 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetEvents([]string{"push", "tag", "deployment"})
 	want.SetAllowEvents(library.NewEventsFromMask(1))
 	want.SetAllowCommand(true)
+	want.SetAllowSubstitution(true)
 	want.SetCreatedAt(tsCreate)
 	want.SetCreatedBy("octocat")
 	want.SetUpdatedAt(tsUpdate)
@@ -295,6 +296,7 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowEvents(library.NewEventsFromMask(1))
 	s.SetAllowCommand(true)
+	s.SetAllowSubstitution(true)
 	s.SetCreatedAt(tsCreate)
 	s.SetCreatedBy("octocat")
 	s.SetUpdatedAt(tsUpdate)
@@ -314,20 +316,21 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 // type with all fields set to a fake value.
 func testSecret() *Secret {
 	return &Secret{
-		ID:           sql.NullInt64{Int64: 1, Valid: true},
-		Org:          sql.NullString{String: "github", Valid: true},
-		Repo:         sql.NullString{String: "octocat", Valid: true},
-		Team:         sql.NullString{String: "octokitties", Valid: true},
-		Name:         sql.NullString{String: "foo", Valid: true},
-		Value:        sql.NullString{String: "bar", Valid: true},
-		Type:         sql.NullString{String: "repo", Valid: true},
-		Images:       []string{"alpine"},
-		Events:       []string{"push", "tag", "deployment"},
-		AllowEvents:  sql.NullInt64{Int64: 1, Valid: true},
-		AllowCommand: sql.NullBool{Bool: true, Valid: true},
-		CreatedAt:    sql.NullInt64{Int64: tsCreate, Valid: true},
-		CreatedBy:    sql.NullString{String: "octocat", Valid: true},
-		UpdatedAt:    sql.NullInt64{Int64: tsUpdate, Valid: true},
-		UpdatedBy:    sql.NullString{String: "octocat2", Valid: true},
+		ID:                sql.NullInt64{Int64: 1, Valid: true},
+		Org:               sql.NullString{String: "github", Valid: true},
+		Repo:              sql.NullString{String: "octocat", Valid: true},
+		Team:              sql.NullString{String: "octokitties", Valid: true},
+		Name:              sql.NullString{String: "foo", Valid: true},
+		Value:             sql.NullString{String: "bar", Valid: true},
+		Type:              sql.NullString{String: "repo", Valid: true},
+		Images:            []string{"alpine"},
+		Events:            []string{"push", "tag", "deployment"},
+		AllowEvents:       sql.NullInt64{Int64: 1, Valid: true},
+		AllowCommand:      sql.NullBool{Bool: true, Valid: true},
+		AllowSubstitution: sql.NullBool{Bool: true, Valid: true},
+		CreatedAt:         sql.NullInt64{Int64: tsCreate, Valid: true},
+		CreatedBy:         sql.NullString{String: "octocat", Valid: true},
+		UpdatedAt:         sql.NullInt64{Int64: tsUpdate, Valid: true},
+		UpdatedBy:         sql.NullString{String: "octocat2", Valid: true},
 	}
 }

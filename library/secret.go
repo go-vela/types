@@ -14,21 +14,22 @@ import (
 //
 // swagger:model Secret
 type Secret struct {
-	ID           *int64    `json:"id,omitempty"`
-	Org          *string   `json:"org,omitempty"`
-	Repo         *string   `json:"repo,omitempty"`
-	Team         *string   `json:"team,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	Value        *string   `json:"value,omitempty"`
-	Type         *string   `json:"type,omitempty"`
-	Images       *[]string `json:"images,omitempty"`
-	Events       *[]string `json:"events,omitempty"`
-	AllowEvents  *Events   `json:"allow_events,omitempty"`
-	AllowCommand *bool     `json:"allow_command,omitempty"`
-	CreatedAt    *int64    `json:"created_at,omitempty"`
-	CreatedBy    *string   `json:"created_by,omitempty"`
-	UpdatedAt    *int64    `json:"updated_at,omitempty"`
-	UpdatedBy    *string   `json:"updated_by,omitempty"`
+	ID                *int64    `json:"id,omitempty"`
+	Org               *string   `json:"org,omitempty"`
+	Repo              *string   `json:"repo,omitempty"`
+	Team              *string   `json:"team,omitempty"`
+	Name              *string   `json:"name,omitempty"`
+	Value             *string   `json:"value,omitempty"`
+	Type              *string   `json:"type,omitempty"`
+	Images            *[]string `json:"images,omitempty"`
+	Events            *[]string `json:"events,omitempty"`
+	AllowEvents       *Events   `json:"allow_events,omitempty"`
+	AllowCommand      *bool     `json:"allow_command,omitempty"`
+	AllowSubstitution *bool     `json:"allow_substitution,omitempty"`
+	CreatedAt         *int64    `json:"created_at,omitempty"`
+	CreatedBy         *string   `json:"created_by,omitempty"`
+	UpdatedAt         *int64    `json:"updated_at,omitempty"`
+	UpdatedBy         *string   `json:"updated_by,omitempty"`
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -39,21 +40,22 @@ func (s *Secret) Sanitize() *Secret {
 	value := constants.SecretMask
 
 	return &Secret{
-		ID:           s.ID,
-		Org:          s.Org,
-		Repo:         s.Repo,
-		Team:         s.Team,
-		Name:         s.Name,
-		Value:        &value,
-		Type:         s.Type,
-		Images:       s.Images,
-		Events:       s.Events,
-		AllowEvents:  s.AllowEvents,
-		AllowCommand: s.AllowCommand,
-		CreatedAt:    s.CreatedAt,
-		CreatedBy:    s.CreatedBy,
-		UpdatedAt:    s.UpdatedAt,
-		UpdatedBy:    s.UpdatedBy,
+		ID:                s.ID,
+		Org:               s.Org,
+		Repo:              s.Repo,
+		Team:              s.Team,
+		Name:              s.Name,
+		Value:             &value,
+		Type:              s.Type,
+		Images:            s.Images,
+		Events:            s.Events,
+		AllowEvents:       s.AllowEvents,
+		AllowCommand:      s.AllowCommand,
+		AllowSubstitution: s.AllowSubstitution,
+		CreatedAt:         s.CreatedAt,
+		CreatedBy:         s.CreatedBy,
+		UpdatedAt:         s.UpdatedAt,
+		UpdatedBy:         s.UpdatedBy,
 	}
 }
 
@@ -66,6 +68,11 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 
 	// check if commands are utilized when not allowed
 	if !commands && len(from.Commands) > 0 {
+		return false
+	}
+
+	// check if a custom entrypoint is utilized when not allowed
+	if !commands && len(from.Commands) == 0 && len(from.Entrypoint) > 0 {
 		return false
 	}
 
@@ -235,6 +242,19 @@ func (s *Secret) GetAllowCommand() bool {
 	}
 
 	return *s.AllowCommand
+}
+
+// GetAllowSubstitution returns the AllowSubstitution field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetAllowSubstitution() bool {
+	// return zero value if Secret type or AllowSubstitution field is nil
+	if s == nil || s.AllowSubstitution == nil {
+		return false
+	}
+
+	return *s.AllowSubstitution
 }
 
 // GetCreatedAt returns the CreatedAt field.
@@ -432,6 +452,19 @@ func (s *Secret) SetAllowCommand(v bool) {
 	s.AllowCommand = &v
 }
 
+// SetAllowSubstitution sets the AllowSubstitution field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetAllowSubstitution(v bool) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.AllowSubstitution = &v
+}
+
 // SetCreatedAt sets the CreatedAt field.
 //
 // When the provided Secret type is nil, it
@@ -489,6 +522,7 @@ func (s *Secret) String() string {
 	return fmt.Sprintf(`{
 	AllowCommand: %t,
 	AllowEvents: %s,
+	AllowSubstitution: %t,
 	Events: %s,
 	ID: %d,
 	Images: %s,
@@ -505,6 +539,7 @@ func (s *Secret) String() string {
 }`,
 		s.GetAllowCommand(),
 		s.GetAllowEvents().List(),
+		s.GetAllowSubstitution(),
 		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),

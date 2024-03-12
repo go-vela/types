@@ -123,6 +123,7 @@ func testPull() *Pull {
 	pr.SetSynchronize(true)
 	pr.SetEdited(false)
 	pr.SetReopened(true)
+	pr.SetLabeled(false)
 
 	return pr
 }

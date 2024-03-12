@@ -425,14 +425,20 @@ func TestPipeline_Rules_Match(t *testing.T) {
 		},
 		{
 			rules:    &Rules{Event: []string{"push", "pull_request"}, Tag: []string{"release/*"}},
-			data:     &RuleData{Branch: "main", Event: "push", Repo: "octocat/hello-world", Status: "pending", Tag: "release/*", Target: ""},
+			data:     &RuleData{Branch: "main", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/main", Target: ""},
 			operator: "or",
+			want:     false,
+		},
+		{
+			rules:    &Rules{Event: []string{"pull_request:labeled"}, Label: []string{"enhancement", "documentation"}},
+			data:     &RuleData{Branch: "main", Event: "pull_request:labeled", Repo: "octocat/hello-world", Status: "pending", Label: "documentation"},
+			operator: "and",
 			want:     true,
 		},
 		{
-			rules:    &Rules{Event: []string{"push", "pull_request"}, Tag: []string{"release/*"}},
-			data:     &RuleData{Branch: "main", Event: "tag", Repo: "octocat/hello-world", Status: "pending", Tag: "refs/heads/main", Target: ""},
-			operator: "or",
+			rules:    &Rules{Event: []string{"pull_request:labeled"}, Label: []string{"enhancement", "documentation"}},
+			data:     &RuleData{Branch: "main", Event: "pull_request:labeled", Repo: "octocat/hello-world", Status: "pending", Label: "support"},
+			operator: "and",
 			want:     false,
 		},
 	}
@@ -572,6 +578,9 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 		// Target with filepath matcher
 		{matcher: "filepath", rule: []string{"production"}, pattern: "production", want: true},
 		{matcher: "filepath", rule: []string{"stage"}, pattern: "production", want: false},
+		// Label with filepath matcher
+		{matcher: "filepath", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
+		{matcher: "filepath", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
 		// Empty with regexp matcher
 		{matcher: "regexp", rule: []string{}, pattern: "main", want: false},
 		{matcher: "regexp", rule: []string{}, pattern: "push", want: false},
@@ -599,6 +608,9 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 		// Target with regexp matcher
 		{matcher: "regexp", rule: []string{"production"}, pattern: "production", want: true},
 		{matcher: "regexp", rule: []string{"stage"}, pattern: "production", want: false},
+		// Label with regexp matcher
+		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
+		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
 	}
 
 	// run test

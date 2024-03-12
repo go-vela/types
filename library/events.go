@@ -104,6 +104,10 @@ func (e *Events) List() []string {
 		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionReopened)
 	}
 
+	if e.GetPullRequest().GetLabeled() {
+		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionLabeled)
+	}
+
 	if e.GetPush().GetTag() {
 		eventSlice = append(eventSlice, constants.EventTag)
 	}

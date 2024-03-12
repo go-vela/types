@@ -28,6 +28,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 					Status:  []string{"success"},
 					Tag:     []string{"v0.1.0"},
 					Target:  []string{"production"},
+					Label:   []string{"enhancement"},
 				},
 				Unless: Rules{
 					Branch:  []string{"main"},
@@ -53,6 +54,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 					Status:  []string{"success"},
 					Tag:     []string{"v0.1.0"},
 					Target:  []string{"production"},
+					Label:   []string{"enhancement"},
 				},
 				Unless: pipeline.Rules{
 					Branch:  []string{"main"},
@@ -173,6 +175,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 				Status:  []string{"success"},
 				Tag:     []string{"v0.1.0"},
 				Target:  []string{"production"},
+				Label:   []string{"enhancement"},
 			},
 			want: &pipeline.Rules{
 				Branch:  []string{"main"},
@@ -183,6 +186,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 				Status:  []string{"success"},
 				Tag:     []string{"v0.1.0"},
 				Target:  []string{"production"},
+				Label:   []string{"enhancement"},
 			},
 		},
 	}

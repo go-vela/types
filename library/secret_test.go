@@ -354,6 +354,27 @@ func TestLibrary_Secret_Match(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "no commands allowed - entrypoint provided",
+			step: &pipeline.Container{
+				Image:       "alpine:latest",
+				Environment: map[string]string{"VELA_BUILD_EVENT": "push"},
+				Ruleset: pipeline.Ruleset{
+					If: pipeline.Rules{
+						Event: []string{"push"},
+					},
+				},
+				Entrypoint: []string{"sh", "-c", "echo hi"},
+			},
+			sec: &Secret{
+				Name:         &v,
+				Value:        &v,
+				Images:       &[]string{"alpine"},
+				AllowEvents:  testEvents,
+				AllowCommand: &fBool,
+			},
+			want: false,
+		},
 	}
 
 	// run tests
@@ -428,6 +449,10 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 			t.Errorf("GetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
 
+		if test.secret.GetAllowSubstitution() != test.want.GetAllowSubstitution() {
+			t.Errorf("GetAllowSubstitution is %v, want %v", test.secret.GetAllowSubstitution(), test.want.GetAllowSubstitution())
+		}
+
 		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
 			t.Errorf("GetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
 		}
@@ -478,6 +503,7 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetEvents(test.want.GetEvents())
 		test.secret.SetAllowEvents(test.want.GetAllowEvents())
 		test.secret.SetAllowCommand(test.want.GetAllowCommand())
+		test.secret.SetAllowSubstitution(test.want.GetAllowSubstitution())
 		test.secret.SetCreatedAt(test.want.GetCreatedAt())
 		test.secret.SetCreatedBy(test.want.GetCreatedBy())
 		test.secret.SetUpdatedAt(test.want.GetUpdatedAt())
@@ -527,6 +553,10 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 			t.Errorf("SetAllowCommand is %v, want %v", test.secret.GetAllowCommand(), test.want.GetAllowCommand())
 		}
 
+		if test.secret.GetAllowSubstitution() != test.want.GetAllowSubstitution() {
+			t.Errorf("SetAllowSubstitution is %v, want %v", test.secret.GetAllowSubstitution(), test.want.GetAllowSubstitution())
+		}
+
 		if test.secret.GetCreatedAt() != test.want.GetCreatedAt() {
 			t.Errorf("SetCreatedAt is %v, want %v", test.secret.GetCreatedAt(), test.want.GetCreatedAt())
 		}
@@ -552,6 +582,7 @@ func TestLibrary_Secret_String(t *testing.T) {
 	want := fmt.Sprintf(`{
 	AllowCommand: %t,
 	AllowEvents: %v,
+	AllowSubstitution: %t,
 	Events: %s,
 	ID: %d,
 	Images: %s,
@@ -568,6 +599,7 @@ func TestLibrary_Secret_String(t *testing.T) {
 }`,
 		s.GetAllowCommand(),
 		s.GetAllowEvents().List(),
+		s.GetAllowSubstitution(),
 		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),
@@ -610,6 +642,7 @@ func testSecret() *Secret {
 	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowEvents(NewEventsFromMask(1))
 	s.SetAllowCommand(true)
+	s.SetAllowSubstitution(true)
 	s.SetCreatedAt(tsCreate)
 	s.SetCreatedBy("octocat")
 	s.SetUpdatedAt(tsUpdate)

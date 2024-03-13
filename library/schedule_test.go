@@ -37,33 +37,43 @@ func TestLibrary_Schedule_Getters(t *testing.T) {
 			if test.schedule.GetID() != test.want.GetID() {
 				t.Errorf("GetID is %v, want %v", test.schedule.GetID(), test.want.GetID())
 			}
+
 			if test.schedule.GetRepoID() != test.want.GetRepoID() {
 				t.Errorf("GetRepoID is %v, want %v", test.schedule.GetRepoID(), test.want.GetRepoID())
 			}
+
 			if test.schedule.GetActive() != test.want.GetActive() {
 				t.Errorf("GetActive is %v, want %v", test.schedule.GetActive(), test.want.GetActive())
 			}
+
 			if test.schedule.GetName() != test.want.GetName() {
 				t.Errorf("GetName is %v, want %v", test.schedule.GetName(), test.want.GetName())
 			}
+
 			if test.schedule.GetEntry() != test.want.GetEntry() {
 				t.Errorf("GetEntry is %v, want %v", test.schedule.GetEntry(), test.want.GetEntry())
 			}
+
 			if test.schedule.GetCreatedAt() != test.want.GetCreatedAt() {
 				t.Errorf("GetCreatedAt is %v, want %v", test.schedule.GetCreatedAt(), test.want.GetCreatedAt())
 			}
+
 			if test.schedule.GetCreatedBy() != test.want.GetCreatedBy() {
 				t.Errorf("GetCreatedBy is %v, want %v", test.schedule.GetCreatedBy(), test.want.GetCreatedBy())
 			}
+
 			if test.schedule.GetUpdatedAt() != test.want.GetUpdatedAt() {
 				t.Errorf("GetUpdatedAt is %v, want %v", test.schedule.GetUpdatedAt(), test.want.GetUpdatedAt())
 			}
+
 			if test.schedule.GetUpdatedBy() != test.want.GetUpdatedBy() {
 				t.Errorf("GetUpdatedBy is %v, want %v", test.schedule.GetUpdatedBy(), test.want.GetUpdatedBy())
 			}
+
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("GetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
 			}
+
 			if test.schedule.GetBranch() != test.want.GetBranch() {
 				t.Errorf("GetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
 			}
@@ -98,46 +108,57 @@ func TestLibrary_Schedule_Setters(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			test.schedule.SetID(test.want.GetID())
+			test.schedule.SetRepoID(test.want.GetRepoID())
+			test.schedule.SetActive(test.want.GetActive())
+			test.schedule.SetName(test.want.GetName())
+			test.schedule.SetEntry(test.want.GetEntry())
+			test.schedule.SetCreatedAt(test.want.GetCreatedAt())
+			test.schedule.SetCreatedBy(test.want.GetCreatedBy())
+			test.schedule.SetUpdatedAt(test.want.GetUpdatedAt())
+			test.schedule.SetUpdatedBy(test.want.GetUpdatedBy())
+			test.schedule.SetScheduledAt(test.want.GetScheduledAt())
+			test.schedule.SetBranch(test.want.GetBranch())
+
 			if test.schedule.GetID() != test.want.GetID() {
 				t.Errorf("SetID is %v, want %v", test.schedule.GetID(), test.want.GetID())
 			}
-			test.schedule.SetRepoID(test.want.GetRepoID())
+
 			if test.schedule.GetRepoID() != test.want.GetRepoID() {
 				t.Errorf("SetRepoID is %v, want %v", test.schedule.GetRepoID(), test.want.GetRepoID())
 			}
-			test.schedule.SetActive(test.want.GetActive())
+
 			if test.schedule.GetActive() != test.want.GetActive() {
 				t.Errorf("SetActive is %v, want %v", test.schedule.GetActive(), test.want.GetActive())
 			}
-			test.schedule.SetName(test.want.GetName())
+
 			if test.schedule.GetName() != test.want.GetName() {
 				t.Errorf("SetName is %v, want %v", test.schedule.GetName(), test.want.GetName())
 			}
-			test.schedule.SetEntry(test.want.GetEntry())
+
 			if test.schedule.GetEntry() != test.want.GetEntry() {
 				t.Errorf("SetEntry is %v, want %v", test.schedule.GetEntry(), test.want.GetEntry())
 			}
-			test.schedule.SetCreatedAt(test.want.GetCreatedAt())
+
 			if test.schedule.GetCreatedAt() != test.want.GetCreatedAt() {
 				t.Errorf("SetCreatedAt is %v, want %v", test.schedule.GetCreatedAt(), test.want.GetCreatedAt())
 			}
-			test.schedule.SetCreatedBy(test.want.GetCreatedBy())
+
 			if test.schedule.GetCreatedBy() != test.want.GetCreatedBy() {
 				t.Errorf("SetCreatedBy is %v, want %v", test.schedule.GetCreatedBy(), test.want.GetCreatedBy())
 			}
-			test.schedule.SetUpdatedAt(test.want.GetUpdatedAt())
+
 			if test.schedule.GetUpdatedAt() != test.want.GetUpdatedAt() {
 				t.Errorf("SetUpdatedAt is %v, want %v", test.schedule.GetUpdatedAt(), test.want.GetUpdatedAt())
 			}
-			test.schedule.SetUpdatedBy(test.want.GetUpdatedBy())
+
 			if test.schedule.GetUpdatedBy() != test.want.GetUpdatedBy() {
 				t.Errorf("SetUpdatedBy is %v, want %v", test.schedule.GetUpdatedBy(), test.want.GetUpdatedBy())
 			}
-			test.schedule.SetScheduledAt(test.want.GetScheduledAt())
+
 			if test.schedule.GetScheduledAt() != test.want.GetScheduledAt() {
 				t.Errorf("SetScheduledAt is %v, want %v", test.schedule.GetScheduledAt(), test.want.GetScheduledAt())
 			}
-			test.schedule.SetBranch(test.want.GetBranch())
+
 			if test.schedule.GetBranch() != test.want.GetBranch() {
 				t.Errorf("SetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
 			}

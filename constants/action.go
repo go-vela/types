@@ -7,7 +7,7 @@ const (
 	// ActionOpened defines the action for opening pull requests.
 	ActionOpened = "opened"
 
-	// ActionCreated defines the action for creating issue comments.
+	// ActionCreated defines the action for creating deployments or issue comments.
 	ActionCreated = "created"
 
 	// ActionEdited defines the action for the editing of pull requests or issue comments.

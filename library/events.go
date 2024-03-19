@@ -66,6 +66,8 @@ func (e *Events) Allowed(event, action string) bool {
 		allowed = e.GetComment().GetEdited()
 	case constants.EventDeploy:
 		allowed = e.GetDeployment().GetCreated()
+	case constants.EventDeploy + ":" + constants.ActionCreated:
+		allowed = e.GetDeployment().GetCreated()
 	case constants.EventSchedule:
 		allowed = e.GetSchedule().GetRun()
 	case constants.EventDelete + ":" + constants.ActionBranch:

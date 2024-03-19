@@ -30,7 +30,7 @@ type (
 		Status  []string `yaml:"status,omitempty,flow"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Tag     []string `yaml:"tag,omitempty,flow"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 		Target  []string `yaml:"target,omitempty,flow"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Label   []string `yaml:"label,omitempty,flow"   json:"label,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Label   []string `yaml:"label,omitempty,flow"   json:"label,omitempty" jsonschema:"description=Limits step execution to match on pull requests labels.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 	}
 )
 

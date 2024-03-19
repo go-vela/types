@@ -496,6 +496,9 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Target with filepath matcher
 		{matcher: "filepath", rule: []string{"production"}, pattern: "production", want: true},
 		{matcher: "filepath", rule: []string{"stage"}, pattern: "production", want: false},
+		// Label with filepath matcher
+		{matcher: "filepath", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
+		{matcher: "filepath", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
 		// Empty with regex matcher
 		{matcher: "regexp", rule: []string{}, pattern: "main", want: true},
 		{matcher: "regexp", rule: []string{}, pattern: "push", want: true},
@@ -531,6 +534,9 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Target with regex matcher
 		{matcher: "regexp", rule: []string{"production"}, pattern: "production", want: true},
 		{matcher: "regexp", rule: []string{"stage"}, pattern: "production", want: false},
+		// Label with regexp matcher
+		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
+		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
 	}
 
 	// run test

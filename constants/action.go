@@ -22,8 +22,11 @@ const (
 	// ActionSynchronize defines the action for the synchronizing of pull requests.
 	ActionSynchronize = "synchronize"
 
-	// ActionLabeled defines the action for the labelin of pull requests.
+	// ActionLabeled defines the action for the labeling of pull requests.
 	ActionLabeled = "labeled"
+
+	// ActionUnlabeled defines the action for the unlabeling of pull requests.
+	ActionUnlabeled = "unlabeled"
 
 	// ActionTransferred defines the action for transferring repository ownership.
 	ActionTransferred = "transferred"

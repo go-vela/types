@@ -22,7 +22,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 				If: Rules{
 					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
-					Event:   []string{"push"},
+					Event:   []string{"push", "pull_request:labeled"},
 					Path:    []string{"foo.txt"},
 					Repo:    []string{"github/octocat"},
 					Status:  []string{"success"},
@@ -48,7 +48,7 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 				If: pipeline.Rules{
 					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
-					Event:   []string{"push"},
+					Event:   []string{"push", "pull_request:labeled"},
 					Path:    []string{"foo.txt"},
 					Repo:    []string{"github/octocat"},
 					Status:  []string{"success"},
@@ -169,7 +169,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 			rules: &Rules{
 				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
-				Event:   []string{"push"},
+				Event:   []string{"push", "pull_request:labeled"},
 				Path:    []string{"foo.txt"},
 				Repo:    []string{"github/octocat"},
 				Status:  []string{"success"},
@@ -180,7 +180,7 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 			want: &pipeline.Rules{
 				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
-				Event:   []string{"push"},
+				Event:   []string{"push", "pull_request:labeled"},
 				Path:    []string{"foo.txt"},
 				Repo:    []string{"github/octocat"},
 				Status:  []string{"success"},

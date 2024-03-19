@@ -122,6 +122,7 @@ func TestLibrary_Events_List(t *testing.T) {
 		"pull_request:opened",
 		"pull_request:synchronize",
 		"pull_request:reopened",
+		"pull_request:unlabeled",
 		"tag",
 		"comment:created",
 		"schedule",
@@ -159,6 +160,7 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
 			constants.AllowPullReopen |
+			constants.AllowPullUnlabel |
 			constants.AllowCommentCreate |
 			constants.AllowSchedule,
 	)
@@ -213,6 +215,7 @@ func TestLibrary_Events_Allowed(t *testing.T) {
 		{event: "pull_request", action: "edited", want: false},
 		{event: "pull_request", action: "reopened", want: true},
 		{event: "pull_request", action: "labeled", want: false},
+		{event: "pull_request", action: "unlabeled", want: true},
 		{event: "deployment", want: false},
 		{event: "comment", action: "created", want: true},
 		{event: "comment", action: "edited", want: false},
@@ -253,6 +256,7 @@ func testEvents() (*Events, *Events) {
 			Edited:      &fBool,
 			Reopened:    &tBool,
 			Labeled:     &fBool,
+			Unlabeled:   &tBool,
 		},
 		Deployment: &actions.Deploy{
 			Created: &fBool,
@@ -279,6 +283,7 @@ func testEvents() (*Events, *Events) {
 			Edited:      &tBool,
 			Reopened:    &fBool,
 			Labeled:     &tBool,
+			Unlabeled:   &fBool,
 		},
 		Deployment: &actions.Deploy{
 			Created: &tBool,

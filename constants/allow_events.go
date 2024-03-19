@@ -23,4 +23,5 @@ const (
 	AllowSchedule
 	AllowPushDeleteBranch
 	AllowPushDeleteTag
+	AllowPullUnlabel
 )

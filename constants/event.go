@@ -27,4 +27,12 @@ const (
 
 	// EventTag defines the event type for build and repo tag events.
 	EventTag = "tag"
+
+	// Alternates
+
+	// EventPullAlternate defines the alternate event type for build and repo pull_request events.
+	EventPullAlternate = "pull"
+
+	// EventDeployAlternate defines the alternate event type for build and repo deployment events.
+	EventDeployAlternate = "deploy"
 )

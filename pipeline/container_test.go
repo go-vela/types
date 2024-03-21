@@ -917,6 +917,7 @@ func testContainers() *ContainerSlice {
 			Name:        "echo",
 			Number:      3,
 			Pull:        "always",
+			ReportAs:    "echo-step",
 			Ruleset: Ruleset{
 				If:       Rules{Event: []string{"push"}},
 				Operator: "and",

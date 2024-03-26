@@ -11,7 +11,7 @@ const (
 	AllowPullSync
 	_ // AllowPullAssigned - Not Implemented
 	_ // AllowPullMilestoned - Not Implemented
-	_ // AllowPullLabel - Not Implemented
+	AllowPullLabel
 	_ // AllowPullLocked - Not Implemented
 	_ // AllowPullReady - Not Implemented
 	AllowPullReopen
@@ -23,4 +23,5 @@ const (
 	AllowSchedule
 	AllowPushDeleteBranch
 	AllowPushDeleteTag
+	AllowPullUnlabel
 )

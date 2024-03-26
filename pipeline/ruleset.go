@@ -37,6 +37,7 @@ type (
 		Status   Ruletype `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag      Ruletype `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   Ruletype `json:"target,omitempty"  yaml:"target,omitempty"`
+		Label    Ruletype `json:"label,omitempty"   yaml:"label,omitempty"`
 		Parallel bool     `json:"-"                 yaml:"-"`
 	}
 
@@ -57,6 +58,7 @@ type (
 		Status   string   `json:"status,omitempty"  yaml:"status,omitempty"`
 		Tag      string   `json:"tag,omitempty"     yaml:"tag,omitempty"`
 		Target   string   `json:"target,omitempty"  yaml:"target,omitempty"`
+		Label    string   `json:"label,omitempty"   yaml:"label,omitempty"`
 		Parallel bool     `json:"-"                 yaml:"-"`
 	}
 )
@@ -111,7 +113,8 @@ func (r *Rules) Empty() bool {
 		len(r.Repo) == 0 &&
 		len(r.Status) == 0 &&
 		len(r.Tag) == 0 &&
-		len(r.Target) == 0 {
+		len(r.Target) == 0 &&
+		len(r.Label) == 0 {
 		return true
 	}
 
@@ -261,10 +264,15 @@ func matches(r *Rules, from *RuleData, matcher, path, logic string) (bool, error
 		return false, err
 	}
 
+	matchLabel, err := r.Label.Match(from.Label, matcher, logic)
+	if err != nil {
+		return false, err
+	}
+
 	switch logic {
 	case constants.OperatorAnd:
-		return (matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && status), nil
+		return (matchBranch && matchComment && matchEvent && matchPath && matchRepo && matchTag && matchTarget && matchLabel && status), nil
 	default:
-		return (matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || status), nil
+		return (matchBranch || matchComment || matchEvent || matchPath || matchRepo || matchTag || matchTarget || matchLabel || status), nil
 	}
 }

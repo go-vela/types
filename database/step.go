@@ -49,6 +49,7 @@ type Step struct {
 	Host         sql.NullString `sql:"host"`
 	Runtime      sql.NullString `sql:"runtime"`
 	Distribution sql.NullString `sql:"distribution"`
+	ReportAs     sql.NullString `sql:"report_as"`
 }
 
 // Nullify ensures the valid flag for
@@ -142,6 +143,11 @@ func (s *Step) Nullify() *Step {
 		s.Distribution.Valid = false
 	}
 
+	// check if the ReportAs field should be false
+	if len(s.ReportAs.String) == 0 {
+		s.ReportAs.Valid = false
+	}
+
 	return s
 }
 
@@ -166,6 +172,7 @@ func (s *Step) ToLibrary() *library.Step {
 	step.SetHost(s.Host.String)
 	step.SetRuntime(s.Runtime.String)
 	step.SetDistribution(s.Distribution.String)
+	step.SetReportAs(s.ReportAs.String)
 
 	return step
 }
@@ -209,6 +216,7 @@ func (s *Step) Validate() error {
 	s.Host = sql.NullString{String: sanitize(s.Host.String), Valid: s.Host.Valid}
 	s.Runtime = sql.NullString{String: sanitize(s.Runtime.String), Valid: s.Runtime.Valid}
 	s.Distribution = sql.NullString{String: sanitize(s.Distribution.String), Valid: s.Distribution.Valid}
+	s.ReportAs = sql.NullString{String: sanitize(s.ReportAs.String), Valid: s.ReportAs.Valid}
 
 	return nil
 }
@@ -233,6 +241,7 @@ func StepFromLibrary(s *library.Step) *Step {
 		Host:         sql.NullString{String: s.GetHost(), Valid: true},
 		Runtime:      sql.NullString{String: s.GetRuntime(), Valid: true},
 		Distribution: sql.NullString{String: s.GetDistribution(), Valid: true},
+		ReportAs:     sql.NullString{String: s.GetReportAs(), Valid: true},
 	}
 
 	return step.Nullify()

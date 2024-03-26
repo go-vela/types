@@ -36,4 +36,7 @@ const (
 
 	// ActionTag defines the action for deleting a tag.
 	ActionTag = "tag"
+
+	// ActionRun defines the action for running a schedule.
+	ActionRun = "run"
 )

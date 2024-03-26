@@ -194,6 +194,102 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 	}
 }
 
+func Test_NewEventsFromSlice(t *testing.T) {
+	// setup types
+	tBool := true
+	fBool := false
+
+	e1, e2 := testEvents()
+
+	// setup tests
+	tests := []struct {
+		name   string
+		events []string
+		want   *Events
+	}{
+		{
+			name:   "action specific events to e1",
+			events: []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run"},
+			want:   e1,
+		},
+		{
+			name:   "action specific events to e2",
+			events: []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited"},
+			want:   e2,
+		},
+		{
+			name:   "general events",
+			events: []string{"push", "pull", "deploy", "comment", "schedule", "tag", "delete"},
+			want: &Events{
+				Push: &actions.Push{
+					Branch:       &tBool,
+					Tag:          &tBool,
+					DeleteBranch: &tBool,
+					DeleteTag:    &tBool,
+				},
+				PullRequest: &actions.Pull{
+					Opened:      &tBool,
+					Reopened:    &tBool,
+					Edited:      &fBool,
+					Synchronize: &tBool,
+				},
+				Deployment: &actions.Deploy{
+					Created: &tBool,
+				},
+				Comment: &actions.Comment{
+					Created: &tBool,
+					Edited:  &tBool,
+				},
+				Schedule: &actions.Schedule{
+					Run: &tBool,
+				},
+			},
+		},
+		{
+			name:   "double events",
+			events: []string{"push", "push:branch", "pull_request", "pull_request:opened"},
+			want: &Events{
+				Push: &actions.Push{
+					Branch:       &tBool,
+					Tag:          &fBool,
+					DeleteBranch: &fBool,
+					DeleteTag:    &fBool,
+				},
+				PullRequest: &actions.Pull{
+					Opened:      &tBool,
+					Reopened:    &tBool,
+					Edited:      &fBool,
+					Synchronize: &tBool,
+				},
+				Deployment: &actions.Deploy{
+					Created: &fBool,
+				},
+				Comment: &actions.Comment{
+					Created: &fBool,
+					Edited:  &fBool,
+				},
+				Schedule: &actions.Schedule{
+					Run: &fBool,
+				},
+			},
+		},
+		{
+			name:   "empty events",
+			events: []string{},
+			want:   NewEventsFromMask(0),
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got := NewEventsFromSlice(test.events)
+
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("PopulateEvents failed for %s mismatch (-want +got):\n%s", test.name, diff)
+		}
+	}
+}
+
 func TestLibrary_Events_Allowed(t *testing.T) {
 	// setup types
 	eventsOne, eventsTwo := testEvents()

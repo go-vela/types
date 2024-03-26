@@ -31,6 +31,7 @@ func TestDatabase_Step_Nullify(t *testing.T) {
 		Host:         sql.NullString{String: "", Valid: false},
 		Runtime:      sql.NullString{String: "", Valid: false},
 		Distribution: sql.NullString{String: "", Valid: false},
+		ReportAs:     sql.NullString{String: "", Valid: false},
 	}
 
 	// setup tests
@@ -82,6 +83,7 @@ func TestDatabase_Step_ToLibrary(t *testing.T) {
 	want.SetHost("example.company.com")
 	want.SetRuntime("docker")
 	want.SetDistribution("linux")
+	want.SetReportAs("test")
 
 	// run test
 	got := testStep().ToLibrary()
@@ -191,6 +193,7 @@ func TestDatabase_StepFromLibrary(t *testing.T) {
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")
+	s.SetReportAs("test")
 
 	want := testStep()
 
@@ -222,5 +225,6 @@ func testStep() *Step {
 		Host:         sql.NullString{String: "example.company.com", Valid: true},
 		Runtime:      sql.NullString{String: "docker", Valid: true},
 		Distribution: sql.NullString{String: "linux", Valid: true},
+		ReportAs:     sql.NullString{String: "test", Valid: true},
 	}
 }

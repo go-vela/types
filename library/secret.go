@@ -22,7 +22,6 @@ type Secret struct {
 	Value             *string   `json:"value,omitempty"`
 	Type              *string   `json:"type,omitempty"`
 	Images            *[]string `json:"images,omitempty"`
-	Events            *[]string `json:"events,omitempty"`
 	AllowEvents       *Events   `json:"allow_events,omitempty"`
 	AllowCommand      *bool     `json:"allow_command,omitempty"`
 	AllowSubstitution *bool     `json:"allow_substitution,omitempty"`
@@ -48,7 +47,6 @@ func (s *Secret) Sanitize() *Secret {
 		Value:             &value,
 		Type:              s.Type,
 		Images:            s.Images,
-		Events:            s.Events,
 		AllowEvents:       s.AllowEvents,
 		AllowCommand:      s.AllowCommand,
 		AllowSubstitution: s.AllowSubstitution,
@@ -203,19 +201,6 @@ func (s *Secret) GetImages() []string {
 	}
 
 	return *s.Images
-}
-
-// GetEvents returns the Events field.
-//
-// When the provided Secret type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (s *Secret) GetEvents() []string {
-	// return zero value if Secret type or Events field is nil
-	if s == nil || s.Events == nil {
-		return []string{}
-	}
-
-	return *s.Events
 }
 
 // GetAllowEvents returns the AllowEvents field.
@@ -413,19 +398,6 @@ func (s *Secret) SetImages(v []string) {
 	s.Images = &v
 }
 
-// SetEvents sets the Events field.
-//
-// When the provided Secret type is nil, it
-// will set nothing and immediately return.
-func (s *Secret) SetEvents(v []string) {
-	// return if Secret type is nil
-	if s == nil {
-		return
-	}
-
-	s.Events = &v
-}
-
 // SetAllowEvents sets the AllowEvents field.
 //
 // When the provided Secret type is nil, it
@@ -523,7 +495,6 @@ func (s *Secret) String() string {
 	AllowCommand: %t,
 	AllowEvents: %s,
 	AllowSubstitution: %t,
-	Events: %s,
 	ID: %d,
 	Images: %s,
 	Name: %s,
@@ -540,7 +511,6 @@ func (s *Secret) String() string {
 		s.GetAllowCommand(),
 		s.GetAllowEvents().List(),
 		s.GetAllowSubstitution(),
-		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),
 		s.GetName(),

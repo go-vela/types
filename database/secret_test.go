@@ -168,7 +168,6 @@ func TestDatabase_Secret_ToLibrary(t *testing.T) {
 	want.SetValue("bar")
 	want.SetType("repo")
 	want.SetImages([]string{"alpine"})
-	want.SetEvents([]string{"push", "tag", "deployment"})
 	want.SetAllowEvents(library.NewEventsFromMask(1))
 	want.SetAllowCommand(true)
 	want.SetAllowSubstitution(true)
@@ -293,7 +292,6 @@ func TestDatabase_SecretFromLibrary(t *testing.T) {
 	s.SetValue("bar")
 	s.SetType("repo")
 	s.SetImages([]string{"alpine"})
-	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowEvents(library.NewEventsFromMask(1))
 	s.SetAllowCommand(true)
 	s.SetAllowSubstitution(true)
@@ -324,7 +322,6 @@ func testSecret() *Secret {
 		Value:             sql.NullString{String: "bar", Valid: true},
 		Type:              sql.NullString{String: "repo", Valid: true},
 		Images:            []string{"alpine"},
-		Events:            []string{"push", "tag", "deployment"},
 		AllowEvents:       sql.NullInt64{Int64: 1, Valid: true},
 		AllowCommand:      sql.NullBool{Bool: true, Valid: true},
 		AllowSubstitution: sql.NullBool{Bool: true, Valid: true},

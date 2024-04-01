@@ -68,6 +68,10 @@ func NewEventsFromSlice(events []string) *Events {
 			mask = mask | constants.AllowPullSync
 		case constants.EventPull + ":" + constants.ActionReopened:
 			mask = mask | constants.AllowPullReopen
+		case constants.EventPull + ":" + constants.ActionLabeled:
+			mask = mask | constants.AllowPullLabel
+		case constants.EventPull + ":" + constants.ActionUnlabeled:
+			mask = mask | constants.AllowPullUnlabel
 
 		// deployment actions
 		case constants.EventDeploy, constants.EventDeployAlternate, constants.EventDeploy + ":" + constants.ActionCreated:

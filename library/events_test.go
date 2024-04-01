@@ -213,12 +213,12 @@ func Test_NewEventsFromSlice(t *testing.T) {
 	}{
 		{
 			name:   "action specific events to e1",
-			events: []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run"},
+			events: []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run", "pull_request:unlabeled"},
 			want:   e1,
 		},
 		{
 			name:   "action specific events to e2",
-			events: []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited"},
+			events: []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited", "pull_request:labeled"},
 			want:   e2,
 		},
 		{
@@ -236,6 +236,8 @@ func Test_NewEventsFromSlice(t *testing.T) {
 					Reopened:    &tBool,
 					Edited:      &fBool,
 					Synchronize: &tBool,
+					Labeled:     &fBool,
+					Unlabeled:   &fBool,
 				},
 				Deployment: &actions.Deploy{
 					Created: &tBool,
@@ -264,6 +266,8 @@ func Test_NewEventsFromSlice(t *testing.T) {
 					Reopened:    &tBool,
 					Edited:      &fBool,
 					Synchronize: &tBool,
+					Labeled:     &fBool,
+					Unlabeled:   &fBool,
 				},
 				Deployment: &actions.Deploy{
 					Created: &fBool,

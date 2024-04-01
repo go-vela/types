@@ -50,7 +50,6 @@ type Secret struct {
 	Value             sql.NullString `sql:"value"`
 	Type              sql.NullString `sql:"type"`
 	Images            pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
-	Events            pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
 	AllowEvents       sql.NullInt64  `sql:"allow_events"`
 	AllowCommand      sql.NullBool   `sql:"allow_command"`
 	AllowSubstitution sql.NullBool   `sql:"allow_substitution"`
@@ -194,7 +193,6 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetValue(s.Value.String)
 	secret.SetType(s.Type.String)
 	secret.SetImages(s.Images)
-	secret.SetEvents(s.Events)
 	secret.SetAllowEvents(library.NewEventsFromMask(s.AllowEvents.Int64))
 	secret.SetAllowCommand(s.AllowCommand.Bool)
 	secret.SetAllowSubstitution(s.AllowSubstitution.Bool)
@@ -261,12 +259,6 @@ func (s *Secret) Validate() error {
 		s.Images[i] = sanitize(v)
 	}
 
-	// ensure that all Events are sanitized
-	// to avoid unsafe HTML content
-	for i, v := range s.Events {
-		s.Events[i] = sanitize(v)
-	}
-
 	return nil
 }
 
@@ -282,7 +274,6 @@ func SecretFromLibrary(s *library.Secret) *Secret {
 		Value:             sql.NullString{String: s.GetValue(), Valid: true},
 		Type:              sql.NullString{String: s.GetType(), Valid: true},
 		Images:            pq.StringArray(s.GetImages()),
-		Events:            pq.StringArray(s.GetEvents()),
 		AllowEvents:       sql.NullInt64{Int64: s.GetAllowEvents().ToDatabase(), Valid: true},
 		AllowCommand:      sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
 		AllowSubstitution: sql.NullBool{Bool: s.GetAllowSubstitution(), Valid: true},

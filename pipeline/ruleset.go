@@ -204,6 +204,7 @@ func (r *Ruletype) MatchSingle(data, matcher, logic string) (bool, error) {
 		if err != nil {
 			return false, err
 		}
+
 		if match {
 			return true, nil
 		}
@@ -230,6 +231,7 @@ func (r *Ruletype) MatchMultiple(data []string, matcher, logic string) (bool, er
 			if err != nil {
 				return false, err
 			}
+
 			if match {
 				return true, nil
 			}

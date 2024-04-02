@@ -42,59 +42,83 @@ func TestLibrary_Log_AppendData(t *testing.T) {
 
 func TestLibrary_Log_MaskData(t *testing.T) {
 	// set up test secrets
-	sVals := []string{"secret", "((%.YY245***pP.><@@}}", "littlesecret", "extrasecret"}
-
-	// set up test logs
-	s1 := "$ echo $NO_SECRET\nnosecret\n"
-	s2 := "((%.YY245***pP.><@@}}"
-	s2Masked := "***"
-	s3 := "$ echo $SECRET1\n((%.YY245***pP.><@@}}\n$ echo $SECRET2\nlittlesecret\n"
-	s3Masked := "$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n"
-	s4 := "SOME_SECRET=((%.YY245***pP.><@@}}"
-	s4Masked := "SOME_SECRET=***"
-	s5 := "www.example.com?username=secret&password=extrasecret"
-	s5Masked := "www.example.com?username=***&password=***"
-	s6 := "[token: extrasecret]"
-	s6Masked := "[token: ***]"
+	sVals := []string{"gh_abc123def456", "((%.YY245***pP.><@@}}", "quick-bear-fox-squid", "SUPERSECRETVALUE"}
 
 	tests := []struct {
-		want    []byte
 		log     []byte
+		want    []byte
 		secrets []string
 	}{
 		{ // no secrets in log
-			want:    []byte(s1),
-			log:     []byte(s1),
+			log: []byte(
+				"$ echo hello\nhello\n",
+			),
+			want: []byte(
+				"$ echo hello\nhello\n",
+			),
 			secrets: sVals,
 		},
 		{ // one secret in log
-			want:    []byte(s2Masked),
-			log:     []byte(s2),
+			log: []byte(
+				"((%.YY245***pP.><@@}}",
+			),
+			want: []byte(
+				"***",
+			),
 			secrets: sVals,
 		},
 		{ // multiple secrets in log
-			want:    []byte(s3Masked),
-			log:     []byte(s3),
+			log: []byte(
+				"$ echo $SECRET1\n((%.YY245***pP.><@@}}\n$ echo $SECRET2\nquick-bear-fox-squid\n",
+			),
+			want: []byte(
+				"$ echo $SECRET1\n***\n$ echo $SECRET2\n***\n",
+			),
 			secrets: sVals,
 		},
 		{ // secret with leading =
-			want:    []byte(s4Masked),
-			log:     []byte(s4),
+			log: []byte(
+				"SOME_SECRET=((%.YY245***pP.><@@}}",
+			),
+			want: []byte(
+				"SOME_SECRET=***",
+			),
 			secrets: sVals,
 		},
 		{ // secret baked in URL query params
-			want:    []byte(s5Masked),
-			log:     []byte(s5),
+			log: []byte(
+				"www.example.com?username=quick-bear-fox-squid&password=SUPERSECRETVALUE",
+			),
+			want: []byte(
+				"www.example.com?username=***&password=***",
+			),
 			secrets: sVals,
 		},
 		{ // secret in verbose brackets
-			want:    []byte(s6Masked),
-			log:     []byte(s6),
+			log: []byte(
+				"[token: gh_abc123def456]",
+			),
+			want: []byte(
+				"[token: ***]",
+			),
+			secrets: sVals,
+		},
+		{ // double secret
+			log: []byte(
+				"echo ${GITHUB_TOKEN}${SUPER_SECRET}\ngh_abc123def456SUPERSECRETVALUE\n",
+			),
+			want: []byte(
+				"echo ${GITHUB_TOKEN}${SUPER_SECRET}\n******\n",
+			),
 			secrets: sVals,
 		},
 		{ // empty secrets slice
-			want:    []byte(s3),
-			log:     []byte(s3),
+			log: []byte(
+				"echo hello\nhello\n",
+			),
+			want: []byte(
+				"echo hello\nhello\n",
+			),
 			secrets: []string{},
 		},
 	}

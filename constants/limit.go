@@ -36,4 +36,7 @@ const (
 
 	// DeployBuildsMaxSize defines the maximum size in characters for deployment builds.
 	DeployBuildsMaxSize = 500
+
+	// ReportStepStatusLimit defines the maximum number of steps in a pipeline that may report their status to the SCM.
+	ReportStepStatusLimit = 10
 )

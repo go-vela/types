@@ -155,8 +155,10 @@ func TestDatabase_Schedule_Validate(t *testing.T) {
 				if err == nil {
 					t.Errorf("Validate should have returned err")
 				}
+
 				return
 			}
+
 			if err != nil {
 				t.Errorf("Validate returned err: %v", err)
 			}

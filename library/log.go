@@ -3,8 +3,8 @@
 package library
 
 import (
+	"bytes"
 	"fmt"
-	"regexp"
 
 	"github.com/go-vela/types/constants"
 )
@@ -45,25 +45,14 @@ func (l *Log) AppendData(data []byte) {
 func (l *Log) MaskData(secrets []string) {
 	data := l.GetData()
 
+	// early exit on empty log or secret list
+	if len(data) == 0 || len(secrets) == 0 {
+		return
+	}
+
+	// byte replace data with masked logs
 	for _, secret := range secrets {
-		// escape regexp meta characters if they exist within value of secret
-		//
-		// https://pkg.go.dev/regexp#QuoteMeta
-		escaped := regexp.QuoteMeta(secret)
-
-		// create regexp to match secrets in the log data surrounded by regexp metacharacters
-		//
-		// https://pkg.go.dev/regexp#MustCompile
-		buffer := `(\s|^|=|"|\?|:|'|\.|,|&|$|;|\[|\])`
-		re := regexp.MustCompile((buffer + escaped + buffer))
-
-		// create a mask for the secret
-		mask := fmt.Sprintf("$1%s$2", constants.SecretLogMask)
-
-		// replace all regexp matches of secret with mask
-		//
-		// https://pkg.go.dev/regexp#Regexp.ReplaceAll
-		data = re.ReplaceAll(data, []byte(mask))
+		data = bytes.ReplaceAll(data, []byte(secret), []byte(constants.SecretLogMask))
 	}
 
 	// update data field to masked logs

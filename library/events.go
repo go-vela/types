@@ -3,10 +3,12 @@
 package library
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
+	"github.com/go-vela/types/raw"
 )
 
 // Events is the library representation of the various events that generate a
@@ -17,6 +19,29 @@ type Events struct {
 	Deployment  *actions.Deploy   `json:"deployment"`
 	Comment     *actions.Comment  `json:"comment"`
 	Schedule    *actions.Schedule `json:"schedule"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Events type.
+func (e *Events) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// string slice we try unmarshalling to
+	stringSlice := new(raw.StringSlice)
+
+	// attempt to unmarshal as a string slice type
+	err := unmarshal(stringSlice)
+	if err == nil {
+		// create new events from string slice
+		evs, err := NewEventsFromSlice(*stringSlice)
+		if err != nil {
+			return err
+		}
+
+		// overwrite existing Events
+		*e = *evs
+
+		return nil
+	}
+
+	return errors.New("failed to unmarshal Events")
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that

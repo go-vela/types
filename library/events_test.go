@@ -207,19 +207,22 @@ func Test_NewEventsFromSlice(t *testing.T) {
 
 	// setup tests
 	tests := []struct {
-		name   string
-		events []string
-		want   *Events
+		name    string
+		events  []string
+		want    *Events
+		failure bool
 	}{
 		{
-			name:   "action specific events to e1",
-			events: []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run", "pull_request:unlabeled"},
-			want:   e1,
+			name:    "action specific events to e1",
+			events:  []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run", "pull_request:unlabeled"},
+			want:    e1,
+			failure: false,
 		},
 		{
-			name:   "action specific events to e2",
-			events: []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited", "pull_request:labeled"},
-			want:   e2,
+			name:    "action specific events to e2",
+			events:  []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited", "pull_request:labeled"},
+			want:    e2,
+			failure: false,
 		},
 		{
 			name:   "general events",
@@ -250,6 +253,7 @@ func Test_NewEventsFromSlice(t *testing.T) {
 					Run: &tBool,
 				},
 			},
+			failure: false,
 		},
 		{
 			name:   "double events",
@@ -280,17 +284,36 @@ func Test_NewEventsFromSlice(t *testing.T) {
 					Run: &fBool,
 				},
 			},
+			failure: false,
 		},
 		{
 			name:   "empty events",
 			events: []string{},
 			want:   NewEventsFromMask(0),
 		},
+		{
+			name:    "invalid events",
+			events:  []string{"foo:bar"},
+			want:    nil,
+			failure: true,
+		},
 	}
 
 	// run tests
 	for _, test := range tests {
-		got := NewEventsFromSlice(test.events)
+		got, err := NewEventsFromSlice(test.events)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("NewEventsFromSlice should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("NewEventsFromSlice returned err: %v", err)
+		}
 
 		if diff := cmp.Diff(test.want, got); diff != "" {
 			t.Errorf("PopulateEvents failed for %s mismatch (-want +got):\n%s", test.name, diff)

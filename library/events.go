@@ -3,6 +3,8 @@
 package library
 
 import (
+	"fmt"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
 )
@@ -39,7 +41,7 @@ func NewEventsFromMask(mask int64) *Events {
 
 // NewEventsFromSlice is an instantiation function for the Events type that
 // takes in a slice of event strings and populates the nested Events struct.
-func NewEventsFromSlice(events []string) *Events {
+func NewEventsFromSlice(events []string) (*Events, error) {
 	mask := int64(0)
 
 	// iterate through all events provided
@@ -88,10 +90,13 @@ func NewEventsFromSlice(events []string) *Events {
 		// schedule actions
 		case constants.EventSchedule, constants.EventSchedule + ":" + constants.ActionRun:
 			mask = mask | constants.AllowSchedule
+
+		default:
+			return nil, fmt.Errorf("invalid event provided: %s", event)
 		}
 	}
 
-	return NewEventsFromMask(mask)
+	return NewEventsFromMask(mask), nil
 }
 
 // Allowed determines whether or not an event + action is allowed based on whether

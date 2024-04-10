@@ -202,6 +202,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -222,6 +223,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -241,6 +243,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -260,6 +263,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess, constants.StatusFailure},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -279,6 +283,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess, constants.StatusFailure},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -298,6 +303,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					If: Rules{
 						Status: []string{constants.StatusSuccess, constants.StatusFailure},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -318,6 +324,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -338,6 +345,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Branch: []string{"main"},
 						Event:  []string{constants.EventPush},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -359,6 +367,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -380,6 +389,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -401,6 +411,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Path:   []string{"README.md"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -422,6 +433,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:   []string{constants.EventComment},
 						Comment: []string{"run vela"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -443,6 +455,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:   []string{constants.EventComment},
 						Comment: []string{"run vela"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -464,6 +477,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:   []string{constants.EventComment},
 						Comment: []string{"run vela"},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -485,6 +499,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -506,6 +521,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -527,6 +543,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -570,6 +587,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventTag},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -592,6 +610,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventTag},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -614,6 +633,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventTag},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -634,6 +654,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					Unless: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -653,6 +674,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					Unless: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -672,6 +694,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 					Unless: Rules{
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -693,6 +716,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -714,6 +738,7 @@ func TestPipeline_Container_Execute(t *testing.T) {
 						Event:  []string{constants.EventPush},
 						Status: []string{constants.StatusSuccess},
 					},
+					Operator: "and",
 				},
 			},
 			ruleData: &RuleData{
@@ -917,6 +942,7 @@ func testContainers() *ContainerSlice {
 			Name:        "echo",
 			Number:      3,
 			Pull:        "always",
+			ReportAs:    "echo-step",
 			Ruleset: Ruleset{
 				If:       Rules{Event: []string{"push"}},
 				Operator: "and",

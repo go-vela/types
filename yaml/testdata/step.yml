@@ -28,6 +28,7 @@
 
 - name: docker_build
   image: plugins/docker:18.09
+  report_as: docker
   parameters:
     registry: index.docker.io
     repo: github/octocat

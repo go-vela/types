@@ -55,6 +55,7 @@ func TestLibrary_Step_Environment(t *testing.T) {
 		"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 		"VELA_STEP_NAME":         "clone",
 		"VELA_STEP_NUMBER":       "1",
+		"VELA_STEP_REPORT_AS":    "test",
 		"VELA_STEP_RUNTIME":      "docker",
 		"VELA_STEP_STAGE":        "",
 		"VELA_STEP_STARTED":      "1563474078",
@@ -150,6 +151,10 @@ func TestLibrary_Step_Getters(t *testing.T) {
 		if test.step.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("GetDistribution is %v, want %v", test.step.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.step.GetReportAs() != test.want.GetReportAs() {
+			t.Errorf("GetReportAs is %v, want %v", test.step.GetReportAs(), test.want.GetReportAs())
+		}
 	}
 }
 
@@ -190,6 +195,7 @@ func TestLibrary_Step_Setters(t *testing.T) {
 		test.step.SetHost(test.want.GetHost())
 		test.step.SetRuntime(test.want.GetRuntime())
 		test.step.SetDistribution(test.want.GetDistribution())
+		test.step.SetReportAs(test.want.GetReportAs())
 
 		if test.step.GetID() != test.want.GetID() {
 			t.Errorf("SetID is %v, want %v", test.step.GetID(), test.want.GetID())
@@ -254,6 +260,10 @@ func TestLibrary_Step_Setters(t *testing.T) {
 		if test.step.GetDistribution() != test.want.GetDistribution() {
 			t.Errorf("SetDistribution is %v, want %v", test.step.GetDistribution(), test.want.GetDistribution())
 		}
+
+		if test.step.GetReportAs() != test.want.GetReportAs() {
+			t.Errorf("SetReportAs is %v, want %v", test.step.GetReportAs(), test.want.GetReportAs())
+		}
 	}
 }
 
@@ -274,6 +284,7 @@ func TestLibrary_Step_String(t *testing.T) {
   Name: %s,
   Number: %d,
   RepoID: %d,
+  ReportAs: %s,
   Runtime: %s,
   Stage: %s,
   Started: %d,
@@ -291,6 +302,7 @@ func TestLibrary_Step_String(t *testing.T) {
 		s.GetName(),
 		s.GetNumber(),
 		s.GetRepoID(),
+		s.GetReportAs(),
 		s.GetRuntime(),
 		s.GetStage(),
 		s.GetStarted(),
@@ -363,9 +375,10 @@ func TestLibrary_StepFromBuildContainer(t *testing.T) {
 		{
 			name: "container with build",
 			container: &pipeline.Container{
-				Name:   s.GetName(),
-				Number: s.GetNumber(),
-				Image:  s.GetImage(),
+				Name:     s.GetName(),
+				Number:   s.GetNumber(),
+				Image:    s.GetImage(),
+				ReportAs: s.GetReportAs(),
 				Environment: map[string]string{
 					"VELA_STEP_STAGE": "clone",
 				},
@@ -423,6 +436,7 @@ func TestLibrary_StepFromContainerEnvironment(t *testing.T) {
 					"VELA_STEP_IMAGE":        "target/vela-git:v0.3.0",
 					"VELA_STEP_NAME":         "clone",
 					"VELA_STEP_NUMBER":       "1",
+					"VELA_STEP_REPORT_AS":    "test",
 					"VELA_STEP_RUNTIME":      "docker",
 					"VELA_STEP_STAGE":        "clone",
 					"VELA_STEP_STARTED":      "1563474078",
@@ -462,6 +476,7 @@ func testStep() *Step {
 	s.SetHost("example.company.com")
 	s.SetRuntime("docker")
 	s.SetDistribution("linux")
+	s.SetReportAs("test")
 
 	return s
 }

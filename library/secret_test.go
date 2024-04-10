@@ -440,10 +440,6 @@ func TestLibrary_Secret_Getters(t *testing.T) {
 			t.Errorf("GetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
 		}
 
-		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
-			t.Errorf("GetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
-		}
-
 		if !reflect.DeepEqual(test.secret.GetAllowEvents(), test.want.GetAllowEvents()) {
 			t.Errorf("GetAllowEvents is %v, want %v", test.secret.GetAllowEvents(), test.want.GetAllowEvents())
 		}
@@ -503,7 +499,6 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 		test.secret.SetValue(test.want.GetValue())
 		test.secret.SetType(test.want.GetType())
 		test.secret.SetImages(test.want.GetImages())
-		test.secret.SetEvents(test.want.GetEvents())
 		test.secret.SetAllowEvents(test.want.GetAllowEvents())
 		test.secret.SetAllowCommand(test.want.GetAllowCommand())
 		test.secret.SetAllowSubstitution(test.want.GetAllowSubstitution())
@@ -544,10 +539,6 @@ func TestLibrary_Secret_Setters(t *testing.T) {
 			t.Errorf("SetImages is %v, want %v", test.secret.GetImages(), test.want.GetImages())
 		}
 
-		if !reflect.DeepEqual(test.secret.GetEvents(), test.want.GetEvents()) {
-			t.Errorf("SetEvents is %v, want %v", test.secret.GetEvents(), test.want.GetEvents())
-		}
-
 		if !reflect.DeepEqual(test.secret.GetAllowEvents(), test.want.GetAllowEvents()) {
 			t.Errorf("SetAllowEvents is %v, want %v", test.secret.GetAllowEvents(), test.want.GetAllowEvents())
 		}
@@ -586,7 +577,6 @@ func TestLibrary_Secret_String(t *testing.T) {
 	AllowCommand: %t,
 	AllowEvents: %v,
 	AllowSubstitution: %t,
-	Events: %s,
 	ID: %d,
 	Images: %s,
 	Name: %s,
@@ -603,7 +593,6 @@ func TestLibrary_Secret_String(t *testing.T) {
 		s.GetAllowCommand(),
 		s.GetAllowEvents().List(),
 		s.GetAllowSubstitution(),
-		s.GetEvents(),
 		s.GetID(),
 		s.GetImages(),
 		s.GetName(),
@@ -642,7 +631,6 @@ func testSecret() *Secret {
 	s.SetValue("bar")
 	s.SetType("repo")
 	s.SetImages([]string{"alpine"})
-	s.SetEvents([]string{"push", "tag", "deployment"})
 	s.SetAllowEvents(NewEventsFromMask(1))
 	s.SetAllowCommand(true)
 	s.SetAllowSubstitution(true)

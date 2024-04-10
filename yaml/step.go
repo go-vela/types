@@ -34,6 +34,7 @@ type (
 		Detach      bool                   `yaml:"detach,omitempty"      json:"detach,omitempty" jsonschema:"description=Run the container in a detached (headless) state.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-detach-tag"`
 		Privileged  bool                   `yaml:"privileged,omitempty"  json:"privileged,omitempty" jsonschema:"description=Run the container with extra privileges.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-privileged-tag"`
 		User        string                 `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Set the user for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-tag"`
+		ReportAs    string                 `yaml:"report_as,omitempty" json:"report_as,omitempty" jsonschema:"description=Set the name of the step to report as.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-report_as-tag"`
 	}
 )
 
@@ -60,6 +61,7 @@ func (s *StepSlice) ToPipeline() *pipeline.ContainerSlice {
 			Ulimits:     *step.Ulimits.ToPipeline(),
 			Volumes:     *step.Volumes.ToPipeline(),
 			User:        step.User,
+			ReportAs:    step.ReportAs,
 		})
 	}
 

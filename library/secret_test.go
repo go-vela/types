@@ -8,10 +8,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
 	"github.com/go-vela/types/pipeline"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Secret_Sanitize(t *testing.T) {

@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/buildkite/yaml"
+
 	"github.com/go-vela/types/pipeline"
 )
 

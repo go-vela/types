@@ -7,8 +7,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/go-vela/types/constants"
 	"github.com/google/go-cmp/cmp"
+
+	"github.com/go-vela/types/constants"
 )
 
 func TestLibrary_Repo_Environment(t *testing.T) {

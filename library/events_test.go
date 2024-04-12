@@ -6,9 +6,10 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Events_Getters(t *testing.T) {

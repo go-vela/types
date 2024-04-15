@@ -77,6 +77,10 @@ func TestLibrary_Schedule_Getters(t *testing.T) {
 			if test.schedule.GetBranch() != test.want.GetBranch() {
 				t.Errorf("GetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
 			}
+
+			if test.schedule.GetError() != test.want.GetError() {
+				t.Errorf("GetError is %v, want %v", test.schedule.GetError(), test.want.GetError())
+			}
 		})
 	}
 }
@@ -118,6 +122,7 @@ func TestLibrary_Schedule_Setters(t *testing.T) {
 			test.schedule.SetUpdatedBy(test.want.GetUpdatedBy())
 			test.schedule.SetScheduledAt(test.want.GetScheduledAt())
 			test.schedule.SetBranch(test.want.GetBranch())
+			test.schedule.SetError(test.want.GetError())
 
 			if test.schedule.GetID() != test.want.GetID() {
 				t.Errorf("SetID is %v, want %v", test.schedule.GetID(), test.want.GetID())
@@ -162,6 +167,10 @@ func TestLibrary_Schedule_Setters(t *testing.T) {
 			if test.schedule.GetBranch() != test.want.GetBranch() {
 				t.Errorf("SetBranch is %v, want %v", test.schedule.GetBranch(), test.want.GetBranch())
 			}
+
+			if test.schedule.GetError() != test.want.GetError() {
+				t.Errorf("SetError is %v, want %v", test.schedule.GetError(), test.want.GetError())
+			}
 		})
 	}
 }
@@ -181,6 +190,7 @@ func TestLibrary_Schedule_String(t *testing.T) {
   UpdatedAt: %d,
   UpdatedBy: %s,
   Branch: %s,
+  Error: %s,
 }`,
 		s.GetActive(),
 		s.GetCreatedAt(),
@@ -193,6 +203,7 @@ func TestLibrary_Schedule_String(t *testing.T) {
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
 		s.GetBranch(),
+		s.GetError(),
 	)
 
 	got := s.String()
@@ -215,6 +226,7 @@ func testSchedule() *Schedule {
 	s.SetUpdatedBy("user2")
 	s.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
 	s.SetBranch("main")
+	s.SetError("failed to execute")
 
 	return s
 }

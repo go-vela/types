@@ -21,6 +21,7 @@ type Schedule struct {
 	UpdatedBy   *string `json:"updated_by,omitempty"`
 	ScheduledAt *int64  `json:"scheduled_at,omitempty"`
 	Branch      *string `json:"branch,omitempty"`
+	Error       *string `json:"error,omitempty"`
 }
 
 // GetID returns the ID field from the provided Schedule. If the object is nil,
@@ -144,6 +145,17 @@ func (s *Schedule) GetBranch() string {
 	return *s.Branch
 }
 
+// GetError returns the Error field from the provided Schedule. If the object is nil,
+// or the field within the object is nil, it returns the zero value instead.
+func (s *Schedule) GetError() string {
+	// return zero value if Schedule type or Error field is nil
+	if s == nil || s.Error == nil {
+		return ""
+	}
+
+	return *s.Error
+}
+
 // SetID sets the ID field in the provided Schedule. If the object is nil,
 // it will set nothing and immediately return making this a no-op.
 func (s *Schedule) SetID(id int64) {
@@ -265,6 +277,17 @@ func (s *Schedule) SetBranch(branch string) {
 	s.Branch = &branch
 }
 
+// SetError sets the Error field in the provided Schedule. If the object is nil,
+// it will set nothing and immediately return making this a no-op.
+func (s *Schedule) SetError(err string) {
+	// return if Schedule type is nil
+	if s == nil {
+		return
+	}
+
+	s.Error = &err
+}
+
 // String implements the Stringer interface for the Schedule type.
 func (s *Schedule) String() string {
 	return fmt.Sprintf(`{
@@ -279,6 +302,7 @@ func (s *Schedule) String() string {
   UpdatedAt: %d,
   UpdatedBy: %s,
   Branch: %s,
+  Error: %s,
 }`,
 		s.GetActive(),
 		s.GetCreatedAt(),
@@ -291,5 +315,6 @@ func (s *Schedule) String() string {
 		s.GetUpdatedAt(),
 		s.GetUpdatedBy(),
 		s.GetBranch(),
+		s.GetError(),
 	)
 }

@@ -24,6 +24,7 @@ func TestDatabase_ScheduleFromLibrary(t *testing.T) {
 	s.SetUpdatedBy("user2")
 	s.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
 	s.SetBranch("main")
+	s.SetError("failed to execute")
 
 	want := testSchedule()
 
@@ -91,6 +92,7 @@ func TestDatabase_Schedule_ToLibrary(t *testing.T) {
 	want.SetUpdatedBy("user2")
 	want.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
 	want.SetBranch("main")
+	want.SetError("failed to execute")
 
 	got := testSchedule().ToLibrary()
 	if !reflect.DeepEqual(got, want) {
@@ -180,5 +182,6 @@ func testSchedule() *Schedule {
 		UpdatedBy:   sql.NullString{String: "user2", Valid: true},
 		ScheduledAt: sql.NullInt64{Int64: time.Now().Add(time.Hour * 2).UTC().Unix(), Valid: true},
 		Branch:      sql.NullString{String: "main", Valid: true},
+		Error:       sql.NullString{String: "failed to execute", Valid: true},
 	}
 }

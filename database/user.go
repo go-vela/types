@@ -8,9 +8,10 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/lib/pq"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
-	"github.com/lib/pq"
 )
 
 var (

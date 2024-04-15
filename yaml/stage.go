@@ -5,10 +5,10 @@ package yaml
 import (
 	"fmt"
 
+	"github.com/buildkite/yaml"
+
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
-
-	"github.com/buildkite/yaml"
 )
 
 type (

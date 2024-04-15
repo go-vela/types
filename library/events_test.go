@@ -6,9 +6,10 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Events_Getters(t *testing.T) {
@@ -339,7 +340,7 @@ func TestLibrary_Events_Allowed(t *testing.T) {
 		{event: "pull_request", action: "reopened", want: true},
 		{event: "pull_request", action: "labeled", want: false},
 		{event: "pull_request", action: "unlabeled", want: true},
-		{event: "deployment", want: false},
+		{event: "deployment", action: "created", want: false},
 		{event: "comment", action: "created", want: true},
 		{event: "comment", action: "edited", want: false},
 		{event: "schedule", want: true},

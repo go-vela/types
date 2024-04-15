@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/buildkite/yaml"
+
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -116,7 +117,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
 				Unless: Rules{
-					Event: []string{"deployment", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "comment:edited", "schedule"},
+					Event: []string{"deployment:created", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "comment:edited", "schedule"},
 					Path:  []string{"foo.txt", "/foo/bar.txt"},
 				},
 				Matcher:  "regexp",

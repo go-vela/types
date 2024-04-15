@@ -226,7 +226,7 @@ func testSchedule() *Schedule {
 	s.SetUpdatedBy("user2")
 	s.SetScheduledAt(time.Now().Add(time.Hour * 2).UTC().Unix())
 	s.SetBranch("main")
-	s.SetError("failed to execute")
+	s.SetError("unable to trigger build for schedule nightly: unknown character")
 
 	return s
 }

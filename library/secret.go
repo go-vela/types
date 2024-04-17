@@ -22,13 +22,32 @@ type Secret struct {
 	Value             *string   `json:"value,omitempty"`
 	Type              *string   `json:"type,omitempty"`
 	Images            *[]string `json:"images,omitempty"`
-	AllowEvents       *Events   `json:"allow_events,omitempty"`
+	AllowEvents       *Events   `json:"allow_events,omitempty" yaml:"allow_events"`
 	AllowCommand      *bool     `json:"allow_command,omitempty"`
 	AllowSubstitution *bool     `json:"allow_substitution,omitempty"`
 	CreatedAt         *int64    `json:"created_at,omitempty"`
 	CreatedBy         *string   `json:"created_by,omitempty"`
 	UpdatedAt         *int64    `json:"updated_at,omitempty"`
 	UpdatedBy         *string   `json:"updated_by,omitempty"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Secret type.
+// This allows custom fields in the Secret type to be read from a YAML file, like AllowEvents.
+func (s *Secret) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// create an alias to perform a normal unmarshal and avoid an infinite loop
+	type jsonSecret Secret
+
+	tmp := &jsonSecret{}
+
+	err := unmarshal(tmp)
+	if err != nil {
+		return err
+	}
+
+	// overwrite existing secret
+	*s = Secret(*tmp)
+
+	return nil
 }
 
 // Sanitize creates a duplicate of the Secret without the value.

@@ -932,6 +932,7 @@ func testContainers() *ContainerSlice {
 			Name:        "clone",
 			Number:      2,
 			Pull:        "always",
+			IDRequest:   "yes",
 		},
 		{
 			ID:          "step_github/octocat._1_echo",

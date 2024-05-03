@@ -8,10 +8,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
 	"github.com/go-vela/types/pipeline"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Secret_Sanitize(t *testing.T) {
@@ -112,8 +113,11 @@ func TestLibrary_Secret_Match(t *testing.T) {
 		{
 			name: "deployment",
 			step: &pipeline.Container{
-				Image:       "alpine:latest",
-				Environment: map[string]string{"VELA_BUILD_EVENT": "deployment"},
+				Image: "alpine:latest",
+				Environment: map[string]string{
+					"VELA_BUILD_EVENT":        "deployment",
+					"VELA_BUILD_EVENT_ACTION": "created",
+				},
 			},
 			sec: &Secret{
 				Name:        &v,

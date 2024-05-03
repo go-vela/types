@@ -6,10 +6,11 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/go-vela/types/library"
-	"github.com/go-vela/types/raw"
 	"github.com/google/go-cmp/cmp"
 	"github.com/lib/pq"
+
+	"github.com/go-vela/types/library"
+	"github.com/go-vela/types/raw"
 )
 
 func TestDatabase_Deployment_Nullify(t *testing.T) {

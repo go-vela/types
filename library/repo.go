@@ -28,10 +28,29 @@ type Repo struct {
 	Private      *bool     `json:"private,omitempty"`
 	Trusted      *bool     `json:"trusted,omitempty"`
 	Active       *bool     `json:"active,omitempty"`
-	AllowEvents  *Events   `json:"allow_events,omitempty"`
+	AllowEvents  *Events   `json:"allow_events,omitempty" yaml:"allow_events"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
 	ApproveBuild *string   `json:"approve_build,omitempty"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Repo type.
+// This allows custom fields in the Repo type to be read from a YAML file, like AllowEvents.
+func (r *Repo) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// create an alias to perform a normal unmarshal and avoid an infinite loop
+	type jsonRepo Repo
+
+	tmp := &jsonRepo{}
+
+	err := unmarshal(tmp)
+	if err != nil {
+		return err
+	}
+
+	// overwrite existing Repo
+	*r = Repo(*tmp)
+
+	return nil
 }
 
 // Environment returns a list of environment variables
@@ -618,8 +637,6 @@ func (r *Repo) SetApproveBuild(v string) {
 }
 
 // String implements the Stringer interface for the Repo type.
-//
-//nolint:dupl // ignore duplicate with test func
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
   Active: %t,

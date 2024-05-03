@@ -142,3 +142,24 @@ schema:
 	@go get github.com/alecthomas/jsonschema
 	@go get github.com/iancoleman/orderedmap
 	@go run cmd/schema/main.go > schema.json
+
+# The `lint` target is intended to lint the
+# Go source code with golangci-lint.
+#
+# Usage: `make lint`
+.PHONY: lint
+lint:
+	@echo
+	@echo "### Linting Go Code"
+	@golangci-lint run ./...
+
+# The `lintfix` target is intended to lint the
+# Go source code with golangci-lint and apply
+# any fixes that can be automatically applied.
+#
+# Usage: `make lintfix`
+.PHONY: lintfix
+lintfix:
+	@echo
+	@echo "### Fixing Go code with linter"
+	@golangci-lint run ./... --fix

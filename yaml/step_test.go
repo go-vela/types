@@ -31,6 +31,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Privileged:  false,
 					Pull:        "not_present",
 					ReportAs:    "my-step",
+					IDRequest:   "yes",
 					Ruleset: Ruleset{
 						If: Rules{
 							Branch:  []string{"main"},
@@ -88,6 +89,7 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Privileged:  false,
 					Pull:        "not_present",
 					ReportAs:    "my-step",
+					IDRequest:   "yes",
 					Ruleset: pipeline.Ruleset{
 						If: pipeline.Rules{
 							Branch:  []string{"main"},

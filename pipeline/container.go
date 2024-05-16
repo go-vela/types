@@ -52,6 +52,7 @@ type (
 		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
 		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
 		ReportAs    string            `json:"report_as,omitempty" yaml:"report_as,omitempty"`
+		IDRequest   string            `json:"id_request,omitempty" yaml:"id_request,omitempty"`
 	}
 )
 
@@ -135,7 +136,8 @@ func (c *Container) Empty() bool {
 		len(c.Ulimits) == 0 &&
 		len(c.Volumes) == 0 &&
 		len(c.User) == 0 &&
-		len(c.ReportAs) == 0 {
+		len(c.ReportAs) == 0 &&
+		len(c.IDRequest) == 0 {
 		return true
 	}
 

@@ -3,8 +3,12 @@
 package library
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
+	"github.com/go-vela/types/raw"
 )
 
 // Events is the library representation of the various events that generate a
@@ -15,6 +19,29 @@ type Events struct {
 	Deployment  *actions.Deploy   `json:"deployment"`
 	Comment     *actions.Comment  `json:"comment"`
 	Schedule    *actions.Schedule `json:"schedule"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Events type.
+func (e *Events) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// string slice we try unmarshalling to
+	stringSlice := new(raw.StringSlice)
+
+	// attempt to unmarshal as a string slice type
+	err := unmarshal(stringSlice)
+	if err == nil {
+		// create new events from string slice
+		evs, err := NewEventsFromSlice(*stringSlice)
+		if err != nil {
+			return err
+		}
+
+		// overwrite existing Events
+		*e = *evs
+
+		return nil
+	}
+
+	return errors.New("failed to unmarshal Events")
 }
 
 // NewEventsFromMask is an instatiation function for the Events type that
@@ -35,6 +62,66 @@ func NewEventsFromMask(mask int64) *Events {
 	e.SetSchedule(scheduleActions)
 
 	return e
+}
+
+// NewEventsFromSlice is an instantiation function for the Events type that
+// takes in a slice of event strings and populates the nested Events struct.
+func NewEventsFromSlice(events []string) (*Events, error) {
+	mask := int64(0)
+
+	// iterate through all events provided
+	for _, event := range events {
+		switch event {
+		// push actions
+		case constants.EventPush, constants.EventPush + ":branch":
+			mask = mask | constants.AllowPushBranch
+		case constants.EventTag, constants.EventPush + ":" + constants.EventTag:
+			mask = mask | constants.AllowPushTag
+		case constants.EventDelete + ":" + constants.ActionBranch:
+			mask = mask | constants.AllowPushDeleteBranch
+		case constants.EventDelete + ":" + constants.ActionTag:
+			mask = mask | constants.AllowPushDeleteTag
+		case constants.EventDelete:
+			mask = mask | constants.AllowPushDeleteBranch | constants.AllowPushDeleteTag
+
+		// pull_request actions
+		case constants.EventPull, constants.EventPullAlternate:
+			mask = mask | constants.AllowPullOpen | constants.AllowPullSync | constants.AllowPullReopen
+		case constants.EventPull + ":" + constants.ActionOpened:
+			mask = mask | constants.AllowPullOpen
+		case constants.EventPull + ":" + constants.ActionEdited:
+			mask = mask | constants.AllowPullEdit
+		case constants.EventPull + ":" + constants.ActionSynchronize:
+			mask = mask | constants.AllowPullSync
+		case constants.EventPull + ":" + constants.ActionReopened:
+			mask = mask | constants.AllowPullReopen
+		case constants.EventPull + ":" + constants.ActionLabeled:
+			mask = mask | constants.AllowPullLabel
+		case constants.EventPull + ":" + constants.ActionUnlabeled:
+			mask = mask | constants.AllowPullUnlabel
+
+		// deployment actions
+		case constants.EventDeploy, constants.EventDeployAlternate, constants.EventDeploy + ":" + constants.ActionCreated:
+			mask = mask | constants.AllowDeployCreate
+
+		// comment actions
+		case constants.EventComment:
+			mask = mask | constants.AllowCommentCreate | constants.AllowCommentEdit
+		case constants.EventComment + ":" + constants.ActionCreated:
+			mask = mask | constants.AllowCommentCreate
+		case constants.EventComment + ":" + constants.ActionEdited:
+			mask = mask | constants.AllowCommentEdit
+
+		// schedule actions
+		case constants.EventSchedule, constants.EventSchedule + ":" + constants.ActionRun:
+			mask = mask | constants.AllowSchedule
+
+		default:
+			return nil, fmt.Errorf("invalid event provided: %s", event)
+		}
+	}
+
+	return NewEventsFromMask(mask), nil
 }
 
 // Allowed determines whether or not an event + action is allowed based on whether
@@ -58,13 +145,17 @@ func (e *Events) Allowed(event, action string) bool {
 		allowed = e.GetPullRequest().GetEdited()
 	case constants.EventPull + ":" + constants.ActionReopened:
 		allowed = e.GetPullRequest().GetReopened()
+	case constants.EventPull + ":" + constants.ActionLabeled:
+		allowed = e.GetPullRequest().GetLabeled()
+	case constants.EventPull + ":" + constants.ActionUnlabeled:
+		allowed = e.GetPullRequest().GetUnlabeled()
 	case constants.EventTag:
 		allowed = e.GetPush().GetTag()
 	case constants.EventComment + ":" + constants.ActionCreated:
 		allowed = e.GetComment().GetCreated()
 	case constants.EventComment + ":" + constants.ActionEdited:
 		allowed = e.GetComment().GetEdited()
-	case constants.EventDeploy:
+	case constants.EventDeploy + ":" + constants.ActionCreated:
 		allowed = e.GetDeployment().GetCreated()
 	case constants.EventSchedule:
 		allowed = e.GetSchedule().GetRun()
@@ -100,6 +191,14 @@ func (e *Events) List() []string {
 
 	if e.GetPullRequest().GetReopened() {
 		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionReopened)
+	}
+
+	if e.GetPullRequest().GetLabeled() {
+		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionLabeled)
+	}
+
+	if e.GetPullRequest().GetUnlabeled() {
+		eventSlice = append(eventSlice, constants.EventPull+":"+constants.ActionUnlabeled)
 	}
 
 	if e.GetPush().GetTag() {

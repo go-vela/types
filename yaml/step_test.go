@@ -7,10 +7,10 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/buildkite/yaml"
+
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
-
-	"github.com/buildkite/yaml"
 )
 
 func TestYaml_StepSlice_ToPipeline(t *testing.T) {
@@ -30,6 +30,8 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Name:        "echo",
 					Privileged:  false,
 					Pull:        "not_present",
+					ReportAs:    "my-step",
+					IDRequest:   "yes",
 					Ruleset: Ruleset{
 						If: Rules{
 							Branch:  []string{"main"},
@@ -86,6 +88,8 @@ func TestYaml_StepSlice_ToPipeline(t *testing.T) {
 					Name:        "echo",
 					Privileged:  false,
 					Pull:        "not_present",
+					ReportAs:    "my-step",
+					IDRequest:   "yes",
 					Ruleset: pipeline.Ruleset{
 						If: pipeline.Rules{
 							Branch:  []string{"main"},
@@ -187,9 +191,10 @@ func TestYaml_StepSlice_UnmarshalYAML(t *testing.T) {
 					Pull:  "always",
 				},
 				{
-					Name:  "docker_build",
-					Image: "plugins/docker:18.09",
-					Pull:  "always",
+					Name:     "docker_build",
+					Image:    "plugins/docker:18.09",
+					Pull:     "always",
+					ReportAs: "docker",
 					Parameters: map[string]interface{}{
 						"registry": "index.docker.io",
 						"repo":     "github/octocat",

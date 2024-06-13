@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/buildkite/yaml"
+
 	"github.com/go-vela/types/pipeline"
 )
 
@@ -22,12 +23,13 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 				If: Rules{
 					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
-					Event:   []string{"push"},
+					Event:   []string{"push", "pull_request:labeled"},
 					Path:    []string{"foo.txt"},
 					Repo:    []string{"github/octocat"},
 					Status:  []string{"success"},
 					Tag:     []string{"v0.1.0"},
 					Target:  []string{"production"},
+					Label:   []string{"enhancement"},
 				},
 				Unless: Rules{
 					Branch:  []string{"main"},
@@ -47,12 +49,13 @@ func TestYaml_Ruleset_ToPipeline(t *testing.T) {
 				If: pipeline.Rules{
 					Branch:  []string{"main"},
 					Comment: []string{"test comment"},
-					Event:   []string{"push"},
+					Event:   []string{"push", "pull_request:labeled"},
 					Path:    []string{"foo.txt"},
 					Repo:    []string{"github/octocat"},
 					Status:  []string{"success"},
 					Tag:     []string{"v0.1.0"},
 					Target:  []string{"production"},
+					Label:   []string{"enhancement"},
 				},
 				Unless: pipeline.Rules{
 					Branch:  []string{"main"},
@@ -114,7 +117,7 @@ func TestYaml_Ruleset_UnmarshalYAML(t *testing.T) {
 					Tag:    []string{"^refs/tags/(\\d+\\.)+\\d+$"},
 				},
 				Unless: Rules{
-					Event: []string{"deployment", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "comment:edited", "schedule"},
+					Event: []string{"deployment:created", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "comment:edited", "schedule"},
 					Path:  []string{"foo.txt", "/foo/bar.txt"},
 				},
 				Matcher:  "regexp",
@@ -167,22 +170,24 @@ func TestYaml_Rules_ToPipeline(t *testing.T) {
 			rules: &Rules{
 				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
-				Event:   []string{"push"},
+				Event:   []string{"push", "pull_request:labeled"},
 				Path:    []string{"foo.txt"},
 				Repo:    []string{"github/octocat"},
 				Status:  []string{"success"},
 				Tag:     []string{"v0.1.0"},
 				Target:  []string{"production"},
+				Label:   []string{"enhancement"},
 			},
 			want: &pipeline.Rules{
 				Branch:  []string{"main"},
 				Comment: []string{"test comment"},
-				Event:   []string{"push"},
+				Event:   []string{"push", "pull_request:labeled"},
 				Path:    []string{"foo.txt"},
 				Repo:    []string{"github/octocat"},
 				Status:  []string{"success"},
 				Tag:     []string{"v0.1.0"},
 				Target:  []string{"production"},
+				Label:   []string{"enhancement"},
 			},
 		},
 	}

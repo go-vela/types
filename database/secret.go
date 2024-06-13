@@ -8,10 +8,10 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/lib/pq"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library"
-
-	"github.com/lib/pq"
 )
 
 var (
@@ -42,21 +42,21 @@ var (
 
 // Secret is the database representation of a secret.
 type Secret struct {
-	ID           sql.NullInt64  `sql:"id"`
-	Org          sql.NullString `sql:"org"`
-	Repo         sql.NullString `sql:"repo"`
-	Team         sql.NullString `sql:"team"`
-	Name         sql.NullString `sql:"name"`
-	Value        sql.NullString `sql:"value"`
-	Type         sql.NullString `sql:"type"`
-	Images       pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
-	Events       pq.StringArray `sql:"events" gorm:"type:varchar(1000)"`
-	AllowEvents  sql.NullInt64  `sql:"allow_events"`
-	AllowCommand sql.NullBool   `sql:"allow_command"`
-	CreatedAt    sql.NullInt64  `sql:"created_at"`
-	CreatedBy    sql.NullString `sql:"created_by"`
-	UpdatedAt    sql.NullInt64  `sql:"updated_at"`
-	UpdatedBy    sql.NullString `sql:"updated_by"`
+	ID                sql.NullInt64  `sql:"id"`
+	Org               sql.NullString `sql:"org"`
+	Repo              sql.NullString `sql:"repo"`
+	Team              sql.NullString `sql:"team"`
+	Name              sql.NullString `sql:"name"`
+	Value             sql.NullString `sql:"value"`
+	Type              sql.NullString `sql:"type"`
+	Images            pq.StringArray `sql:"images" gorm:"type:varchar(1000)"`
+	AllowEvents       sql.NullInt64  `sql:"allow_events"`
+	AllowCommand      sql.NullBool   `sql:"allow_command"`
+	AllowSubstitution sql.NullBool   `sql:"allow_substitution"`
+	CreatedAt         sql.NullInt64  `sql:"created_at"`
+	CreatedBy         sql.NullString `sql:"created_by"`
+	UpdatedAt         sql.NullInt64  `sql:"updated_at"`
+	UpdatedBy         sql.NullString `sql:"updated_by"`
 }
 
 // Decrypt will manipulate the existing secret value by
@@ -193,9 +193,9 @@ func (s *Secret) ToLibrary() *library.Secret {
 	secret.SetValue(s.Value.String)
 	secret.SetType(s.Type.String)
 	secret.SetImages(s.Images)
-	secret.SetEvents(s.Events)
 	secret.SetAllowEvents(library.NewEventsFromMask(s.AllowEvents.Int64))
 	secret.SetAllowCommand(s.AllowCommand.Bool)
+	secret.SetAllowSubstitution(s.AllowSubstitution.Bool)
 	secret.SetCreatedAt(s.CreatedAt.Int64)
 	secret.SetCreatedBy(s.CreatedBy.String)
 	secret.SetUpdatedAt(s.UpdatedAt.Int64)
@@ -259,12 +259,6 @@ func (s *Secret) Validate() error {
 		s.Images[i] = sanitize(v)
 	}
 
-	// ensure that all Events are sanitized
-	// to avoid unsafe HTML content
-	for i, v := range s.Events {
-		s.Events[i] = sanitize(v)
-	}
-
 	return nil
 }
 
@@ -272,21 +266,21 @@ func (s *Secret) Validate() error {
 // to a database Secret type.
 func SecretFromLibrary(s *library.Secret) *Secret {
 	secret := &Secret{
-		ID:           sql.NullInt64{Int64: s.GetID(), Valid: true},
-		Org:          sql.NullString{String: s.GetOrg(), Valid: true},
-		Repo:         sql.NullString{String: s.GetRepo(), Valid: true},
-		Team:         sql.NullString{String: s.GetTeam(), Valid: true},
-		Name:         sql.NullString{String: s.GetName(), Valid: true},
-		Value:        sql.NullString{String: s.GetValue(), Valid: true},
-		Type:         sql.NullString{String: s.GetType(), Valid: true},
-		Images:       pq.StringArray(s.GetImages()),
-		Events:       pq.StringArray(s.GetEvents()),
-		AllowEvents:  sql.NullInt64{Int64: s.GetAllowEvents().ToDatabase(), Valid: true},
-		AllowCommand: sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
-		CreatedAt:    sql.NullInt64{Int64: s.GetCreatedAt(), Valid: true},
-		CreatedBy:    sql.NullString{String: s.GetCreatedBy(), Valid: true},
-		UpdatedAt:    sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
-		UpdatedBy:    sql.NullString{String: s.GetUpdatedBy(), Valid: true},
+		ID:                sql.NullInt64{Int64: s.GetID(), Valid: true},
+		Org:               sql.NullString{String: s.GetOrg(), Valid: true},
+		Repo:              sql.NullString{String: s.GetRepo(), Valid: true},
+		Team:              sql.NullString{String: s.GetTeam(), Valid: true},
+		Name:              sql.NullString{String: s.GetName(), Valid: true},
+		Value:             sql.NullString{String: s.GetValue(), Valid: true},
+		Type:              sql.NullString{String: s.GetType(), Valid: true},
+		Images:            pq.StringArray(s.GetImages()),
+		AllowEvents:       sql.NullInt64{Int64: s.GetAllowEvents().ToDatabase(), Valid: true},
+		AllowCommand:      sql.NullBool{Bool: s.GetAllowCommand(), Valid: true},
+		AllowSubstitution: sql.NullBool{Bool: s.GetAllowSubstitution(), Valid: true},
+		CreatedAt:         sql.NullInt64{Int64: s.GetCreatedAt(), Valid: true},
+		CreatedBy:         sql.NullString{String: s.GetCreatedBy(), Valid: true},
+		UpdatedAt:         sql.NullInt64{Int64: s.GetUpdatedAt(), Valid: true},
+		UpdatedBy:         sql.NullString{String: s.GetUpdatedBy(), Valid: true},
 	}
 
 	return secret.Nullify()

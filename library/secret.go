@@ -14,21 +14,40 @@ import (
 //
 // swagger:model Secret
 type Secret struct {
-	ID           *int64    `json:"id,omitempty"`
-	Org          *string   `json:"org,omitempty"`
-	Repo         *string   `json:"repo,omitempty"`
-	Team         *string   `json:"team,omitempty"`
-	Name         *string   `json:"name,omitempty"`
-	Value        *string   `json:"value,omitempty"`
-	Type         *string   `json:"type,omitempty"`
-	Images       *[]string `json:"images,omitempty"`
-	Events       *[]string `json:"events,omitempty"`
-	AllowEvents  *Events   `json:"allow_events,omitempty"`
-	AllowCommand *bool     `json:"allow_command,omitempty"`
-	CreatedAt    *int64    `json:"created_at,omitempty"`
-	CreatedBy    *string   `json:"created_by,omitempty"`
-	UpdatedAt    *int64    `json:"updated_at,omitempty"`
-	UpdatedBy    *string   `json:"updated_by,omitempty"`
+	ID                *int64    `json:"id,omitempty"`
+	Org               *string   `json:"org,omitempty"`
+	Repo              *string   `json:"repo,omitempty"`
+	Team              *string   `json:"team,omitempty"`
+	Name              *string   `json:"name,omitempty"`
+	Value             *string   `json:"value,omitempty"`
+	Type              *string   `json:"type,omitempty"`
+	Images            *[]string `json:"images,omitempty"`
+	AllowEvents       *Events   `json:"allow_events,omitempty" yaml:"allow_events"`
+	AllowCommand      *bool     `json:"allow_command,omitempty"`
+	AllowSubstitution *bool     `json:"allow_substitution,omitempty"`
+	CreatedAt         *int64    `json:"created_at,omitempty"`
+	CreatedBy         *string   `json:"created_by,omitempty"`
+	UpdatedAt         *int64    `json:"updated_at,omitempty"`
+	UpdatedBy         *string   `json:"updated_by,omitempty"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Secret type.
+// This allows custom fields in the Secret type to be read from a YAML file, like AllowEvents.
+func (s *Secret) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// create an alias to perform a normal unmarshal and avoid an infinite loop
+	type jsonSecret Secret
+
+	tmp := &jsonSecret{}
+
+	err := unmarshal(tmp)
+	if err != nil {
+		return err
+	}
+
+	// overwrite existing secret
+	*s = Secret(*tmp)
+
+	return nil
 }
 
 // Sanitize creates a duplicate of the Secret without the value.
@@ -39,21 +58,21 @@ func (s *Secret) Sanitize() *Secret {
 	value := constants.SecretMask
 
 	return &Secret{
-		ID:           s.ID,
-		Org:          s.Org,
-		Repo:         s.Repo,
-		Team:         s.Team,
-		Name:         s.Name,
-		Value:        &value,
-		Type:         s.Type,
-		Images:       s.Images,
-		Events:       s.Events,
-		AllowEvents:  s.AllowEvents,
-		AllowCommand: s.AllowCommand,
-		CreatedAt:    s.CreatedAt,
-		CreatedBy:    s.CreatedBy,
-		UpdatedAt:    s.UpdatedAt,
-		UpdatedBy:    s.UpdatedBy,
+		ID:                s.ID,
+		Org:               s.Org,
+		Repo:              s.Repo,
+		Team:              s.Team,
+		Name:              s.Name,
+		Value:             &value,
+		Type:              s.Type,
+		Images:            s.Images,
+		AllowEvents:       s.AllowEvents,
+		AllowCommand:      s.AllowCommand,
+		AllowSubstitution: s.AllowSubstitution,
+		CreatedAt:         s.CreatedAt,
+		CreatedBy:         s.CreatedBy,
+		UpdatedAt:         s.UpdatedAt,
+		UpdatedBy:         s.UpdatedBy,
 	}
 }
 
@@ -66,6 +85,11 @@ func (s *Secret) Match(from *pipeline.Container) bool {
 
 	// check if commands are utilized when not allowed
 	if !commands && len(from.Commands) > 0 {
+		return false
+	}
+
+	// check if a custom entrypoint is utilized when not allowed
+	if !commands && len(from.Commands) == 0 && len(from.Entrypoint) > 0 {
 		return false
 	}
 
@@ -198,19 +222,6 @@ func (s *Secret) GetImages() []string {
 	return *s.Images
 }
 
-// GetEvents returns the Events field.
-//
-// When the provided Secret type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (s *Secret) GetEvents() []string {
-	// return zero value if Secret type or Events field is nil
-	if s == nil || s.Events == nil {
-		return []string{}
-	}
-
-	return *s.Events
-}
-
 // GetAllowEvents returns the AllowEvents field.
 //
 // When the provided Secret type is nil, or the field within
@@ -235,6 +246,19 @@ func (s *Secret) GetAllowCommand() bool {
 	}
 
 	return *s.AllowCommand
+}
+
+// GetAllowSubstitution returns the AllowSubstitution field.
+//
+// When the provided Secret type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Secret) GetAllowSubstitution() bool {
+	// return zero value if Secret type or AllowSubstitution field is nil
+	if s == nil || s.AllowSubstitution == nil {
+		return false
+	}
+
+	return *s.AllowSubstitution
 }
 
 // GetCreatedAt returns the CreatedAt field.
@@ -393,19 +417,6 @@ func (s *Secret) SetImages(v []string) {
 	s.Images = &v
 }
 
-// SetEvents sets the Events field.
-//
-// When the provided Secret type is nil, it
-// will set nothing and immediately return.
-func (s *Secret) SetEvents(v []string) {
-	// return if Secret type is nil
-	if s == nil {
-		return
-	}
-
-	s.Events = &v
-}
-
 // SetAllowEvents sets the AllowEvents field.
 //
 // When the provided Secret type is nil, it
@@ -430,6 +441,19 @@ func (s *Secret) SetAllowCommand(v bool) {
 	}
 
 	s.AllowCommand = &v
+}
+
+// SetAllowSubstitution sets the AllowSubstitution field.
+//
+// When the provided Secret type is nil, it
+// will set nothing and immediately return.
+func (s *Secret) SetAllowSubstitution(v bool) {
+	// return if Secret type is nil
+	if s == nil {
+		return
+	}
+
+	s.AllowSubstitution = &v
 }
 
 // SetCreatedAt sets the CreatedAt field.
@@ -489,7 +513,7 @@ func (s *Secret) String() string {
 	return fmt.Sprintf(`{
 	AllowCommand: %t,
 	AllowEvents: %s,
-	Events: %s,
+	AllowSubstitution: %t,
 	ID: %d,
 	Images: %s,
 	Name: %s,
@@ -505,7 +529,7 @@ func (s *Secret) String() string {
 }`,
 		s.GetAllowCommand(),
 		s.GetAllowEvents().List(),
-		s.GetEvents(),
+		s.GetAllowSubstitution(),
 		s.GetID(),
 		s.GetImages(),
 		s.GetName(),

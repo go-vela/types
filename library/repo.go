@@ -28,16 +28,30 @@ type Repo struct {
 	Private      *bool     `json:"private,omitempty"`
 	Trusted      *bool     `json:"trusted,omitempty"`
 	Active       *bool     `json:"active,omitempty"`
-	AllowPull    *bool     `json:"allow_pull,omitempty"`
-	AllowPush    *bool     `json:"allow_push,omitempty"`
-	AllowDeploy  *bool     `json:"allow_deploy,omitempty"`
-	AllowTag     *bool     `json:"allow_tag,omitempty"`
-	AllowComment *bool     `json:"allow_comment,omitempty"`
-	AllowEvents  *Events   `json:"allow_events,omitempty"`
+	AllowEvents  *Events   `json:"allow_events,omitempty" yaml:"allow_events"`
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
 	ApproveBuild *string   `json:"approve_build,omitempty"`
 	InstallID    *int64    `json:"install_id,omitempty"`
+}
+
+// UnmarshalYAML implements the Unmarshaler interface for the Repo type.
+// This allows custom fields in the Repo type to be read from a YAML file, like AllowEvents.
+func (r *Repo) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// create an alias to perform a normal unmarshal and avoid an infinite loop
+	type jsonRepo Repo
+
+	tmp := &jsonRepo{}
+
+	err := unmarshal(tmp)
+	if err != nil {
+		return err
+	}
+
+	// overwrite existing Repo
+	*r = Repo(*tmp)
+
+	return nil
 }
 
 // Environment returns a list of environment variables
@@ -45,11 +59,6 @@ type Repo struct {
 func (r *Repo) Environment() map[string]string {
 	return map[string]string{
 		"VELA_REPO_ACTIVE":        ToString(r.GetActive()),
-		"VELA_REPO_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"VELA_REPO_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
-		"VELA_REPO_ALLOW_PULL":    ToString(r.GetAllowPull()),
-		"VELA_REPO_ALLOW_PUSH":    ToString(r.GetAllowPush()),
-		"VELA_REPO_ALLOW_TAG":     ToString(r.GetAllowTag()),
 		"VELA_REPO_ALLOW_EVENTS":  strings.Join(r.GetAllowEvents().List()[:], ","),
 		"VELA_REPO_BRANCH":        ToString(r.GetBranch()),
 		"VELA_REPO_TOPICS":        strings.Join(r.GetTopics()[:], ","),
@@ -68,23 +77,18 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_INSTALL_ID":    ToString(r.GetInstallID()),
 
 		// deprecated environment variables
-		"REPOSITORY_ACTIVE":        ToString(r.GetActive()),
-		"REPOSITORY_ALLOW_COMMENT": ToString(r.GetAllowComment()),
-		"REPOSITORY_ALLOW_DEPLOY":  ToString(r.GetAllowDeploy()),
-		"REPOSITORY_ALLOW_PULL":    ToString(r.GetAllowPull()),
-		"REPOSITORY_ALLOW_PUSH":    ToString(r.GetAllowPush()),
-		"REPOSITORY_ALLOW_TAG":     ToString(r.GetAllowTag()),
-		"REPOSITORY_ALLOW_EVENTS":  strings.Join(r.GetAllowEvents().List()[:], ","),
-		"REPOSITORY_BRANCH":        ToString(r.GetBranch()),
-		"REPOSITORY_CLONE":         ToString(r.GetClone()),
-		"REPOSITORY_FULL_NAME":     ToString(r.GetFullName()),
-		"REPOSITORY_LINK":          ToString(r.GetLink()),
-		"REPOSITORY_NAME":          ToString(r.GetName()),
-		"REPOSITORY_ORG":           ToString(r.GetOrg()),
-		"REPOSITORY_PRIVATE":       ToString(r.GetPrivate()),
-		"REPOSITORY_TIMEOUT":       ToString(r.GetTimeout()),
-		"REPOSITORY_TRUSTED":       ToString(r.GetTrusted()),
-		"REPOSITORY_VISIBILITY":    ToString(r.GetVisibility()),
+		"REPOSITORY_ACTIVE":       ToString(r.GetActive()),
+		"REPOSITORY_ALLOW_EVENTS": strings.Join(r.GetAllowEvents().List()[:], ","),
+		"REPOSITORY_BRANCH":       ToString(r.GetBranch()),
+		"REPOSITORY_CLONE":        ToString(r.GetClone()),
+		"REPOSITORY_FULL_NAME":    ToString(r.GetFullName()),
+		"REPOSITORY_LINK":         ToString(r.GetLink()),
+		"REPOSITORY_NAME":         ToString(r.GetName()),
+		"REPOSITORY_ORG":          ToString(r.GetOrg()),
+		"REPOSITORY_PRIVATE":      ToString(r.GetPrivate()),
+		"REPOSITORY_TIMEOUT":      ToString(r.GetTimeout()),
+		"REPOSITORY_TRUSTED":      ToString(r.GetTrusted()),
+		"REPOSITORY_VISIBILITY":   ToString(r.GetVisibility()),
 	}
 }
 
@@ -307,71 +311,6 @@ func (r *Repo) GetActive() bool {
 	}
 
 	return *r.Active
-}
-
-// GetAllowPull returns the AllowPull field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowPull() bool {
-	// return zero value if Repo type or AllowPull field is nil
-	if r == nil || r.AllowPull == nil {
-		return false
-	}
-
-	return *r.AllowPull
-}
-
-// GetAllowPush returns the AllowPush field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowPush() bool {
-	// return zero value if Repo type or AllowPush field is nil
-	if r == nil || r.AllowPush == nil {
-		return false
-	}
-
-	return *r.AllowPush
-}
-
-// GetAllowDeploy returns the AllowDeploy field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowDeploy() bool {
-	// return zero value if Repo type or AllowDeploy field is nil
-	if r == nil || r.AllowDeploy == nil {
-		return false
-	}
-
-	return *r.AllowDeploy
-}
-
-// GetAllowTag returns the AllowTag field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowTag() bool {
-	// return zero value if Repo type or AllowTag field is nil
-	if r == nil || r.AllowTag == nil {
-		return false
-	}
-
-	return *r.AllowTag
-}
-
-// GetAllowComment returns the AllowComment field.
-//
-// When the provided Repo type is nil, or the field within
-// the type is nil, it returns the zero value for the field.
-func (r *Repo) GetAllowComment() bool {
-	// return zero value if Repo type or AllowComment field is nil
-	if r == nil || r.AllowComment == nil {
-		return false
-	}
-
-	return *r.AllowComment
 }
 
 // GetAllowEvents returns the AllowEvents field.
@@ -660,71 +599,6 @@ func (r *Repo) SetActive(v bool) {
 	r.Active = &v
 }
 
-// SetAllowPull sets the AllowPull field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowPull(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowPull = &v
-}
-
-// SetAllowPush sets the AllowPush field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowPush(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowPush = &v
-}
-
-// SetAllowDeploy sets the AllowDeploy field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowDeploy(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowDeploy = &v
-}
-
-// SetAllowTag sets the AllowTag field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowTag(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowTag = &v
-}
-
-// SetAllowComment sets the AllowComment field.
-//
-// When the provided Repo type is nil, it
-// will set nothing and immediately return.
-func (r *Repo) SetAllowComment(v bool) {
-	// return if Repo type is nil
-	if r == nil {
-		return
-	}
-
-	r.AllowComment = &v
-}
-
 // SetAllowEvents sets the AllowEvents field.
 //
 // When the provided Repo type is nil, it
@@ -791,16 +665,9 @@ func (r *Repo) SetInstallID(v int64) {
 }
 
 // String implements the Stringer interface for the Repo type.
-//
-//nolint:dupl // ignore duplicate with test func
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
   Active: %t,
-  AllowComment: %t,
-  AllowDeploy: %t,
-  AllowPull: %t,
-  AllowPush: %t,
-  AllowTag: %t,
   AllowEvents: %s,
   ApproveBuild: %s,
   Branch: %s,
@@ -823,11 +690,6 @@ func (r *Repo) String() string {
   Visibility: %s,
 }`,
 		r.GetActive(),
-		r.GetAllowComment(),
-		r.GetAllowDeploy(),
-		r.GetAllowPull(),
-		r.GetAllowPush(),
-		r.GetAllowTag(),
 		r.GetAllowEvents().List(),
 		r.GetApproveBuild(),
 		r.GetBranch(),

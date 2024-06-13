@@ -32,7 +32,7 @@ type Step struct {
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
 	CheckID      *int64  `json:"check_id,omitempty"`
-	Report       *Report `json:"report,omitempty"`
+	ReportAs     *string `json:"report_as,omitempty"`
 }
 
 // Duration calculates and returns the total amount of
@@ -81,6 +81,7 @@ func (s *Step) Environment() map[string]string {
 		"VELA_STEP_STARTED":      ToString(s.GetStarted()),
 		"VELA_STEP_STATUS":       ToString(s.GetStatus()),
 		"VELA_STEP_CHECK_ID":     ToString(s.GetCheckID()),
+		"VELA_STEP_REPORT_AS":    ToString(s.GetReportAs()),
 	}
 }
 
@@ -305,17 +306,17 @@ func (s *Step) GetCheckID() int64 {
 	return *s.CheckID
 }
 
-// GetReport returns the Report field.
+// GetReportAs returns the ReportAs field.
 //
 // When the provided Step type is nil, or the field within
 // the type is nil, it returns the zero value for the field.
-func (s *Step) GetReport() *Report {
-	// return zero value if Report type is nil
-	if s == nil {
-		return nil
+func (s *Step) GetReportAs() string {
+	// return zero value if Step type or ReportAs field is nil
+	if s == nil || s.ReportAs == nil {
+		return ""
 	}
 
-	return s.Report
+	return *s.ReportAs
 }
 
 // SetID sets the ID field.
@@ -513,7 +514,7 @@ func (s *Step) SetRuntime(v string) {
 	s.Runtime = &v
 }
 
-// SetDistribution sets the Runtime field.
+// SetDistribution sets the Distribution field.
 //
 // When the provided Step type is nil, it
 // will set nothing and immediately return.
@@ -539,17 +540,17 @@ func (s *Step) SetCheckID(v int64) {
 	s.CheckID = &v
 }
 
-// SetReport sets the Report field.
+// SetReportAs sets the ReportAs field.
 //
 // When the provided Step type is nil, it
 // will set nothing and immediately return.
-func (s *Step) SetReport(v *Report) {
-	// return if Report type is nil
+func (s *Step) SetReportAs(v string) {
+	// return if Step type is nil
 	if s == nil {
 		return
 	}
 
-	s.Report = v
+	s.ReportAs = &v
 }
 
 // String implements the Stringer interface for the Step type.
@@ -568,6 +569,7 @@ func (s *Step) String() string {
   Number: %d,
   RepoID: %d,
   CheckID: %d,
+  ReportAs: %s,
   Runtime: %s,
   Stage: %s,
   Started: %d,
@@ -586,6 +588,7 @@ func (s *Step) String() string {
 		s.GetNumber(),
 		s.GetRepoID(),
 		s.GetCheckID(),
+		s.GetReportAs(),
 		s.GetRuntime(),
 		s.GetStage(),
 		s.GetStarted(),
@@ -615,6 +618,7 @@ func StepFromBuildContainer(build *Build, ctn *pipeline.Container) *Step {
 		s.SetName(ctn.Name)
 		s.SetNumber(ctn.Number)
 		s.SetImage(ctn.Image)
+		s.SetReportAs(ctn.ReportAs)
 
 		// check if the VELA_STEP_STAGE environment variable exists
 		value, ok := ctn.Environment["VELA_STEP_STAGE"]
@@ -664,6 +668,13 @@ func StepFromContainerEnvironment(ctn *pipeline.Container) *Step {
 	if ok {
 		// set the Name field to the value from environment variable
 		s.SetName(value)
+	}
+
+	// check if the VELA_STEP_REPORT_AS environment variable exists
+	value, ok = ctn.Environment["VELA_STEP_REPORT_AS"]
+	if ok {
+		// set the ReportAs field to the value from environment variable
+		s.SetReportAs(value)
 	}
 
 	// check if the VELA_STEP_RUNTIME environment variable exists

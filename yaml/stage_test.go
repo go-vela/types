@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/go-vela/types/pipeline"
-
 	"github.com/buildkite/yaml"
+
+	"github.com/go-vela/types/pipeline"
 )
 
 func TestYaml_StageSlice_ToPipeline(t *testing.T) {

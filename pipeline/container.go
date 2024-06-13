@@ -31,28 +31,28 @@ type (
 	//
 	// swagger:model PipelineContainer
 	Container struct {
-		ID           string            `json:"id,omitempty"          yaml:"id,omitempty"`
-		Commands     []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
-		Detach       bool              `json:"detach,omitempty"      yaml:"detach,omitempty"`
-		Directory    string            `json:"directory,omitempty"   yaml:"directory,omitempty"`
-		Entrypoint   []string          `json:"entrypoint,omitempty"  yaml:"entrypoint,omitempty"`
-		Environment  map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
-		ExitCode     int               `json:"exit_code,omitempty"   yaml:"exit_code,omitempty"`
-		Image        string            `json:"image,omitempty"       yaml:"image,omitempty"`
-		Name         string            `json:"name,omitempty"        yaml:"name,omitempty"`
-		Needs        []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
-		Networks     []string          `json:"networks,omitempty"    yaml:"networks,omitempty"`
-		Number       int               `json:"number,omitempty"      yaml:"number,omitempty"`
-		Ports        []string          `json:"ports,omitempty"       yaml:"ports,omitempty"`
-		Privileged   bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
-		Pull         string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
-		Ruleset      Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
-		Secrets      StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
-		Ulimits      UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
-		Volumes      VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
-		User         string            `json:"user,omitempty"        yaml:"user,omitempty"`
-		ReportStatus bool              `json:"report_status,omitempty" yaml:"report_status,omitempty"`
-		ReportPath   string            `json:"report_path,omitempty"  yaml:"report_path,omitempty"`
+		ID          string            `json:"id,omitempty"          yaml:"id,omitempty"`
+		Commands    []string          `json:"commands,omitempty"    yaml:"commands,omitempty"`
+		Detach      bool              `json:"detach,omitempty"      yaml:"detach,omitempty"`
+		Directory   string            `json:"directory,omitempty"   yaml:"directory,omitempty"`
+		Entrypoint  []string          `json:"entrypoint,omitempty"  yaml:"entrypoint,omitempty"`
+		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`
+		ExitCode    int               `json:"exit_code,omitempty"   yaml:"exit_code,omitempty"`
+		Image       string            `json:"image,omitempty"       yaml:"image,omitempty"`
+		Name        string            `json:"name,omitempty"        yaml:"name,omitempty"`
+		Needs       []string          `json:"needs,omitempty"       yaml:"needs,omitempty"`
+		Networks    []string          `json:"networks,omitempty"    yaml:"networks,omitempty"`
+		Number      int               `json:"number,omitempty"      yaml:"number,omitempty"`
+		Ports       []string          `json:"ports,omitempty"       yaml:"ports,omitempty"`
+		Privileged  bool              `json:"privileged,omitempty"  yaml:"privileged,omitempty"`
+		Pull        string            `json:"pull,omitempty"        yaml:"pull,omitempty"`
+		Ruleset     Ruleset           `json:"ruleset,omitempty"     yaml:"ruleset,omitempty"`
+		Secrets     StepSecretSlice   `json:"secrets,omitempty"     yaml:"secrets,omitempty"`
+		Ulimits     UlimitSlice       `json:"ulimits,omitempty"     yaml:"ulimits,omitempty"`
+		Volumes     VolumeSlice       `json:"volumes,omitempty"     yaml:"volumes,omitempty"`
+		User        string            `json:"user,omitempty"        yaml:"user,omitempty"`
+		ReportAs    string            `json:"report_as,omitempty" yaml:"report_as,omitempty"`
+		IDRequest   string            `json:"id_request,omitempty" yaml:"id_request,omitempty"`
 	}
 )
 
@@ -135,7 +135,9 @@ func (c *Container) Empty() bool {
 		len(c.Secrets) == 0 &&
 		len(c.Ulimits) == 0 &&
 		len(c.Volumes) == 0 &&
-		len(c.User) == 0 {
+		len(c.User) == 0 &&
+		len(c.ReportAs) == 0 &&
+		len(c.IDRequest) == 0 {
 		return true
 	}
 

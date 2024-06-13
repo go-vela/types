@@ -165,6 +165,7 @@ func TestStringSliceMap_Value(t *testing.T) {
 				t.Errorf("StringSliceMap.Value() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("StringSliceMap.Value() = %v, want %v", got, tt.want)
 			}

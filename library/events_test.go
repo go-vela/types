@@ -6,9 +6,10 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/library/actions"
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestLibrary_Events_Getters(t *testing.T) {
@@ -122,6 +123,7 @@ func TestLibrary_Events_List(t *testing.T) {
 		"pull_request:opened",
 		"pull_request:synchronize",
 		"pull_request:reopened",
+		"pull_request:unlabeled",
 		"tag",
 		"comment:created",
 		"schedule",
@@ -130,6 +132,7 @@ func TestLibrary_Events_List(t *testing.T) {
 
 	wantTwo := []string{
 		"pull_request:edited",
+		"pull_request:labeled",
 		"deployment",
 		"comment:edited",
 		"delete:tag",
@@ -158,6 +161,7 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 			constants.AllowPullOpen |
 			constants.AllowPullSync |
 			constants.AllowPullReopen |
+			constants.AllowPullUnlabel |
 			constants.AllowCommentCreate |
 			constants.AllowSchedule,
 	)
@@ -166,6 +170,7 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 		constants.AllowPushDeleteTag |
 			constants.AllowPullEdit |
 			constants.AllowCommentEdit |
+			constants.AllowPullLabel |
 			constants.AllowDeployCreate,
 	)
 
@@ -194,6 +199,129 @@ func TestLibrary_Events_NewEventsFromMask_ToDatabase(t *testing.T) {
 	}
 }
 
+func Test_NewEventsFromSlice(t *testing.T) {
+	// setup types
+	tBool := true
+	fBool := false
+
+	e1, e2 := testEvents()
+
+	// setup tests
+	tests := []struct {
+		name    string
+		events  []string
+		want    *Events
+		failure bool
+	}{
+		{
+			name:    "action specific events to e1",
+			events:  []string{"push:branch", "push:tag", "delete:branch", "pull_request:opened", "pull_request:synchronize", "pull_request:reopened", "comment:created", "schedule:run", "pull_request:unlabeled"},
+			want:    e1,
+			failure: false,
+		},
+		{
+			name:    "action specific events to e2",
+			events:  []string{"delete:tag", "pull_request:edited", "deployment:created", "comment:edited", "pull_request:labeled"},
+			want:    e2,
+			failure: false,
+		},
+		{
+			name:   "general events",
+			events: []string{"push", "pull", "deploy", "comment", "schedule", "tag", "delete"},
+			want: &Events{
+				Push: &actions.Push{
+					Branch:       &tBool,
+					Tag:          &tBool,
+					DeleteBranch: &tBool,
+					DeleteTag:    &tBool,
+				},
+				PullRequest: &actions.Pull{
+					Opened:      &tBool,
+					Reopened:    &tBool,
+					Edited:      &fBool,
+					Synchronize: &tBool,
+					Labeled:     &fBool,
+					Unlabeled:   &fBool,
+				},
+				Deployment: &actions.Deploy{
+					Created: &tBool,
+				},
+				Comment: &actions.Comment{
+					Created: &tBool,
+					Edited:  &tBool,
+				},
+				Schedule: &actions.Schedule{
+					Run: &tBool,
+				},
+			},
+			failure: false,
+		},
+		{
+			name:   "double events",
+			events: []string{"push", "push:branch", "pull_request", "pull_request:opened"},
+			want: &Events{
+				Push: &actions.Push{
+					Branch:       &tBool,
+					Tag:          &fBool,
+					DeleteBranch: &fBool,
+					DeleteTag:    &fBool,
+				},
+				PullRequest: &actions.Pull{
+					Opened:      &tBool,
+					Reopened:    &tBool,
+					Edited:      &fBool,
+					Synchronize: &tBool,
+					Labeled:     &fBool,
+					Unlabeled:   &fBool,
+				},
+				Deployment: &actions.Deploy{
+					Created: &fBool,
+				},
+				Comment: &actions.Comment{
+					Created: &fBool,
+					Edited:  &fBool,
+				},
+				Schedule: &actions.Schedule{
+					Run: &fBool,
+				},
+			},
+			failure: false,
+		},
+		{
+			name:   "empty events",
+			events: []string{},
+			want:   NewEventsFromMask(0),
+		},
+		{
+			name:    "invalid events",
+			events:  []string{"foo:bar"},
+			want:    nil,
+			failure: true,
+		},
+	}
+
+	// run tests
+	for _, test := range tests {
+		got, err := NewEventsFromSlice(test.events)
+
+		if test.failure {
+			if err == nil {
+				t.Errorf("NewEventsFromSlice should have returned err")
+			}
+
+			continue
+		}
+
+		if err != nil {
+			t.Errorf("NewEventsFromSlice returned err: %v", err)
+		}
+
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("PopulateEvents failed for %s mismatch (-want +got):\n%s", test.name, diff)
+		}
+	}
+}
+
 func TestLibrary_Events_Allowed(t *testing.T) {
 	// setup types
 	eventsOne, eventsTwo := testEvents()
@@ -210,7 +338,9 @@ func TestLibrary_Events_Allowed(t *testing.T) {
 		{event: "pull_request", action: "synchronize", want: true},
 		{event: "pull_request", action: "edited", want: false},
 		{event: "pull_request", action: "reopened", want: true},
-		{event: "deployment", want: false},
+		{event: "pull_request", action: "labeled", want: false},
+		{event: "pull_request", action: "unlabeled", want: true},
+		{event: "deployment", action: "created", want: false},
 		{event: "comment", action: "created", want: true},
 		{event: "comment", action: "edited", want: false},
 		{event: "schedule", want: true},
@@ -249,6 +379,8 @@ func testEvents() (*Events, *Events) {
 			Synchronize: &tBool,
 			Edited:      &fBool,
 			Reopened:    &tBool,
+			Labeled:     &fBool,
+			Unlabeled:   &tBool,
 		},
 		Deployment: &actions.Deploy{
 			Created: &fBool,
@@ -274,6 +406,8 @@ func testEvents() (*Events, *Events) {
 			Synchronize: &fBool,
 			Edited:      &tBool,
 			Reopened:    &fBool,
+			Labeled:     &tBool,
+			Unlabeled:   &fBool,
 		},
 		Deployment: &actions.Deploy{
 			Created: &tBool,

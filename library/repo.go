@@ -32,6 +32,7 @@ type Repo struct {
 	PipelineType *string   `json:"pipeline_type,omitempty"`
 	PreviousName *string   `json:"previous_name,omitempty"`
 	ApproveBuild *string   `json:"approve_build,omitempty"`
+	InstallID    *int64    `json:"install_id,omitempty"`
 }
 
 // UnmarshalYAML implements the Unmarshaler interface for the Repo type.
@@ -73,6 +74,7 @@ func (r *Repo) Environment() map[string]string {
 		"VELA_REPO_VISIBILITY":    ToString(r.GetVisibility()),
 		"VELA_REPO_PIPELINE_TYPE": ToString(r.GetPipelineType()),
 		"VELA_REPO_APPROVE_BUILD": ToString(r.GetApproveBuild()),
+		"VELA_REPO_INSTALL_ID":    ToString(r.GetInstallID()),
 
 		// deprecated environment variables
 		"REPOSITORY_ACTIVE":       ToString(r.GetActive()),
@@ -363,6 +365,19 @@ func (r *Repo) GetApproveBuild() string {
 	return *r.ApproveBuild
 }
 
+// GetInstallID returns the InstallID field.
+//
+// When the provided Repo type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (r *Repo) GetInstallID() int64 {
+	// return zero value if Repo type or InstallID field is nil
+	if r == nil || r.InstallID == nil {
+		return 0
+	}
+
+	return *r.InstallID
+}
+
 // SetID sets the ID field.
 //
 // When the provided Repo type is nil, it
@@ -636,6 +651,19 @@ func (r *Repo) SetApproveBuild(v string) {
 	r.ApproveBuild = &v
 }
 
+// SetInstallID sets the InstallID field.
+//
+// When the provided Repo type is nil, it
+// will set nothing and immediately return.
+func (r *Repo) SetInstallID(v int64) {
+	// return if Repo type is nil
+	if r == nil {
+		return
+	}
+
+	r.InstallID = &v
+}
+
 // String implements the Stringer interface for the Repo type.
 func (r *Repo) String() string {
 	return fmt.Sprintf(`{
@@ -648,6 +676,7 @@ func (r *Repo) String() string {
   Counter: %d,
   FullName: %s,
   ID: %d,
+  InstallID: %d,
   Link: %s,
   Name: %s,
   Org: %s,
@@ -669,6 +698,7 @@ func (r *Repo) String() string {
 		r.GetCounter(),
 		r.GetFullName(),
 		r.GetID(),
+		r.GetInstallID(),
 		r.GetLink(),
 		r.GetName(),
 		r.GetOrg(),

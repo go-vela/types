@@ -152,31 +152,20 @@ func (c *Container) Execute(r *RuleData) (bool, error) {
 	if c == nil {
 		return false, nil
 	}
-	// skip evaluating path in ruleset
+
+	// Skip evaluating path, comment, and label in ruleset,
+	// as the worker lacks necessary rule data.
 	//
-	// the compiler is the component responsible for
-	// choosing whether a container will run based
-	// off the files changed for a build
-	//
-	// the worker doesn't have any record of
-	// what files changed for a build so we
-	// should "skip" evaluating what the
-	// user provided for the path element
+	// The compiler determines whether a container will run based on
+	// these rules.
 	c.Ruleset.If.Path = []string{}
 	c.Ruleset.Unless.Path = []string{}
 
-	// skip evaluating comment in ruleset
-	//
-	// the compiler is the component responsible for
-	// choosing whether a container will run based
-	// off the PR comment matching the pipeline comment
-	//
-	// the worker doesn't have any record of
-	// the PR comment so we
-	// should "skip" evaluating what the
-	// user provided for the PR comment
 	c.Ruleset.If.Comment = []string{}
 	c.Ruleset.Unless.Comment = []string{}
+
+	c.Ruleset.If.Label = []string{}
+	c.Ruleset.Unless.Label = []string{}
 
 	// check if the build is in a running state
 	if strings.EqualFold(r.Status, constants.StatusRunning) {

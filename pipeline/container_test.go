@@ -749,6 +749,92 @@ func TestPipeline_Container_Execute(t *testing.T) {
 			},
 			want: true,
 		},
+		{ // pull request labeled success container with build success
+			container: &Container{
+				Name:     "pull-request-labeled",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Branch: []string{"fix/1234"},
+						Event:  []string{constants.EventPull + constants.ActionLabeled},
+						Label:  []string{"enhancement", "documentation"},
+					},
+					Operator: "and",
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "fix/1234",
+				Event:  "pull_request:labeled",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // pull request unlabeled success container with build success
+			container: &Container{
+				Name:     "pull-request-unlabeled",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					If: Rules{
+						Event: []string{constants.EventPull + constants.ActionUnlabeled},
+						Label: []string{"enhancement"},
+					},
+					Operator: "and",
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "fix/1234",
+				Event:  "pull_request:unlabeled",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // pull request labeled unless ruleset, success container with build success
+			container: &Container{
+				Name:     "pull-request-labeled",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					Unless: Rules{
+						Branch: []string{"fix/1234"},
+						Event:  []string{constants.EventPull + constants.ActionLabeled},
+						Label:  []string{"enhancement", "documentation"},
+					},
+					Operator: "and",
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "fix/1234",
+				Event:  "pull_request:labeled",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
+		{ // pull request unlabeled unless ruleset, success container with build success
+			container: &Container{
+				Name:     "pull-request-unlabeled",
+				Image:    "alpine:latest",
+				Commands: []string{"echo \"Hey Vela\""},
+				Ruleset: Ruleset{
+					Unless: Rules{
+						Event: []string{constants.EventPull + constants.ActionUnlabeled},
+						Label: []string{"enhancement"},
+					},
+					Operator: "and",
+				},
+			},
+			ruleData: &RuleData{
+				Branch: "fix/1234",
+				Event:  "pull_request:unlabeled",
+				Repo:   "foo/bar",
+				Status: "success",
+			},
+			want: true,
+		},
 	}
 
 	// run tests

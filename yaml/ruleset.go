@@ -22,15 +22,16 @@ type (
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	Rules struct {
-		Branch  []string `yaml:"branch,omitempty,flow"  json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Comment []string `yaml:"comment,omitempty,flow" json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Event   []string `yaml:"event,omitempty,flow"   json:"event,omitempty" jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Path    []string `yaml:"path,omitempty,flow"    json:"path,omitempty" jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Repo    []string `yaml:"repo,omitempty,flow"    json:"repo,omitempty" jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Status  []string `yaml:"status,omitempty,flow"  json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Tag     []string `yaml:"tag,omitempty,flow"     json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Target  []string `yaml:"target,omitempty,flow"  json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
-		Label   []string `yaml:"label,omitempty,flow"   json:"label,omitempty" jsonschema:"description=Limits step execution to match on pull requests labels.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Branch   []string `yaml:"branch,omitempty,flow"   json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Comment  []string `yaml:"comment,omitempty,flow"  json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Event    []string `yaml:"event,omitempty,flow"    json:"event,omitempty" jsonschema:"description=Limits the execution of a step to matching build events.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Path     []string `yaml:"path,omitempty,flow"     json:"path,omitempty" jsonschema:"description=Limits the execution of a step to matching files changed in a repository.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Repo     []string `yaml:"repo,omitempty,flow"     json:"repo,omitempty" jsonschema:"description=Limits the execution of a step to matching repos.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Status   []string `yaml:"status,omitempty,flow"   json:"status,omitempty" jsonschema:"enum=[failure],enum=[success],description=Limits the execution of a step to matching build statuses.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Tag      []string `yaml:"tag,omitempty,flow"      json:"tag,omitempty" jsonschema:"description=Limits the execution of a step to matching build tag references.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Target   []string `yaml:"target,omitempty,flow"   json:"target,omitempty" jsonschema:"description=Limits the execution of a step to matching build deployment targets.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Label    []string `yaml:"label,omitempty,flow"    json:"label,omitempty" jsonschema:"description=Limits step execution to match on pull requests labels.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
+		Instance []string `yaml:"instance,omitempty,flow" json:"instance,omitempty" jsonschema:"description=Limits step execution to match on certain instances.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-tag"`
 	}
 )
 
@@ -86,6 +87,7 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	advanced.If.Tag = append(advanced.If.Tag, simple.Tag...)
 	advanced.If.Target = append(advanced.If.Target, simple.Target...)
 	advanced.If.Label = append(advanced.If.Label, simple.Label...)
+	advanced.If.Instance = append(advanced.If.Instance, simple.Instance...)
 
 	// set ruleset `if` to advanced `if` rules
 	r.If = advanced.If
@@ -107,15 +109,16 @@ func (r *Ruleset) UnmarshalYAML(unmarshal func(interface{}) error) error {
 // type to a pipeline Rules type.
 func (r *Rules) ToPipeline() *pipeline.Rules {
 	return &pipeline.Rules{
-		Branch:  r.Branch,
-		Comment: r.Comment,
-		Event:   r.Event,
-		Path:    r.Path,
-		Repo:    r.Repo,
-		Status:  r.Status,
-		Tag:     r.Tag,
-		Target:  r.Target,
-		Label:   r.Label,
+		Branch:   r.Branch,
+		Comment:  r.Comment,
+		Event:    r.Event,
+		Path:     r.Path,
+		Repo:     r.Repo,
+		Status:   r.Status,
+		Tag:      r.Tag,
+		Target:   r.Target,
+		Label:    r.Label,
+		Instance: r.Instance,
 	}
 }
 
@@ -123,15 +126,16 @@ func (r *Rules) ToPipeline() *pipeline.Rules {
 func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	// rules struct we try unmarshalling to
 	rules := new(struct {
-		Branch  raw.StringSlice
-		Comment raw.StringSlice
-		Event   raw.StringSlice
-		Path    raw.StringSlice
-		Repo    raw.StringSlice
-		Status  raw.StringSlice
-		Tag     raw.StringSlice
-		Target  raw.StringSlice
-		Label   raw.StringSlice
+		Branch   raw.StringSlice
+		Comment  raw.StringSlice
+		Event    raw.StringSlice
+		Path     raw.StringSlice
+		Repo     raw.StringSlice
+		Status   raw.StringSlice
+		Tag      raw.StringSlice
+		Target   raw.StringSlice
+		Label    raw.StringSlice
+		Instance raw.StringSlice
 	})
 
 	// attempt to unmarshal rules
@@ -145,6 +149,7 @@ func (r *Rules) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		r.Tag = rules.Tag
 		r.Target = rules.Target
 		r.Label = rules.Label
+		r.Instance = rules.Instance
 
 		// account for users who use non-scoped pull_request event
 		events := []string{}

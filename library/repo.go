@@ -8,8 +8,6 @@ import (
 )
 
 // Repo is the library representation of a repo.
-//
-// swagger:model Repo
 type Repo struct {
 	ID           *int64    `json:"id,omitempty"`
 	UserID       *int64    `json:"user_id,omitempty"`

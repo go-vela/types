@@ -10,8 +10,6 @@ import (
 )
 
 // Executor is the library representation of an executor for a worker.
-//
-// swagger:model Executor
 type Executor struct {
 	ID           *int64          `json:"id,omitempty"`
 	Host         *string         `json:"host,omitempty"`

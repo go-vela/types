@@ -7,8 +7,6 @@ import (
 )
 
 // Worker is the library representation of a worker.
-//
-// swagger:model Worker
 type Worker struct {
 	ID                  *int64    `json:"id,omitempty"`
 	Hostname            *string   `json:"hostname,omitempty"`

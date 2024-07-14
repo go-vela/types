@@ -7,8 +7,6 @@ import (
 )
 
 // Schedule is the API representation of a schedule for a repo.
-//
-// swagger:model Schedule
 type Schedule struct {
 	ID          *int64  `json:"id,omitempty"`
 	RepoID      *int64  `json:"repo_id,omitempty"`

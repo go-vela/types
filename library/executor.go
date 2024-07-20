@@ -10,6 +10,8 @@ import (
 )
 
 // Executor is the library representation of an executor for a worker.
+//
+// Deprecated: use Executor from github.com/go-vela/server/api/types instead.
 type Executor struct {
 	ID           *int64          `json:"id,omitempty"`
 	Host         *string         `json:"host,omitempty"`

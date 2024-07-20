@@ -7,6 +7,8 @@ import (
 )
 
 // Schedule is the API representation of a schedule for a repo.
+//
+// Deprecated: use Schedule from github.com/go-vela/server/api/types instead.
 type Schedule struct {
 	ID          *int64  `json:"id,omitempty"`
 	RepoID      *int64  `json:"repo_id,omitempty"`

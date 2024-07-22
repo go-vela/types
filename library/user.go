@@ -9,6 +9,8 @@ import (
 )
 
 // User is the library representation of a user.
+//
+// Deprecated: use User from github.com/go-vela/server/api/types instead.
 type User struct {
 	ID           *int64    `json:"id,omitempty"`
 	Name         *string   `json:"name,omitempty"`

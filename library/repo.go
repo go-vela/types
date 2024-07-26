@@ -9,7 +9,7 @@ import (
 
 // Repo is the library representation of a repo.
 //
-// swagger:model Repo
+// Deprecated: use Repo from github.com/go-vela/server/api/types instead.
 type Repo struct {
 	ID           *int64    `json:"id,omitempty"`
 	UserID       *int64    `json:"user_id,omitempty"`

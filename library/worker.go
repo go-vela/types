@@ -8,7 +8,7 @@ import (
 
 // Worker is the library representation of a worker.
 //
-// swagger:model Worker
+// Deprecated: use Worker from github.com/go-vela/server/api/types instead.
 type Worker struct {
 	ID                  *int64    `json:"id,omitempty"`
 	Hostname            *string   `json:"hostname,omitempty"`

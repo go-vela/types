@@ -471,6 +471,18 @@ func TestPipeline_Rules_Match(t *testing.T) {
 			operator: "or",
 			want:     true,
 		},
+		{
+			rules:    &Rules{Event: []string{"push"}, Instance: []string{"http://localhost:8080"}},
+			data:     &RuleData{Branch: "main", Event: "push", Repo: "octocat/hello-world", Status: "pending", Instance: "http://localhost:5432"},
+			operator: "and",
+			want:     false,
+		},
+		{
+			rules:    &Rules{Event: []string{"push"}, Instance: []string{"http://localhost:8080"}},
+			data:     &RuleData{Branch: "main", Event: "push", Repo: "octocat/hello-world", Status: "pending", Instance: "http://localhost:8080"},
+			operator: "and",
+			want:     true,
+		},
 	}
 
 	// run test
@@ -567,6 +579,9 @@ func TestPipeline_Ruletype_MatchAnd(t *testing.T) {
 		// Label with regexp matcher
 		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
 		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
+		// Instance with regexp matcher
+		{matcher: "regexp", rule: []string{"http://localhost:8080", "http://localhost:1234"}, pattern: "http://localhost:5432", want: false},
+		{matcher: "regexp", rule: []string{"http://localhost:8080", "http://localhost:1234"}, pattern: "http://localhost:8080", want: true},
 	}
 
 	// run test
@@ -647,6 +662,9 @@ func TestPipeline_Ruletype_MatchOr(t *testing.T) {
 		// Label with regexp matcher
 		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "documentation", want: true},
 		{matcher: "regexp", rule: []string{"enhancement", "documentation"}, pattern: "question", want: false},
+		// Instance with regexp matcher
+		{matcher: "regexp", rule: []string{"http://localhost:8080", "http://localhost:1234"}, pattern: "http://localhost:5432", want: false},
+		{matcher: "regexp", rule: []string{"http://localhost:8080", "http://localhost:1234"}, pattern: "http://localhost:8080", want: true},
 	}
 
 	// run test

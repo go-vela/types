@@ -167,6 +167,9 @@ func (c *Container) Execute(r *RuleData) (bool, error) {
 	c.Ruleset.If.Label = []string{}
 	c.Ruleset.Unless.Label = []string{}
 
+	c.Ruleset.If.Instance = []string{}
+	c.Ruleset.Unless.Instance = []string{}
+
 	// check if the build is in a running state
 	if strings.EqualFold(r.Status, constants.StatusRunning) {
 		// treat the ruleset status as success

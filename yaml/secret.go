@@ -239,7 +239,7 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 			// append the element to the step secret slice
 			*s = append(*s, &StepSecret{
 				Source: secret,
-				Target: secret,
+				Target: strings.ToUpper(secret),
 			})
 		}
 
@@ -257,6 +257,8 @@ func (s *StepSecretSlice) UnmarshalYAML(unmarshal func(interface{}) error) error
 			if len(secret.Source) == 0 || len(secret.Target) == 0 {
 				return fmt.Errorf("no secret source or target found")
 			}
+
+			secret.Target = strings.ToUpper(secret.Target)
 		}
 
 		// overwrite existing StepSecretSlice

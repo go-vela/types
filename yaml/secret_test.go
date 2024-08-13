@@ -264,11 +264,11 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 						Secrets: StepSecretSlice{
 							{
 								Source: "foo",
-								Target: "foo",
+								Target: "FOO",
 							},
 							{
 								Source: "foobar",
-								Target: "foobar",
+								Target: "FOOBAR",
 							},
 						},
 					},
@@ -296,11 +296,11 @@ func TestYaml_SecretSlice_UnmarshalYAML(t *testing.T) {
 						Secrets: StepSecretSlice{
 							{
 								Source: "foo",
-								Target: "foo",
+								Target: "FOO",
 							},
 							{
 								Source: "foobar",
-								Target: "foobar",
+								Target: "FOOBAR",
 							},
 						},
 					},
@@ -390,11 +390,11 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 			want: &StepSecretSlice{
 				{
 					Source: "foo",
-					Target: "bar",
+					Target: "BAR",
 				},
 				{
 					Source: "hello",
-					Target: "world",
+					Target: "WORLD",
 				},
 			},
 		},
@@ -404,11 +404,11 @@ func TestYaml_StepSecretSlice_UnmarshalYAML(t *testing.T) {
 			want: &StepSecretSlice{
 				{
 					Source: "foo",
-					Target: "foo",
+					Target: "FOO",
 				},
 				{
 					Source: "hello",
-					Target: "hello",
+					Target: "HELLO",
 				},
 			},
 		},

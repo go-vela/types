@@ -246,11 +246,11 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Secrets: StepSecretSlice{
 							{
 								Source: "docker_username",
-								Target: "plugin_username",
+								Target: "PLUGIN_USERNAME",
 							},
 							{
 								Source: "docker_password",
-								Target: "plugin_password",
+								Target: "PLUGIN_PASSWORD",
 							},
 						},
 					},
@@ -308,11 +308,11 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 							Secrets: StepSecretSlice{
 								{
 									Source: "docker_username",
-									Target: "docker_username",
+									Target: "DOCKER_USERNAME",
 								},
 								{
 									Source: "docker_password",
-									Target: "docker_password",
+									Target: "DOCKER_PASSWORD",
 								},
 							},
 						},

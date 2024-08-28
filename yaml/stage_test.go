@@ -7,7 +7,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/buildkite/yaml"
+	"github.com/google/go-cmp/cmp"
+	"gopkg.in/yaml.v3"
 
 	"github.com/go-vela/types/pipeline"
 )
@@ -287,8 +288,8 @@ func TestYaml_StageSlice_UnmarshalYAML(t *testing.T) {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("(Unmarshal mismatch: -want +got):\n%s", diff)
 		}
 	}
 }
@@ -413,8 +414,8 @@ func TestYaml_StageSlice_MarshalYAML(t *testing.T) {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}
 
-		if !reflect.DeepEqual(got2, test.want) {
-			t.Errorf("MarshalYAML is %v, want %v", got2, test.want)
+		if diff := cmp.Diff(got2, test.want); diff != "" {
+			t.Errorf("(Marshal mismatch: -got +want):\n%s", diff)
 		}
 	}
 }

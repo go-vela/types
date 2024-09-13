@@ -11,7 +11,7 @@ import (
 type Build struct {
 	Version     string             `yaml:"version,omitempty"   json:"version,omitempty"  jsonschema:"required,minLength=1,description=Provide syntax version used to evaluate the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/version/"`
 	Metadata    Metadata           `yaml:"metadata,omitempty"  json:"metadata,omitempty" jsonschema:"description=Pass extra information.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/"`
-	Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide global environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-environment-tag"`
+	Environment raw.StringSliceMap `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Provide global environment variables injected into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-environment-key"`
 	Worker      Worker             `yaml:"worker,omitempty"    json:"worker,omitempty" jsonschema:"description=Limit the pipeline to certain types of workers.\nReference: https://go-vela.github.io/docs/reference/yaml/worker/"`
 	Secrets     SecretSlice        `yaml:"secrets,omitempty"   json:"secrets,omitempty" jsonschema:"description=Provide sensitive information.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/"`
 	Services    ServiceSlice       `yaml:"services,omitempty"  json:"services,omitempty" jsonschema:"description=Provide detached (headless) execution instructions.\nReference: https://go-vela.github.io/docs/reference/yaml/services/"`

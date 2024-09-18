@@ -8,7 +8,7 @@ import (
 
 // Hook is the library representation of a webhook for a repo.
 //
-// swagger:model Webhook
+// Deprecated: use Hook from github.com/go-vela/server/api/types instead.
 type Hook struct {
 	ID          *int64  `json:"id,omitempty"`
 	RepoID      *int64  `json:"repo_id,omitempty"`

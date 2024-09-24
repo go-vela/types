@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -72,22 +74,79 @@ func (s *StepSlice) ToPipeline() *pipeline.ContainerSlice {
 
 // UnmarshalYAML implements the Unmarshaler interface for the StepSlice type.
 //
-//nolint:dupl // accepting duplicative code that exits in service.go as well
-func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
+//nolint:dupl // ignore similarities with service unmarshal
+func (s *StepSlice) UnmarshalYAML(v *yaml.Node) error {
+	// step slice should be sequence
+	if v.Kind != yaml.SequenceNode {
+		return fmt.Errorf("invalid yaml: expected sequence node for step slice")
+	}
+
 	// step slice we try unmarshalling to
 	stepSlice := new([]*Step)
 
-	// attempt to unmarshal as a step slice type
-	err := unmarshal(stepSlice)
-	if err != nil {
-		return err
-	}
-
 	// iterate through each element in the step slice
-	for _, step := range *stepSlice {
-		// handle nil step to avoid panic
-		if step == nil {
-			return fmt.Errorf("invalid step with nil content found")
+	for _, st := range v.Content {
+		// make local var
+		tmpStep := *st
+
+		// steps are mapping nodes
+		if tmpStep.Kind != yaml.MappingNode {
+			return fmt.Errorf("invalid yaml: expected map node for step")
+		}
+
+		// initialize anchor node -- will be nil if `<<` never used
+		var anchorKey *yaml.Node
+
+		// initialize anchor sets
+		anchorList := new([]*yaml.Node)  // collect multiple anchor references
+		newContent := new([]*yaml.Node)  // new step content
+		anchorSequence := new(yaml.Node) // final type that is appended to step contents
+
+		// iterate through map contents (key, value)
+		for i := 0; i < len(tmpStep.Content); i += 2 {
+			key := tmpStep.Content[i]
+			value := tmpStep.Content[i+1]
+
+			// check if key is an anchor reference
+			if strings.EqualFold(key.Value, "<<") {
+				// if this is first anchor, initialize key and value
+				if anchorKey == nil {
+					anchorKey = key
+					anchorSequence = value
+				}
+
+				// append value to anchor list
+				*anchorList = append(*anchorList, value)
+			} else {
+				*newContent = append(*newContent, key, value)
+			}
+		}
+
+		// overwrite content
+		tmpStep.Content = *newContent
+
+		// if there is only one anchor key, use existing sequence
+		if len(*anchorList) == 1 {
+			tmpStep.Content = append(tmpStep.Content, anchorKey, anchorSequence)
+		}
+
+		// if there are multiple anchor keys, create a sequence using anchorList as the content
+		if len(*anchorList) > 1 {
+			anchorSequence = new(yaml.Node)
+			anchorSequence.Kind = yaml.SequenceNode
+			anchorSequence.Style = yaml.FlowStyle
+			anchorSequence.Tag = "!!seq"
+			anchorSequence.Content = *anchorList
+
+			tmpStep.Content = append(tmpStep.Content, anchorKey, anchorSequence)
+		}
+
+		// convert processed node to step type
+		step := new(Step)
+
+		err := tmpStep.Decode(step)
+		if err != nil {
+			return err
 		}
 
 		// implicitly set `pull` field if empty
@@ -112,6 +171,8 @@ func (s *StepSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if strings.EqualFold(step.Pull, "false") {
 			step.Pull = constants.PullNotPresent
 		}
+
+		*stepSlice = append(*stepSlice, step)
 	}
 
 	// overwrite existing StepSlice

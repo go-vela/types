@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"gopkg.in/yaml.v3"
 
 	"github.com/go-vela/types/library"
@@ -328,6 +329,72 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			},
 		},
 		{
+			file: "testdata/merge_anchor_step.yml",
+			want: &Build{
+				Version: "1",
+				Metadata: Metadata{
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
+				},
+				Services: ServiceSlice{
+					{
+						Name:  "service-a",
+						Ports: []string{"5432:5432"},
+						Environment: raw.StringSliceMap{
+							"REGION": "dev",
+						},
+						Image: "postgres",
+						Pull:  "not_present",
+					},
+				},
+				Steps: StepSlice{
+					{
+						Commands: raw.StringSlice{"echo alpha"},
+						Name:     "alpha",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+					},
+					{
+						Commands: raw.StringSlice{"echo beta"},
+						Name:     "beta",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+					},
+					{
+						Commands: raw.StringSlice{"echo gamma"},
+						Name:     "gamma",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Environment: raw.StringSliceMap{
+							"REGION": "dev",
+						},
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+					},
+				},
+			},
+		},
+		{
 			file: "testdata/build_anchor_stage.yml",
 			want: &Build{
 				Version: "1",
@@ -613,8 +680,8 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 			t.Errorf("UnmarshalYAML returned err: %v", err)
 		}
 
-		if !reflect.DeepEqual(got, test.want) {
-			t.Errorf("UnmarshalYAML is %v, want %v", got, test.want)
+		if diff := cmp.Diff(test.want, got); diff != "" {
+			t.Errorf("UnmarshalYAML mismatch (-want +got):\n%s", diff)
 		}
 	}
 }

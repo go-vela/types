@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/go-vela/types/constants"
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -58,21 +60,78 @@ func (s *ServiceSlice) ToPipeline() *pipeline.ContainerSlice {
 // UnmarshalYAML implements the Unmarshaler interface for the ServiceSlice type.
 //
 //nolint:dupl // accepting duplicative code that exists in step.go as well
-func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (s *ServiceSlice) UnmarshalYAML(v *yaml.Node) error {
+	// service slice should be sequence
+	if v.Kind != yaml.SequenceNode {
+		return fmt.Errorf("invalid yaml: expected sequence node for service slice")
+	}
+
 	// service slice we try unmarshalling to
 	serviceSlice := new([]*Service)
 
-	// attempt to unmarshal as a service slice type
-	err := unmarshal(serviceSlice)
-	if err != nil {
-		return err
-	}
-
 	// iterate through each element in the service slice
-	for _, service := range *serviceSlice {
-		// handle nil service to avoid panic
-		if service == nil {
-			return fmt.Errorf("invalid service with nil content found")
+	for _, st := range v.Content {
+		// make local var
+		tmpService := *st
+
+		// services are mapping nodes
+		if tmpService.Kind != yaml.MappingNode {
+			return fmt.Errorf("invalid yaml: expected map node for service")
+		}
+
+		// initialize anchor node -- will be nil if `<<` never used
+		var anchorKey *yaml.Node
+
+		// initialize anchor sets
+		anchorList := new([]*yaml.Node)  // collect multiple anchor references
+		newContent := new([]*yaml.Node)  // new service content
+		anchorSequence := new(yaml.Node) // final type that is appended to service contents
+
+		// iterate through map contents (key, value)
+		for i := 0; i < len(tmpService.Content); i += 2 {
+			key := tmpService.Content[i]
+			value := tmpService.Content[i+1]
+
+			// check if key is an anchor reference
+			if strings.EqualFold(key.Value, "<<") {
+				// if this is first anchor, initialize key and value
+				if anchorKey == nil {
+					anchorKey = key
+					anchorSequence = value
+				}
+
+				// append value to anchor list
+				*anchorList = append(*anchorList, value)
+			} else {
+				*newContent = append(*newContent, key, value)
+			}
+		}
+
+		// overwrite content
+		tmpService.Content = *newContent
+
+		// if there is only one anchor key, use existing sequence
+		if len(*anchorList) == 1 {
+			tmpService.Content = append(tmpService.Content, anchorKey, anchorSequence)
+		}
+
+		// if there are multiple anchor keys, create a sequence using anchorList as the content
+		if len(*anchorList) > 1 {
+			anchorSequence = new(yaml.Node)
+			anchorSequence.Kind = yaml.SequenceNode
+			anchorSequence.Style = yaml.FlowStyle
+			anchorSequence.Tag = "!!seq"
+			anchorSequence.Content = *anchorList
+
+			tmpService.Content = append(tmpService.Content, anchorKey, anchorSequence)
+		}
+
+		// convert processed node to service type
+		service := new(Service)
+
+		err := tmpService.Decode(service)
+		if err != nil {
+			return err
 		}
 
 		// implicitly set `pull` field if empty
@@ -97,6 +156,8 @@ func (s *ServiceSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if strings.EqualFold(service.Pull, "false") {
 			service.Pull = constants.PullNotPresent
 		}
+
+		*serviceSlice = append(*serviceSlice, service)
 	}
 
 	// overwrite existing ServiceSlice

@@ -1,5 +1,5 @@
-github.com/adhocore/gronx v1.19.0 h1:GrEvNMPDwXND+YFadCyFVQPC+/xxoGJaQzu+duNf6aU=
-github.com/adhocore/gronx v1.19.0/go.mod h1:7oUY1WAU8rEJWmAxXR2DN0JaO4gi9khSgKjiRypqteg=
+github.com/adhocore/gronx v1.19.1 h1:S4c3uVp5jPjnk00De0lslyTenGJ4nA3Ydbkj1SbdPVc=
+github.com/adhocore/gronx v1.19.1/go.mod h1:7oUY1WAU8rEJWmAxXR2DN0JaO4gi9khSgKjiRypqteg=
 github.com/aymerick/douceur v0.2.0 h1:Mv+mAeH1Q+n9Fr+oyamOlAkUNPWPlA8PPGR0QAaYuPk=
 github.com/aymerick/douceur v0.2.0/go.mod h1:wlT5vV2O3h55X9m7iVYN0TBM0NH/MmbLnd30/FjWUq4=
 github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3 h1:q+sMKdA6L8LyGVudTkpGoC73h6ak2iWSPFiFo/pFOU8=

@@ -5,7 +5,7 @@ package yaml
 import (
 	"fmt"
 
-	"gopkg.in/yaml.v3"
+	"github.com/buildkite/yaml"
 
 	"github.com/go-vela/types/pipeline"
 	"github.com/go-vela/types/raw"
@@ -50,27 +50,33 @@ func (s *StageSlice) ToPipeline() *pipeline.StageSlice {
 }
 
 // UnmarshalYAML implements the Unmarshaler interface for the StageSlice type.
-func (s *StageSlice) UnmarshalYAML(v *yaml.Node) error {
-	if v.Kind != yaml.MappingNode {
-		return fmt.Errorf("invalid yaml: expected map node for stage")
+func (s *StageSlice) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// map slice we try unmarshalling to
+	mapSlice := new(yaml.MapSlice)
+
+	// attempt to unmarshal as a map slice type
+	err := unmarshal(mapSlice)
+	if err != nil {
+		return err
 	}
 
 	// iterate through each element in the map slice
-	for i := 0; i < len(v.Content); i += 2 {
-		key := v.Content[i]
-		value := v.Content[i+1]
-
+	for _, v := range *mapSlice {
+		// stage we try unmarshalling to
 		stage := new(Stage)
 
-		// unmarshal value into stage
-		err := value.Decode(stage)
+		// marshal interface value from ordered map
+		out, _ := yaml.Marshal(v.Value)
+
+		// unmarshal interface value as stage
+		err = yaml.Unmarshal(out, stage)
 		if err != nil {
 			return err
 		}
 
 		// implicitly set stage `name` if empty
 		if len(stage.Name) == 0 {
-			stage.Name = fmt.Sprintf("%v", key.Value)
+			stage.Name = fmt.Sprintf("%v", v.Key)
 		}
 
 		// implicitly set the stage `needs`
@@ -82,42 +88,36 @@ func (s *StageSlice) UnmarshalYAML(v *yaml.Node) error {
 						return needs
 					}
 				}
-
 				return append(needs, "clone")
 			}(stage.Needs)
 		}
-
 		// append stage to stage slice
 		*s = append(*s, stage)
 	}
-
 	return nil
 }
 
 // MarshalYAML implements the marshaler interface for the StageSlice type.
 func (s StageSlice) MarshalYAML() (interface{}, error) {
-	output := new(yaml.Node)
-	output.Kind = yaml.MappingNode
+	// map slice to return as marshaled output
+	var output yaml.MapSlice
 
+	// loop over the input stages
 	for _, inputStage := range s {
-		n := new(yaml.Node)
+		// create a new stage
+		outputStage := new(Stage)
 
-		// create new stage with existing properties
-		outputStage := &Stage{
-			Name:        inputStage.Name,
-			Needs:       inputStage.Needs,
-			Independent: inputStage.Independent,
-			Steps:       inputStage.Steps,
-		}
+		// add the existing needs to the new stage
+		outputStage.Needs = inputStage.Needs
 
-		err := n.Encode(outputStage)
-		if err != nil {
-			return nil, err
-		}
+		// add the existing dependent tag to the new stage
+		outputStage.Independent = inputStage.Independent
 
-		// append stage to map output
-		output.Content = append(output.Content, &yaml.Node{Kind: yaml.ScalarNode, Value: inputStage.Name})
-		output.Content = append(output.Content, n)
+		// add the existing steps to the new stage
+		outputStage.Steps = inputStage.Steps
+
+		// append stage to MapSlice
+		output = append(output, yaml.MapItem{Key: inputStage.Name, Value: outputStage})
 	}
 
 	return output, nil

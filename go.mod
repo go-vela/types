@@ -4,11 +4,11 @@ go 1.23.1
 
 require (
 	github.com/adhocore/gronx v1.19.0
+	github.com/buildkite/yaml v0.0.0-20181016232759-0caa5f0796e3
 	github.com/drone/envsubst v1.0.3
 	github.com/ghodss/yaml v1.0.0
 	github.com/lib/pq v1.10.9
 	github.com/microcosm-cc/bluemonday v1.0.27
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"testing"
 
-	"gopkg.in/yaml.v3"
+	"github.com/buildkite/yaml"
 
 	"github.com/go-vela/types/pipeline"
 )

@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"gopkg.in/yaml.v3"
+	"github.com/buildkite/yaml"
 )
 
 func TestRaw_StringSliceMap_UnmarshalJSON(t *testing.T) {

@@ -38,6 +38,7 @@ type (
 		User        string                 `yaml:"user,omitempty"        json:"user,omitempty" jsonschema:"description=Set the user for the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-user-key"`
 		ReportAs    string                 `yaml:"report_as,omitempty" json:"report_as,omitempty" jsonschema:"description=Set the name of the step to report as.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-report_as-key"`
 		IDRequest   string                 `yaml:"id_request,omitempty" json:"id_request,omitempty" jsonschema:"description=Request ID Request Token for the step.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-id_request-key"`
+		Warnings    []string               `yaml:"-" json:"-"`
 	}
 )
 
@@ -88,6 +89,7 @@ func (s *StepSlice) UnmarshalYAML(v *yaml.Node) error {
 	for _, st := range v.Content {
 		// make local var
 		tmpStep := *st
+		warnings := []string{}
 
 		// steps are mapping nodes
 		if tmpStep.Kind != yaml.MappingNode {
@@ -113,6 +115,8 @@ func (s *StepSlice) UnmarshalYAML(v *yaml.Node) error {
 				if anchorKey == nil {
 					anchorKey = key
 					anchorSequence = value
+
+					warnings = append(warnings, fmt.Sprintf("%d:contains anchor reference, behavior may have changed", key.Line))
 				}
 
 				// append value to anchor list
@@ -171,6 +175,9 @@ func (s *StepSlice) UnmarshalYAML(v *yaml.Node) error {
 		if strings.EqualFold(step.Pull, "false") {
 			step.Pull = constants.PullNotPresent
 		}
+
+		// append warnings
+		step.Warnings = append(step.Warnings, warnings...)
 
 		*stepSlice = append(*stepSlice, step)
 	}

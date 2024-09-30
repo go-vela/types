@@ -57,6 +57,12 @@ func (b *Build) ToPipelineLibrary() *library.Pipeline {
 	pipeline.SetExternalSecrets(external)
 	pipeline.SetInternalSecrets(internal)
 
+	w := ([]string{})
+	for _, s := range b.Steps {
+		w = append(w, s.Warnings...)
+	}
+	pipeline.Warnings = &w
+
 	return pipeline
 }
 

@@ -7,6 +7,7 @@ import (
 	"errors"
 
 	"github.com/go-vela/types/library"
+	"github.com/lib/pq"
 )
 
 var (
@@ -48,6 +49,7 @@ type Pipeline struct {
 	Steps           sql.NullBool   `sql:"steps"`
 	Templates       sql.NullBool   `sql:"templates"`
 	Data            []byte         `sql:"data"`
+	Warnings        pq.StringArray `sql:"warnings" gorm:"type:varchar(1000)"`
 }
 
 // Compress will manipulate the existing data for the
@@ -158,6 +160,7 @@ func (p *Pipeline) ToLibrary() *library.Pipeline {
 	pipeline.SetSteps(p.Steps.Bool)
 	pipeline.SetTemplates(p.Templates.Bool)
 	pipeline.SetData(p.Data)
+	pipeline.SetWarnings(p.Warnings)
 
 	return pipeline
 }
@@ -200,6 +203,10 @@ func (p *Pipeline) Validate() error {
 	p.Type = sql.NullString{String: sanitize(p.Type.String), Valid: p.Type.Valid}
 	p.Version = sql.NullString{String: sanitize(p.Version.String), Valid: p.Version.Valid}
 
+	for i, v := range p.Warnings {
+		p.Warnings[i] = sanitize(v)
+	}
+
 	return nil
 }
 
@@ -222,6 +229,8 @@ func PipelineFromLibrary(p *library.Pipeline) *Pipeline {
 		Steps:           sql.NullBool{Bool: p.GetSteps(), Valid: true},
 		Templates:       sql.NullBool{Bool: p.GetTemplates(), Valid: true},
 		Data:            p.GetData(),
+
+		Warnings: pq.StringArray(p.GetWarnings()),
 	}
 
 	return pipeline.Nullify()

@@ -10,20 +10,21 @@ import (
 //
 // swagger:model Pipeline
 type Pipeline struct {
-	ID              *int64  `json:"id,omitempty"`
-	RepoID          *int64  `json:"repo_id,omitempty"`
-	Commit          *string `json:"commit,omitempty"`
-	Flavor          *string `json:"flavor,omitempty"`
-	Platform        *string `json:"platform,omitempty"`
-	Ref             *string `json:"ref,omitempty"`
-	Type            *string `json:"type,omitempty"`
-	Version         *string `json:"version,omitempty"`
-	ExternalSecrets *bool   `json:"external_secrets,omitempty"`
-	InternalSecrets *bool   `json:"internal_secrets,omitempty"`
-	Services        *bool   `json:"services,omitempty"`
-	Stages          *bool   `json:"stages,omitempty"`
-	Steps           *bool   `json:"steps,omitempty"`
-	Templates       *bool   `json:"templates,omitempty"`
+	ID              *int64    `json:"id,omitempty"`
+	RepoID          *int64    `json:"repo_id,omitempty"`
+	Commit          *string   `json:"commit,omitempty"`
+	Flavor          *string   `json:"flavor,omitempty"`
+	Platform        *string   `json:"platform,omitempty"`
+	Ref             *string   `json:"ref,omitempty"`
+	Type            *string   `json:"type,omitempty"`
+	Version         *string   `json:"version,omitempty"`
+	ExternalSecrets *bool     `json:"external_secrets,omitempty"`
+	InternalSecrets *bool     `json:"internal_secrets,omitempty"`
+	Services        *bool     `json:"services,omitempty"`
+	Stages          *bool     `json:"stages,omitempty"`
+	Steps           *bool     `json:"steps,omitempty"`
+	Templates       *bool     `json:"templates,omitempty"`
+	Warnings        *[]string `json:"warnings,omitempty"`
 	// swagger:strfmt base64
 	Data *[]byte `json:"data,omitempty"`
 }
@@ -223,6 +224,15 @@ func (p *Pipeline) GetData() []byte {
 	return *p.Data
 }
 
+func (p *Pipeline) GetWarnings() []string {
+	// return zero value if Pipeline type or field is nil
+	if p == nil || p.Data == nil {
+		return []string{}
+	}
+
+	return *p.Warnings
+}
+
 // SetID sets the ID field.
 //
 // When the provided Pipeline type is nil, it
@@ -416,6 +426,15 @@ func (p *Pipeline) SetData(v []byte) {
 	}
 
 	p.Data = &v
+}
+
+func (p *Pipeline) SetWarnings(v []string) {
+	// return if Pipeline type is nil
+	if p == nil {
+		return
+	}
+
+	p.Warnings = &v
 }
 
 // String implements the Stringer interface for the Pipeline type.

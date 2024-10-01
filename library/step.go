@@ -31,7 +31,9 @@ type Step struct {
 	Host         *string `json:"host,omitempty"`
 	Runtime      *string `json:"runtime,omitempty"`
 	Distribution *string `json:"distribution,omitempty"`
+	CheckID      *int64  `json:"check_id,omitempty"`
 	ReportAs     *string `json:"report_as,omitempty"`
+	Report       *Report `json:"report,omitempty"`
 }
 
 // Duration calculates and returns the total amount of
@@ -79,6 +81,7 @@ func (s *Step) Environment() map[string]string {
 		"VELA_STEP_STAGE":        ToString(s.GetStage()),
 		"VELA_STEP_STARTED":      ToString(s.GetStarted()),
 		"VELA_STEP_STATUS":       ToString(s.GetStatus()),
+		"VELA_STEP_CHECK_ID":     ToString(s.GetCheckID()),
 		"VELA_STEP_REPORT_AS":    ToString(s.GetReportAs()),
 	}
 }
@@ -291,6 +294,19 @@ func (s *Step) GetDistribution() string {
 	return *s.Distribution
 }
 
+// GetCheckID returns the CheckID field.
+//
+// When the provided Step type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Step) GetCheckID() int64 {
+	// return zero value if Step type or CheckID field is nil
+	if s == nil || s.CheckID == nil {
+		return 0
+	}
+
+	return *s.CheckID
+}
+
 // GetReportAs returns the ReportAs field.
 //
 // When the provided Step type is nil, or the field within
@@ -302,6 +318,19 @@ func (s *Step) GetReportAs() string {
 	}
 
 	return *s.ReportAs
+}
+
+// GetReport returns the Report field.
+//
+// When the provided Step type is nil, or the field within
+// the type is nil, it returns the zero value for the field.
+func (s *Step) GetReport() *Report {
+	// return zero value if Step type or ReportAs field is nil
+	if s == nil || s.Report == nil {
+		return new(Report)
+	}
+
+	return s.Report
 }
 
 // SetID sets the ID field.
@@ -512,6 +541,19 @@ func (s *Step) SetDistribution(v string) {
 	s.Distribution = &v
 }
 
+// SetCheckID sets the CheckID field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
+func (s *Step) SetCheckID(v int64) {
+	// return if Step type is nil
+	if s == nil {
+		return
+	}
+
+	s.CheckID = &v
+}
+
 // SetReportAs sets the ReportAs field.
 //
 // When the provided Step type is nil, it
@@ -525,10 +567,25 @@ func (s *Step) SetReportAs(v string) {
 	s.ReportAs = &v
 }
 
+// SetReport sets the Report field.
+//
+// When the provided Step type is nil, it
+// will set nothing and immediately return.
+func (s *Step) SetReport(v *Report) {
+	// return if Step type is nil
+	if s == nil {
+		return
+	}
+
+	s.Report = v
+}
+
+// TODO: Add Report
 // String implements the Stringer interface for the Step type.
 func (s *Step) String() string {
 	return fmt.Sprintf(`{
   BuildID: %d,
+  CheckID: %d,
   Created: %d,
   Distribution: %s,
   Error: %s,
@@ -547,6 +604,7 @@ func (s *Step) String() string {
   Status: %s,
 }`,
 		s.GetBuildID(),
+		s.GetCheckID(),
 		s.GetCreated(),
 		s.GetDistribution(),
 		s.GetError(),

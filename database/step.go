@@ -49,6 +49,7 @@ type Step struct {
 	Host         sql.NullString `sql:"host"`
 	Runtime      sql.NullString `sql:"runtime"`
 	Distribution sql.NullString `sql:"distribution"`
+	CheckID      sql.NullInt64  `sql:"check_id"`
 	ReportAs     sql.NullString `sql:"report_as"`
 }
 
@@ -143,6 +144,11 @@ func (s *Step) Nullify() *Step {
 		s.Distribution.Valid = false
 	}
 
+	// check if the CheckID field should be false
+	if s.CheckID.Int64 == 0 {
+		s.CheckID.Valid = false
+	}
+
 	// check if the ReportAs field should be false
 	if len(s.ReportAs.String) == 0 {
 		s.ReportAs.Valid = false
@@ -172,6 +178,7 @@ func (s *Step) ToLibrary() *library.Step {
 	step.SetHost(s.Host.String)
 	step.SetRuntime(s.Runtime.String)
 	step.SetDistribution(s.Distribution.String)
+	step.SetCheckID(s.CheckID.Int64)
 	step.SetReportAs(s.ReportAs.String)
 
 	return step
@@ -241,6 +248,7 @@ func StepFromLibrary(s *library.Step) *Step {
 		Host:         sql.NullString{String: s.GetHost(), Valid: true},
 		Runtime:      sql.NullString{String: s.GetRuntime(), Valid: true},
 		Distribution: sql.NullString{String: s.GetDistribution(), Valid: true},
+		CheckID:      sql.NullInt64{Int64: s.GetCheckID(), Valid: true},
 		ReportAs:     sql.NullString{String: s.GetReportAs(), Valid: true},
 	}
 

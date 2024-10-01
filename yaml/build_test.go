@@ -246,11 +246,11 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 						Secrets: StepSecretSlice{
 							{
 								Source: "docker_username",
-								Target: "plugin_username",
+								Target: "PLUGIN_USERNAME",
 							},
 							{
 								Source: "docker_password",
-								Target: "plugin_password",
+								Target: "PLUGIN_PASSWORD",
 							},
 						},
 					},
@@ -308,11 +308,11 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 							Secrets: StepSecretSlice{
 								{
 									Source: "docker_username",
-									Target: "docker_username",
+									Target: "DOCKER_USERNAME",
 								},
 								{
 									Source: "docker_password",
-									Target: "docker_password",
+									Target: "DOCKER_PASSWORD",
 								},
 							},
 						},
@@ -591,6 +591,72 @@ func TestYaml_Build_UnmarshalYAML(t *testing.T) {
 								Destination: "/bar",
 								AccessMode:  "ro",
 							},
+						},
+					},
+				},
+			},
+		},
+		{
+			file: "testdata/merge_anchor.yml",
+			want: &Build{
+				Version: "1",
+				Metadata: Metadata{
+					Template:    false,
+					Clone:       nil,
+					Environment: []string{"steps", "services", "secrets"},
+				},
+				Services: ServiceSlice{
+					{
+						Name:  "service-a",
+						Ports: []string{"5432:5432"},
+						Environment: raw.StringSliceMap{
+							"REGION": "dev",
+						},
+						Image: "postgres",
+						Pull:  "not_present",
+					},
+				},
+				Steps: StepSlice{
+					{
+						Commands: raw.StringSlice{"echo alpha"},
+						Name:     "alpha",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+					},
+					{
+						Commands: raw.StringSlice{"echo beta"},
+						Name:     "beta",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
+						},
+					},
+					{
+						Commands: raw.StringSlice{"echo gamma"},
+						Name:     "gamma",
+						Image:    "alpine:latest",
+						Pull:     "not_present",
+						Environment: raw.StringSliceMap{
+							"REGION": "dev",
+						},
+						Ruleset: Ruleset{
+							If: Rules{
+								Event: []string{"push"},
+							},
+							Matcher:  "filepath",
+							Operator: "and",
 						},
 					},
 				},

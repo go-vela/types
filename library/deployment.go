@@ -10,7 +10,7 @@ import (
 
 // Deployment is the library representation of a deployment.
 //
-// swagger:model Deployment
+// Deprecated: use Deployment from github.com/go-vela/server/api/types instead.
 type Deployment struct {
 	ID          *int64              `json:"id,omitempty"`
 	Number      *int64              `json:"number,omitempty"`

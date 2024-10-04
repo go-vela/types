@@ -1,6 +1,6 @@
 module github.com/go-vela/types
 
-go 1.23.1
+go 1.23.2
 
 require (
 	github.com/adhocore/gronx v1.19.1

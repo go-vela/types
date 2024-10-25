@@ -4,7 +4,7 @@ package pipeline
 
 // Metadata is the pipeline representation of the metadata block for a pipeline.
 //
-// swagger:model PipelineMetadata
+// Deprecated: use Metadata from github.com/go-vela/server/compiler/types/pipeline instead.
 type Metadata struct {
 	Template    bool           `json:"template,omitempty" yaml:"template,omitempty"`
 	Clone       bool           `json:"clone,omitempty" yaml:"clone,omitempty"`
@@ -13,6 +13,8 @@ type Metadata struct {
 }
 
 // CancelOptions is the pipeline representation of the auto_cancel block for a pipeline.
+//
+// Deprecated: use CancelOptions from github.com/go-vela/server/compiler/types/pipeline instead.
 type CancelOptions struct {
 	Running       bool `yaml:"running,omitempty" json:"running,omitempty"`
 	Pending       bool `yaml:"pending,omitempty" json:"pending,omitempty"`

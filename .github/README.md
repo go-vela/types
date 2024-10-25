@@ -1,5 +1,8 @@
 # types
 
+> :warning: The types module is deprecated.
+> Please use the types located in [go-vela/server](https://github.com/go-vela/server)
+
 [![license](https://img.shields.io/crates/l/gl.svg)](../LICENSE)
 [![GoDoc](https://godoc.org/github.com/go-vela/types?status.svg)](https://godoc.org/github.com/go-vela/types)
 [![Go Report Card](https://goreportcard.com/badge/go-vela/types)](https://goreportcard.com/report/go-vela/types)

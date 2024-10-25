@@ -41,6 +41,8 @@ var (
 )
 
 // Secret is the database representation of a secret.
+//
+// Deprecated: use Secret from github.com/go-vela/server/database/types instead.
 type Secret struct {
 	ID                sql.NullInt64  `sql:"id"`
 	Org               sql.NullString `sql:"org"`

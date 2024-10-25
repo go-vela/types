@@ -6,6 +6,8 @@ import "github.com/go-vela/types/constants"
 
 // Push is the library representation of the various actions associated
 // with the push event webhook from the SCM.
+//
+// Deprecated: use Push from github.com/go-vela/server/api/types/actions instead.
 type Push struct {
 	Branch       *bool `json:"branch"`
 	Tag          *bool `json:"tag"`

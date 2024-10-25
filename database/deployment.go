@@ -25,6 +25,8 @@ var (
 )
 
 // Deployment is the database representation of a deployment for a repo.
+//
+// Deprecated: use Deployment from github.com/go-vela/server/database/types instead.
 type Deployment struct {
 	ID          sql.NullInt64      `sql:"id"`
 	Number      sql.NullInt64      `sql:"number"`

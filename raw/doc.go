@@ -2,7 +2,7 @@
 
 // Package raw provides the defined raw types for Vela.
 //
-// Usage:
+// Deprecated: all raw types for Vela have been moved to github.com/go-vela/server/compiler/types/raw .
 //
-//	import "github.com/go-vela/types/raw"
+// This package is frozen.
 package raw

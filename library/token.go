@@ -6,7 +6,7 @@ import "fmt"
 
 // Token is the library representation of a token response from server.
 //
-// swagger:model Token
+// Deprecated: use Token from github.com/go-vela/server/api/types instead.
 type Token struct {
 	Token *string `json:"token,omitempty"`
 }

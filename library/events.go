@@ -13,6 +13,8 @@ import (
 
 // Events is the library representation of the various events that generate a
 // webhook from the SCM.
+//
+// Deprecated: use Events from github.com/go-vela/server/api/types instead.
 type Events struct {
 	Push        *actions.Push     `json:"push"`
 	PullRequest *actions.Pull     `json:"pull_request"`

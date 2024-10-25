@@ -44,6 +44,8 @@ var (
 )
 
 // Repo is the database representation of a repo.
+//
+// Deprecated: use Repo from github.com/go-vela/server/database/types instead.
 type Repo struct {
 	ID           sql.NullInt64  `sql:"id"`
 	UserID       sql.NullInt64  `sql:"user_id"`

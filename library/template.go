@@ -9,7 +9,7 @@ import (
 
 // Template is the library representation of a template for a pipeline.
 //
-// swagger:model Template
+// Deprecated: use Template from github.com/go-vela/server/api/types instead.
 type Template struct {
 	Link   *string `json:"link,omitempty"`
 	Name   *string `json:"name,omitempty"`

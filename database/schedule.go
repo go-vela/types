@@ -26,6 +26,8 @@ var (
 )
 
 // Schedule is the database representation of a schedule for a repo.
+//
+// Deprecated: use Schedule from github.com/go-vela/server/database/types instead.
 type Schedule struct {
 	ID          sql.NullInt64  `sql:"id"`
 	RepoID      sql.NullInt64  `sql:"repo_id"`

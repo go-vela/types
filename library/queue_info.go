@@ -4,7 +4,7 @@ package library
 
 // QueueInfo is the library representation of a QueueInfo.
 //
-// swagger:model QueueInfo
+// Deprecated: use QueueInfo from github.com/go-vela/server/api/types instead.
 type QueueInfo struct {
 	QueuePublicKey *string `json:"queue_public_key,omitempty"`
 	QueueAddress   *string `json:"queue_address,omitempty"`

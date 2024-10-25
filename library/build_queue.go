@@ -8,8 +8,6 @@ import "fmt"
 // BuildQueue is the library representation of the builds in the queue.
 //
 // Deprecated: use QueueBuild from github.com/go-vela/server/api/types instead.
-//
-// swagger:model BuildQueue
 type BuildQueue struct {
 	Status   *string `json:"status,omitempty"`
 	Number   *int32  `json:"number,omitempty"`

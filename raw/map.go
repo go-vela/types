@@ -10,6 +10,8 @@ import (
 )
 
 // StringSliceMap represents an array of strings or a map of strings.
+//
+// Deprecated: use StringSliceMap from github.com/go-vela/server/compiler/types/raw instead.
 type StringSliceMap map[string]string
 
 // Value returns the map in JSON format.

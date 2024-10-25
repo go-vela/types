@@ -26,7 +26,7 @@ const versionFormat = `{
 // follows semantic version guidelines from
 // https://semver.org/.
 //
-// swagger:model Version
+// Deprecated: use Version from github.com/go-vela/server/compiler/types/version instead.
 type Version struct {
 	// Canonical represents a canonical semantic version for the application.
 	Canonical string `json:"canonical"`

@@ -8,7 +8,7 @@ import (
 
 // Pipeline is the library representation of a Pipeline.
 //
-// swagger:model Pipeline
+// Deprecated: use Pipeline from github.com/go-vela/server/api/types instead.
 type Pipeline struct {
 	ID              *int64  `json:"id,omitempty"`
 	RepoID          *int64  `json:"repo_id,omitempty"`

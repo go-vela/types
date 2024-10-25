@@ -41,6 +41,8 @@ var (
 )
 
 // User is the database representation of a user.
+//
+// Deprecated: use User from github.com/go-vela/server/database/types instead.
 type User struct {
 	ID           sql.NullInt64  `sql:"id"`
 	Name         sql.NullString `sql:"name"`

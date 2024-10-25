@@ -6,7 +6,7 @@ import "fmt"
 
 // Error is the json error message from the server for a given http response.
 //
-// swagger:model Error
+// Deprecated: use Error from github.com/go-vela/server/api/types instead.
 type Error struct {
 	Message *string `json:"error"`
 }

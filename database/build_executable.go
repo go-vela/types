@@ -17,6 +17,8 @@ var (
 )
 
 // BuildExecutable is the database representation of a BuildExecutable.
+//
+// Deprecated: use BuildExecutable from github.com/go-vela/server/database/types instead.
 type BuildExecutable struct {
 	ID      sql.NullInt64 `sql:"id"`
 	BuildID sql.NullInt64 `sql:"build_id"`

@@ -14,10 +14,14 @@ import (
 type (
 	// ServiceSlice is the yaml representation
 	// of the Services block for a pipeline.
+	//
+	// Deprecated: use ServiceSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	ServiceSlice []*Service
 
 	// Service is the yaml representation
 	// of a Service in a pipeline.
+	//
+	// Deprecated: use Service from github.com/go-vela/server/compiler/types/yaml instead.
 	Service struct {
 		Image       string             `yaml:"image,omitempty"       json:"image,omitempty" jsonschema:"required,minLength=1,description=Docker image used to create ephemeral container.\nReference: https://go-vela.github.io/docs/reference/yaml/services/#the-image-key"`
 		Name        string             `yaml:"name,omitempty"        json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the container in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/services/#the-name-key"`

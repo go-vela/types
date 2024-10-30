@@ -32,6 +32,8 @@ var (
 )
 
 // Step is the database representation of a step in a build.
+//
+// Deprecated: use Step from github.com/go-vela/server/database/types instead.
 type Step struct {
 	ID           sql.NullInt64  `sql:"id"`
 	BuildID      sql.NullInt64  `sql:"build_id"`

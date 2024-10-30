@@ -2,7 +2,7 @@
 
 // Package constants provides the defined constant types for Vela.
 //
-// Usage:
+// Deprecated: all constants for Vela have been moved to github.com/go-vela/server/constants.
 //
-//	import "github.com/go-vela/types/constants"
+// This package is frozen.
 package constants

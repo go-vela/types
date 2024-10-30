@@ -6,13 +6,13 @@ type (
 	// UlimitSlice is the pipeline representation of
 	// the ulimits block for a step in a pipeline.
 	//
-	// swagger:model PipelineUlimitSlice
+	// Deprecated: use UlimitSlice from github.com/go-vela/server/compiler/types/pipeline instead.
 	UlimitSlice []*Ulimit
 
 	// Ulimit is the pipeline representation of a ulimit
 	// from the ulimits block for a step in a pipeline.
 	//
-	// swagger:model PipelineUlimit
+	// Deprecated: use Ulimit from github.com/go-vela/server/compiler/types/pipeline instead.
 	Ulimit struct {
 		Name string `json:"name,omitempty" yaml:"name,omitempty"`
 		Soft int64  `json:"soft,omitempty" yaml:"soft,omitempty"`

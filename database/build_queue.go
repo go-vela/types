@@ -9,6 +9,8 @@ import (
 )
 
 // BuildQueue is the database representation of the builds in the queue.
+//
+// Deprecated: use QueueBuild from github.com/go-vela/server/database/types instead.
 type BuildQueue struct {
 	Status   sql.NullString `sql:"status"`
 	Number   sql.NullInt32  `sql:"number"`

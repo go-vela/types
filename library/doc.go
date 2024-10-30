@@ -2,7 +2,7 @@
 
 // Package library provides the defined library types for Vela.
 //
-// Usage:
+// Deprecated: all library types for Vela have been moved to github.com/go-vela/server/api/types .
 //
-//	import "github.com/go-vela/types/library"
+// This package is frozen.
 package library

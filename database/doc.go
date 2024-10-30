@@ -2,7 +2,7 @@
 
 // Package database provides the defined database types for Vela.
 //
-// Usage:
+// Deprecated: all database types for Vela have been moved to github.com/go-vela/server/database/types .
 //
-//	import "github.com/go-vela/types/database"
+// This package is frozen.
 package database

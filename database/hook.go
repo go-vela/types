@@ -28,6 +28,8 @@ var (
 )
 
 // Hook is the database representation of a webhook for a repo.
+//
+// Deprecated: use Hook from github.com/go-vela/server/database/types instead.
 type Hook struct {
 	ID          sql.NullInt64  `sql:"id"`
 	RepoID      sql.NullInt64  `sql:"repo_id"`

@@ -14,6 +14,8 @@ const metaFormat = `{
 }`
 
 // Metadata represents extra information surrounding the application version.
+//
+// Deprecated: use Metadata from github.com/go-vela/server/version instead.
 type Metadata struct {
 	// Architecture represents the architecture information for the application.
 	Architecture string `json:"architecture,omitempty"`

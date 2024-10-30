@@ -13,7 +13,7 @@ import (
 
 // Build is the pipeline representation of a build for a pipeline.
 //
-// swagger:model PipelineBuild
+// Deprecated: use Build from github.com/go-vela/server/compiler/types/pipeline instead.
 type Build struct {
 	ID          string             `json:"id,omitempty"       yaml:"id,omitempty"`
 	Version     string             `json:"version,omitempty"  yaml:"version,omitempty"`

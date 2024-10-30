@@ -30,6 +30,8 @@ const (
 )
 
 // Build is the database representation of a build for a pipeline.
+//
+// Deprecated: use Build from github.com/go-vela/server/database/types instead.
 type Build struct {
 	ID            sql.NullInt64      `sql:"id"`
 	RepoID        sql.NullInt64      `sql:"repo_id"`

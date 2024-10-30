@@ -15,10 +15,14 @@ import (
 type (
 	// SecretSlice is the yaml representation
 	// of the secrets block for a pipeline.
+	//
+	// Deprecated: use SecretSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	SecretSlice []*Secret
 
 	// Secret is the yaml representation of a secret
 	// from the secrets block for a pipeline.
+	//
+	// Deprecated: use Secret from github.com/go-vela/server/compiler/types/yaml instead.
 	Secret struct {
 		Name   string `yaml:"name,omitempty"   json:"name,omitempty" jsonschema:"required,minLength=1,description=Name of secret to reference in the pipeline.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/#the-name-key"`
 		Key    string `yaml:"key,omitempty"    json:"key,omitempty" jsonschema:"minLength=1,description=Path to secret to fetch from storage backend.\nReference: https://go-vela.github.io/docs/reference/yaml/secrets/#the-key-key"`
@@ -30,6 +34,8 @@ type (
 
 	// Origin is the yaml representation of a method
 	// for looking up secrets with a secret plugin.
+	//
+	// Deprecated: use Origin from github.com/go-vela/server/compiler/types/yaml instead.
 	Origin struct {
 		Environment raw.StringSliceMap     `yaml:"environment,omitempty" json:"environment,omitempty" jsonschema:"description=Variables to inject into the container environment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-environment-key"`
 		Image       string                 `yaml:"image,omitempty"       json:"image,omitempty" jsonschema:"required,minLength=1,description=Docker image to use to create the ephemeral container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-image-key"`
@@ -198,10 +204,14 @@ func (o *Origin) ToPipeline() *pipeline.Container {
 type (
 	// StepSecretSlice is the yaml representation of
 	// the secrets block for a step in a pipeline.
+	//
+	// Deprecated: use StepSecretSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	StepSecretSlice []*StepSecret
 
 	// StepSecret is the yaml representation of a secret
 	// from a secrets block for a step in a pipeline.
+	//
+	// Deprecated: use StepSecret from github.com/go-vela/server/compiler/types/yaml instead.
 	StepSecret struct {
 		Source string `yaml:"source,omitempty"`
 		Target string `yaml:"target,omitempty"`

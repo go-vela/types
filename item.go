@@ -13,6 +13,8 @@ import (
 const ItemVersion uint64 = 2
 
 // Item is the queue representation of an item to publish to the queue.
+//
+// Deprecated: use Item from github.com/go-vela/server/queue/models instead.
 type Item struct {
 	Build *library.Build `json:"build"`
 	Repo  *library.Repo  `json:"repo"`

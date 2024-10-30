@@ -13,7 +13,7 @@ import (
 
 // Service is the library representation of a service in a build.
 //
-// swagger:model Service
+// Deprecated: use Service from github.com/go-vela/server/api/types instead.
 type Service struct {
 	ID           *int64  `json:"id,omitempty"`
 	BuildID      *int64  `json:"build_id,omitempty"`

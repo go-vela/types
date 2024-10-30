@@ -14,13 +14,13 @@ type (
 	// SecretSlice is the pipeline representation
 	// of the secrets block for a pipeline.
 	//
-	// swagger:model PipelineSecretSlice
+	// Deprecated: use SecretSlice from github.com/go-vela/server/compiler/types/pipeline instead.
 	SecretSlice []*Secret
 
 	// Secret is the pipeline representation of a
 	// secret from the secrets block for a pipeline.
 	//
-	// swagger:model PipelineSecret
+	// Deprecated: use Secret from github.com/go-vela/server/compiler/types/pipeline instead.
 	Secret struct {
 		Name   string     `json:"name,omitempty"   yaml:"name,omitempty"`
 		Value  string     `json:"value,omitempty"  yaml:"value,omitempty"`
@@ -34,13 +34,13 @@ type (
 	// StepSecretSlice is the pipeline representation
 	// of the secrets block for a step in a pipeline.
 	//
-	// swagger:model PipelineStepSecretSlice
+	// Deprecated: use StepSecretSlice from github.com/go-vela/server/compiler/types/pipeline instead.
 	StepSecretSlice []*StepSecret
 
 	// StepSecret is the pipeline representation of a secret
 	// from a secrets block for a step in a pipeline.
 	//
-	// swagger:model PipelineStepSecret
+	// Deprecated: use StepSecret from github.com/go-vela/server/compiler/types/pipeline instead.
 	StepSecret struct {
 		Source string `json:"source,omitempty" yaml:"source,omitempty"`
 		Target string `json:"target,omitempty" yaml:"target,omitempty"`

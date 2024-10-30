@@ -14,10 +14,14 @@ import (
 type (
 	// UlimitSlice is the yaml representation of
 	// the ulimits block for a step in a pipeline.
+	//
+	// Deprecated: use UlimitSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	UlimitSlice []*Ulimit
 
 	// Ulimit is the yaml representation of a ulimit
 	// from the ulimits block for a step in a pipeline.
+	//
+	// Deprecated: use Ulimit from github.com/go-vela/server/compiler/types/yaml instead.
 	Ulimit struct {
 		Name string `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique name of the user limit.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ulimits-key"`
 		Soft int64  `yaml:"soft,omitempty" json:"soft,omitempty" jsonschema:"description=Set the soft limit.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ulimits-key"`

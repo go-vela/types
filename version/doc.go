@@ -2,7 +2,7 @@
 
 // Package version provides the defined version types for Vela.
 //
-// Usage:
+// Deprecated: all version types for Vela have been moved to github.com/go-vela/server/version .
 //
-//	import "github.com/go-vela/types/version"
+// This package is frozen.
 package version

@@ -32,6 +32,8 @@ var (
 )
 
 // Service is the database representation of a service in a build.
+//
+// Deprecated: use Service from github.com/go-vela/server/database/types instead.
 type Service struct {
 	ID           sql.NullInt64  `sql:"id"`
 	BuildID      sql.NullInt64  `sql:"build_id"`

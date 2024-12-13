@@ -2,7 +2,7 @@
 
 // Package yaml provides the defined yaml types for Vela.
 //
-// Usage:
+// Deprecated: all yaml types for Vela have been moved to github.com/go-vela/server/compiler/types/yaml .
 //
-//	import "github.com/go-vela/types/yaml"
+// This package is frozen.
 package yaml

@@ -8,6 +8,8 @@ import (
 )
 
 // StringSlice represents a string or an array of strings.
+//
+// Deprecated: use StringSlice from github.com/go-vela/server/compiler/types/raw instead.
 type StringSlice []string
 
 // UnmarshalJSON implements the Unmarshaler interface for the StringSlice type.

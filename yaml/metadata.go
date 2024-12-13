@@ -9,6 +9,8 @@ import (
 type (
 	// Metadata is the yaml representation of
 	// the metadata block for a pipeline.
+	//
+	// Deprecated: use Metadata from github.com/go-vela/server/compiler/types/yaml instead.
 	Metadata struct {
 		Template     bool           `yaml:"template,omitempty" json:"template,omitempty" jsonschema:"description=Enables compiling the pipeline as a template.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-template-key"`
 		RenderInline bool           `yaml:"render_inline,omitempty" json:"render_inline,omitempty" jsonschema:"description=Enables inline compiling for the pipeline templates.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-render-inline-key"`
@@ -19,6 +21,8 @@ type (
 
 	// CancelOptions is the yaml representation of
 	// the auto_cancel block for a pipeline.
+	//
+	// Deprecated: use CancelOptions from github.com/go-vela/server/compiler/types/yaml instead.
 	CancelOptions struct {
 		Running       *bool `yaml:"running,omitempty" json:"running,omitempty" jsonschema:"description=Enables auto canceling of running pipelines that become stale due to new push.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-auto-cancel-key"`
 		Pending       *bool `yaml:"pending,omitempty" json:"pending,omitempty" jsonschema:"description=Enables auto canceling of queued pipelines that become stale due to new push.\nReference: https://go-vela.github.io/docs/reference/yaml/metadata/#the-auto-cancel-key"`

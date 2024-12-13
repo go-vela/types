@@ -8,7 +8,7 @@ import (
 
 // BuildExecutable is the library representation of a BuildExecutable.
 //
-// swagger:model BuildExecutable
+// Deprecated: use BuildExecutable from github.com/go-vela/server/api/types instead.
 type BuildExecutable struct {
 	ID      *int64 `json:"id,omitempty"`
 	BuildID *int64 `json:"build_id,omitempty"`

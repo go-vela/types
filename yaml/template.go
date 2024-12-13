@@ -9,10 +9,14 @@ import (
 type (
 	// TemplateSlice is the yaml representation
 	// of the templates block for a pipeline.
+	//
+	// Deprecated: use TemplateSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	TemplateSlice []*Template
 
 	// Template is the yaml representation of a template
 	// from the templates block for a pipeline.
+	//
+	// Deprecated: use Template from github.com/go-vela/server/compiler/types/yaml instead.
 	Template struct {
 		Name      string                 `yaml:"name,omitempty"   json:"name,omitempty"  jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-name-key"`
 		Source    string                 `yaml:"source,omitempty" json:"source,omitempty" jsonschema:"required,minLength=1,description=Path to template in remote system.\nReference: https://go-vela.github.io/docs/reference/yaml/templates/#the-source-key"`
@@ -23,6 +27,8 @@ type (
 
 	// StepTemplate is the yaml representation of the
 	// template block for a step in a pipeline.
+	//
+	// Deprecated: use StepTemplate from github.com/go-vela/server/compiler/types/yaml instead.
 	StepTemplate struct {
 		Name      string                 `yaml:"name,omitempty" json:"name,omitempty" jsonschema:"required,minLength=1,description=Unique identifier for the template.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-template-key"`
 		Variables map[string]interface{} `yaml:"vars,omitempty" json:"vars,omitempty" jsonschema:"description=Variables injected into the template.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-template-key"`

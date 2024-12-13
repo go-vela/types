@@ -15,6 +15,8 @@ var (
 
 // PullRequest defines the data pulled from PRs while
 // processing a webhook.
+//
+// Deprecated: use PullRequest from github.com/go-vela/server/internal instead.
 type PullRequest struct {
 	Comment    string
 	Number     int
@@ -25,6 +27,8 @@ type PullRequest struct {
 // Webhook defines a struct that is used to return
 // the required data when processing webhook event
 // a for a source provider event.
+//
+// Deprecated: use Webhook from github.com/go-vela/server/internal instead.
 type Webhook struct {
 	Hook        *library.Hook
 	Repo        *library.Repo

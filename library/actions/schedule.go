@@ -7,6 +7,8 @@ import "github.com/go-vela/types/constants"
 
 // Schedule is the library representation of the various actions associated
 // with the schedule event.
+//
+// Deprecated: use Schedule from github.com/go-vela/server/api/types/actions instead.
 type Schedule struct {
 	Run *bool `json:"run"`
 }

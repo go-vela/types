@@ -12,13 +12,13 @@ type (
 	// StageSlice is the pipeline representation
 	// of the stages block for a pipeline.
 	//
-	// swagger:model PipelineStageSlice
+	// Deprecated: use StageSlice from github.com/go-vela/server/compiler/types/pipeline instead.
 	StageSlice []*Stage
 
 	// Stage is the pipeline representation
 	// of a stage in a pipeline.
 	//
-	// swagger:model PipelineStage
+	// Deprecated: use Stage from github.com/go-vela/server/compiler/types/pipeline instead.
 	Stage struct {
 		Done        chan error        `json:"-"                     yaml:"-"`
 		Environment map[string]string `json:"environment,omitempty" yaml:"environment,omitempty"`

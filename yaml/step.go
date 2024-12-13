@@ -14,10 +14,14 @@ import (
 type (
 	// StepSlice is the yaml representation
 	// of the steps block for a pipeline.
+	//
+	// Deprecated: use StepSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	StepSlice []*Step
 
 	// Step is the yaml representation of a step
 	// from the steps block for a pipeline.
+	//
+	// Deprecated: use Step from github.com/go-vela/server/compiler/types/yaml instead.
 	Step struct {
 		Ruleset     Ruleset                `yaml:"ruleset,omitempty"     json:"ruleset,omitempty" jsonschema:"description=Conditions to limit the execution of the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-key"`
 		Commands    raw.StringSlice        `yaml:"commands,omitempty"    json:"commands,omitempty" jsonschema:"description=Execution instructions to run inside the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-commands-key"`

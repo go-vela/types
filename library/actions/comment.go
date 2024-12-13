@@ -6,6 +6,8 @@ import "github.com/go-vela/types/constants"
 
 // Comment is the library representation of the various actions associated
 // with the comment event webhook from the SCM.
+//
+// Deprecated: use Comment from github.com/go-vela/server/api/types/actions instead.
 type Comment struct {
 	Created *bool `json:"created"`
 	Edited  *bool `json:"edited"`

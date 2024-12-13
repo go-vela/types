@@ -11,6 +11,8 @@ import (
 type (
 	// Ruleset is the yaml representation of a
 	// ruleset block for a step in a pipeline.
+	//
+	// Deprecated: use Ruleset from github.com/go-vela/server/compiler/types/yaml instead.
 	Ruleset struct {
 		If       Rules  `yaml:"if,omitempty"       json:"if,omitempty" jsonschema:"description=Limit execution to when all rules match.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-key"`
 		Unless   Rules  `yaml:"unless,omitempty"   json:"unless,omitempty" jsonschema:"description=Limit execution to when all rules do not match.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-key"`
@@ -21,6 +23,8 @@ type (
 
 	// Rules is the yaml representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
+	//
+	// Deprecated: use Rules from github.com/go-vela/server/compiler/types/yaml instead.
 	Rules struct {
 		Branch   []string `yaml:"branch,omitempty,flow"   json:"branch,omitempty" jsonschema:"description=Limits the execution of a step to matching build branches.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-key"`
 		Comment  []string `yaml:"comment,omitempty,flow"  json:"comment,omitempty" jsonschema:"description=Limits the execution of a step to matching a pull request comment.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-ruleset-key"`

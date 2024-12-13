@@ -27,6 +27,8 @@ var (
 )
 
 // Worker is the database representation of a worker.
+//
+// Deprecated: use Worker from github.com/go-vela/server/database/types instead.
 type Worker struct {
 	ID                  sql.NullInt64  `sql:"id"`
 	Hostname            sql.NullString `sql:"hostname"`

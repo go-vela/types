@@ -13,7 +13,7 @@ import (
 
 // Step is the library representation of a step in a build.
 //
-// swagger:model Step
+// Deprecated: use Step from github.com/go-vela/server/api/types instead.
 type Step struct {
 	ID           *int64  `json:"id,omitempty"`
 	BuildID      *int64  `json:"build_id,omitempty"`

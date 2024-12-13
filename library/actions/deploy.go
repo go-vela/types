@@ -7,6 +7,8 @@ import "github.com/go-vela/types/constants"
 
 // Deploy is the library representation of the various actions associated
 // with the deploy event webhook from the SCM.
+//
+// Deprecated: use Deploy from github.com/go-vela/server/api/types/actions instead.
 type Deploy struct {
 	Created *bool `json:"created"`
 }

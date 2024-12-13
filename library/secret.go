@@ -12,7 +12,7 @@ import (
 
 // Secret is the library representation of a secret.
 //
-// swagger:model Secret
+// Deprecated: use Secret from github.com/go-vela/server/api/types instead.
 type Secret struct {
 	ID                *int64    `json:"id,omitempty"`
 	Org               *string   `json:"org,omitempty"`

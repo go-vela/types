@@ -32,6 +32,8 @@ var (
 )
 
 // Pipeline is the database representation of a pipeline.
+//
+// Deprecated: use Pipeline from github.com/go-vela/server/database/types instead.
 type Pipeline struct {
 	ID              sql.NullInt64  `sql:"id"`
 	RepoID          sql.NullInt64  `sql:"repo_id"`

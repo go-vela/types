@@ -15,7 +15,7 @@ type (
 	// Ruleset is the pipeline representation of
 	// a ruleset block for a step in a pipeline.
 	//
-	// swagger:model PipelineRuleset
+	// Deprecated: use Ruleset from github.com/go-vela/server/compiler/types/pipeline instead.
 	Ruleset struct {
 		If       Rules  `json:"if,omitempty"       yaml:"if,omitempty"`
 		Unless   Rules  `json:"unless,omitempty"   yaml:"unless,omitempty"`
@@ -27,7 +27,7 @@ type (
 	// Rules is the pipeline representation of the ruletypes
 	// from a ruleset block for a step in a pipeline.
 	//
-	// swagger:model PipelineRules
+	// Deprecated: use Rules from github.com/go-vela/server/compiler/types/pipeline instead.
 	Rules struct {
 		Branch   Ruletype `json:"branch,omitempty"   yaml:"branch,omitempty"`
 		Comment  Ruletype `json:"comment,omitempty"  yaml:"comment,omitempty"`
@@ -45,11 +45,13 @@ type (
 	// Ruletype is the pipeline representation of an element
 	// for a ruleset block for a step in a pipeline.
 	//
-	// swagger:model PipelineRuletype
+	// Deprecated: use Ruletype from github.com/go-vela/server/compiler/types/pipeline instead.
 	Ruletype []string
 
 	// RuleData is the data to check our ruleset
 	// against for a step in a pipeline.
+	//
+	// Deprecated: use RuleData from github.com/go-vela/server/compiler/types/pipeline instead.
 	RuleData struct {
 		Branch   string   `json:"branch,omitempty"   yaml:"branch,omitempty"`
 		Comment  string   `json:"comment,omitempty"  yaml:"comment,omitempty"`

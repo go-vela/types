@@ -13,10 +13,14 @@ import (
 type (
 	// VolumeSlice is the yaml representation of
 	// the volumes block for a step in a pipeline.
+	//
+	// Deprecated: use VolumeSlice from github.com/go-vela/server/compiler/types/yaml instead.
 	VolumeSlice []*Volume
 
 	// Volume is the yaml representation of a volume
 	// from a volumes block for a step in a pipeline.
+	//
+	// Deprecated: use Volume from github.com/go-vela/server/compiler/types/yaml instead.
 	Volume struct {
 		Source      string `yaml:"source,omitempty"      json:"source,omitempty" jsonschema:"required,minLength=1,description=Set the source directory to be mounted.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-volume-key"`
 		Destination string `yaml:"destination,omitempty" json:"destination,omitempty" jsonschema:"required,minLength=1,description=Set the destination directory for the mount in the container.\nReference: https://go-vela.github.io/docs/reference/yaml/steps/#the-volume-key"`

@@ -24,6 +24,8 @@ var (
 )
 
 // Log is the database representation of a log for a step in a build.
+//
+// Deprecated: use Log from github.com/go-vela/server/database/types instead.
 type Log struct {
 	ID        sql.NullInt64 `sql:"id"`
 	BuildID   sql.NullInt64 `sql:"build_id"`

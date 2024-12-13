@@ -6,6 +6,8 @@ import "github.com/go-vela/types/constants"
 
 // Pull is the library representation of the various actions associated
 // with the pull_request event webhook from the SCM.
+//
+// Deprecated: use Pull from github.com/go-vela/server/api/types/actions instead.
 type Pull struct {
 	Opened      *bool `json:"opened"`
 	Edited      *bool `json:"edited"`

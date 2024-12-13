@@ -2,7 +2,7 @@
 
 // Package pipeline provides the defined pipeline types for Vela.
 //
-// Usage:
+// Deprecated: all pipeline types for Vela have been moved to github.com/go-vela/server/compiler/types/pipeline .
 //
-//	import "github.com/go-vela/types/pipeline"
+// This package is frozen.
 package pipeline

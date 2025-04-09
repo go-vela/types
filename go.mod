@@ -1,6 +1,7 @@
+// Deprecated: use github.com/go-vela/server instead
 module github.com/go-vela/types
 
-go 1.23.5
+go 1.24.2
 
 require (
 	github.com/adhocore/gronx v1.19.5
